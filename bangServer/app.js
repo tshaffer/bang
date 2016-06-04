@@ -56,17 +56,11 @@ app.get('/getThumbs', function(req, res) {
                     console.log("thumbnails build complete");
                     // TODO - what's in mediaFiles - can't access it from debugger.
                     var saveThumbsPromise = dbController.saveThumbsToDB(mediaFilesToAdd);
-                    // saveThumbsPromise.then(function() {
-                    //     var addFolderPromise = dbController.addFolder(folder, baseName, dirName);
-                    //     addFolderPromise.then(function() {
-                    //         var fetchAllPhotosPromise = dbController.fetchAllPhotos();
-                    //         fetchAllPhotosPromise.then(function(allPhotos) {
-                    //             var response = {};
-                    //             response.photos = allPhotos;
-                    //             res.send(response);
-                    //         });
-                    //     });
-                    // });
+                    saveThumbsPromise.then(function(thumbSpecs) {
+                        var response = {};
+                        response.thumbs = thumbSpecs;
+                        res.send(response);
+                    });
                 });
             });
         }

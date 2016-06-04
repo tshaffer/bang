@@ -38,22 +38,32 @@ function saveThumbsToDB(thumbs) {
 
     return new Promise(function (resolve, reject) {
 
+        var thumbSpecs = [];
+        var thumbsSaved = 0;
+
         thumbs.forEach(function(thumb) {
 
-            var thumbForDB = new Thumb({
+            var thumbSpec = { 
                 mediaFilePath: thumb.filePath,
                 url: thumb.thumbUrl,
                 lastModified: thumb.lastModified
-            });
+            };
+            
+            var thumbForDB = new Thumb(thumbSpec);
 
             thumbForDB.save(function (err) {
                 if (err) return handleError(err);
+                thumbsSaved++;
+                if (thumbsSaved == thumbs.length) {
+                    resolve(thumbSpecs);
+                    console.log("all thumbs saved to db");
+                }
             });
+            
+            thumbSpecs.push(thumbSpec);
         });
 
         console.log("all thumbs submitted to save engine");
-
-        resolve();
     })
 }
 
