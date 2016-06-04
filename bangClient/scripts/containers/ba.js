@@ -3,9 +3,11 @@
  */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 import { setMediaLibraryContents } from '../actions/index';
 
-import { bindActionCreators } from 'redux';
+import MediaLibrary from '../containers/mediaLibrary';
 
 // electron only
 const {remote} = require('electron');
@@ -120,9 +122,17 @@ class BA extends Component {
         };
     }
 
+
     render () {
         return (
-            <div className="bangPageContainer">herro prease</div>
+            <div className="bangPageContainer">
+                <div>herro prease</div>
+                <div>
+                    Put media library here
+                    <MediaLibrary />
+                </div>
+
+            </div>
         )
     }
 }
