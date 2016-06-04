@@ -6,3 +6,9 @@ body {
     width: 1400px;
 }
 
+.bangPageContainer {
+    display: flex;
+}
+
+
+
