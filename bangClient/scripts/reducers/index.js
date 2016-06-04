@@ -2,13 +2,10 @@
  * Created by tedshaffer on 6/3/16.
  */
 import {combineReducers} from 'redux';
+import MediaLibraryContentsReducer from './reducer_media_library_contents';
 
 const rootReducer = combineReducers({
-    // photos: PhotosReducer,
-    // tags: TagsReducer,
-    // activePhoto: ActivePhoto,
-    // selectedPhotos: SelectedPhotos,
-    // albums: AlbumsReducer
+    mediaLibraryContents: MediaLibraryContentsReducer
 });
 
 export default rootReducer;

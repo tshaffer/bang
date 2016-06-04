@@ -3,8 +3,7 @@
  */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import { queryPhotos } from '../actions/index';
-// import { addFolder } from '../actions/index';
+import { setMediaLibraryContents } from '../actions/index';
 
 import { bindActionCreators } from 'redux';
 
@@ -15,6 +14,16 @@ const fs = require('fs');
 const path = require('path');
 
 class BA extends Component {
+
+    // constructor(props) {
+    //     super(props);
+    //     this.state = {
+    //         mediaLibraryContents: []
+    //     };
+    //     this.photosById = {};
+    //     this.selectedPhotos = {};
+    // }
+
 
     // electron only
     openMediaLibrary() {
@@ -27,6 +36,7 @@ class BA extends Component {
             if (directories) {
                 const mediaDirectory = directories[0];
                 const files = fs.readdirSync(mediaDirectory);
+                self.props.setMediaLibraryContents(files);
             }
         })
     }
@@ -117,4 +127,8 @@ class BA extends Component {
     }
 }
 
-export default BA;
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ setMediaLibraryContents: setMediaLibraryContents }, dispatch);
+}
+
+export default connect(null, mapDispatchToProps)(BA);
