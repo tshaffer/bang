@@ -16,24 +16,24 @@ class MediaLibrary extends Component {
 
     render() {
 
-        let mediaLibraryContents = "";
+        let thumbs = "";
 
-        if (this.props.mediaLibraryContents && this.props.mediaLibraryContents.length > 0) {
-            // mediaLibraryContents = "Number of items in media library is: " + this.props.mediaLibraryContents.length.toString();
+        if (this.props.thumbs && this.props.thumbs.length > 0) {
+            thumbs = "Number of items in media library is: " + this.props.thumbs.length.toString();
 
-            let url = path.join(this.props.mediaLibraryContents[0], this.props.mediaLibraryContents[1]);
-            url = "file:///Users/tedshaffer/Pictures/SanMateoCoast2013/IMG_7094_thumb.JPG";
-            mediaLibraryContents = <img src={url}/>;
-            // mediaLibraryContents = "File at: " + url;
+            // let url = path.join(this.props.thumbsContents[0], this.props.thumbsContents[1]);
+            // url = "file:///Users/tedshaffer/Pictures/SanMateoCoast2013/IMG_7094_thumb.JPG";
+            // thumbsContents = <img src={url}/>;
+            // thumbsContents = "File at: " + url;
 
         }
         else {
-            mediaLibraryContents = "Media Library is empty";
+            thumbs = "Media Library is empty";
         }
         
         return (
             <div>
-                {mediaLibraryContents}
+                {thumbs}
             </div>
         )
     }
@@ -41,7 +41,7 @@ class MediaLibrary extends Component {
 
 function mapStateToProps(state) {
     return {
-        mediaLibraryContents: state.mediaLibraryContents
+        thumbs: state.thumbs
     };
 }
 
