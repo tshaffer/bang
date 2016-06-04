@@ -5,7 +5,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { setMediaLibraryContents } from '../actions/index';
+// import { setMediaLibraryContents } from '../actions/index';
+import { getThumbs } from '../actions/index';
 
 import MediaLibrary from '../containers/mediaLibrary';
 
@@ -37,8 +38,12 @@ class BA extends Component {
         }, function (directories) {
             if (directories) {
                 const mediaDirectory = directories[0];
-                const files = fs.readdirSync(mediaDirectory);
-                self.props.setMediaLibraryContents(files);
+                self.props.getThumbs(mediaDirectory);
+                // const files = fs.readdirSync(mediaDirectory);
+                // // self.props.setMediaLibraryContents(files);
+                //
+                // const mediaLibraryContents = [mediaDirectory, files[1]];
+                // self.props.setMediaLibraryContents(mediaLibraryContents);
             }
         })
     }
@@ -138,7 +143,8 @@ class BA extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ setMediaLibraryContents: setMediaLibraryContents }, dispatch);
+    // return bindActionCreators({ setMediaLibraryContents: setMediaLibraryContents }, dispatch);
+    return bindActionCreators({ getThumbs: getThumbs }, dispatch);
 }
 
 export default connect(null, mapDispatchToProps)(BA);
