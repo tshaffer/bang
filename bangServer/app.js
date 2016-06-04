@@ -23,65 +23,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/', express.static(path.join(__dirname, '../bangClient/')));
 
-// app.get('/addMediaLibraryFolder', function (req, res) {
-//
-//     res.set('Access-Control-Allow-Origin', '*');
-//
-//     var folder = req.query.folderName[0];
-//     var baseName = path.basename(folder);
-//     var dirName = path.dirname(folder);
-//
-//     console.log("addMediaLibraryFolder invoked: ", folder);
-//
-//     var imagesInFolder = [];
-//     imagesOnDrive = findPhotos(folder, imagesInFolder, baseName);
-//
-//     if (imagesOnDrive.length > 0) {
-//
-//         app.use(express.static(dirName));
-//
-//         // temporarily comment out the code that only looks for new files
-//         // look for photosOnDrive that aren't in photosInDB
-//         var photosToAdd = [];
-//         photosOnDrive.forEach(function (photoOnDrive) {
-//             // if ( !photosInDB.hasOwnProperty( photoOnDrive.url ) ) {
-//             photosToAdd.push(photoOnDrive);
-//             // }
-//         });
-//
-//         if (photosToAdd.length > 0) {
-//             var getExifDataPromise = exifReader.getAllExifData(photosToAdd);
-//             getExifDataPromise.then(function(photos) {
-//                 console.log("getExifDataPromised resolved");
-//
-//                 var buildThumbnailsPromise = buildThumbnails(photos, baseName);
-//                 buildThumbnailsPromise.then(function(obj) {
-//                     console.log("thumbnails build complete");
-//                     var savePhotosPromise = dbController.savePhotosToDB(photos);
-//                     savePhotosPromise.then(function() {
-//                         var addFolderPromise = dbController.addFolder(folder, baseName, dirName);
-//                         addFolderPromise.then(function() {
-//                             var fetchAllPhotosPromise = dbController.fetchAllPhotos();
-//                             fetchAllPhotosPromise.then(function(allPhotos) {
-//                                 var response = {};
-//                                 response.photos = allPhotos;
-//                                 res.send(response);
-//                             });
-//                         });
-//                     });
-//                 });
-//             });
-//         }
-//     }
-//
-// });
-
 
 openDBPromise.then(function() {
 });
 
 
-var mediaFileSuffixes = ['jpg', 'JPG'];
+var mediaFileSuffixes = ['jpg'];
 
 app.get('/getThumbs', function(req, res) {
 
@@ -89,8 +36,6 @@ app.get('/getThumbs', function(req, res) {
     res.set('Access-Control-Allow-Origin', '*');
 
     var folder = req.query.mediaFolder;
-    // var baseName = path.basename(folder);
-    // var dirName = path.dirname(folder);
 
     var mediaFilesInFolder = [];
     mediaFilesInFolder = findMediaFiles(folder, mediaFilesInFolder);
@@ -106,7 +51,23 @@ app.get('/getThumbs', function(req, res) {
             var getExifDataPromise = exifReader.getAllExifData(mediaFilesToAdd);
             getExifDataPromise.then(function(mediaFiles) {
                 console.log("getExifDataPromised resolved");
-                var buildThumbnailsPromise = buildThumbnails(mediaFilesToAdd);
+                var buildThumbnailsPromise = buildThumbnails(mediaFiles);
+                buildThumbnailsPromise.then(function(obj) {
+                    console.log("thumbnails build complete");
+                    // TODO - what's in mediaFiles - can't access it from debugger.
+                    var saveThumbsPromise = dbController.saveThumbsToDB(mediaFilesToAdd);
+                    // saveThumbsPromise.then(function() {
+                    //     var addFolderPromise = dbController.addFolder(folder, baseName, dirName);
+                    //     addFolderPromise.then(function() {
+                    //         var fetchAllPhotosPromise = dbController.fetchAllPhotos();
+                    //         fetchAllPhotosPromise.then(function(allPhotos) {
+                    //             var response = {};
+                    //             response.photos = allPhotos;
+                    //             res.send(response);
+                    //         });
+                    //     });
+                    // });
+                });
             });
         }
     }
@@ -199,8 +160,6 @@ function buildThumb(mediaFile) {
         });
     });
 }
-
-
 
 
 function handleError(err) {

@@ -8,7 +8,7 @@ require('datejs');
 
 var Schema = mongoose.Schema;
 var thumbSchema = new Schema({
-    path: String,
+    mediaFilePath: String,
     url: String,
     lastModified: Date
 });
@@ -30,11 +30,35 @@ function initialize() {
             dbOpened = true;
             resolve();
         });
-
     });
-
 }
 
+
+function saveThumbsToDB(thumbs) {
+
+    return new Promise(function (resolve, reject) {
+
+        thumbs.forEach(function(thumb) {
+
+            var thumbForDB = new Thumb({
+                mediaFilePath: thumb.filePath,
+                url: thumb.thumbUrl,
+                lastModified: thumb.lastModified
+            });
+
+            thumbForDB.save(function (err) {
+                if (err) return handleError(err);
+            });
+        });
+
+        console.log("all thumbs submitted to save engine");
+
+        resolve();
+    })
+}
+
+
 module.exports = {
-    initialize: initialize
+    initialize: initialize,
+    saveThumbsToDB: saveThumbsToDB
 }
