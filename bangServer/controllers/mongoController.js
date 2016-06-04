@@ -1,15 +1,17 @@
 /**
  * Created by tedshaffer on 6/4/16.
  */
-var dbOpened = false;
-
+var path = require('path');
 var mongoose = require('mongoose');
 require('datejs');
+
+var dbOpened = false;
 
 var Schema = mongoose.Schema;
 var thumbSchema = new Schema({
     mediaFilePath: String,
     url: String,
+    mediaFolder: String,
     lastModified: Date
 });
 var Thumb = mongoose.model('Thumb', thumbSchema);
@@ -45,6 +47,7 @@ function saveThumbsToDB(thumbs) {
 
             var thumbSpec = { 
                 mediaFilePath: thumb.filePath,
+                mediaFolder: path.dirname(thumb.filePath),
                 url: thumb.thumbUrl,
                 lastModified: thumb.lastModified
             };
