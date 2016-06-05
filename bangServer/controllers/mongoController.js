@@ -8,6 +8,7 @@ require('datejs');
 var dbOpened = false;
 
 var Schema = mongoose.Schema;
+
 var thumbSchema = new Schema({
     fileName: String,
     thumbFileName: String,
@@ -17,6 +18,11 @@ var thumbSchema = new Schema({
     lastModified: Date
 });
 var Thumb = mongoose.model('Thumb', thumbSchema);
+
+var mediaFolderSchema = new Schema({
+    folder: String
+});
+var MediaFolder = mongoose.model('MediaFolder', mediaFolderSchema);
 
 function initialize() {
 
@@ -34,6 +40,51 @@ function initialize() {
             dbOpened = true;
             resolve();
         });
+    });
+}
+
+
+function updateMediaFolder(mediaFolder) {
+    return new Promise(function (resolve, reject) {
+        if (dbOpened) {
+
+            MediaFolder.find({ }, function (err, mediaFolderDocs) {
+                if (err) {
+                    console.log("MediaFolder.find returned error");
+                    reject();
+                }
+                if (mediaFolderDocs.length == 0) {
+
+                    // none exists; add it
+                    var mediaFolderSpec = {
+                        folder: mediaFolder
+                    };
+                    var mediaFolderForDB = new MediaFolder(mediaFolderSpec);
+
+                    mediaFolderForDB.save(function (err) {
+                        if (err) {
+                            console.log("error adding mediaFolder");
+                            reject();
+                        }
+                    })
+                }
+                else {
+                    var mediaFolderDoc = mediaFolderDocs[0];
+                    MediaFolder.findByIdAndUpdate(mediaFolderDoc.id, { $set: { folder: mediaFolder}}, function(err, mediaFolder) {
+                        if (err) {
+                            console.log("MediaFolder.findByIdAndUpdate returned error");
+                            reject();
+                        }
+                    });
+                }
+            });
+
+            resolve();
+            console.log("mediaFolderUpdated");
+        }
+        else {
+            reject();
+        }
     });
 }
 
@@ -114,6 +165,7 @@ function saveThumbsToDB(thumbs) {
 
 module.exports = {
     initialize: initialize,
+    updateMediaFolder: updateMediaFolder,
     findThumbs: findThumbs,
     saveThumbsToDB: saveThumbsToDB
 }

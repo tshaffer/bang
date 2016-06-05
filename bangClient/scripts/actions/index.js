@@ -10,8 +10,13 @@ export function getThumbs(mediaFolder) {
     console.log("getThumbs invoked");
 
     const url = "http://localhost:6969/";
-    const getThumbsUrl = url + "getThumbs";
+    
+    const updateMediaFolderUrl = url + "updateMediaFolder";
+    const updateMediaFolderRequest = axios.get(updateMediaFolderUrl, {
+        params: { mediaFolder: mediaFolder }
+    });
 
+    const getThumbsUrl = url + "getThumbs";
     const request = axios.get(getThumbsUrl, {
         params: { mediaFolder: mediaFolder }
     });

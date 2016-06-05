@@ -27,6 +27,25 @@ openDBPromise.then(function() {
 
 var mediaFileSuffixes = ['jpg'];
 
+app.get('/updateMediaFolder', function(req, res) {
+
+    console.log("updateMediaFolder invoked");
+    res.set('Access-Control-Allow-Origin', '*');
+
+    var folder = req.query.mediaFolder;
+    var updateMediaFolderPromise = dbController.updateMediaFolder(folder);
+    updateMediaFolderPromise.then(function() {
+        console.log("updateMediaFolder successful");
+    }, function(err) {
+        console.log("Error " + err + " from updateMediaFolder");
+        // TODO
+        res.send("fail");
+    });
+
+    res.send("ok");
+});
+
+
 app.get('/getThumbs', function(req, res) {
 
     console.log("getThumbs invoked");
