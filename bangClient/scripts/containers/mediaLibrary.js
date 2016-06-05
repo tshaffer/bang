@@ -2,11 +2,11 @@
  * Created by tedshaffer on 6/4/16.
  */
 import React, { Component } from 'react';
-var ReactDOM = require('react-dom');
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 const path = require('path');
 
-var ReactTabs = require('react-tabs');
+import ReactTabs from 'react-tabs';
 var Tab = ReactTabs.Tab;
 var Tabs = ReactTabs.Tabs;
 var TabList = ReactTabs.TabList;
