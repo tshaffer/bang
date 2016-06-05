@@ -23,8 +23,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/', express.static(path.join(__dirname, '../bangClient/')));
 
-
 openDBPromise.then(function() {
+    app.use(express.static(path.join(__dirname, 'thumbs')));
 });
 
 
@@ -55,7 +55,7 @@ app.get('/getThumbs', function(req, res) {
         var existingThumbs = [];
         mediaFilesInFolder.forEach(function (mediaFileInFolder) {
 
-            // only create thumbs for those files that already have thumbs
+            // only create thumbs for those files that don't already have thumbs
 
             // TODO - check last modified date
             if (!foundThumbsByPath.hasOwnProperty(mediaFileInFolder.filePath)) {
@@ -90,7 +90,7 @@ app.get('/getThumbs', function(req, res) {
         }
         else {
             var response = {};
-            
+
             response.thumbs = [];
             existingThumbs.forEach(function(existingThumb) {
                 response.thumbs.push(existingThumb);
@@ -120,6 +120,7 @@ function findMediaFiles(dir, mediaFiles) {
                         var mediaFile = {};
 
                         // TODO - url needs to include dir to distinguish thumbs with the same file name
+                        mediaFile.fileName = file;
                         mediaFile.filePath = path.join(dir, file);
                         // mediaFile.url = path.join(__dirname, 'thumbs', file + "_thumb." + suffix);
                         mediaFile.lastModified = new Date();
@@ -170,14 +171,17 @@ function buildThumb(mediaFile) {
         var ext = path.extname(mediaFile.filePath);
 
         var thumbFileName = fileName.substring(0,fileName.length - ext.length) + "_thumb" + ext;
-        var thumbPathName = path.join(dirName,thumbFileName);
+        mediaFile.thumbFileName = thumbFileName;
+
+        var thumbPath = path.join(__dirname, 'thumbs', mediaFile.thumbFileName);
 
         // TODO - thumbUrl needs to include dir to distinguish thumbs with the same file name
-        mediaFile.thumbUrl = path.join(__dirname, 'thumbs', thumbFileName);
+        // currently it's identical to thumbPath.
+        mediaFile.thumbUrl = path.join(__dirname, 'thumbs', mediaFile.thumbFileName);
 
         var createThumbPromise = easyImage.resize({
             src: mediaFile.filePath,
-            dst: thumbPathName,
+            dst: thumbPath,
             width: targetWidth,
             height: targetHeight,
             quality: 75

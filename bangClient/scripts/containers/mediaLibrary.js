@@ -15,27 +15,34 @@ class MediaLibrary extends Component {
     }
 
     render() {
-
-        let thumbs = "";
-
-        if (this.props.thumbs && this.props.thumbs.length > 0) {
-            thumbs = "Number of items in media library is: " + this.props.thumbs.length.toString();
-
-            // let url = path.join(this.props.thumbsContents[0], this.props.thumbsContents[1]);
-            // url = "file:///Users/tedshaffer/Pictures/SanMateoCoast2013/IMG_7094_thumb.JPG";
-            // thumbsContents = <img src={url}/>;
-            // thumbsContents = "File at: " + url;
-
-        }
-        else {
-            thumbs = "Media Library is empty";
-        }
         
+        if (!this.props.thumbs || this.props.thumbs.length == 0) {
+            return (
+                <div>Pizza</div>
+            );
+        }
+
+        let mediaLibraryThumbs = this.props.thumbs.map(function (thumb) {
+
+            const thumbUrl = thumb.thumbFileName;
+            
+            // <img id={thumb.id} src={thumbUrl} className="mediaLibraryThumbImg" data-name={thumb.fileName} data-path={thumb.path} data-type={thumb.type} draggable={true} onDragStart={self.mediaLibraryDragStartHandler}/>
+            return (
+                <li className="flex-item mediaLibraryThumbDiv" key={thumb.id}>
+                    <img src={thumbUrl} className="mediaLibraryThumbImg"/>
+                    <p className="mediaLibraryThumbLbl">{thumb.fileName}</p>
+                </li>
+            );
+        });
+
         return (
-            <div>
-                {thumbs}
+            <div className="mediaLibraryDiv">
+                <ul className="flex-container wrap">
+                    {mediaLibraryThumbs}
+                </ul>
             </div>
-        )
+        );
+
     }
 }
 

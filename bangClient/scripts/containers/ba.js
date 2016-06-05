@@ -131,9 +131,7 @@ class BA extends Component {
     render () {
         return (
             <div className="bangPageContainer">
-                <div>herro prease</div>
                 <div>
-                    Put media library here
                     <MediaLibrary />
                 </div>
 

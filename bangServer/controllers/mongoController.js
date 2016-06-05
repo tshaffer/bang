@@ -9,6 +9,8 @@ var dbOpened = false;
 
 var Schema = mongoose.Schema;
 var thumbSchema = new Schema({
+    fileName: String,
+    thumbFileName: String,
     mediaFilePath: String,
     url: String,
     mediaFolder: String,
@@ -53,6 +55,9 @@ function findThumbs(mediaFolder) {
                 thumbDocs.forEach(function (thumbDoc) {
                     thumbs.push(
                         {
+                            id: thumbDoc.id,
+                            fileName: thumbDoc.fileName,
+                            thumbFileName: thumbDoc.thumbFileName,
                             mediaFilePath: thumbDoc.mediaFilePath,
                             mediaFolder: mediaFolder,
                             url: thumbDoc.url,
@@ -79,7 +84,9 @@ function saveThumbsToDB(thumbs) {
 
         thumbs.forEach(function(thumb) {
 
-            var thumbSpec = { 
+            var thumbSpec = {
+                fileName: thumb.fileName,
+                thumbFileName: thumb.thumbFileName,
                 mediaFilePath: thumb.filePath,
                 mediaFolder: path.dirname(thumb.filePath),
                 url: thumb.thumbUrl,
