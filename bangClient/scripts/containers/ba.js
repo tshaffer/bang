@@ -17,15 +17,12 @@ const path = require('path');
 
 class BA extends Component {
 
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {
-    //         mediaLibraryContents: []
-    //     };
-    //     this.photosById = {};
-    //     this.selectedPhotos = {};
-    // }
-
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedMediaFolder: ''
+        };
+    }
 
     // electron only
     handleBrowseForMediaLibrary() {
@@ -38,6 +35,7 @@ class BA extends Component {
             if (directories) {
                 const mediaDirectory = directories[0];
                 self.props.getThumbs(mediaDirectory);
+                self.setState({selectedMediaFolder: mediaDirectory});
             }
         })
     }
@@ -115,19 +113,13 @@ class BA extends Component {
         Menu.setApplicationMenu(menu);
     }
 
-    constructor(props) {
-        super(props);
-        this.state = {
-        };
-    }
-
-
     render () {
         return (
             <div className="bangPageContainer">
                 <div>
                     <MediaLibrary
                         onBrowseForMediaLibrary={this.handleBrowseForMediaLibrary.bind(this)}
+                        selectedMediaFolder = {this.state.selectedMediaFolder}
                     />
                 </div>
 

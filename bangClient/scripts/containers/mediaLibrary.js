@@ -26,6 +26,7 @@ class MediaLibrary extends Component {
         super(props);
         this.state = {
         };
+        this.mediaFolderPath = '';
     }
 
     componentWillMount() {
@@ -40,15 +41,16 @@ class MediaLibrary extends Component {
         const url = "http://localhost:6969/";
         const getMediaFolderUrl = url + "getMediaFolder";
         $.get( getMediaFolderUrl, function( mediaFolder ) {
-            const mediaFolderPath = mediaFolder.mediaFolder;
-            console.log("getMediaFolder jquery call returned: " + mediaFolderPath);
+            self.mediaFolderPath = mediaFolder.mediaFolder;
+            console.log("getMediaFolder jquery call returned: " + self.mediaFolderPath);
 
             const mediaLibraryFolder = document.getElementById("mediaLibraryFolder");
             if (mediaLibraryFolder) {
                 mediaLibraryFolder.readOnly = true;
-                mediaLibraryFolder.value = mediaFolderPath;
+                mediaLibraryFolder.value = self.mediaFolderPath;
+                console.log("componentDidMount - mediaLibraryFolder.value=", self.mediaFolderPath);
 
-                self.props.getThumbs(mediaFolderPath);
+                self.props.getThumbs(self.mediaFolderPath);
             }
         });
     }
@@ -69,28 +71,26 @@ class MediaLibrary extends Component {
 
 
     render() {
-        
-        let mediaLibraryDiv = <div>No thumbs</div>
 
-        if (this.props.mediaFolder && this.props.mediaFolder.length > 0) {
-            console.log("mediaLibrary::render - mediaFolder=", this.props.mediaFolder);
-            const mediaLibraryFolder = document.getElementById("mediaLibraryFolder");
-            if (mediaLibraryFolder) {
-                mediaLibraryFolder.value = this.props.mediaFolder;
-            }
-
+        let currentMediaFolder = '';
+        if (this.props.selectedMediaFolder && this.props.selectedMediaFolder.length > 0) {
+            currentMediaFolder = this.props.selectedMediaFolder;
         }
         else {
-            console.log("mediaLibrary::render - no mediaFolder");
+            currentMediaFolder = this.mediaFolderPath;
         }
+        const mediaLibraryFolder = document.getElementById("mediaLibraryFolder");
+        if (mediaLibraryFolder) {
+            mediaLibraryFolder.value = currentMediaFolder;
+        }
+
+        let mediaLibraryDiv = <div>No thumbs</div>
 
         if (this.props.thumbs) {
 
             let mediaLibraryThumbs = this.props.thumbs.map(function (thumb) {
 
                 const thumbUrl = thumb.thumbFileName;
-
-                console.log("thumb.id=" + thumb.id);
 
                 // <img id={thumb.id} src={thumbUrl} className="mediaLibraryThumbImg" data-name={thumb.fileName} data-path={thumb.path} data-type={thumb.type} draggable={true} onDragStart={self.mediaLibraryDragStartHandler}/>
                 return (
@@ -124,10 +124,12 @@ class MediaLibrary extends Component {
                     </TabList>
 
                     <TabPanel>
+                        <div>
+                            <input type="image" src="images/iconBrowse.png" onClick={this.props.onBrowseForMediaLibrary.bind(this)} />
+                            <input type="image" src="images/24x24_sync.png" onClick={this.onSync.bind(this)}/>
+                            <input type="image" src="images/iconNavigateUp.png" onClick={this.onNavigateUp.bind(this)}/>
+                        </div>
                         <input type="text" id="mediaLibraryFolder"></input>
-                        <input type="image" src="images/iconBrowse.png" onClick={this.props.onBrowseForMediaLibrary.bind(this)} />
-                        <input type="image" src="images/24x24_sync.png" onClick={this.onSync.bind(this)}/>
-                        <input type="image" src="images/iconNavigateUp.png" onClick={this.onNavigateUp.bind(this)}/>
                         {mediaLibraryDiv}
                     </TabPanel>
 
