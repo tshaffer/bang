@@ -80,7 +80,7 @@ class MediaLibrary extends Component {
 
                     <TabPanel>
                         <input type="text" readonly=""></input>
-                        <input type="image" src="images/iconBrowse.png" onClick={this.onBrowse.bind(this)} />
+                        <input type="image" src="images/iconBrowse.png" onClick={this.props.onBrowseForMediaLibrary.bind(this)} />
                         <input type="image" src="images/24x24_sync.png" onClick={this.onSync.bind(this)}/>
                         <input type="image" src="images/iconNavigateUp.png" onClick={this.onNavigateUp.bind(this)}/>
                         <ul className="flex-container wrap">

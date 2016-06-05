@@ -29,7 +29,7 @@ class BA extends Component {
 
 
     // electron only
-    openMediaLibrary() {
+    handleBrowseForMediaLibrary() {
 
         var self = this;
 
@@ -62,7 +62,7 @@ class BA extends Component {
                     {
                         label: 'Open Media Library',
                         click: function() {
-                            self.openMediaLibrary();
+                            self.handleBrowseForMediaLibrary();
                         }
                     }
                 ]
@@ -132,7 +132,9 @@ class BA extends Component {
         return (
             <div className="bangPageContainer">
                 <div>
-                    <MediaLibrary />
+                    <MediaLibrary
+                        onBrowseForMediaLibrary={this.handleBrowseForMediaLibrary.bind(this)}
+                    />
                 </div>
 
             </div>
