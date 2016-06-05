@@ -10,11 +10,6 @@ var easyImage = require("easyimage");
 var dbController = require('./controllers/mongoController');
 var exifReader = require('./controllers/nodeExif.js');
 
-
-
-
-
-
 var openDBPromise = dbController.initialize();
 var app = express();
 
@@ -22,6 +17,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/', express.static(path.join(__dirname, '../bangClient/')));
+
+app.use(express.static(path.join(__dirname, 'public/')));
 
 openDBPromise.then(function() {
     app.use(express.static(path.join(__dirname, 'thumbs')));

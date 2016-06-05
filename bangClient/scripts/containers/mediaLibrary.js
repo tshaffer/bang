@@ -24,6 +24,22 @@ class MediaLibrary extends Component {
         console.log('Selected tab: ' + index + ', Last tab: ' + last);
     }
 
+    onBrowse(event) {
+        console.log("onBrowse invoked");
+        // this.props.getPhotosInAlbum(this.selectedAlbum.id);
+    }
+
+    onSync(event) {
+        console.log("onSync invoked");
+        // this.props.getPhotosInAlbum(this.selectedAlbum.id);
+    }
+
+    onNavigateUp(event) {
+        console.log("onNavigateUp invoked");
+        // this.props.getPhotosInAlbum(this.selectedAlbum.id);
+    }
+
+
     render() {
         
         if (!this.props.thumbs || this.props.thumbs.length == 0) {
@@ -47,9 +63,11 @@ class MediaLibrary extends Component {
             );
         });
 
+        // <img src="images/iconBrowse.png"/>
+
         return (
             <div className="mediaLibraryDiv">
-
+                <p>Media Library</p>
                 <Tabs
                     onSelect={this.handleSelect}
                 >
@@ -61,16 +79,23 @@ class MediaLibrary extends Component {
                     </TabList>
 
                     <TabPanel>
+                        <input type="text" readonly=""></input>
+                        <input type="image" src="images/iconBrowse.png" onClick={this.onBrowse.bind(this)} />
+                        <input type="image" src="images/24x24_sync.png" onClick={this.onSync.bind(this)}/>
+                        <input type="image" src="images/iconNavigateUp.png" onClick={this.onNavigateUp.bind(this)}/>
                         <ul className="flex-container wrap">
                             {mediaLibraryThumbs}
                         </ul>
                     </TabPanel>
+
                     <TabPanel>
                         <h2>other</h2>
                     </TabPanel>
+
                     <TabPanel>
                         <h2>events</h2>
                     </TabPanel>
+
                     <TabPanel>
                         <h2>user events</h2>
                     </TabPanel>
