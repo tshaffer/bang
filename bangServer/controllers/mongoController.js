@@ -44,6 +44,30 @@ function initialize() {
 }
 
 
+function getMediaFolder() {
+    return new Promise(function (resolve, reject) {
+        if (dbOpened) {
+            MediaFolder.find({ }, function (err, mediaFolderDoc) {
+                if (err) {
+                    console.log("MediaFolder.find returned error");
+                    reject();
+                }
+                if (mediaFolderDoc.length == 0) {
+                    console.log("MediaFolder.find returned none");
+                    reject();
+                }
+                else {
+                    resolve(mediaFolderDoc[0].folder);
+                }
+            });
+        }
+        else {
+            reject();
+        }
+    });  
+}
+
+
 function updateMediaFolder(mediaFolder) {
     return new Promise(function (resolve, reject) {
         if (dbOpened) {
@@ -165,6 +189,7 @@ function saveThumbsToDB(thumbs) {
 
 module.exports = {
     initialize: initialize,
+    getMediaFolder: getMediaFolder,
     updateMediaFolder: updateMediaFolder,
     findThumbs: findThumbs,
     saveThumbsToDB: saveThumbsToDB

@@ -1,16 +1,24 @@
 /**
  * Created by tedshaffer on 6/4/16.
  */
+const path = require('path');
+
+import $ from 'jquery';
+
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-const path = require('path');
 
 import ReactTabs from 'react-tabs';
 var Tab = ReactTabs.Tab;
 var Tabs = ReactTabs.Tabs;
 var TabList = ReactTabs.TabList;
 var TabPanel = ReactTabs.TabPanel;
+
+import { getMediaFolder } from '../actions/index';
+import { getThumbs } from '../actions/index';
 
 class MediaLibrary extends Component {
 
@@ -20,11 +28,29 @@ class MediaLibrary extends Component {
         };
     }
 
+    componentWillMount() {
+        console.log("mediaLibrary: componentWillMount invoked");
+        // this.props.getMediaFolder();
+    }
+
     componentDidMount() {
-        const mediaLibraryFolder = document.getElementById("mediaLibraryFolder");
-        if (mediaLibraryFolder) {
-            mediaLibraryFolder.readOnly = true;
-        }
+
+        var self = this;
+
+        const url = "http://localhost:6969/";
+        const getMediaFolderUrl = url + "getMediaFolder";
+        $.get( getMediaFolderUrl, function( mediaFolder ) {
+            const mediaFolderPath = mediaFolder.mediaFolder;
+            console.log("getMediaFolder jquery call returned: " + mediaFolderPath);
+
+            const mediaLibraryFolder = document.getElementById("mediaLibraryFolder");
+            if (mediaLibraryFolder) {
+                mediaLibraryFolder.readOnly = true;
+                mediaLibraryFolder.value = mediaFolderPath;
+
+                self.props.getThumbs(mediaFolderPath);
+            }
+        });
     }
 
     handleSelect (index, last) {
@@ -45,6 +71,18 @@ class MediaLibrary extends Component {
     render() {
         
         let mediaLibraryDiv = <div>No thumbs</div>
+
+        if (this.props.mediaFolder && this.props.mediaFolder.length > 0) {
+            console.log("mediaLibrary::render - mediaFolder=", this.props.mediaFolder);
+            const mediaLibraryFolder = document.getElementById("mediaLibraryFolder");
+            if (mediaLibraryFolder) {
+                mediaLibraryFolder.value = this.props.mediaFolder;
+            }
+
+        }
+        else {
+            console.log("mediaLibrary::render - no mediaFolder");
+        }
 
         if (this.props.thumbs) {
 
@@ -69,9 +107,12 @@ class MediaLibrary extends Component {
                 </ul>
         }
 
+        // <input type="text" id="mediaLibraryFolder" value="this.props.mediaFolder"></input>
+
         return (
             <div className="mediaLibraryDiv">
                 <p>Media Library</p>
+                <p>{this.props.mediaFolder}</p>
                 <Tabs
                     onSelect={this.handleSelect}
                 >
@@ -109,9 +150,13 @@ class MediaLibrary extends Component {
 
 function mapStateToProps(state) {
     return {
-        thumbs: state.thumbs
+        thumbs: state.thumbs,
+        mediaFolder: state.mediaFolder
     };
 }
 
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ getMediaFolder: getMediaFolder, getThumbs: getThumbs }, dispatch);
+}
 
-export default connect(mapStateToProps)(MediaLibrary);
+export default connect(mapStateToProps, mapDispatchToProps)(MediaLibrary);

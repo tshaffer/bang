@@ -27,6 +27,22 @@ openDBPromise.then(function() {
 
 var mediaFileSuffixes = ['jpg'];
 
+app.get('/getMediaFolder', function (req, res) {
+
+    console.log("getMediaFolder invoked");
+    res.set('Access-Control-Allow-Origin', '*');
+
+    var promise = dbController.getMediaFolder();
+    promise.then(function(mediaFolder) {
+        var response = {};
+        response.mediaFolder = mediaFolder;
+        res.send(response);
+    }, function(err) {
+        res.send("fail");
+    });
+});
+
+
 app.get('/updateMediaFolder', function(req, res) {
 
     console.log("updateMediaFolder invoked");

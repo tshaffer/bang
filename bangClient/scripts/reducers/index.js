@@ -3,9 +3,11 @@
  */
 import {combineReducers} from 'redux';
 import ThumbsReducer from './reducer_thumbs';
+import MediaFolderReducer from './reducer_media_folder';
 
 const rootReducer = combineReducers({
-    thumbs: ThumbsReducer
+    thumbs: ThumbsReducer,
+    mediaFolder: MediaFolderReducer
 });
 
 export default rootReducer;

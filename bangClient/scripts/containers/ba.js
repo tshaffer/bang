@@ -5,7 +5,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-// import { setMediaLibraryContents } from '../actions/index';
 import { getThumbs } from '../actions/index';
 
 import MediaLibrary from '../containers/mediaLibrary';
@@ -138,7 +137,6 @@ class BA extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-    // return bindActionCreators({ setMediaLibraryContents: setMediaLibraryContents }, dispatch);
     return bindActionCreators({ getThumbs: getThumbs }, dispatch);
 }
 
