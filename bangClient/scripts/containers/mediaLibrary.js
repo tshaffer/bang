@@ -20,6 +20,10 @@ class MediaLibrary extends Component {
         };
     }
 
+    handleSelect (index, last) {
+        console.log('Selected tab: ' + index + ', Last tab: ' + last);
+    }
+
     render() {
         
         if (!this.props.thumbs || this.props.thumbs.length == 0) {
@@ -46,9 +50,10 @@ class MediaLibrary extends Component {
         return (
             <div className="mediaLibraryDiv">
 
-                <Tabs>
+                <Tabs
+                    onSelect={this.handleSelect}
+                >
                     <TabList>
-
                         <Tab>files</Tab>
                         <Tab>other</Tab>
                         <Tab>events</Tab>
