@@ -2,9 +2,15 @@
  * Created by tedshaffer on 6/4/16.
  */
 import React, { Component } from 'react';
+var ReactDOM = require('react-dom');
 import { connect } from 'react-redux';
-
 const path = require('path');
+
+var ReactTabs = require('react-tabs');
+var Tab = ReactTabs.Tab;
+var Tabs = ReactTabs.Tabs;
+var TabList = ReactTabs.TabList;
+var TabPanel = ReactTabs.TabPanel;
 
 class MediaLibrary extends Component {
 
@@ -25,7 +31,9 @@ class MediaLibrary extends Component {
         let mediaLibraryThumbs = this.props.thumbs.map(function (thumb) {
 
             const thumbUrl = thumb.thumbFileName;
-            
+
+            console.log("thumb.id=" + thumb.id);
+
             // <img id={thumb.id} src={thumbUrl} className="mediaLibraryThumbImg" data-name={thumb.fileName} data-path={thumb.path} data-type={thumb.type} draggable={true} onDragStart={self.mediaLibraryDragStartHandler}/>
             return (
                 <li className="flex-item mediaLibraryThumbDiv" key={thumb.id}>
@@ -37,11 +45,33 @@ class MediaLibrary extends Component {
 
         return (
             <div className="mediaLibraryDiv">
-                <ul className="flex-container wrap">
-                    {mediaLibraryThumbs}
-                </ul>
+
+                <Tabs>
+                    <TabList>
+
+                        <Tab>files</Tab>
+                        <Tab>other</Tab>
+                        <Tab>events</Tab>
+                        <Tab>user events</Tab>
+                    </TabList>
+
+                    <TabPanel>
+                        <ul className="flex-container wrap">
+                            {mediaLibraryThumbs}
+                        </ul>
+                    </TabPanel>
+                    <TabPanel>
+                        <h2>other</h2>
+                    </TabPanel>
+                    <TabPanel>
+                        <h2>events</h2>
+                    </TabPanel>
+                    <TabPanel>
+                        <h2>user events</h2>
+                    </TabPanel>
+                </Tabs>
             </div>
-        );
+    );
 
     }
 }
