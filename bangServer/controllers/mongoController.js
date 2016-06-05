@@ -36,6 +36,40 @@ function initialize() {
 }
 
 
+function findThumbs(mediaFolder) {
+
+    return new Promise(function (resolve, reject) {
+
+        var thumbs = [];
+        
+        if (dbOpened) {
+
+            Thumb.find({ mediaFolder: mediaFolder }, function (err, thumbDocs) {
+                if (err) {
+                    console.log("error returned from mongoose query");
+                    reject();
+                }
+
+                thumbDocs.forEach(function (thumbDoc) {
+                    thumbs.push(
+                        {
+                            mediaFilePath: thumbDoc.mediaFilePath,
+                            mediaFolder: mediaFolder,
+                            url: thumbDoc.url,
+                            lastModified: thumbDoc.lastModified});
+                        });
+
+                resolve(thumbs);
+            });
+
+        }
+        else {
+            reject();
+        }
+    });
+}
+
+
 function saveThumbsToDB(thumbs) {
 
     return new Promise(function (resolve, reject) {
@@ -73,5 +107,6 @@ function saveThumbsToDB(thumbs) {
 
 module.exports = {
     initialize: initialize,
+    findThumbs: findThumbs,
     saveThumbsToDB: saveThumbsToDB
 }

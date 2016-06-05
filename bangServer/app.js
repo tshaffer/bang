@@ -37,14 +37,33 @@ app.get('/getThumbs', function(req, res) {
 
     var folder = req.query.mediaFolder;
 
-    var mediaFilesInFolder = [];
-    mediaFilesInFolder = findMediaFiles(folder, mediaFilesInFolder);
+    var foundThumbs = {};
+    var findThumbsPromise = dbController.findThumbs(folder);
+    findThumbsPromise.then(function(foundThumbs) {
 
-    if (mediaFilesInFolder.length > 0) {
+        console.log("return from findThumbs, found " + foundThumbs.length.toString() + " thumbs");
+
+        var foundThumbsByPath = {};
+        foundThumbs.forEach(function(foundThumb) {
+            foundThumbsByPath[foundThumb.mediaFilePath] = foundThumb;
+        });
+
+        var mediaFilesInFolder = [];
+        mediaFilesInFolder = findMediaFiles(folder, mediaFilesInFolder);
 
         var mediaFilesToAdd = [];
+        var existingThumbs = [];
         mediaFilesInFolder.forEach(function (mediaFileInFolder) {
-            mediaFilesToAdd.push(mediaFileInFolder);
+
+            // only create thumbs for those files that already have thumbs
+
+            // TODO - check last modified date
+            if (!foundThumbsByPath.hasOwnProperty(mediaFileInFolder.filePath)) {
+                mediaFilesToAdd.push(mediaFileInFolder);
+            }
+            else {
+                existingThumbs.push(foundThumbsByPath[mediaFileInFolder.filePath]);
+            }
         });
 
         if (mediaFilesToAdd.length > 0) {
@@ -59,12 +78,28 @@ app.get('/getThumbs', function(req, res) {
                     saveThumbsPromise.then(function(thumbSpecs) {
                         var response = {};
                         response.thumbs = thumbSpecs;
+
+                        existingThumbs.forEach(function(existingThumb) {
+                            response.thumbs.push(existingThumb);
+                        });
+
                         res.send(response);
                     });
                 });
             });
         }
-    }
+        else {
+            var response = {};
+            
+            response.thumbs = [];
+            existingThumbs.forEach(function(existingThumb) {
+                response.thumbs.push(existingThumb);
+            });
+
+            res.send(response);
+        }
+    });
+
 });
 
 
