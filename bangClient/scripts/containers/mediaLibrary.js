@@ -111,16 +111,15 @@ class MediaLibrary extends Component {
 
         return (
             <div className="mediaLibraryDiv">
-                <p>Media Library</p>
-                <p>{this.props.mediaFolder}</p>
+                <p className="smallishFont">Media Library</p>
                 <Tabs
                     onSelect={this.handleSelect}
                 >
                     <TabList>
-                        <Tab>files</Tab>
-                        <Tab>other</Tab>
-                        <Tab>events</Tab>
-                        <Tab>user events</Tab>
+                        <Tab className="smallishFont">files</Tab>
+                        <Tab className="smallishFont tabPadding">other</Tab>
+                        <Tab className="smallishFont tabPadding">events</Tab>
+                        <Tab className="smallishFont tabPadding">user events</Tab>
                     </TabList>
 
                     <TabPanel>
@@ -134,15 +133,15 @@ class MediaLibrary extends Component {
                     </TabPanel>
 
                     <TabPanel>
-                        <h2>other</h2>
+                        <p className="smallishFont">other</p>
                     </TabPanel>
 
                     <TabPanel>
-                        <h2>events</h2>
+                        <p className="smallishFont">events</p>
                     </TabPanel>
 
                     <TabPanel>
-                        <h2>user events</h2>
+                        <p className="smallishFont">user events</p>
                     </TabPanel>
                 </Tabs>
             </div>

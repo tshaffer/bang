@@ -2,6 +2,21 @@
     width: 235px;
 }
 
+.tabPadding {
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.smallFont {
+    font-size: 11px;
+}
+
+.smallishFont {
+    font-size: 13px;
+}
+
 body {
     /*width: 1400px;*/
     /*height: 1000px;*/
