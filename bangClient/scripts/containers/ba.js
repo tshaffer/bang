@@ -39,11 +39,6 @@ class BA extends Component {
             if (directories) {
                 const mediaDirectory = directories[0];
                 self.props.getThumbs(mediaDirectory);
-                // const files = fs.readdirSync(mediaDirectory);
-                // // self.props.setMediaLibraryContents(files);
-                //
-                // const mediaLibraryContents = [mediaDirectory, files[1]];
-                // self.props.setMediaLibraryContents(mediaLibraryContents);
             }
         })
     }

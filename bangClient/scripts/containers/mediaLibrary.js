@@ -20,13 +20,15 @@ class MediaLibrary extends Component {
         };
     }
 
-    handleSelect (index, last) {
-        console.log('Selected tab: ' + index + ', Last tab: ' + last);
+    componentDidMount() {
+        const mediaLibraryFolder = document.getElementById("mediaLibraryFolder");
+        if (mediaLibraryFolder) {
+            mediaLibraryFolder.readOnly = true;
+        }
     }
 
-    onBrowse(event) {
-        console.log("onBrowse invoked");
-        // this.props.getPhotosInAlbum(this.selectedAlbum.id);
+    handleSelect (index, last) {
+        console.log('Selected tab: ' + index + ', Last tab: ' + last);
     }
 
     onSync(event) {
@@ -42,28 +44,30 @@ class MediaLibrary extends Component {
 
     render() {
         
-        if (!this.props.thumbs || this.props.thumbs.length == 0) {
-            return (
-                <div>Pizza</div>
-            );
+        let mediaLibraryDiv = <div>No thumbs</div>
+
+        if (this.props.thumbs) {
+
+            let mediaLibraryThumbs = this.props.thumbs.map(function (thumb) {
+
+                const thumbUrl = thumb.thumbFileName;
+
+                console.log("thumb.id=" + thumb.id);
+
+                // <img id={thumb.id} src={thumbUrl} className="mediaLibraryThumbImg" data-name={thumb.fileName} data-path={thumb.path} data-type={thumb.type} draggable={true} onDragStart={self.mediaLibraryDragStartHandler}/>
+                return (
+                    <li className="flex-item mediaLibraryThumbDiv" key={thumb.id}>
+                        <img src={thumbUrl} className="mediaLibraryThumbImg"/>
+                        <p className="mediaLibraryThumbLbl">{thumb.fileName}</p>
+                    </li>
+                );
+            });
+
+            mediaLibraryDiv =
+                <ul className="flex-container wrap">
+                    {mediaLibraryThumbs}
+                </ul>
         }
-
-        let mediaLibraryThumbs = this.props.thumbs.map(function (thumb) {
-
-            const thumbUrl = thumb.thumbFileName;
-
-            console.log("thumb.id=" + thumb.id);
-
-            // <img id={thumb.id} src={thumbUrl} className="mediaLibraryThumbImg" data-name={thumb.fileName} data-path={thumb.path} data-type={thumb.type} draggable={true} onDragStart={self.mediaLibraryDragStartHandler}/>
-            return (
-                <li className="flex-item mediaLibraryThumbDiv" key={thumb.id}>
-                    <img src={thumbUrl} className="mediaLibraryThumbImg"/>
-                    <p className="mediaLibraryThumbLbl">{thumb.fileName}</p>
-                </li>
-            );
-        });
-
-        // <img src="images/iconBrowse.png"/>
 
         return (
             <div className="mediaLibraryDiv">
@@ -79,13 +83,11 @@ class MediaLibrary extends Component {
                     </TabList>
 
                     <TabPanel>
-                        <input type="text" readonly=""></input>
+                        <input type="text" id="mediaLibraryFolder"></input>
                         <input type="image" src="images/iconBrowse.png" onClick={this.props.onBrowseForMediaLibrary.bind(this)} />
                         <input type="image" src="images/24x24_sync.png" onClick={this.onSync.bind(this)}/>
                         <input type="image" src="images/iconNavigateUp.png" onClick={this.onNavigateUp.bind(this)}/>
-                        <ul className="flex-container wrap">
-                            {mediaLibraryThumbs}
-                        </ul>
+                        {mediaLibraryDiv}
                     </TabPanel>
 
                     <TabPanel>
@@ -101,8 +103,7 @@ class MediaLibrary extends Component {
                     </TabPanel>
                 </Tabs>
             </div>
-    );
-
+        );
     }
 }
 
