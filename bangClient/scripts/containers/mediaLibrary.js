@@ -20,6 +20,8 @@ var TabPanel = ReactTabs.TabPanel;
 import { getMediaFolder } from '../actions/index';
 import { getThumbs } from '../actions/index';
 
+import ImagePlaylistItem from '../badm';
+
 class MediaLibrary extends Component {
 
     constructor(props) {
@@ -89,6 +91,8 @@ class MediaLibrary extends Component {
         if (this.props.thumbs) {
 
             let mediaLibraryThumbs = this.props.thumbs.map(function (thumb) {
+
+                const imagePlaylistItem = new ImagePlaylistItem("fred", "smith");
 
                 const thumbUrl = thumb.thumbFileName;
 

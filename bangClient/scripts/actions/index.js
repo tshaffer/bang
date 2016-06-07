@@ -38,6 +38,20 @@ export function getThumbs(mediaFolder) {
         params: { mediaFolder: mediaFolder }
     });
 
+    // test code
+    // updateMediaFolderRequest.then(function(data) {
+    //     const getThumbsUrl = url + "getThumbs";
+    //     const request = axios.get(getThumbsUrl, {
+    //         params: { mediaFolder: mediaFolder }
+    //     });
+    //
+    //     return {
+    //         type: GET_THUMBS,
+    //         payload: request
+    //     };
+    //
+    // });
+
     const getThumbsUrl = url + "getThumbs";
     const request = axios.get(getThumbsUrl, {
         params: { mediaFolder: mediaFolder }
