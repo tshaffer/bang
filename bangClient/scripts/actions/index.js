@@ -74,7 +74,7 @@ export function fetchMediaFolder() {
         fetch(`http://localhost:6969/getMediaFolder`)
             .then(response => response.json())
             .then(function(data) {
-                return getThumbs(dispatch, data.mediaFolder);
+                return getMediaFiles(dispatch, data.mediaFolder);
             });
     }
 };

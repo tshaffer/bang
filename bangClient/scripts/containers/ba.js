@@ -20,7 +20,6 @@ class BA extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedMediaFolder: ''
         };
     }
 
@@ -118,7 +117,6 @@ class BA extends Component {
                 <div>
                     <MediaLibrary
                         onBrowseForMediaLibrary={this.handleBrowseForMediaLibrary.bind(this)}
-                        selectedMediaFolder = {this.state.selectedMediaFolder}
                     />
                 </div>
 
