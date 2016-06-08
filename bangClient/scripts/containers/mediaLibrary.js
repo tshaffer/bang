@@ -17,8 +17,10 @@ var Tabs = ReactTabs.Tabs;
 var TabList = ReactTabs.TabList;
 var TabPanel = ReactTabs.TabPanel;
 
-import { getMediaFolder } from '../actions/index';
+// import { getMediaFolder } from '../actions/index';
 import { getThumbs } from '../actions/index';
+// import { requestMediaFolder } from '../actions/index';
+import { fetchMediaFolder } from '../actions/index';
 
 import ImagePlaylistItem from '../badm';
 
@@ -38,23 +40,8 @@ class MediaLibrary extends Component {
 
     componentDidMount() {
 
-        var self = this;
-
-        const url = "http://localhost:6969/";
-        const getMediaFolderUrl = url + "getMediaFolder";
-        $.get( getMediaFolderUrl, function( mediaFolder ) {
-            self.mediaFolderPath = mediaFolder.mediaFolder;
-            console.log("getMediaFolder jquery call returned: " + self.mediaFolderPath);
-
-            const mediaLibraryFolder = document.getElementById("mediaLibraryFolder");
-            if (mediaLibraryFolder) {
-                mediaLibraryFolder.readOnly = true;
-                mediaLibraryFolder.value = self.mediaFolderPath;
-                console.log("componentDidMount - mediaLibraryFolder.value=", self.mediaFolderPath);
-
-                self.props.getThumbs(self.mediaFolderPath);
-            }
-        });
+        console.log("mediaLibrary.js::componentDidMount invoked");
+        this.props.fetchMediaFolder();
     }
 
     handleSelect (index, last) {
@@ -112,6 +99,7 @@ class MediaLibrary extends Component {
         }
 
         // <input type="text" id="mediaLibraryFolder" value="this.props.mediaFolder"></input>
+        // <input type="text" id="mediaLibraryFolder"></input>
 
         return (
             <div className="mediaLibraryDiv">
@@ -132,7 +120,7 @@ class MediaLibrary extends Component {
                             <input type="image" src="images/24x24_sync.png" onClick={this.onSync.bind(this)}/>
                             <input type="image" src="images/iconNavigateUp.png" onClick={this.onNavigateUp.bind(this)}/>
                         </div>
-                        <input type="text" id="mediaLibraryFolder"></input>
+                        <input type="text" id="mediaLibraryFolder" value={this.props.mediaFolder}></input>
                         {mediaLibraryDiv}
                     </TabPanel>
 
@@ -160,8 +148,10 @@ function mapStateToProps(state) {
     };
 }
 
+// return bindActionCreators({ getMediaFolder: getMediaFolder, getThumbs: getThumbs }, dispatch);
+
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ getMediaFolder: getMediaFolder, getThumbs: getThumbs }, dispatch);
+    return bindActionCreators({ fetchMediaFolder: fetchMediaFolder, getThumbs: getThumbs }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MediaLibrary);
