@@ -12,20 +12,56 @@ export function receiveMediaFolder(mediaFolder) {
     }
 }
 
+export const RECEIVE_THUMBS = 'RECEIVE_THUMBS'
+export function receiveThumbs(thumbs) {
+    return {
+        type: RECEIVE_THUMBS,
+        payload: thumbs
+    }
+}
+
 export function fetchMediaFolder() {
     console.log("fetchMediaFolder invoked");
     return function (dispatch) {
 
         console.log("fetchMediaFolder perform fetch");
 
-        return fetch(`http://localhost:6969/getMediaFolder`)
+        // return fetch(`http://localhost:6969/getMediaFolder`)
+        //     .then(response => response.json())
+        //     .then(function(data) {
+        //         const mediaFolder = data.mediaFolder;
+        //         dispatch(receiveMediaFolder(mediaFolder));
+        //     });
+        fetch(`http://localhost:6969/getMediaFolder`)
             .then(response => response.json())
             .then(function(data) {
                 const mediaFolder = data.mediaFolder;
                 dispatch(receiveMediaFolder(mediaFolder));
+
+                const url = "http://localhost:6969/";
+                const getThumbsUrl = url + "getThumbs";
+
+                return axios.get(getThumbsUrl, {
+                    params: { mediaFolder: mediaFolder }
+                }).then(function(data) {
+                    console.log("successful return from axios.get");
+                    console.log("Set a breakpoint here");
+                    var thumbs = data.data.thumbs;
+                    console.log("number of thumbs=" + thumbs.length);
+                    dispatch(receiveThumbs(thumbs));
+                });
+
+                // const request = axios.get(getThumbsUrl, {
+                //     params: { mediaFolder: mediaFolder }
+                // });
+
+                // return fetch(getThumbsUrl)
+                //     .then(response => response.json())
+                //     .then(function(data) {
+                //         console.log("received response from getThumbs");
+                //     });
             });
     }
-
 };
 
 
