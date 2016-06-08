@@ -7,10 +7,10 @@ import fetch from 'isomorphic-fetch';
 
 import ImagePlaylistItem from '../badm';
 
-export const RECEIVE_MEDIA_FOLDER = 'RECEIVE_MEDIA_FOLDER'
-export function receiveMediaFolder(mediaFolder) {
+export const SET_MEDIA_FOLDER = 'SET_MEDIA_FOLDER'
+export function setMediaFolder(mediaFolder) {
     return {
-        type: RECEIVE_MEDIA_FOLDER,
+        type: SET_MEDIA_FOLDER,
         payload: mediaFolder
     }
 }
@@ -38,9 +38,9 @@ export function setMediaLibraryFiles(mediaLibraryFiles) {
     }
 }
 
-function getThumbs(dispatch, mediaFolder) {
+function getMediaFiles(dispatch, mediaFolder) {
 
-    dispatch(receiveMediaFolder(mediaFolder));
+    dispatch(setMediaFolder(mediaFolder));
 
     const getThumbsUrl = "http://localhost:6969/" + "getThumbs";
 
@@ -52,7 +52,7 @@ function getThumbs(dispatch, mediaFolder) {
 }
 
 
-export function setMediaFolder(mediaFolder) {
+export function updateMediaFolder(mediaFolder) {
 
     return function(dispatch) {
 
@@ -61,7 +61,7 @@ export function setMediaFolder(mediaFolder) {
             params: { mediaFolder: mediaFolder }
         }).then(function() {
 
-            return getThumbs(dispatch, mediaFolder);
+            return getMediaFiles(dispatch, mediaFolder);
         })
     }
 }

@@ -13,7 +13,7 @@ const {Menu, MenuItem, dialog} = remote;
 const fs = require('fs');
 const path = require('path');
 
-import { setMediaFolder } from '../actions/index';
+import { updateMediaFolder } from '../actions/index';
 
 class BA extends Component {
 
@@ -34,7 +34,7 @@ class BA extends Component {
         }, function (directories) {
             if (directories) {
                 const mediaFolder = directories[0];
-                self.props.setMediaFolder(mediaFolder);
+                self.props.updateMediaFolder(mediaFolder);
             }
         })
     }
@@ -128,7 +128,7 @@ class BA extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ setMediaFolder: setMediaFolder }, dispatch);
+    return bindActionCreators({ updateMediaFolder: updateMediaFolder }, dispatch);
 }
 
 export default connect(null, mapDispatchToProps)(BA);
