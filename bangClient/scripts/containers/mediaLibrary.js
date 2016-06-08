@@ -152,7 +152,7 @@ function mapStateToProps(state) {
 // return bindActionCreators({ getMediaFolder: getMediaFolder, getThumbs: getThumbs }, dispatch);
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ fetchMediaFolder: fetchMediaFolder, setMediaFolder: setMediaFolder, getThumbs: getThumbs }, dispatch);
+    return bindActionCreators({ fetchMediaFolder: fetchMediaFolder, setMediaFolder: setMediaFolder }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MediaLibrary);
