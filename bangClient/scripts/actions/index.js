@@ -21,26 +21,30 @@ export function receiveThumbs(thumbs) {
     }
 }
 
-export const SET_MEDIA_FOLDER = 'SET_MEDIA_FOLDER';
+function getThumbs(dispatch, mediaFolder) {
+
+    dispatch(receiveMediaFolder(mediaFolder));
+
+    const getThumbsUrl = "http://localhost:6969/" + "getThumbs";
+
+    return axios.get(getThumbsUrl, {
+        params: { mediaFolder: mediaFolder }
+    }).then(function(data) {
+        dispatch(receiveThumbs(data.data.thumbs));
+    });
+}
+
+
 export function setMediaFolder(mediaFolder) {
 
     return function(dispatch) {
-
 
         const updateMediaFolderUrl = "http://localhost:6969/" + "updateMediaFolder";
         axios.get(updateMediaFolderUrl, {
             params: { mediaFolder: mediaFolder }
         }).then(function() {
 
-            dispatch(receiveMediaFolder(mediaFolder));
-
-            const getThumbsUrl = "http://localhost:6969/" + "getThumbs";
-
-            return axios.get(getThumbsUrl, {
-                params: {mediaFolder: mediaFolder}
-            }).then(function (data) {
-                dispatch(receiveThumbs(data.data.thumbs));
-            });
+            return getThumbs(dispatch, mediaFolder);
         })
     }
 }
@@ -53,18 +57,7 @@ export function fetchMediaFolder() {
         fetch(`http://localhost:6969/getMediaFolder`)
             .then(response => response.json())
             .then(function(data) {
-
-                const mediaFolder = data.mediaFolder;
-
-                dispatch(receiveMediaFolder(mediaFolder));
-
-                const getThumbsUrl = "http://localhost:6969/" + "getThumbs";
-
-                return axios.get(getThumbsUrl, {
-                    params: { mediaFolder: mediaFolder }
-                }).then(function(data) {
-                    dispatch(receiveThumbs(data.data.thumbs));
-                });
+                return getThumbs(dispatch, data.mediaFolder);
             });
     }
 };
