@@ -21,6 +21,7 @@ var TabPanel = ReactTabs.TabPanel;
 import { getThumbs } from '../actions/index';
 // import { requestMediaFolder } from '../actions/index';
 import { fetchMediaFolder } from '../actions/index';
+import { setMediaFolder } from '../actions/index';
 
 import ImagePlaylistItem from '../badm';
 
@@ -151,7 +152,7 @@ function mapStateToProps(state) {
 // return bindActionCreators({ getMediaFolder: getMediaFolder, getThumbs: getThumbs }, dispatch);
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ fetchMediaFolder: fetchMediaFolder, getThumbs: getThumbs }, dispatch);
+    return bindActionCreators({ fetchMediaFolder: fetchMediaFolder, setMediaFolder: setMediaFolder, getThumbs: getThumbs }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MediaLibrary);

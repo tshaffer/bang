@@ -15,6 +15,8 @@ const {Menu, MenuItem, dialog} = remote;
 const fs = require('fs');
 const path = require('path');
 
+import { setMediaFolder } from '../actions/index';
+
 class BA extends Component {
 
     constructor(props) {
@@ -33,9 +35,10 @@ class BA extends Component {
             properties: ['openDirectory']
         }, function (directories) {
             if (directories) {
-                const mediaDirectory = directories[0];
-                self.props.getThumbs(mediaDirectory);
-                self.setState({selectedMediaFolder: mediaDirectory});
+                const mediaFolder = directories[0];
+                self.props.setMediaFolder(mediaFolder);
+                // self.props.getThumbs(mediaDirectory);
+                // self.setState({selectedMediaFolder: mediaDirectory});
             }
         })
     }
@@ -129,7 +132,7 @@ class BA extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ getThumbs: getThumbs }, dispatch);
+    return bindActionCreators({ setMediaFolder: setMediaFolder, getThumbs: getThumbs }, dispatch);
 }
 
 export default connect(null, mapDispatchToProps)(BA);
