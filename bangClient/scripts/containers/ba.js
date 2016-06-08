@@ -5,8 +5,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { getThumbs } from '../actions/index';
-
 import MediaLibrary from '../containers/mediaLibrary';
 
 // electron only
@@ -37,8 +35,6 @@ class BA extends Component {
             if (directories) {
                 const mediaFolder = directories[0];
                 self.props.setMediaFolder(mediaFolder);
-                // self.props.getThumbs(mediaDirectory);
-                // self.setState({selectedMediaFolder: mediaDirectory});
             }
         })
     }
@@ -132,7 +128,7 @@ class BA extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ setMediaFolder: setMediaFolder, getThumbs: getThumbs }, dispatch);
+    return bindActionCreators({ setMediaFolder: setMediaFolder }, dispatch);
 }
 
 export default connect(null, mapDispatchToProps)(BA);

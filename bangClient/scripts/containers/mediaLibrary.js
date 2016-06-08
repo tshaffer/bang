@@ -17,9 +17,6 @@ var Tabs = ReactTabs.Tabs;
 var TabList = ReactTabs.TabList;
 var TabPanel = ReactTabs.TabPanel;
 
-// import { getMediaFolder } from '../actions/index';
-import { getThumbs } from '../actions/index';
-// import { requestMediaFolder } from '../actions/index';
 import { fetchMediaFolder } from '../actions/index';
 import { setMediaFolder } from '../actions/index';
 
@@ -36,7 +33,6 @@ class MediaLibrary extends Component {
 
     componentWillMount() {
         console.log("mediaLibrary: componentWillMount invoked");
-        // this.props.getMediaFolder();
     }
 
     componentDidMount() {
@@ -51,28 +47,14 @@ class MediaLibrary extends Component {
 
     onSync(event) {
         console.log("onSync invoked");
-        // this.props.getPhotosInAlbum(this.selectedAlbum.id);
     }
 
     onNavigateUp(event) {
         console.log("onNavigateUp invoked");
-        // this.props.getPhotosInAlbum(this.selectedAlbum.id);
     }
 
 
     render() {
-
-        let currentMediaFolder = '';
-        if (this.props.selectedMediaFolder && this.props.selectedMediaFolder.length > 0) {
-            currentMediaFolder = this.props.selectedMediaFolder;
-        }
-        else {
-            currentMediaFolder = this.mediaFolderPath;
-        }
-        const mediaLibraryFolder = document.getElementById("mediaLibraryFolder");
-        if (mediaLibraryFolder) {
-            mediaLibraryFolder.value = currentMediaFolder;
-        }
 
         let mediaLibraryDiv = <div>No thumbs</div>
 
@@ -98,9 +80,6 @@ class MediaLibrary extends Component {
                     {mediaLibraryThumbs}
                 </ul>
         }
-
-        // <input type="text" id="mediaLibraryFolder" value="this.props.mediaFolder"></input>
-        // <input type="text" id="mediaLibraryFolder"></input>
 
         return (
             <div className="mediaLibraryDiv">
@@ -148,8 +127,6 @@ function mapStateToProps(state) {
         mediaFolder: state.mediaFolder
     };
 }
-
-// return bindActionCreators({ getMediaFolder: getMediaFolder, getThumbs: getThumbs }, dispatch);
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({ fetchMediaFolder: fetchMediaFolder, setMediaFolder: setMediaFolder }, dispatch);
