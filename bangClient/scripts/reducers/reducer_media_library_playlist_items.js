@@ -2,12 +2,12 @@
  * Created by tedshaffer on 6/4/16.
  */
 
-import { RECEIVE_THUMBS } from '../actions/index';
+import { SET_MEDIA_LIBRARY_FILES } from '../actions/index';
 
 export default function(state = [], action) {
 
     switch (action.type) {
-        case RECEIVE_THUMBS:
+        case SET_MEDIA_LIBRARY_FILES:
             return action.payload;
     }
 

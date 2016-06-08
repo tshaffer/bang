@@ -58,26 +58,24 @@ class MediaLibrary extends Component {
 
         let mediaLibraryDiv = <div>No thumbs</div>
 
-        if (this.props.thumbs) {
+        if (this.props.mediaLibraryPlaylistItems) {
 
-            let mediaLibraryThumbs = this.props.thumbs.map(function (thumb) {
+            let mediaLibraryPlaylistItems = this.props.mediaLibraryPlaylistItems.map(function (mediaLibraryPlaylistItem) {
 
-                const imagePlaylistItem = new ImagePlaylistItem("fred", "smith");
-
-                const thumbUrl = thumb.thumbFileName;
+                const thumbUrl = mediaLibraryPlaylistItem.thumbUrl;
 
                 // <img id={thumb.id} src={thumbUrl} className="mediaLibraryThumbImg" data-name={thumb.fileName} data-path={thumb.path} data-type={thumb.type} draggable={true} onDragStart={self.mediaLibraryDragStartHandler}/>
                 return (
-                    <li className="flex-item mediaLibraryThumbDiv" key={thumb.id}>
+                    <li className="flex-item mediaLibraryThumbDiv" key={mediaLibraryPlaylistItem.id}>
                         <img src={thumbUrl} className="mediaLibraryThumbImg"/>
-                        <p className="mediaLibraryThumbLbl">{thumb.fileName}</p>
+                        <p className="mediaLibraryThumbLbl">{mediaLibraryPlaylistItem.fileName}</p>
                     </li>
                 );
             });
 
             mediaLibraryDiv =
                 <ul className="flex-container wrap">
-                    {mediaLibraryThumbs}
+                    {mediaLibraryPlaylistItems}
                 </ul>
         }
 
@@ -123,7 +121,7 @@ class MediaLibrary extends Component {
 
 function mapStateToProps(state) {
     return {
-        thumbs: state.thumbs,
+        mediaLibraryPlaylistItems: state.mediaLibraryPlaylistItems,
         mediaFolder: state.mediaFolder
     };
 }
