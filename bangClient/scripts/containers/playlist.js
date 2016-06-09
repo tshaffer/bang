@@ -49,7 +49,6 @@ class Playlist extends Component {
         // get playlist item to add to playlist
         const path = ev.dataTransfer.getData("path");
         const stateName = ev.dataTransfer.getData("name");
-        const thumbUrl = ev.dataTransfer.getData("thumburl");
         const type = ev.dataTransfer.getData("type");
 
         // specify playlist item to drop
