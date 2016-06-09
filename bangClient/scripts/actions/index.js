@@ -19,6 +19,7 @@ export const SET_MEDIA_LIBRARY_FILES = 'SET_MEDIA_LIBRARY_FILES';
 export function setMediaLibraryFiles(mediaLibraryFiles) {
 
     let mediaLibraryPlaylistItems = [];
+    let mediaItemThumbs = {};
 
     mediaLibraryFiles.forEach( mediaLibraryFile =>
     {
@@ -26,15 +27,21 @@ export function setMediaLibraryFiles(mediaLibraryFiles) {
         const id = mediaLibraryFile.id;
         const filePath = mediaLibraryFile.mediaFilePath;
         const mediaFolder = mediaLibraryFile.mediaFolder;
-        const thumbUrl = mediaLibraryFile.thumbFileName;
 
-        const imagePlaylistItem = new ImagePlaylistItem(fileName, filePath, thumbUrl, id);
+        const imagePlaylistItem = new ImagePlaylistItem(fileName, filePath, id);
         mediaLibraryPlaylistItems.push(imagePlaylistItem);
+
+        mediaItemThumbs[mediaLibraryFile.mediaFilePath] = mediaLibraryFile.thumbFileName;
     });
+
+    const payload = {
+        mediaLibraryPlaylistItems,
+        mediaItemThumbs
+    };
 
     return {
         type: SET_MEDIA_LIBRARY_FILES,
-        payload: mediaLibraryPlaylistItems
+        payload: payload
     }
 }
 

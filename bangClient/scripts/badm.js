@@ -28,9 +28,8 @@ class FilePlaylistItem extends MediaPlaylistItem  {
 }
 
 export default class ImagePlaylistItem extends FilePlaylistItem  {
-    constructor(fileName, filePath, thumbUrl, id) {
+    constructor(fileName, filePath, id) {
         super(fileName, filePath);
-        this.thumbUrl = thumbUrl;
         this.id = id;
     }
 }

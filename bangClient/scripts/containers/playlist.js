@@ -2,6 +2,7 @@
  * Created by tedshaffer on 6/8/16.
  */
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import ImagePlaylistItem from '../badm';
 
@@ -24,7 +25,6 @@ class Playlist extends Component {
         const playlistItem = new ImagePlaylistItem(
             "Drop item here",
             "/Users/tedshaffer/Pictures/BangPhotos2/backend_menu_Notes.jpg",
-            "backend_menu_Notes_thumb.jpg",
             "69");
 
         this.setState({playlistItems: [playlistItem]});
@@ -56,7 +56,6 @@ class Playlist extends Component {
         const playlistItem = new ImagePlaylistItem(
             stateName,
             path,
-            thumbUrl,
             ev.target.id);
 
         // figure out where to drop it
@@ -93,11 +92,14 @@ class Playlist extends Component {
         let self = this;
 
         let playlistItems = this.state.playlistItems.map(function (playlistItem) {
+
+            const thumbUrl = self.props.mediaItemThumbs[playlistItem.filePath];
+
             return (
                 <li className="flex-item mediaLibraryThumbDiv" key={playlistItem.id} onDrop={self.playlistDropHandler.bind(self)} onDragOver={self.playlistDragOverHandler}>
                     <img
                         id={playlistItem.id}
-                        src={playlistItem.thumbUrl}
+                        src={thumbUrl}
                         className="mediaLibraryThumbImg"
                     />
                     <p className="mediaLibraryThumbLbl">{playlistItem.name}</p>
@@ -116,4 +118,11 @@ class Playlist extends Component {
     }
 }
 
-export default Playlist;
+// export default Playlist;
+function mapStateToProps(state) {
+    return {
+        mediaItemThumbs: state.mediaItemThumbs
+    };
+}
+
+export default connect(mapStateToProps)(Playlist);

@@ -20,8 +20,6 @@ var TabPanel = ReactTabs.TabPanel;
 import { fetchMediaFolder } from '../actions/index';
 import { setMediaFolder } from '../actions/index';
 
-import ImagePlaylistItem from '../badm';
-
 class MediaLibrary extends Component {
 
     constructor(props) {
@@ -68,7 +66,7 @@ class MediaLibrary extends Component {
     handleChange() {
 
     }
-    
+
     render() {
 
         var self = this;
@@ -79,7 +77,7 @@ class MediaLibrary extends Component {
 
             let mediaLibraryPlaylistItems = this.props.mediaLibraryPlaylistItems.map(function (mediaLibraryPlaylistItem) {
 
-                const thumbUrl = mediaLibraryPlaylistItem.thumbUrl;
+                const thumbUrl = self.props.mediaItemThumbs[mediaLibraryPlaylistItem.filePath];
 
                 return (
                     <li className="flex-item mediaLibraryThumbDiv" key={mediaLibraryPlaylistItem.id}>
@@ -120,7 +118,7 @@ class MediaLibrary extends Component {
 
                     <TabPanel>
                         <div>
-                            <input type="image" src="images/iconBrowse.png" onClick={this.props.onBrowseForMediaLibrary.bind(this)} />
+                            <input type="image" src="images/iconBrowse.png" className="plainButton" onClick={this.props.onBrowseForMediaLibrary.bind(this)} />
                             <input type="image" src="images/24x24_sync.png" onClick={this.onSync.bind(this)}/>
                             <input type="image" src="images/iconNavigateUp.png" onClick={this.onNavigateUp.bind(this)}/>
                         </div>
@@ -148,7 +146,8 @@ class MediaLibrary extends Component {
 function mapStateToProps(state) {
     return {
         mediaLibraryPlaylistItems: state.mediaLibraryPlaylistItems,
-        mediaFolder: state.mediaFolder
+        mediaFolder: state.mediaFolder,
+        mediaItemThumbs: state.mediaItemThumbs
     };
 }
 
