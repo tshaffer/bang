@@ -8,8 +8,6 @@ export default function(state = [], action) {
 
     switch (action.type) {
         case SET_MEDIA_LIBRARY_FILES:
-            console.log("pizza 1");
-            console.log("pizza 2");
 
             let newMediaItemThumbs = action.payload.mediaItemThumbs;
 
