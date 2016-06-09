@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import MediaLibrary from '../containers/mediaLibrary';
+import Playlist from '../containers/playlist';
 
 // electron only
 const {remote} = require('electron');
@@ -118,6 +119,7 @@ class BA extends Component {
                     <MediaLibrary
                         onBrowseForMediaLibrary={this.handleBrowseForMediaLibrary.bind(this)}
                     />
+                    <Playlist />
                 </div>
 
             </div>

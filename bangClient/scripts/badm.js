@@ -10,18 +10,18 @@ class PlaylistItem {
 }
 
 class MediaPlaylistItem extends PlaylistItem {
-    constructor() {
+    constructor(fileName) {
         super();
-        this.fileName = "";
+        this.fileName = fileName;
     }
 
     // getter / setter for fileName
 }
 
 class FilePlaylistItem extends MediaPlaylistItem  {
-    constructor() {
-        super();
-        this.filePath = "";
+    constructor(fileName, filePath) {
+        super(fileName);
+        this.filePath = filePath;
     }
 
     // getter / setter for filePath
@@ -29,7 +29,7 @@ class FilePlaylistItem extends MediaPlaylistItem  {
 
 export default class ImagePlaylistItem extends FilePlaylistItem  {
     constructor(fileName, filePath, thumbUrl, id) {
-        super();
+        super(fileName, filePath);
         this.thumbUrl = thumbUrl;
         this.id = id;
     }

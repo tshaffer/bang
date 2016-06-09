@@ -28,7 +28,6 @@ class MediaLibrary extends Component {
         super(props);
         this.state = {
         };
-        this.mediaFolderPath = '';
     }
 
     componentWillMount() {
@@ -53,8 +52,22 @@ class MediaLibrary extends Component {
         console.log("onNavigateUp invoked");
     }
 
+    mediaLibraryDragStartHandler(ev) {
+
+        console.log("dragStart");
+
+        // Add the target element's id to the data transfer object
+        // ev.dataTransfer.setData("text", ev.target.id);
+        ev.dataTransfer.setData("path", ev.target.dataset.path);
+        ev.dataTransfer.setData("name", ev.target.dataset.name);
+        ev.dataTransfer.setData("thumburl", ev.target.dataset.thumburl);
+        ev.dataTransfer.setData("type", ev.target.dataset.type);
+        ev.dataTransfer.dropEffect = "copy";
+    }
 
     render() {
+
+        var self = this;
 
         let mediaLibraryDiv = <div>No thumbs</div>
 
@@ -64,10 +77,19 @@ class MediaLibrary extends Component {
 
                 const thumbUrl = mediaLibraryPlaylistItem.thumbUrl;
 
-                // <img id={thumb.id} src={thumbUrl} className="mediaLibraryThumbImg" data-name={thumb.fileName} data-path={thumb.path} data-type={thumb.type} draggable={true} onDragStart={self.mediaLibraryDragStartHandler}/>
                 return (
                     <li className="flex-item mediaLibraryThumbDiv" key={mediaLibraryPlaylistItem.id}>
-                        <img src={thumbUrl} className="mediaLibraryThumbImg"/>
+                        <img
+                            id={mediaLibraryPlaylistItem.id}
+                            src={thumbUrl}
+                            className="mediaLibraryThumbImg"
+                            data-name={mediaLibraryPlaylistItem.fileName}
+                            data-path={mediaLibraryPlaylistItem.filePath}
+                            data-thumburl = {thumbUrl}
+                            data-type="image"
+                            draggable={true}
+                            onDragStart={self.mediaLibraryDragStartHandler}
+                        />
                         <p className="mediaLibraryThumbLbl">{mediaLibraryPlaylistItem.fileName}</p>
                     </li>
                 );
