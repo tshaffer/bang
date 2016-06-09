@@ -65,6 +65,10 @@ class MediaLibrary extends Component {
         ev.dataTransfer.dropEffect = "copy";
     }
 
+    handleChange() {
+
+    }
+    
     render() {
 
         var self = this;
@@ -120,7 +124,7 @@ class MediaLibrary extends Component {
                             <input type="image" src="images/24x24_sync.png" onClick={this.onSync.bind(this)}/>
                             <input type="image" src="images/iconNavigateUp.png" onClick={this.onNavigateUp.bind(this)}/>
                         </div>
-                        <input type="text" id="mediaLibraryFolder" value={this.props.mediaFolder}></input>
+                        <input type="text" id="mediaLibraryFolder" value={this.props.mediaFolder} onChange={this.handleChange}></input>
                         {mediaLibraryDiv}
                     </TabPanel>
 
