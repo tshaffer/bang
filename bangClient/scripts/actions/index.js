@@ -5,7 +5,7 @@
 import axios from 'axios';
 import fetch from 'isomorphic-fetch';
 
-import ImagePlaylistItem from '../badm';
+import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
 export const SET_MEDIA_FOLDER = 'SET_MEDIA_FOLDER'
 export function setMediaFolder(mediaFolder) {

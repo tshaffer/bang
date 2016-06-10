@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import ImagePlaylistItem from '../badm';
+import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
 class Playlist extends Component {
 
