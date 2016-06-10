@@ -5,7 +5,19 @@
 import axios from 'axios';
 import fetch from 'isomorphic-fetch';
 
+import Sign from '../badm/sign';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
+
+export const CREATE_DEFAULT_SIGN = 'CREATE_DEFAULT_SIGN'
+export function createDefaultSign() {
+
+    const sign = new Sign();
+
+    return {
+        type: CREATE_DEFAULT_SIGN,
+        payload: sign
+    }
+}
 
 export const SET_MEDIA_FOLDER = 'SET_MEDIA_FOLDER'
 export function setMediaFolder(mediaFolder) {
@@ -85,3 +97,5 @@ export function fetchMediaFolder() {
             });
     }
 };
+
+

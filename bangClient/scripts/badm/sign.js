@@ -3,8 +3,8 @@
  */
 export default class Sign {
     constructor() {
-        this.id = id;
-        this.name = "";
+        this.id = "";
+        this.name = "Unnamed";
         this.zones = [];
     }
 }

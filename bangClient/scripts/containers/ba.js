@@ -14,7 +14,9 @@ const {Menu, MenuItem, dialog} = remote;
 const fs = require('fs');
 const path = require('path');
 
-import { updateMediaFolder } from '../actions/index';
+// import { Sign } from '../badm/sign';
+
+import { createDefaultSign, updateMediaFolder } from '../actions/index';
 
 class BA extends Component {
 
@@ -43,6 +45,9 @@ class BA extends Component {
 
         console.log("ba.js::componentDidMount invoked");
 
+        // const sign = new Sign();
+        this.props.createDefaultSign();
+        
         // electron only
         var self = this;
 
@@ -112,9 +117,17 @@ class BA extends Component {
         Menu.setApplicationMenu(menu);
     }
 
+
     render () {
+
+        let signName = <p>No sign yet</p>;
+        if (this.props.sign) {
+            signName = this.props.sign.name;
+        }
+
         return (
             <div className="bangPageContainer">
+                <p>{signName}</p>
                 <div>
                     <MediaLibrary
                         onBrowseForMediaLibrary={this.handleBrowseForMediaLibrary.bind(this)}
@@ -127,8 +140,15 @@ class BA extends Component {
     }
 }
 
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ updateMediaFolder: updateMediaFolder }, dispatch);
+function mapStateToProps(state) {
+    return {
+        sign: state.sign
+    };
 }
 
-export default connect(null, mapDispatchToProps)(BA);
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ createDefaultSign: createDefaultSign, updateMediaFolder: updateMediaFolder }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BA);

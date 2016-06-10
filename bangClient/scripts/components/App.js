@@ -5,6 +5,10 @@ import BA from '../containers/ba';
 
 export default class App extends Component {
 
+    componentDidMount() {
+        console.log("app.js::componentDidMount invoked");
+    }
+    
     render() {
 
         console.log("app.js render invoked");
