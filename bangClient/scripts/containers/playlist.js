@@ -2,32 +2,32 @@
  * Created by tedshaffer on 6/8/16.
  */
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
+
+import { addPlaylistItem } from '../actions/index';
 
 class Playlist extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            playlistItems: []
         };
     }
 
     componentWillMount() {
         console.log("playlist: componentWillMount invoked");
+
+        this.fakePlaylistItem = new ImagePlaylistItem(
+            "Drop item here",
+            "/Users/tedshaffer/Pictures/BangPhotos2/backend_menu_Notes.jpg");
     }
 
     componentDidMount() {
         console.log("playlist.js::componentDidMount invoked");
 
-        const playlistItem = new ImagePlaylistItem(
-            "Drop item here",
-            "/Users/tedshaffer/Pictures/BangPhotos2/backend_menu_Notes.jpg",
-            "69");
-
-        this.setState({playlistItems: [playlistItem]});
     }
 
 
@@ -40,7 +40,7 @@ class Playlist extends Component {
 
     playlistDropHandler (ev: any) {
 
-        let playlistItems = this.state.playlistItems;
+        let playlistItems = this.props.currentPlaylist.playlistItems;
 
         console.log("drop");
 
@@ -54,43 +54,57 @@ class Playlist extends Component {
         // specify playlist item to drop
         const playlistItem = new ImagePlaylistItem(
             stateName,
-            path,
-            ev.target.id);
+            path);
 
+        // TODO TODO TODO - all broken
+        var index = 0;
         // figure out where to drop it
         //      get id of playlist item that was drop target
         //      get offset that indicates how far over user dropped thumb
         //      if offset > half of thumb width, add thumb after target; otherwise insert thumb before target
-        var id = ev.target.id;
-        var index = Number(id);
-        var offset = ev.offsetX;
-        var insert = false;
-        if (offset < 50) {
-            insert = true;
-        }
+        // var id = ev.target.id;
+        // var index = Number(id);
+        // var offset = ev.offsetX;
+        // var insert = false;
+        // if (offset < 50) {
+        //     insert = true;
+        // }
 
-        if (insert) {
-            // insert prior to index
-            playlistItems.split(index, 0, playlistItem);
-        }
-        else {
-            // add after index
-            playlistItems.splice(index + 1, 0, playlistItem);
-        }
+        // var insert = false;
+        // if (insert) {
+        //     // insert prior to index
+        //     playlistItems.split(index, 0, playlistItem);
+        // }
+        // else {
+        //     // add after index
+        //     playlistItems.splice(index + 1, 0, playlistItem);
+        // }
 
+        this.props.addPlaylistItem(this.props.currentPlaylist, playlistItem, -1);
+
+        // TODO
         // renumber id's
-        playlistItems.forEach(function (playlistItem, index) {
-            playlistItem.id = index.toString();
-        });
+        // playlistItems.forEach(function (playlistItem, index) {
+        //     playlistItem.id = index.toString();
+        // });
 
-        this.setState({playlistItems: playlistItems});
+        // this.setState({playlistItems: playlistItems});
     }
 
     render () {
 
         let self = this;
 
-        let playlistItems = this.state.playlistItems.map(function (playlistItem) {
+        let currentPlaylistItems = [];
+        if (typeof this.props.currentPlaylist.playlistItems != "undefined") {
+            currentPlaylistItems = this.props.currentPlaylist.playlistItems;
+        }
+
+        if (currentPlaylistItems.length == 0) {
+            currentPlaylistItems.push(this.fakePlaylistItem);
+        }
+
+        let playlistItems = currentPlaylistItems.map(function (playlistItem) {
 
             const thumbUrl = self.props.mediaItemThumbs[playlistItem.filePath];
 
@@ -106,8 +120,14 @@ class Playlist extends Component {
             );
         });
 
+        let signName = <p>No sign yet</p>;
+        if (this.props.sign) {
+            signName = this.props.sign.name;
+        }
+
         return (
             <div className="playlistDiv">
+                <p>Presentation name: {signName}</p>
                 Zone 1: Video or Images: Playlist
                 <ul className="playlist-flex-container wrap">
                     {playlistItems}
@@ -117,11 +137,16 @@ class Playlist extends Component {
     }
 }
 
-// export default Playlist;
 function mapStateToProps(state) {
     return {
-        mediaItemThumbs: state.mediaItemThumbs
+        mediaItemThumbs: state.mediaItemThumbs,
+        currentPlaylist: state.currentPlaylist,
+        sign: state.sign
     };
 }
 
-export default connect(mapStateToProps)(Playlist);
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ addPlaylistItem: addPlaylistItem }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Playlist);

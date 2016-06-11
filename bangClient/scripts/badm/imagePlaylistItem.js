@@ -4,8 +4,9 @@
 import FilePlaylistItem from './filePlaylistItem';
 
 export default class ImagePlaylistItem extends FilePlaylistItem  {
-    constructor(fileName, filePath, id) {
+    constructor(fileName, filePath) {
         super(fileName, filePath);
-        this.id = id;
+        console.log("created");
+        // this.id = id;
     }
 }

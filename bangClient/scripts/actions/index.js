@@ -11,12 +11,36 @@ import ImagePlaylistItem from '../badm/imagePlaylistItem';
 export const CREATE_DEFAULT_SIGN = 'CREATE_DEFAULT_SIGN'
 export function createDefaultSign() {
 
-    // create a defaut sign
+    // create a default sign
     const sign = new Sign("Project 1");
-
+    const currentPlaylist = sign.zones[0].zonePlaylist;
+    const signData = { sign: sign, currentPlaylist: currentPlaylist };
+    
     return {
         type: CREATE_DEFAULT_SIGN,
+        payload: signData
+    }
+}
+
+export const SET_CURRENT_PLAYLIST = 'SET_CURRENT_PLAYLIST'
+export function setCurrentPlaylist() {
+
+    return {
+        type: SET_CURRENT_PLAYLIST,
         payload: sign
+    }
+}
+
+export const ADD_PLAYLIST_ITEM = 'ADD_PLAYLIST_ITEM';
+export function addPlaylistItem(playlist, playlistItem, index) {
+
+    if (index < 0) {
+        playlist.playlistItems.push(playlistItem);
+    }
+    
+    return {
+        type: ADD_PLAYLIST_ITEM,
+        payload: playlist
     }
 }
 
@@ -41,7 +65,7 @@ export function setMediaLibraryFiles(mediaLibraryFiles) {
         const filePath = mediaLibraryFile.mediaFilePath;
         const mediaFolder = mediaLibraryFile.mediaFolder;
 
-        const imagePlaylistItem = new ImagePlaylistItem(fileName, filePath, id);
+        const imagePlaylistItem = new ImagePlaylistItem(fileName, filePath);
         mediaLibraryPlaylistItems.push(imagePlaylistItem);
 
         mediaItemThumbs[mediaLibraryFile.mediaFilePath] = mediaLibraryFile.thumbFileName;
