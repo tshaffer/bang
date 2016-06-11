@@ -31,14 +31,14 @@ class Playlist extends Component {
     }
 
 
-    playlistDragOverHandler (ev: any) {
+    playlistDragOverHandler (ev) {
 
         console.log("playlistDragOverHandler");
         ev.preventDefault();
         ev.dataTransfer.dropEffect = "move";
     }
 
-    playlistDropHandler (ev: any) {
+    playlistDropHandler (ev) {
 
         let playlistItems = this.props.currentPlaylist.playlistItems;
 
@@ -57,6 +57,8 @@ class Playlist extends Component {
             path);
 
         // TODO TODO TODO - all broken
+        // https://developer.mozilla.org/en-US/docs/Web/Events/drop
+
         var index = 0;
         // figure out where to drop it
         //      get id of playlist item that was drop target
