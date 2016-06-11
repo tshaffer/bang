@@ -9,6 +9,8 @@ import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
 import { addPlaylistItem } from '../actions/index';
 
+import $ from 'jquery';
+
 class Playlist extends Component {
 
     constructor(props) {
@@ -42,8 +44,6 @@ class Playlist extends Component {
 
         let playlistItems = this.props.currentPlaylist.playlistItems;
 
-        console.log("drop");
-
         ev.preventDefault();
 
         // get playlist item to add to playlist
@@ -56,41 +56,22 @@ class Playlist extends Component {
             stateName,
             path);
 
-        // TODO TODO TODO - all broken
-        // https://developer.mozilla.org/en-US/docs/Web/Events/drop
+        // determine where the drop occurred relative to the target element
+        var offset = $("#" + ev.target.id).offset();
+        const left = ev.pageX - offset.left;
+        const targetWidth = ev.target.width;
 
-        var index = 0;
-        // figure out where to drop it
-        //      get id of playlist item that was drop target
-        //      get offset that indicates how far over user dropped thumb
-        //      if offset > half of thumb width, add thumb after target; otherwise insert thumb before target
-        // var id = ev.target.id;
-        // var index = Number(id);
-        // var offset = ev.offsetX;
-        // var insert = false;
-        // if (offset < 50) {
-        //     insert = true;
-        // }
+        let indexOfDropTarget = ev.target.dataset.index;
 
-        // var insert = false;
-        // if (insert) {
-        //     // insert prior to index
-        //     playlistItems.split(index, 0, playlistItem);
-        // }
-        // else {
-        //     // add after index
-        //     playlistItems.splice(index + 1, 0, playlistItem);
-        // }
+        let index = -1;
+        if (left < (targetWidth / 2)) {
+            index = indexOfDropTarget;
+        }
+        else if (indexOfDropTarget < (this.props.currentPlaylist.playlistItems.length - 1)) {
+            index = indexOfDropTarget + 1;
+        }
 
-        this.props.addPlaylistItem(this.props.currentPlaylist, playlistItem, -1);
-
-        // TODO
-        // renumber id's
-        // playlistItems.forEach(function (playlistItem, index) {
-        //     playlistItem.id = index.toString();
-        // });
-
-        // this.setState({playlistItems: playlistItems});
+        this.props.addPlaylistItem(this.props.currentPlaylist, playlistItem, index);
     }
 
     render () {
@@ -106,9 +87,11 @@ class Playlist extends Component {
             currentPlaylistItems.push(this.fakePlaylistItem);
         }
 
+        let dataIndex = -1;
         let playlistItems = currentPlaylistItems.map(function (playlistItem) {
 
             const thumbUrl = self.props.mediaItemThumbs[playlistItem.filePath];
+            dataIndex++;
 
             return (
                 <li className="flex-item mediaLibraryThumbDiv" key={playlistItem.id} onDrop={self.playlistDropHandler.bind(self)} onDragOver={self.playlistDragOverHandler}>
@@ -116,20 +99,17 @@ class Playlist extends Component {
                         id={playlistItem.id}
                         src={thumbUrl}
                         className="mediaLibraryThumbImg"
+                        data-index={dataIndex}
+
                     />
                     <p className="mediaLibraryThumbLbl">{playlistItem.name}</p>
                 </li>
             );
-        });
 
-        let signName = <p>No sign yet</p>;
-        if (this.props.sign) {
-            signName = this.props.sign.name;
-        }
+        });
 
         return (
             <div className="playlistDiv">
-                <p>Presentation name: {signName}</p>
                 Zone 1: Video or Images: Playlist
                 <ul className="playlist-flex-container wrap">
                     {playlistItems}
@@ -142,8 +122,7 @@ class Playlist extends Component {
 function mapStateToProps(state) {
     return {
         mediaItemThumbs: state.mediaItemThumbs,
-        currentPlaylist: state.currentPlaylist,
-        sign: state.sign
+        currentPlaylist: state.currentPlaylist
     };
 }
 
