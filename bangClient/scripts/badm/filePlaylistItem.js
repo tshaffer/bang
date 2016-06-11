@@ -8,6 +8,4 @@ export default class FilePlaylistItem extends MediaPlaylistItem  {
         super(fileName);
         this.filePath = filePath;
     }
-
-    // getter / setter for filePath
 }

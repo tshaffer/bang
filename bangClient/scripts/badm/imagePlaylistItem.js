@@ -7,6 +7,5 @@ export default class ImagePlaylistItem extends FilePlaylistItem  {
     constructor(fileName, filePath) {
         super(fileName, filePath);
         console.log("created");
-        // this.id = id;
     }
 }

@@ -29,7 +29,6 @@ class Playlist extends Component {
 
     componentDidMount() {
         console.log("playlist.js::componentDidMount invoked");
-
     }
 
 
@@ -80,7 +79,7 @@ class Playlist extends Component {
 
         let currentPlaylistItems = [];
         if (typeof this.props.currentPlaylist.playlistItems != "undefined") {
-            currentPlaylistItems = this.props.currentPlaylist.playlistItems;
+            currentPlaylistItems = Object.assign([], this.props.currentPlaylist.playlistItems);
         }
 
         if (currentPlaylistItems.length == 0) {
