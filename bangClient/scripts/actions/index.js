@@ -11,7 +11,8 @@ import ImagePlaylistItem from '../badm/imagePlaylistItem';
 export const CREATE_DEFAULT_SIGN = 'CREATE_DEFAULT_SIGN'
 export function createDefaultSign() {
 
-    const sign = new Sign();
+    // create a defaut sign
+    const sign = new Sign("Project 1");
 
     return {
         type: CREATE_DEFAULT_SIGN,
