@@ -8,6 +8,9 @@ import fetch from 'isomorphic-fetch';
 import Sign from '../badm/sign';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
+// electron only
+const fs = require('fs');
+
 export const CREATE_DEFAULT_SIGN = 'CREATE_DEFAULT_SIGN'
 export function createDefaultSign() {
 
@@ -22,12 +25,44 @@ export function createDefaultSign() {
     }
 }
 
+export const OPEN_SIGN = 'OPEN_SIGN'
+export function openSign(sign) {
+    
+    console.log("actions::openSign");
+    
+    return {
+        type: OPEN_SIGN,
+        payload: sign
+    }
+}
+
+export function fetchSign(filePath) {
+
+    return function (dispatch) {
+
+        console.log("fetchSign, filePath=", filePath);
+
+        fs.readFile(filePath, 'utf8', (err, data) => {
+
+            // TODO - proper error handling?
+            if (err) {
+                throw err;
+                return;
+            }
+            console.log("fs.ReadFile successful");
+            var sign = JSON.parse(data);
+            dispatch(openSign(sign));
+            dispatch(setCurrentPlaylist(sign.zones[0].zonePlaylist));
+        })
+    }
+}
+
 export const SET_CURRENT_PLAYLIST = 'SET_CURRENT_PLAYLIST'
-export function setCurrentPlaylist() {
+export function setCurrentPlaylist(playlist) {
 
     return {
         type: SET_CURRENT_PLAYLIST,
-        payload: sign
+        payload: playlist
     }
 }
 

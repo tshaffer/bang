@@ -14,9 +14,7 @@ const {Menu, MenuItem, dialog} = remote;
 const fs = require('fs');
 const path = require('path');
 
-// import { Sign } from '../badm/sign';
-
-import { createDefaultSign, updateMediaFolder } from '../actions/index';
+import { createDefaultSign, fetchSign, updateMediaFolder } from '../actions/index';
 
 class BA extends Component {
 
@@ -38,7 +36,7 @@ class BA extends Component {
             ]
         }
         dialog.showOpenDialog(options, filenameDir => {
-            self.openPresentation(filenameDir[0]);
+            self.props.fetchSign(filenameDir[0]);
         })
     }
 
@@ -58,20 +56,6 @@ class BA extends Component {
     }
 
     // TODO - move these functions somewhere, but not sure where
-    openPresentation(filePath) {
-        console.log("openPresentation, filePath=", filePath);
-
-        fs.readFile(filePath, 'utf8', (err, data) => {
-            if (err) {
-                throw err;
-                return;
-            }
-            console.log("fs.ReadFile successful");
-            var sign = JSON.parse(data);
-        })
-    }
-
-
     savePresentation(filePath) {
 
         const presentation = JSON.stringify(this.props.sign, null, 2);
@@ -214,7 +198,7 @@ function mapStateToProps(state) {
 
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ createDefaultSign: createDefaultSign, updateMediaFolder: updateMediaFolder }, dispatch);
+    return bindActionCreators({ createDefaultSign: createDefaultSign, fetchSign, updateMediaFolder: updateMediaFolder }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);

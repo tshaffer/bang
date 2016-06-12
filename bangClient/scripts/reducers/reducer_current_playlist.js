@@ -11,7 +11,7 @@ export default function(state = [], action) {
         case CREATE_DEFAULT_SIGN:
             return action.payload.currentPlaylist;
         case SET_CURRENT_PLAYLIST:
-            return state;
+            return action.payload;
         case ADD_PLAYLIST_ITEM:
             return Object.assign({}, action.payload);
     }
