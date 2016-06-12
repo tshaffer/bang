@@ -45,30 +45,7 @@ class BA extends Component {
     // TODO - move this code somewhere, but not sure where
     savePresentation(filePath) {
 
-        const presentation = JSON.stringify(this.props.sign);
-
-        // var self = this;
-        //
-        // fs.open(filePath, 'w', function(err, fd) {
-        //
-        //     if (err) {
-        //         console.log("File open returned error ", err);
-        //         return;
-        //     }
-        //     console.log("Successfully opened ", filePath);
-        //
-        //     fs.write(fd, presentation, function(err, written, string) {
-        //         if (err) {
-        //             console.log("File write returned error ", err);
-        //             return;
-        //         }
-        //         console.log("File write successful, number of bytes written= ", written);
-        //
-        //         fs.close(fd, function() {
-        //             console.log("File close successful");
-        //         })
-        //     });
-        // });
+        const presentation = JSON.stringify(this.props.sign, null, 2);
 
         fs.writeFile(filePath, presentation, function() {
             console.log("writeFile successful");
