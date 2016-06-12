@@ -8,8 +8,8 @@ import fetch from 'isomorphic-fetch';
 import Sign from '../badm/sign';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
-// electron only
-const fs = require('fs');
+// import { executeFetchSign } from '../bangatron/actions';
+import { executeFetchSign } from '../bangwapp/actions';
 
 export const CREATE_DEFAULT_SIGN = 'CREATE_DEFAULT_SIGN'
 export function createDefaultSign() {
@@ -36,46 +36,9 @@ export function openSign(sign) {
     }
 }
 
-export function fetchBSNSign(presentationName) {
-
-    return function(dispatch) {
-
-        const getBSNPresentationUrl = "http://localhost:6969/getBSNPresentation";
-
-        return axios.get(getBSNPresentationUrl, {
-            params: { name: presentationName }
-        }).then(function(data) {
-            console.log("fetchBSNSign - return from server call");
-
-            const signAsJson = data.data.bsnPresentation;
-            const sign = JSON.parse(signAsJson);
-            dispatch(openSign(sign));
-            dispatch(setCurrentPlaylist(sign.zones[0].zonePlaylist));
-        })
-    }
+export function fetchSign(signId) {
+    return executeFetchSign(signId);
 }
-
-export function fetchSign(filePath) {
-
-    return function (dispatch) {
-
-        console.log("fetchSign, filePath=", filePath);
-
-        fs.readFile(filePath, 'utf8', (err, data) => {
-
-            // TODO - proper error handling?
-            if (err) {
-                throw err;
-                return;
-            }
-            console.log("fs.ReadFile successful");
-            var sign = JSON.parse(data);
-            dispatch(openSign(sign));
-            dispatch(setCurrentPlaylist(sign.zones[0].zonePlaylist));
-        })
-    }
-}
-
 
 // TODO - currently doesn't do anything with redux. If it never does, where should it live?
 export function saveBSNPresentation(name, sign) {

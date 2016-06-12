@@ -10,13 +10,13 @@ import Playlist from '../containers/playlist';
 
 import axios from 'axios';
 
-import BAUI from '../bangatron/baUI';
-// import BAUI from '../bangwapp/baUI';
+// import BAUI from '../bangatron/baUI';
+import BAUI from '../bangwapp/baUI';
 
 import { createDefaultSign, updateMediaFolder } from '../actions/index';
 
 // these should be mutually exclusive
-import { fetchBSNSign, saveBSNPresentation } from '../actions/index';
+import { saveBSNPresentation } from '../actions/index';
 import { fetchSign }  from '../actions/index';
 
 class BA extends Component {
@@ -83,7 +83,7 @@ function mapStateToProps(state) {
 
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ fetchSign, fetchBSNSign, saveBSNPresentation, createDefaultSign: createDefaultSign, updateMediaFolder: updateMediaFolder }, dispatch);
+    return bindActionCreators({ fetchSign, saveBSNPresentation, createDefaultSign: createDefaultSign, updateMediaFolder: updateMediaFolder }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);

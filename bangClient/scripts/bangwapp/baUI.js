@@ -74,7 +74,7 @@ export default class BAUI {
     }
 
     onOpenPresentation() {
-        this.ba.props.fetchBSNSign(this.selectedPresentation);
+        this.ba.props.fetchSign(this.selectedPresentation);
     }
 
     onPresentationSelected(event) {
