@@ -37,7 +37,7 @@ class BA extends Component {
                 { name: 'Presentations', extensions: ['bpf'] }
             ]
         }
-        dialog.showOpenDialog(options, function (filenameDir) {
+        dialog.showOpenDialog(options, filenameDir => {
             self.openPresentation(filenameDir[0]);
         })
     }
@@ -52,7 +52,7 @@ class BA extends Component {
                 { name: 'Presentations', extensions: ['bpf'] }
             ]
         }
-        dialog.showSaveDialog(options, function (filename) {
+        dialog.showSaveDialog(options, filename => {
             self.savePresentation(filename);
         })
     }
@@ -61,7 +61,11 @@ class BA extends Component {
     openPresentation(filePath) {
         console.log("openPresentation, filePath=", filePath);
 
-        fs.readFile(filePath, 'utf8', function(err, data) {
+        fs.readFile(filePath, 'utf8', (err, data) => {
+            if (err) {
+                throw err;
+                return;
+            }
             console.log("fs.ReadFile successful");
             var sign = JSON.parse(data);
         })
@@ -72,7 +76,7 @@ class BA extends Component {
 
         const presentation = JSON.stringify(this.props.sign, null, 2);
 
-        fs.writeFile(filePath, presentation, function() {
+        fs.writeFile(filePath, presentation, () => {
             console.log("writeFile successful");
         })
     }
