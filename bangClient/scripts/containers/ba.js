@@ -26,6 +26,7 @@ class BA extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            bsnPresentations: []
         };
     }
 
@@ -174,6 +175,9 @@ class BA extends Component {
 
 
     onOpenPresentation() {
+        
+        var self = this;
+        
         console.log("open presentation");
 
         const getBSNPresentationsUrl = "http://localhost:6969/getBSNPresentations";
@@ -183,6 +187,7 @@ class BA extends Component {
         }).then(function(data) {
             console.log("onOpenPresentation - return from server call");
             console.log("Number of bsnPresentations" + data.data.bsnPresentations.length);
+            self.setState( { bsnPresentations: data.data.bsnPresentations} )
         })
 
     }
@@ -205,6 +210,18 @@ class BA extends Component {
 
         // onBrowseForMediaLibrary={this.handleBrowseForMediaLibrary.bind(this)}
 
+        let bsnPresentationsDiv = <div></div>;
+        if (this.state.bsnPresentations.length > 0) {
+
+            let bsnPresentations = this.state.bsnPresentations.map(function(bsnPresentationName, index) {
+                return (
+                    <option value={bsnPresentationName} key={index}>{bsnPresentationName}</option>
+                );
+            });
+
+            bsnPresentationsDiv = <div> <select id="bsnPresentations">{bsnPresentations}</select> </div>
+        }
+
         return (
 
             <div>
@@ -215,6 +232,8 @@ class BA extends Component {
                 <div>
                     <button onClick={this.onOpenPresentation.bind(this)}>Open Presentation</button>
                 </div>
+
+                {bsnPresentationsDiv}
 
                 <div>
                     <button onClick={this.onSavePresentation.bind(this)}>Save Presentation</button>
