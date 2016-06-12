@@ -27,6 +27,21 @@ class BA extends Component {
     }
 
     // electron only
+    handleOpenPresentation() {
+
+        var self = this;
+
+        const options = {
+            title: 'Open Presentation',
+            filters: [
+                { name: 'Presentations', extensions: ['bpf'] }
+            ]
+        }
+        dialog.showOpenDialog(options, function (filenameDir) {
+            self.openPresentation(filenameDir[0]);
+        })
+    }
+
     handleSavePresentation() {
 
         var self = this;
@@ -42,7 +57,17 @@ class BA extends Component {
         })
     }
 
-    // TODO - move this code somewhere, but not sure where
+    // TODO - move these functions somewhere, but not sure where
+    openPresentation(filePath) {
+        console.log("openPresentation, filePath=", filePath);
+
+        fs.readFile(filePath, 'utf8', function(err, data) {
+            console.log("fs.ReadFile successful");
+            var sign = JSON.parse(data);
+        })
+    }
+
+
     savePresentation(filePath) {
 
         const presentation = JSON.stringify(this.props.sign, null, 2);
@@ -80,6 +105,12 @@ class BA extends Component {
             {
                 label: 'File',
                 submenu: [
+                    {
+                        label: 'Open Presentation',
+                        click: function() {
+                            self.handleOpenPresentation();
+                        }
+                    },
                     {
                         label: 'Save Presentation',
                         click: function() {
