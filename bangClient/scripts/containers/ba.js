@@ -195,9 +195,13 @@ class BA extends Component {
     }
 
     onOpenPresentation() {
-        this.props.fetchBSNSign("threeImages");
+        this.props.fetchBSNSign(this.selectedPresentation);
     }
 
+    onPresentationSelected(event) {
+        this.selectedPresentation = event.target.value;
+    }
+    
     onSavePresentation() {
         console.log("save presentation, name it ", this.refs.presentationName.value);
 
@@ -219,13 +223,15 @@ class BA extends Component {
         let bsnPresentationsDiv = <span></span>;
         if (this.state.bsnPresentations.length > 0) {
 
+            this.selectedPresentation = this.state.bsnPresentations[0];
+
             let bsnPresentations = this.state.bsnPresentations.map(function(bsnPresentationName, index) {
                 return (
                     <option value={bsnPresentationName} key={index}>{bsnPresentationName}</option>
                 );
             });
 
-            bsnPresentationsDiv = <select id="bsnPresentations">{bsnPresentations}</select>
+            bsnPresentationsDiv = <select onChange={this.onPresentationSelected.bind(this)} defaultValue={this.state.bsnPresentations[0]} id="bsnPresentations">{bsnPresentations}</select>
         }
 
         return (
