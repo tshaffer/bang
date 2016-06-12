@@ -6,7 +6,7 @@ module.exports = {
         filename: 'bundle.js'
     },
     devtool: "source-map",
-    target: 'electron',
+    // target: 'electron',
     module: {
         loaders: [{
             test: /\.jsx?$/,

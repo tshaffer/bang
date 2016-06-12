@@ -9,7 +9,7 @@ import Sign from '../badm/sign';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
 // electron only
-const fs = require('fs');
+// const fs = require('fs');
 
 export const CREATE_DEFAULT_SIGN = 'CREATE_DEFAULT_SIGN'
 export function createDefaultSign() {
@@ -36,26 +36,26 @@ export function openSign(sign) {
     }
 }
 
-export function fetchSign(filePath) {
-
-    return function (dispatch) {
-
-        console.log("fetchSign, filePath=", filePath);
-
-        fs.readFile(filePath, 'utf8', (err, data) => {
-
-            // TODO - proper error handling?
-            if (err) {
-                throw err;
-                return;
-            }
-            console.log("fs.ReadFile successful");
-            var sign = JSON.parse(data);
-            dispatch(openSign(sign));
-            dispatch(setCurrentPlaylist(sign.zones[0].zonePlaylist));
-        })
-    }
-}
+// export function fetchSign(filePath) {
+//
+//     return function (dispatch) {
+//
+//         console.log("fetchSign, filePath=", filePath);
+//
+//         fs.readFile(filePath, 'utf8', (err, data) => {
+//
+//             // TODO - proper error handling?
+//             if (err) {
+//                 throw err;
+//                 return;
+//             }
+//             console.log("fs.ReadFile successful");
+//             var sign = JSON.parse(data);
+//             dispatch(openSign(sign));
+//             dispatch(setCurrentPlaylist(sign.zones[0].zonePlaylist));
+//         })
+//     }
+// }
 
 export const SET_CURRENT_PLAYLIST = 'SET_CURRENT_PLAYLIST'
 export function setCurrentPlaylist(playlist) {
