@@ -36,6 +36,25 @@ export function openSign(sign) {
     }
 }
 
+export function fetchBSNSign(presentationName) {
+
+    return function(dispatch) {
+
+        const getBSNPresentationUrl = "http://localhost:6969/getBSNPresentation";
+
+        return axios.get(getBSNPresentationUrl, {
+            params: { name: presentationName }
+        }).then(function(data) {
+            console.log("fetchBSNSign - return from server call");
+
+            const signAsJson = data.data.bsnPresentation;
+            const sign = JSON.parse(signAsJson);
+            dispatch(openSign(sign));
+            dispatch(setCurrentPlaylist(sign.zones[0].zonePlaylist));
+        })
+    }
+}
+
 // export function fetchSign(filePath) {
 //
 //     return function (dispatch) {

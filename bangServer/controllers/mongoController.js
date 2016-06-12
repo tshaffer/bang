@@ -99,6 +99,33 @@ function getBSNPresentations() {
     })
 }
 
+
+function getBSNPresentation(name) {
+
+    return new Promise(function (resolve, reject) {
+        if (dbOpened) {
+
+            BSNPresentation.find({ name: name }, function (err, bsnPresentationDocs) {
+                if (err) {
+                    console.log("BSNPresentation.find returned error");
+                    reject();
+                }
+                if (bsnPresentationDocs.length == 0) {
+                    console.log("BSNPresentation.find returned none");
+                    reject();
+                }
+                if (bsnPresentationDocs.length > 1) {
+                    console.log("BSNPresentation.find more than one");
+                    reject();
+                }
+                
+                resolve(bsnPresentationDocs[0].sign);
+            });
+        }
+    })
+}
+
+
 function getMediaFolder() {
     return new Promise(function (resolve, reject) {
         if (dbOpened) {
@@ -249,5 +276,6 @@ module.exports = {
     findThumbs: findThumbs,
     saveThumbsToDB: saveThumbsToDB,
     saveBSNPresentation: saveBSNPresentation,
-    getBSNPresentations: getBSNPresentations
+    getBSNPresentations: getBSNPresentations,
+    getBSNPresentation: getBSNPresentation
 }

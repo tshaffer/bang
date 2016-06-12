@@ -44,6 +44,25 @@ app.get('/saveBSNPresentation', function(req, res) {
 });
 
 
+app.get('/getBSNPresentation', function(req, res) {
+
+    console.log("getBSNPresentation invoked");
+    res.set('Access-Control-Allow-Origin', '*');
+
+    var name = req.query.name;
+
+    var promise = dbController.getBSNPresentation(name);
+    promise.then(function(bsnPresentation) {
+        var response = {};
+        response.bsnPresentation = bsnPresentation;
+        res.send(response);
+    }, function(err) {
+        res.send("fail");
+    });
+
+});
+
+
 app.get('/getBSNPresentations', function(req, res) {
 
     console.log("getMediaFolder invoked");

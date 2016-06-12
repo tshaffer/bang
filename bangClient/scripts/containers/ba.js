@@ -17,7 +17,7 @@ import axios from 'axios';
 // const path = require('path');
 
 import { createDefaultSign, updateMediaFolder } from '../actions/index';
-import { saveBSNPresentation } from '../actions/index';
+import { fetchBSNSign, saveBSNPresentation } from '../actions/index';
 
 // import { fetchSign }  from '../actions/index';
 
@@ -195,8 +195,7 @@ class BA extends Component {
     }
 
     onOpenPresentation() {
-        
-
+        this.props.fetchBSNSign("threeImages");
     }
 
     onSavePresentation() {
@@ -270,7 +269,7 @@ function mapStateToProps(state) {
 
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ saveBSNPresentation, createDefaultSign: createDefaultSign, updateMediaFolder: updateMediaFolder }, dispatch);
+    return bindActionCreators({ fetchBSNSign, saveBSNPresentation, createDefaultSign: createDefaultSign, updateMediaFolder: updateMediaFolder }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);
