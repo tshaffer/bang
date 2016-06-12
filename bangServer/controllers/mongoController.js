@@ -24,6 +24,12 @@ var mediaFolderSchema = new Schema({
 });
 var MediaFolder = mongoose.model('MediaFolder', mediaFolderSchema);
 
+var bsnPresentationSchema = new Schema({
+    name: String,
+    sign: String
+});
+var BSNPresentation = mongoose.model('BSNPresentation', bsnPresentationSchema);
+
 function initialize() {
 
     return new Promise(function (resolve, reject) {
@@ -41,6 +47,27 @@ function initialize() {
             resolve();
         });
     });
+}
+
+function saveBSNPresentation(name, sign) {
+
+    return new Promise(function (resolve, reject) {
+        if (dbOpened) {
+
+            var bsnPresentationSpec = {
+                name: name,
+                sign: sign
+            };
+            var bsnPresentationForDB = new BSNPresentation(bsnPresentationSpec);
+
+            bsnPresentationForDB.save(function(err) {
+                if (err) {
+                   throw err;
+                }
+                console.log("BSNPresentation saved to db");
+            });
+        }
+    })
 }
 
 
@@ -192,5 +219,6 @@ module.exports = {
     getMediaFolder: getMediaFolder,
     updateMediaFolder: updateMediaFolder,
     findThumbs: findThumbs,
-    saveThumbsToDB: saveThumbsToDB
+    saveThumbsToDB: saveThumbsToDB,
+    saveBSNPresentation: saveBSNPresentation
 }

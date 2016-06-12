@@ -27,6 +27,23 @@ openDBPromise.then(function() {
 
 var mediaFileSuffixes = ['jpg'];
 
+app.get('/saveBSNPresentation', function(req, res) {
+    
+    console.log("saveBSNPresentation invoked");
+    res.set('Access-Control-Allow-Origin', '*');
+
+    var name = req.query.name;
+    var sign = req.query.sign;
+
+    var promise = dbController.saveBSNPresentation(name, sign);
+    promise.then(function() {
+        res.send("ok");
+    }, function(err) {
+        res.send("fail");
+    });
+});
+
+
 app.get('/getMediaFolder', function (req, res) {
 
     console.log("getMediaFolder invoked");

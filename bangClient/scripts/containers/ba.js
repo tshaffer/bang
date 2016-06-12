@@ -15,6 +15,8 @@ import Playlist from '../containers/playlist';
 // const path = require('path');
 
 import { createDefaultSign, updateMediaFolder } from '../actions/index';
+import { saveBSNPresentation } from '../actions/index';
+
 // import { fetchSign }  from '../actions/index';
 
 class BA extends Component {
@@ -169,6 +171,15 @@ class BA extends Component {
     }
 
 
+    onSavePresentation() {
+        console.log("save presentation, name it ", this.refs.presentationName.value);
+
+        const presentation = JSON.stringify(this.props.sign, null, 2);
+        // const presentation = JSON.stringify(this.props.sign);
+
+        this.props.saveBSNPresentation(this.refs.presentationName.value, presentation);
+    }
+
     render () {
 
         let signName = <p>No sign yet</p>;
@@ -177,15 +188,33 @@ class BA extends Component {
         }
 
         // onBrowseForMediaLibrary={this.handleBrowseForMediaLibrary.bind(this)}
+
         return (
-            <div className="bangPageContainer">
-                <p>{signName}</p>
+
+            <div>
                 <div>
-                    <MediaLibrary
-                    />
-                    <Playlist />
+                    <p>{signName}</p>
                 </div>
 
+                <div>
+                    <button onClick={this.onSavePresentation.bind(this)}>Save Presentation</button>
+                </div>
+
+                <div>
+                    <input
+                        type="text"
+                        id="bsnPresentationName"
+                        ref="presentationName"/>
+                </div>
+
+            <div className="bangPageContainer">
+                    <div>
+                        <MediaLibrary
+                        />
+                        <Playlist />
+                    </div>
+
+                </div>
             </div>
         )
     }
@@ -199,7 +228,7 @@ function mapStateToProps(state) {
 
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ createDefaultSign: createDefaultSign, updateMediaFolder: updateMediaFolder }, dispatch);
+    return bindActionCreators({ saveBSNPresentation, createDefaultSign: createDefaultSign, updateMediaFolder: updateMediaFolder }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);

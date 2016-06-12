@@ -57,6 +57,23 @@ export function openSign(sign) {
 //     }
 // }
 
+
+// TODO - currently doesn't do anything with redux. If it never does, where should it live?
+export function saveBSNPresentation(name, sign) {
+    
+    return function(dispatch) {
+        
+        const saveBSNPresentationUrl = "http://localhost:6969/saveBSNPresentation";
+        
+        return axios.get(saveBSNPresentationUrl, {
+            params: { name: name, sign: sign }
+        }).then(function() {
+            console.log("savePresentation - return from server call");
+        })
+    }
+}
+
+
 export const SET_CURRENT_PLAYLIST = 'SET_CURRENT_PLAYLIST'
 export function setCurrentPlaylist(playlist) {
 
@@ -162,5 +179,3 @@ export function fetchMediaFolder() {
             });
     }
 };
-
-
