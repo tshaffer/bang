@@ -71,6 +71,34 @@ function saveBSNPresentation(name, sign) {
 }
 
 
+function getBSNPresentations() {
+    
+    return new Promise(function (resolve, reject) {
+        if (dbOpened) {
+            BSNPresentation.find({ }, function (err, bsnPresentationDocs) {
+                if (err) {
+                    console.log("BSNPresentation.find returned error");
+                    reject();
+                }
+                if (bsnPresentationDocs.length == 0) {
+                    console.log("BSNPresentation.find returned none");
+                    reject();
+                }
+                else {
+                    
+                    var bsnPresentationNames = [];
+                    
+                    bsnPresentationDocs.forEach(function(bsnPresentationDoc) {
+                        bsnPresentationNames.push(bsnPresentationDoc.name);
+                    });
+                    
+                    resolve(bsnPresentationNames);
+                }
+            });
+        }
+    })
+}
+
 function getMediaFolder() {
     return new Promise(function (resolve, reject) {
         if (dbOpened) {
@@ -220,5 +248,6 @@ module.exports = {
     updateMediaFolder: updateMediaFolder,
     findThumbs: findThumbs,
     saveThumbsToDB: saveThumbsToDB,
-    saveBSNPresentation: saveBSNPresentation
+    saveBSNPresentation: saveBSNPresentation,
+    getBSNPresentations: getBSNPresentations
 }

@@ -44,6 +44,22 @@ app.get('/saveBSNPresentation', function(req, res) {
 });
 
 
+app.get('/getBSNPresentations', function(req, res) {
+
+    console.log("getMediaFolder invoked");
+    res.set('Access-Control-Allow-Origin', '*');
+
+    var promise = dbController.getBSNPresentations();
+    promise.then(function(bsnPresentations) {
+        var response = {};
+        response.bsnPresentations = bsnPresentations;
+        res.send(response);
+    }, function(err) {
+        res.send("fail");
+    });
+});
+
+
 app.get('/getMediaFolder', function (req, res) {
 
     console.log("getMediaFolder invoked");

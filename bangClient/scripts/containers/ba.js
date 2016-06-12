@@ -8,6 +8,8 @@ import { bindActionCreators } from 'redux';
 import MediaLibrary from '../containers/mediaLibrary';
 import Playlist from '../containers/playlist';
 
+import axios from 'axios';
+
 // electron only
 // const {remote} = require('electron');
 // const {Menu, MenuItem, dialog} = remote;
@@ -171,6 +173,20 @@ class BA extends Component {
     }
 
 
+    onOpenPresentation() {
+        console.log("open presentation");
+
+        const getBSNPresentationsUrl = "http://localhost:6969/getBSNPresentations";
+
+        axios.get(getBSNPresentationsUrl, {
+            params: { }
+        }).then(function(data) {
+            console.log("onOpenPresentation - return from server call");
+            console.log("Number of bsnPresentations" + data.data.bsnPresentations.length);
+        })
+
+    }
+
     onSavePresentation() {
         console.log("save presentation, name it ", this.refs.presentationName.value);
 
@@ -194,6 +210,10 @@ class BA extends Component {
             <div>
                 <div>
                     <p>{signName}</p>
+                </div>
+
+                <div>
+                    <button onClick={this.onOpenPresentation.bind(this)}>Open Presentation</button>
                 </div>
 
                 <div>
