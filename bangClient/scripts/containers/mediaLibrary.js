@@ -101,8 +101,6 @@ class MediaLibrary extends Component {
                 </ul>
         }
 
-        // <input type="image" src="images/iconBrowse.png" className="plainButton" onClick={this.props.onBrowseForMediaLibrary.bind(this)} />
-
         return (
             <div className="mediaLibraryDiv">
                 <p className="smallishFont">Media Library</p>
@@ -118,6 +116,7 @@ class MediaLibrary extends Component {
 
                     <TabPanel>
                         <div>
+                            <input type="image" src="images/iconBrowse.png" className="plainButton" onClick={this.props.onBrowseForMediaLibrary.bind(this)} />
                             <input type="image" src="images/24x24_sync.png" onClick={this.onSync.bind(this)}/>
                             <input type="image" src="images/iconNavigateUp.png" onClick={this.onNavigateUp.bind(this)}/>
                         </div>

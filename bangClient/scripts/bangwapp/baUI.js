@@ -88,4 +88,11 @@ export default class BAUI {
 
         this.ba.props.saveBSNPresentation(this.refs.presentationName.value, presentation);
     }
+
+    handleBrowseForMediaLibrary() {
+
+        console.log("not implemented yet");
+    }
+
+
 }

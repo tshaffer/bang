@@ -10,8 +10,8 @@ import Playlist from '../containers/playlist';
 
 import axios from 'axios';
 
-// import BAUI from '../bangatron/baUI';
-import BAUI from '../bangwapp/baUI';
+import BAUI from '../bangatron/baUI';
+// import BAUI from '../bangwapp/baUI';
 
 import { createDefaultSign, updateMediaFolder } from '../actions/index';
 
@@ -48,9 +48,7 @@ class BA extends Component {
         if (this.props.sign) {
             signName = this.props.sign.name;
         }
-
-        // onBrowseForMediaLibrary={this.handleBrowseForMediaLibrary.bind(this)}
-
+        
         const openSavePresentationJSX = this.baUI.getOpenSavePresentationJSX(this.state.bsnPresentations);
         
         return (
@@ -65,6 +63,7 @@ class BA extends Component {
             <div className="bangPageContainer">
                     <div>
                         <MediaLibrary
+                            onBrowseForMediaLibrary={this.baUI.handleBrowseForMediaLibrary.bind(this.baUI)}
                         />
                         <Playlist />
                     </div>
