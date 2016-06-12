@@ -84,7 +84,10 @@ class BA extends Component {
     //         }
     //     })
     // }
-    
+
+    componentWillMount() {
+        this.retrievePresentations();
+    }
     componentDidMount() {
 
         console.log("ba.js::componentDidMount invoked");
@@ -174,11 +177,11 @@ class BA extends Component {
     }
 
 
-    onOpenPresentation() {
-        
+    retrievePresentations() {
+
         var self = this;
-        
-        console.log("open presentation");
+
+        console.log("retrievePresentations");
 
         const getBSNPresentationsUrl = "http://localhost:6969/getBSNPresentations";
 
@@ -189,6 +192,10 @@ class BA extends Component {
             console.log("Number of bsnPresentations" + data.data.bsnPresentations.length);
             self.setState( { bsnPresentations: data.data.bsnPresentations} )
         })
+    }
+
+    onOpenPresentation() {
+        
 
     }
 
@@ -210,7 +217,7 @@ class BA extends Component {
 
         // onBrowseForMediaLibrary={this.handleBrowseForMediaLibrary.bind(this)}
 
-        let bsnPresentationsDiv = <div></div>;
+        let bsnPresentationsDiv = <span></span>;
         if (this.state.bsnPresentations.length > 0) {
 
             let bsnPresentations = this.state.bsnPresentations.map(function(bsnPresentationName, index) {
@@ -219,7 +226,7 @@ class BA extends Component {
                 );
             });
 
-            bsnPresentationsDiv = <div> <select id="bsnPresentations">{bsnPresentations}</select> </div>
+            bsnPresentationsDiv = <select id="bsnPresentations">{bsnPresentations}</select>
         }
 
         return (
@@ -231,15 +238,11 @@ class BA extends Component {
 
                 <div>
                     <button onClick={this.onOpenPresentation.bind(this)}>Open Presentation</button>
-                </div>
-
-                {bsnPresentationsDiv}
-
-                <div>
-                    <button onClick={this.onSavePresentation.bind(this)}>Save Presentation</button>
+                    {bsnPresentationsDiv}
                 </div>
 
                 <div>
+                    <button onClick={this.onSavePresentation.bind(this)}>Save Presentation As</button>
                     <input
                         type="text"
                         id="bsnPresentationName"
