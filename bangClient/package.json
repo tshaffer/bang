@@ -8,9 +8,9 @@
   "scripts": {
     "start": "webpack --watch",
     "build": "webpack",
-    "buildtron": "webpack --config ./webpacktron.config.js",
-    "buildtronW": "webpack --config ./webpacktron.config.js --watch",
-    "buildwapp": "webpack --config ./webpackwapp.config.js"
+    "bangatron": "webpack --config ./webpacktron.config.js",
+    "bangatronW": "webpack --config ./webpacktron.config.js --watch",
+    "bangwapp": "webpack --config ./webpackwapp.config.js"
   },
   "dependencies": {
     "axios": "^0.12.0",
