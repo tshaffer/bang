@@ -8,8 +8,7 @@ import fetch from 'isomorphic-fetch';
 import Sign from '../badm/sign';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
-import { executeFetchSign } from '../bangatron/actions';
-// import { executeFetchSign } from '../bangwapp/actions';
+import { executeFetchSign } from '../platform/actions';
 
 export const CREATE_DEFAULT_SIGN = 'CREATE_DEFAULT_SIGN'
 export function createDefaultSign() {

@@ -10,8 +10,7 @@ import Playlist from '../containers/playlist';
 
 import axios from 'axios';
 
-import BAUI from '../bangatron/baUI';
-// import BAUI from '../bangwapp/baUI';
+import BAUI from '../platform/baUI';
 
 import { createDefaultSign, updateMediaFolder } from '../actions/index';
 
