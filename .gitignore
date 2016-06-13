@@ -1,4 +1,5 @@
 bangClient/node_modules
 bangServer/node_modules
+bangClient/scripts/platform
 bangClient/build
 
