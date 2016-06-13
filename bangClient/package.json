@@ -7,7 +7,10 @@
   "license": "MIT",
   "scripts": {
     "start": "webpack --watch",
-    "build": "webpack"
+    "build": "webpack",
+    "buildtron": "webpack --config ./webpacktron.config.js",
+    "buildtronW": "webpack --config ./webpacktron.config.js --watch",
+    "buildwapp": "webpack --config ./webpackwapp.config.js"
   },
   "dependencies": {
     "axios": "^0.12.0",

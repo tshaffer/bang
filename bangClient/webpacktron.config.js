@@ -3,7 +3,7 @@ module.exports = {
     entry: './scripts/index.js',
     output: {
         path: './build',
-        filename: 'bundle.js'
+        filename: 'bundletron.js'
     },
     devtool: "source-map",
     target: 'electron',
