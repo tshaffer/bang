@@ -76,23 +76,33 @@ class MediaLibrary extends Component {
 
             let mediaLibraryPlaylistItems = this.props.mediaLibraryPlaylistItems.map(function (mediaLibraryPlaylistItem) {
 
-                const thumbUrl = self.props.mediaItemThumbs[mediaLibraryPlaylistItem.filePath];
+                if (self.props.mediaItemThumbs.hasOwnProperty(mediaLibraryPlaylistItem.filePath)) {
 
-                return (
-                    <li className="flex-item mediaLibraryThumbDiv" key={mediaLibraryPlaylistItem.id}>
-                        <img
-                            id={mediaLibraryPlaylistItem.id}
-                            src={thumbUrl}
-                            className="mediaLibraryThumbImg"
-                            data-name={mediaLibraryPlaylistItem.fileName}
-                            data-path={mediaLibraryPlaylistItem.filePath}
-                            data-type="image"
-                            draggable={true}
-                            onDragStart={self.mediaLibraryDragStartHandler}
-                        />
-                        <p className="mediaLibraryThumbLbl">{mediaLibraryPlaylistItem.fileName}</p>
-                    </li>
-                );
+                    const thumbUrl = self.props.mediaItemThumbs[mediaLibraryPlaylistItem.filePath].thumbFileName;
+
+                    return (
+                        <li className="flex-item mediaLibraryThumbDiv" key={mediaLibraryPlaylistItem.id}>
+                            <img
+                                id={mediaLibraryPlaylistItem.id}
+                                src={thumbUrl}
+                                className="mediaLibraryThumbImg"
+                                data-name={mediaLibraryPlaylistItem.fileName}
+                                data-path={mediaLibraryPlaylistItem.filePath}
+                                data-type="image"
+                                draggable={true}
+                                onDragStart={self.mediaLibraryDragStartHandler}
+                            />
+                            <p className="mediaLibraryThumbLbl">{mediaLibraryPlaylistItem.fileName}</p>
+                        </li>
+                    );
+                }
+                else {
+                    return (
+                        <li key={mediaLibraryPlaylistItem.id}>
+                            <p className="mediaLibraryThumbLbl">{mediaLibraryPlaylistItem.name}</p>
+                        </li>
+                    )
+                }
             });
 
             mediaLibraryDiv =

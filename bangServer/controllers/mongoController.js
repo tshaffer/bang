@@ -195,35 +195,65 @@ function updateMediaFolder(mediaFolder) {
 }
 
 
+function findThumbsCallback(thumbDocs, mediaFolder) {
+
+    var thumbs = [];
+
+    thumbDocs.forEach(function (thumbDoc) {
+
+        var thumbDocObj =
+        {
+            id: thumbDoc.id,
+            fileName: thumbDoc.fileName,
+            thumbFileName: thumbDoc.thumbFileName,
+            mediaFilePath: thumbDoc.mediaFilePath,
+            url: thumbDoc.url,
+            lastModified: thumbDoc.lastModified
+        };
+
+        if (mediaFolder) {
+            thumbDocObj.mediaFolder = mediaFolder;
+        }
+
+        thumbs.push(thumbDocObj);
+    });
+
+    return thumbs;
+}
+
+
+function getAllThumbs() {
+
+    return new Promise(function (resolve, reject) {
+
+        if (dbOpened) {
+            Thumb.find({}, function(err, thumbDocs) {
+                if (err) {
+                    reject();
+                }
+                var thumbs = findThumbsCallback(thumbDocs, null);
+                resolve(thumbs);
+            });
+        }
+        else {
+            reject();
+        }
+    });
+}
+
+
 function findThumbs(mediaFolder) {
 
     return new Promise(function (resolve, reject) {
 
-        var thumbs = [];
-        
         if (dbOpened) {
-
-            Thumb.find({ mediaFolder: mediaFolder }, function (err, thumbDocs) {
+            Thumb.find({mediaFolder: mediaFolder}, function(err, thumbDocs) {
                 if (err) {
-                    console.log("error returned from mongoose query");
                     reject();
                 }
-
-                thumbDocs.forEach(function (thumbDoc) {
-                    thumbs.push(
-                        {
-                            id: thumbDoc.id,
-                            fileName: thumbDoc.fileName,
-                            thumbFileName: thumbDoc.thumbFileName,
-                            mediaFilePath: thumbDoc.mediaFilePath,
-                            mediaFolder: mediaFolder,
-                            url: thumbDoc.url,
-                            lastModified: thumbDoc.lastModified});
-                        });
-
+                var thumbs = findThumbsCallback(thumbDocs, null);
                 resolve(thumbs);
             });
-
         }
         else {
             reject();
@@ -273,6 +303,7 @@ module.exports = {
     initialize: initialize,
     getMediaFolder: getMediaFolder,
     updateMediaFolder: updateMediaFolder,
+    getAllThumbs: getAllThumbs,
     findThumbs: findThumbs,
     saveThumbsToDB: saveThumbsToDB,
     saveBSNPresentation: saveBSNPresentation,

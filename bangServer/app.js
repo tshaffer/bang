@@ -114,6 +114,25 @@ app.get('/updateMediaFolder', function(req, res) {
 });
 
 
+app.get('/getAllThumbs', function(req, res) {
+
+    console.log("getAllThumbs invoked");
+    res.set('Access-Control-Allow-Origin', '*');
+
+    var getAllThumbsPromise = dbController.getAllThumbs();
+    getAllThumbsPromise.then(function(allThumbs) {
+
+        var thumbsByPath = {};
+        allThumbs.forEach(function(thumb) {
+            thumbsByPath[thumb.mediaFilePath] = thumb;
+        });
+
+        var response = thumbsByPath;
+        res.send(response);
+    });
+});
+
+
 app.get('/getThumbs', function(req, res) {
 
     console.log("getThumbs invoked");

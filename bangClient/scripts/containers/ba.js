@@ -12,7 +12,7 @@ import axios from 'axios';
 
 import BAUI from '../platform/baUI';
 
-import { createDefaultSign, updateMediaFolder } from '../actions/index';
+import { getAllThumbs, createDefaultSign, updateMediaFolder } from '../actions/index';
 
 // these should be mutually exclusive
 import { saveBSNPresentation } from '../actions/index';
@@ -28,6 +28,10 @@ class BA extends Component {
 
         this.baUI = new BAUI(this);
 
+    }
+
+    componentWillMount() {
+        this.props.getAllThumbs();
     }
 
     componentDidMount() {
@@ -81,7 +85,7 @@ function mapStateToProps(state) {
 
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ fetchSign, saveBSNPresentation, createDefaultSign: createDefaultSign, updateMediaFolder: updateMediaFolder }, dispatch);
+    return bindActionCreators({ getAllThumbs, fetchSign, saveBSNPresentation, createDefaultSign: createDefaultSign, updateMediaFolder: updateMediaFolder }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);

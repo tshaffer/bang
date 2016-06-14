@@ -160,3 +160,26 @@ export function fetchMediaFolder() {
             });
     }
 };
+
+
+export const SET_ALL_THUMBS = 'SET_ALL_THUMBS';
+export function setAllThumbs(thumbsByPath) {
+
+    return {
+        type: SET_ALL_THUMBS,
+        payload: thumbsByPath
+    }
+}
+
+
+export function getAllThumbs() {
+
+    return function (dispatch) {
+
+        const getAllThumbsUrl = "http://localhost:6969/" + "getAllThumbs";
+        axios.get(getAllThumbsUrl, {}).then(function(data) {
+            const thumbsByPath = data.data;
+            dispatch(setAllThumbs(thumbsByPath));
+        })
+    }
+}

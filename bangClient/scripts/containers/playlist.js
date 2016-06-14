@@ -89,21 +89,30 @@ class Playlist extends Component {
         let dataIndex = -1;
         let playlistItems = currentPlaylistItems.map(function (playlistItem) {
 
-            const thumbUrl = self.props.mediaItemThumbs[playlistItem.filePath];
-            dataIndex++;
+            if (self.props.mediaItemThumbs.hasOwnProperty(playlistItem.filePath)) {
+                
+                const thumbUrl = self.props.mediaItemThumbs[playlistItem.filePath].thumbFileName;
+                dataIndex++;
 
-            return (
-                <li className="flex-item mediaLibraryThumbDiv" key={playlistItem.id} onDrop={self.playlistDropHandler.bind(self)} onDragOver={self.playlistDragOverHandler}>
-                    <img
-                        id={playlistItem.id}
-                        src={thumbUrl}
-                        className="mediaLibraryThumbImg"
-                        data-index={dataIndex}
-
-                    />
-                    <p className="mediaLibraryThumbLbl">{playlistItem.name}</p>
-                </li>
-            );
+                return (
+                    <li className="flex-item mediaLibraryThumbDiv" key={playlistItem.id} onDrop={self.playlistDropHandler.bind(self)} onDragOver={self.playlistDragOverHandler}>
+                        <img
+                            id={playlistItem.id}
+                            src={thumbUrl}
+                            className="mediaLibraryThumbImg"
+                            data-index={dataIndex}
+                        />
+                        <p className="mediaLibraryThumbLbl">{playlistItem.name}</p>
+                    </li>
+                );
+            }
+            else {
+                return (
+                    <li key={playlistItem.id} >
+                        <p className="mediaLibraryThumbLbl">{playlistItem.name}</p>
+                    </li>
+                )
+            }
 
         });
 
