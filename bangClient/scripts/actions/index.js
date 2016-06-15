@@ -8,7 +8,7 @@ import fetch from 'isomorphic-fetch';
 import Sign from '../badm/sign';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
-import { executeFetchSign } from '../platform/actions';
+import { executeFetchSign, executeSelectMediaFolder } from '../platform/actions';
 
 export const CREATE_DEFAULT_SIGN = 'CREATE_DEFAULT_SIGN'
 export function createDefaultSign() {
@@ -35,6 +35,10 @@ export function openSign(sign) {
     }
 }
 
+export function selectMediaFolder(mediaFolder) {
+    return executeSelectMediaFolder(mediaFolder);
+    
+}
 export function fetchSign(signId) {
     return executeFetchSign(signId);
 }
@@ -181,5 +185,14 @@ export function getAllThumbs() {
             const thumbsByPath = data.data;
             dispatch(setAllThumbs(thumbsByPath));
         })
+    }
+}
+
+export const SET_MEDIA_FOLDER_FILES = 'SET_MEDIA_FOLDER_FILES';
+export function setMediaFolderFiles(mediaFolderFiles) {
+
+    return {
+        type: SET_MEDIA_FOLDER_FILES,
+        payload: mediaFolderFiles
     }
 }

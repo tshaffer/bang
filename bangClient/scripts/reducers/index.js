@@ -7,13 +7,15 @@ import MediaFolderReducer from './reducer_media_folder';
 import MediaItemThumbsReducer from './reducer_media_item_thumbs';
 import SignReducer from './reducer_sign';
 import CurrentPlaylistReducer from './reducer_current_playlist';
+import MediaFolderFilesReducer from './reducer_media_folder_files';
 
 const rootReducer = combineReducers({
     sign: SignReducer,
     currentPlaylist: CurrentPlaylistReducer,
     mediaLibraryPlaylistItems: MediaLibraryPlaylistItemsReducer,
     mediaFolder: MediaFolderReducer,
-    mediaItemThumbs: MediaItemThumbsReducer
+    mediaItemThumbs: MediaItemThumbsReducer,
+    mediaFolderFiles: MediaFolderFilesReducer
 });
 
 export default rootReducer;

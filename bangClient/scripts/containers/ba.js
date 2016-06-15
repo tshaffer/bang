@@ -12,7 +12,7 @@ import axios from 'axios';
 
 import BAUI from '../platform/baUI';
 
-import { getAllThumbs, createDefaultSign, updateMediaFolder } from '../actions/index';
+import { getAllThumbs, createDefaultSign, selectMediaFolder, updateMediaFolder } from '../actions/index';
 
 // these should be mutually exclusive
 import { saveBSNPresentation } from '../actions/index';
@@ -85,7 +85,7 @@ function mapStateToProps(state) {
 
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ getAllThumbs, fetchSign, saveBSNPresentation, createDefaultSign: createDefaultSign, updateMediaFolder: updateMediaFolder }, dispatch);
+    return bindActionCreators({ getAllThumbs, fetchSign, saveBSNPresentation, createDefaultSign: createDefaultSign, selectMediaFolder, updateMediaFolder: updateMediaFolder }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);
