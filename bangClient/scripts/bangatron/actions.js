@@ -8,10 +8,9 @@ const easyImage = require("easyimage");
 
 const dbName = "BADatabase-0";
 
-import { openSign, setCurrentPlaylist, setMediaFolderFiles } from '../actions/index';
+import { setDB, openSign, setCurrentPlaylist, setMediaFolderFiles } from '../actions/index';
 
 const mediaFileSuffixes = ['jpg'];
-
 
 export function executeOpenDB() {
 
@@ -54,6 +53,7 @@ export function executeOpenDB() {
             // Do something with request.result!
             console.log("request.onsuccess invoked");
             const db = event.target.result;
+            dispatch(setDB(db));
 
             // var tx = this.db.transaction("thumbFiles", "readwrite");
             // let objectStore = tx.objectStore("thumbFiles");
@@ -65,18 +65,18 @@ export function executeOpenDB() {
             //     console.log("returnedKey=", returnedKey);
             // };
 
-            var objectStore = db.transaction("thumbFiles").objectStore("thumbFiles");
-
-            objectStore.openCursor().onsuccess = function(event) {
-                var cursor = event.target.result;
-                if (cursor) {
-                    console.log("Item " + cursor.key + " is " + cursor.value);
-                    cursor.continue();
-                }
-                else {
-                    console.log("No more entries!");
-                }
-            };
+            // var objectStore = db.transaction("thumbFiles").objectStore("thumbFiles");
+            //
+            // objectStore.openCursor().onsuccess = function(event) {
+            //     var cursor = event.target.result;
+            //     if (cursor) {
+            //         console.log("Item " + cursor.key + " is " + cursor.value);
+            //         cursor.continue();
+            //     }
+            //     else {
+            //         console.log("No more entries!");
+            //     }
+            // };
         };
     }
 }

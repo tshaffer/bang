@@ -14,6 +14,18 @@ export function openDB() {
     return executeOpenDB();
 }
 
+export const SET_DB = 'SET_DB'
+export function setDB(db) {
+
+    console.log("actions::setDB");
+
+    return {
+        type: SET_DB,
+        payload: db
+    }
+}
+
+
 export const CREATE_DEFAULT_SIGN = 'CREATE_DEFAULT_SIGN'
 export function createDefaultSign() {
 
