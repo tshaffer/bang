@@ -9,6 +9,7 @@ import SignReducer from './reducer_sign';
 import CurrentPlaylistReducer from './reducer_current_playlist';
 import MediaFolderFilesReducer from './reducer_media_folder_files';
 import OpenDBReducer from './reducer_db';
+import ThumbFilesReducer from './reducer_thumb_files';
 
 const rootReducer = combineReducers({
     sign: SignReducer,
@@ -17,7 +18,8 @@ const rootReducer = combineReducers({
     mediaFolder: MediaFolderReducer,
     mediaItemThumbs: MediaItemThumbsReducer,
     mediaFolderFiles: MediaFolderFilesReducer,
-    db: OpenDBReducer
+    db: OpenDBReducer,
+    thumbFiles: ThumbFilesReducer
 });
 
 export default rootReducer;

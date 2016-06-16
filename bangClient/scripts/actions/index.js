@@ -215,5 +215,15 @@ export function setMediaFolderFiles(mediaFolderFiles) {
     }
 }
 
+export const SET_THUMB_FILES = 'SET_THUMB_FILES';
+export function setThumbFiles(thumbsByFilePath) {
+
+    return {
+        type: SET_THUMB_FILES,
+        payload: thumbsByFilePath
+    }
+}
+
+
 
 

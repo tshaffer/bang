@@ -8,7 +8,7 @@ const easyImage = require("easyimage");
 
 const dbName = "BADatabase-0";
 
-import { setDB, openSign, setCurrentPlaylist, setMediaFolderFiles } from '../actions/index';
+import { setDB, openSign, setCurrentPlaylist, setMediaFolderFiles, setThumbFiles } from '../actions/index';
 
 const mediaFileSuffixes = ['jpg'];
 
@@ -114,7 +114,16 @@ export function executeSelectMediaFolder(mediaFolder) {
         dispatch(setMediaFolderFiles(mediaFolderFiles));
 
         // given the list of files, get thumbs for each of them
-        getThumbs(mediaFolderFiles);
+        getThumbs(mediaFolderFiles).then(function(mediaFilesWithThumbInfo) {
+
+            console.log("executeSelectMediaFolder - number of mediaFiles with thumbs=", mediaFilesWithThumbInfo.length);
+
+            let thumbFilesByFilePath = {};
+            mediaFilesWithThumbInfo.forEach(function(mediaFileWithThumbInfo) {
+                thumbFilesByFilePath[mediaFileWithThumbInfo.filePath] = mediaFileWithThumbInfo;
+            });
+            dispatch(setThumbFiles(mediaFilesWithThumbInfo));
+        });
     }
 }
 
@@ -143,27 +152,31 @@ function findMediaFiles(dir, mediaFiles) {
 
 function getThumbs(mediaFiles) {
 
-    var getExifDataPromise = exifReader.getAllExifData(mediaFiles);
-    getExifDataPromise.then(function(mediaFilesWithExif) {
-        console.log("getExifDataPromised resolved");
-        var buildThumbnailsPromise = buildThumbnails(mediaFilesWithExif);
-        buildThumbnailsPromise.then(function(obj) {
-            console.log("thumbnails build complete");
-            // TODO - what's in mediaFiles - can't access it from debugger.
-            // var saveThumbsPromise = dbController.saveThumbsToDB(mediaFilesToAdd);
-            // saveThumbsPromise.then(function(thumbSpecs) {
-            //     var response = {};
-            //     response.thumbs = thumbSpecs;
-            //
-            //     existingThumbs.forEach(function(existingThumb) {
-            //         response.thumbs.push(existingThumb);
-            //     });
-            //
-            //     res.send(response);
-            // });
+    return new Promise(function(resolve, reject) {
+
+        var getExifDataPromise = exifReader.getAllExifData(mediaFiles);
+        getExifDataPromise.then(function(mediaFilesWithExif) {
+            console.log("getExifDataPromised resolved");
+            var buildThumbnailsPromise = buildThumbnails(mediaFilesWithExif);
+            buildThumbnailsPromise.then(function(obj) {
+                console.log("thumbnails build complete");
+                console.log("number of thumbsnails created=", mediaFilesWithExif.length);
+
+                // at this point, each entry in mediaFilesWithExif includes the following fields
+                //      dateTaken
+                //      fileName                backend_menu_Notes.jpg
+                //      filePath                /Users/tedshaffer/Pictures/BangPhotos2/backend_menu_Notes.jpg
+                //      imageHeight
+                //      imageWidth
+                //      orientation
+                //      thumbFileName           backend_menu_Notes_thumb.jpg
+                //      thumbUrl                /thumbs/backend_menu_Notes_thumb.jpg
+                resolve(mediaFilesWithExif);
+            });
         });
     });
 }
+
 
 // build thumbs for the media library
 function buildThumbnails(mediaFiles) {
