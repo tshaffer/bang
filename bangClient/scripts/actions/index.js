@@ -8,7 +8,11 @@ import fetch from 'isomorphic-fetch';
 import Sign from '../badm/sign';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
-import { executeFetchSign, executeSelectMediaFolder } from '../platform/actions';
+import { executeOpenDB, executeFetchSign, executeSelectMediaFolder } from '../platform/actions';
+
+export function openDB() {
+    return executeOpenDB();
+}
 
 export const CREATE_DEFAULT_SIGN = 'CREATE_DEFAULT_SIGN'
 export function createDefaultSign() {
@@ -35,10 +39,12 @@ export function openSign(sign) {
     }
 }
 
+
 export function selectMediaFolder(mediaFolder) {
     return executeSelectMediaFolder(mediaFolder);
-    
 }
+
+
 export function fetchSign(signId) {
     return executeFetchSign(signId);
 }
@@ -196,3 +202,6 @@ export function setMediaFolderFiles(mediaFolderFiles) {
         payload: mediaFolderFiles
     }
 }
+
+
+
