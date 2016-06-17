@@ -6,7 +6,7 @@ const easyImage = require("easyimage");
 let baDB = null;
 const dbName = "BADatabase-8";
 
-import { setDB, openSign, setCurrentPlaylist, setMediaFolderFiles, setThumbFiles } from '../actions/index';
+import { setDB, openSign, setCurrentPlaylist, setMediaFolderFiles, setThumbFiles, setAllThumbs } from '../actions/index';
 
 const mediaFileSuffixes = ['jpg'];
 
@@ -20,8 +20,9 @@ export function executeGetAllThumbs() {
                 baDB = openedDB;
 
                 // now that db is open, fetch all the thumbs
-                readThumbs().then(function(thumbs) {
+                readThumbs().then(function(thumbsByPath) {
                     console.log("read thumbs");
+                    dispatch(setAllThumbs(thumbsByPath));
                 });
             });
         }
