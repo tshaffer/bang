@@ -4,7 +4,7 @@ const exifReader = require('./nodeExif');
 const easyImage = require("easyimage");
 
 let baDB = null;
-const dbName = "BADatabase-0";
+const dbName = "BADatabase-8";
 
 import { setDB, openSign, setCurrentPlaylist, setMediaFolderFiles, setThumbFiles } from '../actions/index';
 
@@ -50,11 +50,36 @@ function readThumbs() {
     })
 }
 
+
+function addRecordToDB ( objectStoreName, key, value ) {
+    return new Promise(function(resolve, reject) {
+
+        var request = baDB.transaction([objectStoreName], "readwrite")
+            .objectStore(objectStoreName)
+            .add( value, key );
+
+        request.onsuccess = function(event) {
+            console.log("record added to db");
+            resolve(event);
+        };
+
+        request.onerror = function(event) {
+            console.log("unable to add record to db");
+            reject(event);
+        }
+    });
+}
+
+
 function openDB() {
+
+    let upgrading = false;
+    let upgradeComplete = false;
+    let success = false;
 
     return new Promise(function(resolve, reject) {
 
-        var request = window.indexedDB.open(dbName, 4);
+        var request = window.indexedDB.open(dbName, 1);
 
         request.onerror = function(event) {
             // TODO - what??
@@ -64,10 +89,12 @@ function openDB() {
 
         request.onupgradeneeded = function(event) {
 
-            console.log("openDB.onupgradeneeded invoked");
-            let db = event.target.result;
+            upgrading = true;
 
-            var store = db.createObjectStore("thumbFiles");
+            console.log("openDB.onupgradeneeded invoked");
+            baDB = event.target.result;
+
+            var store = baDB.createObjectStore("thumbFiles");
 
             store.transaction.oncomplete = function(event) {
                 console.log("createObjectStore transaction complete");
@@ -82,6 +109,49 @@ function openDB() {
                 // var thumbFilesObjectStore = db.transaction("thumbFiles", "readwrite").objectStore("thumbFiles");
                 // thumbFilesObjectStore.add("thumb1.jpg", "/users/tedshaffer/Projects/thumb1.jpg");
                 // thumbFilesObjectStore.add("thumb2.jpg", "/users/tedshaffer/Projects/thumb2.jpg");
+
+                let mediaFilePath = "";
+                let thumbData = {};
+
+
+                mediaFilePath = "/Users/tedshaffer/Pictures/BangPhotos2/amsterdam(8).JPG";
+                thumbData = {
+                    fileName: "amsterdam(8).JPG",
+                    thumbFileName: "amsterdam(8)_thumb.JPG",
+                    mediaFolder: "/Users/tedshaffer/Pictures/BangPhotos2",
+                    url: "/Users/tedshaffer/Documents/Projects/bang/bangServer/thumbs/amsterdam(8)_thumb.JPG",
+                    lastModified: "2016-06-05 13:49:04.423Z"
+                };
+                var promise0 = addRecordToDB("thumbFiles", mediaFilePath, thumbData);
+
+                mediaFilePath = "/Users/tedshaffer/Pictures/BangPhotos2/backend_menu_Notes.jpg";
+                thumbData = {
+                    fileName: "backend_menu_Notes.jpg",
+                    thumbFileName: "backend_menu_Notes_thumb.jpg",
+                    mediaFolder: "/Users/tedshaffer/Pictures/BangPhotos2",
+                    url: "/Users/tedshaffer/Documents/Projects/bang/bangServer/thumbs/backend_menu_Notes_thumb.jpg",
+                    lastModified: "2016-06-05 13:49:04.423Z"
+                };
+                var promise1 = addRecordToDB("thumbFiles", mediaFilePath, thumbData);
+
+                mediaFilePath = "/Users/tedshaffer/Pictures/BangPhotos2/WindRiverRange.jpg";
+                thumbData = {
+                    fileName: "WindRiverRange.jpg",
+                    thumbFileName: "WindRiverRange_thumb.jpg",
+                    mediaFolder: "/Users/tedshaffer/Pictures/BangPhotos2",
+                    url: "/Users/tedshaffer/Documents/Projects/bang/bangServer/thumbs/WindRiverRange_thumb.jpg",
+                    lastModified: "2016-06-05 13:49:04.423Z"
+                };
+                var promise2 = addRecordToDB("thumbFiles", mediaFilePath, thumbData);
+
+                Promise.all([promise0, promise1, promise2]).then(function(values) {
+                    console.log(values);
+                    upgradeComplete = true;
+
+                    if (success) {
+                        resolve(baDB);
+                    }
+                });
             };
         };
 
@@ -113,7 +183,10 @@ function openDB() {
             //     }
             // };
 
-            resolve(db);
+            success = true;
+            if (!upgrading || upgradeComplete) {
+                resolve(db);
+            }
         };
     });
 }
