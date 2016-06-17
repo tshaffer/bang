@@ -155,7 +155,9 @@ function mapStateToProps(state) {
     return {
         mediaLibraryPlaylistItems: state.mediaLibraryPlaylistItems,
         mediaFolder: state.mediaFolder,
-        mediaItemThumbs: state.mediaItemThumbs
+        mediaItemThumbs: state.mediaItemThumbs,
+        mediaFolderFiles: state.mediaFolderFiles,
+        thumbFiles: state.thumbFiles
     };
 }
 

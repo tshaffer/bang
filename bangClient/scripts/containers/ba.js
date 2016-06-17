@@ -32,7 +32,7 @@ class BA extends Component {
 
     componentWillMount() {
 
-        this.props.openDB();
+        // this.props.openDB();
 
         this.props.getAllThumbs();
     }

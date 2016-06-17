@@ -1,16 +1,122 @@
-/**
- * Created by tedshaffer on 6/12/16.
- */
 const fs = require('fs');
 const path = require('path');
 const exifReader = require('./nodeExif');
 const easyImage = require("easyimage");
 
+let baDB = null;
 const dbName = "BADatabase-0";
 
 import { setDB, openSign, setCurrentPlaylist, setMediaFolderFiles, setThumbFiles } from '../actions/index';
 
 const mediaFileSuffixes = ['jpg'];
+
+export function executeGetAllThumbs() {
+
+    // check to see if the db has been opened yet
+    if (baDB === null) {
+        openDB().then(function(openedDB) {
+            console.log("db successfully opened");
+            baDB = openedDB;
+
+            // now that db is open, fetch all the thumbs
+            readThumbs().then(function(thumbs) {
+                console.log("read thumbs");
+            });
+        });
+    }
+}
+
+function readThumbs() {
+
+    return new Promise(function(resolve, reject) {
+
+        let thumbs = [];
+
+        const objectStore = baDB.transaction("thumbFiles").objectStore("thumbFiles");
+
+        objectStore.openCursor().onsuccess = function(event) {
+            var cursor = event.target.result;
+            if (cursor) {
+
+                let thumb = {};
+                thumb[cursor.key] = cursor.value;
+                thumbs.push(thumb);
+                cursor.continue();
+            }
+            else {
+                resolve(thumbs);
+            }
+        };
+    })
+}
+
+function openDB() {
+
+    return new Promise(function(resolve, reject) {
+
+        var request = window.indexedDB.open(dbName, 4);
+
+        request.onerror = function(event) {
+            // TODO - what??
+            alert("Database error: " + event.target.errorCode);
+            reject();
+        };
+
+        request.onupgradeneeded = function(event) {
+
+            console.log("openDB.onupgradeneeded invoked");
+            let db = event.target.result;
+
+            var store = db.createObjectStore("thumbFiles");
+
+            store.transaction.oncomplete = function(event) {
+                console.log("createObjectStore transaction complete");
+
+                // // Store values in the newly created objectStore.
+                // var transaction = db.transaction(["thumbFiles"], "readwrite");
+                //
+                // var request = objectStore.add();
+                // request.onsuccess = function(event) {
+                //     // event.target.result == customerData[i].ssn;
+                // };
+                // var thumbFilesObjectStore = db.transaction("thumbFiles", "readwrite").objectStore("thumbFiles");
+                // thumbFilesObjectStore.add("thumb1.jpg", "/users/tedshaffer/Projects/thumb1.jpg");
+                // thumbFilesObjectStore.add("thumb2.jpg", "/users/tedshaffer/Projects/thumb2.jpg");
+            };
+        };
+
+        request.onsuccess = function(event) {
+            // Do something with request.result!
+            console.log("request.onsuccess invoked");
+            let db = event.target.result;
+
+            // var tx = this.db.transaction("thumbFiles", "readwrite");
+            // let objectStore = tx.objectStore("thumbFiles");
+            // var request = objectStore.add("/users/tedshaffer/Projects/thumb3.jpg", "thumb3");
+            // request.onsuccess = function(event) {
+            //     console.log("add success 1");
+            //     console.log("add success 2");
+            //     var returnedKey = event.target.result;
+            //     console.log("returnedKey=", returnedKey);
+            // };
+
+            // var objectStore = db.transaction("thumbFiles").objectStore("thumbFiles");
+            //
+            // objectStore.openCursor().onsuccess = function(event) {
+            //     var cursor = event.target.result;
+            //     if (cursor) {
+            //         console.log("Item " + cursor.key + " is " + cursor.value);
+            //         cursor.continue();
+            //     }
+            //     else {
+            //         console.log("No more entries!");
+            //     }
+            // };
+
+            resolve(db);
+        };
+    });
+}
 
 export function executeOpenDB() {
 

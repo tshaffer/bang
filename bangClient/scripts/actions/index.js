@@ -8,7 +8,7 @@ import fetch from 'isomorphic-fetch';
 import Sign from '../badm/sign';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
-import { executeOpenDB, executeFetchSign, executeSelectMediaFolder } from '../platform/actions';
+import { executeGetAllThumbs, executeOpenDB, executeFetchSign, executeSelectMediaFolder } from '../platform/actions';
 
 export function openDB() {
     return executeOpenDB();
@@ -196,14 +196,15 @@ export function setAllThumbs(thumbsByPath) {
 
 export function getAllThumbs() {
 
-    return function (dispatch) {
-
-        const getAllThumbsUrl = "http://localhost:6969/" + "getAllThumbs";
-        axios.get(getAllThumbsUrl, {}).then(function(data) {
-            const thumbsByPath = data.data;
-            dispatch(setAllThumbs(thumbsByPath));
-        })
-    }
+    return executeGetAllThumbs();
+    // return function (dispatch) {
+    //
+    //     const getAllThumbsUrl = "http://localhost:6969/" + "getAllThumbs";
+    //     axios.get(getAllThumbsUrl, {}).then(function(data) {
+    //         const thumbsByPath = data.data;
+    //         dispatch(setAllThumbs(thumbsByPath));
+    //     })
+    // }
 }
 
 export const SET_MEDIA_FOLDER_FILES = 'SET_MEDIA_FOLDER_FILES';
