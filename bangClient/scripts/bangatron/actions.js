@@ -12,17 +12,19 @@ const mediaFileSuffixes = ['jpg'];
 
 export function executeGetAllThumbs() {
 
-    // check to see if the db has been opened yet
-    if (baDB === null) {
-        openDB().then(function(openedDB) {
-            console.log("db successfully opened");
-            baDB = openedDB;
+    return function(dispatch) {
+        // check to see if the db has been opened yet
+        if (baDB === null) {
+            openDB().then(function(openedDB) {
+                console.log("db successfully opened");
+                baDB = openedDB;
 
-            // now that db is open, fetch all the thumbs
-            readThumbs().then(function(thumbs) {
-                console.log("read thumbs");
+                // now that db is open, fetch all the thumbs
+                readThumbs().then(function(thumbs) {
+                    console.log("read thumbs");
+                });
             });
-        });
+        }
     }
 }
 
