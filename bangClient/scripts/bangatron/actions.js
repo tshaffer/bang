@@ -6,7 +6,7 @@ const easyImage = require("easyimage");
 let baDB = null;
 const dbName = "BADatabase-17";
 
-import { setDB, openSign, setCurrentPlaylist, setMediaLibraryFiles, setThumbFiles, setAllThumbs, mergeThumbs, setMediaFolder } from '../actions/index';
+import { setMediaThumbs, setMediaFolder, openSign, setCurrentPlaylist, setMediaLibraryFiles, mergeThumbs } from '../actions/index';
 
 const mediaFileSuffixes = ['jpg'];
 
@@ -15,7 +15,6 @@ export function executeLoadAppData() {
 
     return function(dispatch) {
         
-        // open db if it's not open yet
         if (baDB === null) {
             openDB().then(function(openedDB) {
                 console.log("db successfully opened");
@@ -27,135 +26,7 @@ export function executeLoadAppData() {
     }
 }
 
-// used by bangatron
-function fetchStartupData(dispatch) {
 
-    // startup data required for the app
-    //      all thumbs in the database, indexed by media file path
-    //      last used media directory
-    //      files in the last used media directory
-
-    let readThumbsPromise = readThumbs();
-    let getMediaDirectoryPromise = readMediaDirectory();
-
-    Promise.all([readThumbsPromise, getMediaDirectoryPromise]).then(function(values) {
-
-        console.log("readThumbs and readMediaDirectory complete");
-        console.log("number of thumbs is " + values[0].length);
-        console.log("media folder is " + values[1]);
-        dispatch(setAllThumbs(values[0]));
-        dispatch(setMediaFolder(values[1]));
-
-        // get the files in the last used media folder
-        let mediaFolder = values[1];
-
-        // instead of doing this, executeSelectMediaFolder should get called
-        let mediaFolderFiles = [];
-        mediaFolderFiles = findMediaFiles(mediaFolder, mediaFolderFiles);
-        dispatch(setMediaLibraryFiles(mediaFolderFiles));
-    });
-}
-
-
-// used by bangatron
-function readMediaDirectory() {
-
-    let mediaDirectory = "";
-
-    return new Promise(function(resolve, reject) {
-
-        const objectStore = baDB.transaction("mediaDirectory").objectStore("mediaDirectory");
-
-        objectStore.openCursor().onsuccess = function(event) {
-            var cursor = event.target.result;
-            if (cursor) {
-                if (cursor.key == "currentMediaFolder" ) {
-                    mediaDirectory = cursor.value;
-                }
-                cursor.continue();
-            }
-            else {
-                resolve(mediaDirectory);
-            }
-        };
-    })
-}
-
-function updateMediaFolderInDB(mediaFolder) {
-
-    var objectStore = baDB.transaction(["mediaDirectory"], "readwrite").objectStore("mediaDirectory");
-    var request = objectStore.get("currentMediaFolder");
-
-    request.onerror = function(event) {
-        // Handle errors!
-        addRecordToDB( "mediaDirectory", "currentMediaFolder", mediaFolder );
-    };
-
-    request.onsuccess = function(event) {
-
-        // Get the old value that we want to update
-        var data = request.result;
-
-        // Put this updated object back into the database.
-        var requestUpdate = objectStore.put(mediaFolder, "currentMediaFolder");
-        requestUpdate.onerror = function(event) {
-            console.log("error updating media folder");
-            // Do something with the error
-        };
-        requestUpdate.onsuccess = function(event) {
-            console.log("success updating media folder");
-            // Success - the data is updated!
-        };
-    };
-
-
-}
-
-// used by bangatron
-function readThumbs() {
-
-    return new Promise(function(resolve, reject) {
-
-        let thumbs = {};
-
-        const objectStore = baDB.transaction("thumbFiles").objectStore("thumbFiles");
-
-        objectStore.openCursor().onsuccess = function(event) {
-            var cursor = event.target.result;
-            if (cursor) {
-                thumbs[cursor.key] = cursor.value;
-                cursor.continue();
-            }
-            else {
-                resolve(thumbs);
-            }
-        };
-    })
-}
-
-
-// used by bangatron
-function addRecordToDB ( objectStoreName, key, value ) {
-    return new Promise(function(resolve, reject) {
-
-        var request = baDB.transaction([objectStoreName], "readwrite")
-            .objectStore(objectStoreName)
-            .add( value, key );
-
-        request.onsuccess = function(event) {
-            console.log("record added to db");
-            resolve(event);
-        };
-
-        request.onerror = function(event) {
-            console.log("unable to add record to db");
-            reject(event);
-        }
-    });
-}
-
-
-// used by bangatron
 function openDB() {
 
     // use the following flags to determine when to resolve the promise
@@ -168,7 +39,7 @@ function openDB() {
         var request = window.indexedDB.open(dbName, 3);
 
         request.onerror = function(event) {
-            alert("Database error: " + event.target.errorCode);
+            console.log("Database error: " + event.target.errorCode);
             reject();
         };
 
@@ -259,49 +130,150 @@ function openDB() {
     });
 }
 
-export function executeFetchSign(filePath) {
 
-    return function (dispatch) {
+function fetchStartupData(dispatch) {
 
-        console.log("fetchSign, filePath=", filePath);
+    // startup data required for the app
+    //      all media thumbs in the database, indexed by media file path
+    //      last used media directory
+    //      files in the last used media directory
 
-        fs.readFile(filePath, 'utf8', (err, data) => {
+    let getMediaThumbsPromise = getMediaThumbs();
+    let getMediaLibraryFolderPromise = getMediaLibraryFolder();
 
-            // TODO - proper error handling?
-            if (err) {
-                throw err;
-                return;
-            }
-            console.log("fs.ReadFile successful");
-            var sign = JSON.parse(data);
-            dispatch(openSign(sign));
-            dispatch(setCurrentPlaylist(sign.zones[0].zonePlaylist));
-        })
-    }
+    Promise.all([getMediaThumbsPromise, getMediaLibraryFolderPromise]).then(function(values) {
+
+        const mediaThumbs = values[0];
+        const mediaFolder = values[1];
+
+        dispatch(setMediaThumbs(mediaThumbs));
+        dispatch(setMediaFolder(mediaFolder));
+
+        // get the files in the last used media folder
+        let mediaFolderFiles = findFilesThenSetMediaLibraryFiles(dispatch, mediaFolder);
+    });
 }
+
+
+function getMediaLibraryFolder() {
+
+    let mediaFolder = "";
+
+    return new Promise(function(resolve, reject) {
+
+        const objectStore = baDB.transaction("mediaDirectory").objectStore("mediaDirectory");
+
+        objectStore.openCursor().onsuccess = function(event) {
+            var cursor = event.target.result;
+            if (cursor) {
+                if (cursor.key == "currentMediaFolder" ) {
+                    mediaFolder = cursor.value;
+                }
+                cursor.continue();
+            }
+            else {
+                resolve(mediaFolder);
+            }
+        };
+    })
+}
+
+
+function saveMediaFolder(mediaFolder) {
+
+    var objectStore = baDB.transaction(["mediaDirectory"], "readwrite").objectStore("mediaDirectory");
+    var request = objectStore.get("currentMediaFolder");
+
+    request.onerror = function(event) {
+        // currentMediaFolder record not found - add it
+        addRecordToDB( "mediaDirectory", "currentMediaFolder", mediaFolder );
+    };
+
+    request.onsuccess = function(event) {
+
+        // record found, update it
+        var updateRequest = objectStore.put(mediaFolder, "currentMediaFolder");
+        updateRequest.onerror = function(event) {
+            console.log("error updating media folder");
+            // TODO - error handling?
+        };
+        updateRequest.onsuccess = function(event) {
+            // Success - the data is updated!
+        };
+    };
+
+
+}
+
+
+// builds and returns a datastructure that maps file paths to thumbData objects
+function getMediaThumbs() {
+
+    return new Promise(function(resolve, reject) {
+
+        let thumbs = {};
+
+        const objectStore = baDB.transaction("thumbFiles").objectStore("thumbFiles");
+
+        objectStore.openCursor().onsuccess = function(event) {
+            var cursor = event.target.result;
+            if (cursor) {
+                thumbs[cursor.key] = cursor.value;
+                cursor.continue();
+            }
+            else {
+                resolve(thumbs);
+            }
+        };
+    })
+}
+
+
+// general purpose method to add a db record with key, value to the db
+function addRecordToDB ( objectStoreName, key, value ) {
+    return new Promise(function(resolve, reject) {
+
+        var request = baDB.transaction([objectStoreName], "readwrite")
+            .objectStore(objectStoreName)
+            .add( value, key );
+
+        request.onsuccess = function(event) {
+            resolve(event);
+        };
+
+        request.onerror = function(event) {
+            reject(event);
+        }
+    });
+}
+
+
+// TODO - rename me
+function findFilesThenSetMediaLibraryFiles(dispatch, mediaFolder) {
+
+    let mediaFolderFiles = [];
+    mediaFolderFiles = findMediaFiles(mediaFolder, mediaFolderFiles);
+    dispatch(setMediaLibraryFiles(mediaFolderFiles));
+    return mediaFolderFiles;
+}
+
 
 // invoked when the user selects a new media folder through the UI
 export function executeSelectMediaFolder(mediaFolder, mediaItemThumbs) {
 
     return function(dispatch) {
 
-        // copied from fetchStartupData
-        let mediaFolderFiles = [];
-        mediaFolderFiles = findMediaFiles(mediaFolder, mediaFolderFiles);
-        dispatch(setMediaLibraryFiles(mediaFolderFiles));
+        let mediaFolderFiles = findFilesThenSetMediaLibraryFiles(dispatch, mediaFolder);
 
         // make a list of thumbs that need to be created
         let thumbsToCreate = [];
 
         mediaFolderFiles.forEach(function(mediaFolderFile) {
             if (!mediaItemThumbs.hasOwnProperty(mediaFolderFile.filePath)) {
-                // thumb doesn't already exist for this file - create it
+                // thumb doesn't exist for this file - mark it for creation
                 thumbsToCreate.push(mediaFolderFile);
             }
         });
-
-        console.log("need to create " + thumbsToCreate.length);
-        console.log("do it carefully");
 
         if (thumbsToCreate.length > 0) {
 
@@ -309,10 +281,7 @@ export function executeSelectMediaFolder(mediaFolder, mediaItemThumbs) {
 
             let getThumbsPromise = getThumbs(thumbsToCreate);
             getThumbsPromise.then(function(mediaFilesWithThumbInfo) {
-                console.log("mediaFilesWithThumbInfo returned");
-                console.log(mediaFilesWithThumbInfo);
-
-                // at this point, each entry in mediaFilesWithThumbInfo includes the following fields
+                // each entry in mediaFilesWithThumbInfo includes the following fields
                 //      dateTaken
                 //      fileName                backend_menu_Notes.jpg
                 //      filePath                /Users/tedshaffer/Pictures/BangPhotos2/backend_menu_Notes.jpg
@@ -321,7 +290,7 @@ export function executeSelectMediaFolder(mediaFolder, mediaItemThumbs) {
                 //      orientation
                 //      thumbFileName           backend_menu_Notes_thumb.jpg
                 //      thumbUrl                /thumbs/backend_menu_Notes_thumb.jpg
-                // add each of these to the thumbFiles db
+                // add each entry to the thumbFiles object store in the db
 
                 let promises = [];
                 mediaFilesWithThumbInfo.forEach( (mediaFileWithThumbInfo) => {
@@ -333,6 +302,7 @@ export function executeSelectMediaFolder(mediaFolder, mediaItemThumbs) {
                         lastModified: ""
                     };
                     let promise = addRecordToDB("thumbFiles", mediaFileWithThumbInfo.filePath, thumbData);
+                    promises.push(promise);
 
                     thumbsByPathToMerge[mediaFileWithThumbInfo.filePath] = thumbData;
                 });
@@ -341,23 +311,21 @@ export function executeSelectMediaFolder(mediaFolder, mediaItemThumbs) {
                     console.log("added thumbs to db: count was ", promises.length);
                     console.log(values);
 
+                    // TODO - it's not really necessary to wait for the db updates to invoke mergeThumbs
                     dispatch(mergeThumbs(thumbsByPathToMerge));
-
                 });
             });
         }
 
         // update db with selectedMediaFolder
-        updateMediaFolderInDB(mediaFolder);
+        saveMediaFolder(mediaFolder);
 
         // update store with selected media folder
         dispatch(setMediaFolder(mediaFolder));
-
     }
 }
 
 
-// used by bangatron (fetchStartupData - code there needs to be pulled out)
 function findMediaFiles(dir, mediaFiles) {
 
     var files = fs.readdirSync(dir);
@@ -473,6 +441,27 @@ function buildThumb(mediaFile) {
     });
 }
 
+
+export function executeFetchSign(filePath) {
+
+    return function (dispatch) {
+
+        console.log("fetchSign, filePath=", filePath);
+
+        fs.readFile(filePath, 'utf8', (err, data) => {
+
+            // TODO - proper error handling?
+            if (err) {
+                throw err;
+                return;
+            }
+            console.log("fs.ReadFile successful");
+            var sign = JSON.parse(data);
+            dispatch(openSign(sign));
+            dispatch(setCurrentPlaylist(sign.zones[0].zonePlaylist));
+        })
+    }
+}
 
 
 

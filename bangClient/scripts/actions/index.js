@@ -10,18 +10,9 @@ import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
 import { executeLoadAppData, executeFetchSign, executeSelectMediaFolder } from '../platform/actions';
 
-// used by bangatron
 export function loadAppData() {
 
     return executeLoadAppData();
-    // return function (dispatch) {
-    //
-    //     const getAllThumbsUrl = "http://localhost:6969/" + "getAllThumbs";
-    //     axios.get(getAllThumbsUrl, {}).then(function(data) {
-    //         const thumbsByPath = data.data;
-    //         dispatch(setAllThumbs(thumbsByPath));
-    //     })
-    // }
 }
 
 export const CREATE_DEFAULT_SIGN = 'CREATE_DEFAULT_SIGN'
@@ -197,7 +188,7 @@ export function fetchMediaFolder() {
 
 
 export const SET_ALL_THUMBS = 'SET_ALL_THUMBS';
-export function setAllThumbs(thumbsByPath) {
+export function setMediaThumbs(thumbsByPath) {
 
     return {
         type: SET_ALL_THUMBS,
