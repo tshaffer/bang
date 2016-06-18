@@ -259,7 +259,7 @@ function findFilesThenSetMediaLibraryFiles(dispatch, mediaFolder) {
 
 
 // invoked when the user selects a new media folder through the UI
-export function executeSelectMediaFolder(mediaFolder, mediaItemThumbs) {
+export function executeSelectMediaFolder(mediaFolder, mediaThumbs) {
 
     return function(dispatch) {
 
@@ -269,7 +269,7 @@ export function executeSelectMediaFolder(mediaFolder, mediaItemThumbs) {
         let thumbsToCreate = [];
 
         mediaFolderFiles.forEach(function(mediaFolderFile) {
-            if (!mediaItemThumbs.hasOwnProperty(mediaFolderFile.filePath)) {
+            if (!mediaThumbs.hasOwnProperty(mediaFolderFile.filePath)) {
                 // thumb doesn't exist for this file - mark it for creation
                 thumbsToCreate.push(mediaFolderFile);
             }

@@ -146,7 +146,7 @@ export default class BAUI {
             if (directories) {
                 const mediaFolder = directories[0];
                 // self.ba.props.updateMediaFolder(mediaFolder);
-                self.ba.props.selectMediaFolder(mediaFolder, self.ba.props.mediaItemThumbs);
+                self.ba.props.selectMediaFolder(mediaFolder, self.ba.props.mediaThumbs);
             }
         })
     }

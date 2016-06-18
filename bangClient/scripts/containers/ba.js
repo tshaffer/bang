@@ -70,7 +70,7 @@ class BA extends Component {
                             onBrowseForMediaLibrary={this.baUI.handleBrowseForMediaLibrary.bind(this.baUI)}
                             mediaLibraryPlaylistItems={this.props.mediaLibraryPlaylistItems}
                             mediaFolder={this.props.mediaFolder}
-                            mediaItemThumbs={this.props.mediaItemThumbs}
+                            mediaThumbs={this.props.mediaThumbs}
                         />
                         <Playlist />
                     </div>
@@ -86,7 +86,7 @@ function mapStateToProps(state) {
         sign: state.sign,
         mediaLibraryPlaylistItems: state.mediaLibraryPlaylistItems,
         mediaFolder: state.mediaFolder,
-        mediaItemThumbs: state.mediaItemThumbs,
+        mediaThumbs: state.mediaThumbs,
     };
 }
 

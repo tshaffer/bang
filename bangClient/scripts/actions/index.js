@@ -17,8 +17,8 @@ export function loadAppData() {
 
 
 // invoked when the user selects a new media folder through the UI
-export function selectMediaFolder(mediaFolder, mediaItemThumbs) {
-    return executeSelectMediaFolder(mediaFolder, mediaItemThumbs);
+export function selectMediaFolder(mediaFolder, mediaThumbs) {
+    return executeSelectMediaFolder(mediaFolder, mediaThumbs);
 }
 
 

@@ -89,9 +89,9 @@ class Playlist extends Component {
         let dataIndex = -1;
         let playlistItems = currentPlaylistItems.map(function (playlistItem) {
 
-            if (self.props.mediaItemThumbs.hasOwnProperty(playlistItem.filePath)) {
+            if (self.props.mediaThumbs.hasOwnProperty(playlistItem.filePath)) {
                 
-                const thumbUrl = self.props.mediaItemThumbs[playlistItem.filePath].thumbFileName;
+                const thumbUrl = self.props.mediaThumbs[playlistItem.filePath].thumbFileName;
                 dataIndex++;
 
                 return (
@@ -129,7 +129,7 @@ class Playlist extends Component {
 
 function mapStateToProps(state) {
     return {
-        mediaItemThumbs: state.mediaItemThumbs,
+        mediaThumbs: state.mediaThumbs,
         currentPlaylist: state.currentPlaylist
     };
 }

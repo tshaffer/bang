@@ -10,15 +10,15 @@ export default function(state = {}, action) {
         case SET_MEDIA_THUMBS:
             return action.payload;
         case MERGE_MEDIA_THUMBS:
-            let newMediaItemThumbs = action.payload;
+            let newMediaThumbs = action.payload;
 
             // merge existing thumbs with new thumbs - merging in this direction avoids mutating current state
             for (var prop in state) {
-                if (state.hasOwnProperty( prop ) &&  !newMediaItemThumbs.hasOwnProperty( prop )) {
-                    newMediaItemThumbs[prop] = state[prop];
+                if (state.hasOwnProperty( prop ) &&  !newMediaThumbs.hasOwnProperty( prop )) {
+                    newMediaThumbs[prop] = state[prop];
                 }
             }
-            return newMediaItemThumbs;
+            return newMediaThumbs;
     }
 
     return state;
