@@ -16,7 +16,7 @@ import { getAllThumbs, createDefaultSign, selectMediaFolder, updateMediaFolder }
 
 // these should be mutually exclusive
 import { saveBSNPresentation } from '../actions/index';
-import { openDB, fetchSign }  from '../actions/index';
+import { openDB, loadAppData, fetchSign }  from '../actions/index';
 
 class BA extends Component {
 
@@ -32,9 +32,7 @@ class BA extends Component {
 
     componentWillMount() {
 
-        // this.props.openDB();
-
-        this.props.getAllThumbs();
+        this.props.loadAppData();
     }
 
     componentDidMount() {
@@ -88,7 +86,7 @@ function mapStateToProps(state) {
 
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ openDB, getAllThumbs, fetchSign, saveBSNPresentation, createDefaultSign: createDefaultSign, selectMediaFolder, updateMediaFolder: updateMediaFolder }, dispatch);
+    return bindActionCreators({ openDB, loadAppData, fetchSign, saveBSNPresentation, createDefaultSign: createDefaultSign, selectMediaFolder, updateMediaFolder: updateMediaFolder }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);

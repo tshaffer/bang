@@ -10,10 +10,11 @@ import { setDB, openSign, setCurrentPlaylist, setMediaLibraryFiles, setThumbFile
 
 const mediaFileSuffixes = ['jpg'];
 
-export function executeGetAllThumbs() {
+export function executeLoadAppData() {
 
     return function(dispatch) {
-        // check to see if the db has been opened yet
+        
+        // open db if it's not open yet
         if (baDB === null) {
             openDB().then(function(openedDB) {
                 console.log("db successfully opened");

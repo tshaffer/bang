@@ -94,7 +94,12 @@ class MediaLibrary extends Component {
 
                 if (self.props.mediaItemThumbs.hasOwnProperty(mediaLibraryPlaylistItem.filePath)) {
 
-                    const thumbUrl = self.props.mediaItemThumbs[mediaLibraryPlaylistItem.filePath].thumbFileName;
+                    const mediaItem = self.props.mediaItemThumbs[mediaLibraryPlaylistItem.filePath];
+                    let thumbUrl = mediaItem.thumbFileName;
+                    // let thumbUrl = mediaItem.url;
+                    // thumbUrl = "file://localhost/" + mediaItem.url;
+                    // thumbUrl = "http://localhost/" + mediaItem.url;
+                    // let thumbUrl = "file:///" + mediaItem.url;
 
                     return (
                         <li className="flex-item mediaLibraryThumbDiv" key={mediaLibraryPlaylistItem.id}>

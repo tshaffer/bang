@@ -8,23 +8,21 @@ import fetch from 'isomorphic-fetch';
 import Sign from '../badm/sign';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
-import { executeGetAllThumbs, executeOpenDB, executeFetchSign, executeSelectMediaFolder } from '../platform/actions';
+import { executeLoadAppData, executeOpenDB, executeFetchSign, executeSelectMediaFolder } from '../platform/actions';
 
-export function openDB() {
-    return executeOpenDB();
+// used by bangatron
+export function loadAppData() {
+
+    return executeLoadAppData();
+    // return function (dispatch) {
+    //
+    //     const getAllThumbsUrl = "http://localhost:6969/" + "getAllThumbs";
+    //     axios.get(getAllThumbsUrl, {}).then(function(data) {
+    //         const thumbsByPath = data.data;
+    //         dispatch(setAllThumbs(thumbsByPath));
+    //     })
+    // }
 }
-
-export const SET_DB = 'SET_DB'
-export function setDB(db) {
-
-    console.log("actions::setDB");
-
-    return {
-        type: SET_DB,
-        payload: db
-    }
-}
-
 
 export const CREATE_DEFAULT_SIGN = 'CREATE_DEFAULT_SIGN'
 export function createDefaultSign() {
@@ -205,19 +203,6 @@ export function setAllThumbs(thumbsByPath) {
     }
 }
 
-
-export function getAllThumbs() {
-
-    return executeGetAllThumbs();
-    // return function (dispatch) {
-    //
-    //     const getAllThumbsUrl = "http://localhost:6969/" + "getAllThumbs";
-    //     axios.get(getAllThumbsUrl, {}).then(function(data) {
-    //         const thumbsByPath = data.data;
-    //         dispatch(setAllThumbs(thumbsByPath));
-    //     })
-    // }
-}
 
 // export const SET_MEDIA_FOLDER_FILES = 'SET_MEDIA_FOLDER_FILES';
 // export function setMediaFolderFiles(mediaFolderFiles) {
