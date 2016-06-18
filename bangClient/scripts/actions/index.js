@@ -205,6 +205,14 @@ export function setAllThumbs(thumbsByPath) {
     }
 }
 
+export const MERGE_THUMBS = 'MERGE_THUMBS';
+export function mergeThumbs(thumbsByPath) {
+
+    return {
+        type: MERGE_THUMBS,
+        payload: thumbsByPath
+    }
+}
 
 // export const SET_MEDIA_FOLDER_FILES = 'SET_MEDIA_FOLDER_FILES';
 // export function setMediaFolderFiles(mediaFolderFiles) {

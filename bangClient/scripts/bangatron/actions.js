@@ -6,7 +6,7 @@ const easyImage = require("easyimage");
 let baDB = null;
 const dbName = "BADatabase-17";
 
-import { setDB, openSign, setCurrentPlaylist, setMediaLibraryFiles, setThumbFiles, setAllThumbs, setMediaFolder } from '../actions/index';
+import { setDB, openSign, setCurrentPlaylist, setMediaLibraryFiles, setThumbFiles, setAllThumbs, mergeThumbs, setMediaFolder } from '../actions/index';
 
 const mediaFileSuffixes = ['jpg'];
 
@@ -69,7 +69,9 @@ function readMediaDirectory() {
         objectStore.openCursor().onsuccess = function(event) {
             var cursor = event.target.result;
             if (cursor) {
-                mediaDirectory = cursor.key;
+                if (cursor.key == "currentMediaFolder" ) {
+                    mediaDirectory = cursor.value;
+                }
                 cursor.continue();
             }
             else {
@@ -79,6 +81,35 @@ function readMediaDirectory() {
     })
 }
 
+function updateMediaFolderInDB(mediaFolder) {
+
+    var objectStore = baDB.transaction(["mediaDirectory"], "readwrite").objectStore("mediaDirectory");
+    var request = objectStore.get("currentMediaFolder");
+
+    request.onerror = function(event) {
+        // Handle errors!
+        addRecordToDB( "mediaDirectory", "currentMediaFolder", mediaFolder );
+    };
+
+    request.onsuccess = function(event) {
+
+        // Get the old value that we want to update
+        var data = request.result;
+
+        // Put this updated object back into the database.
+        var requestUpdate = objectStore.put(mediaFolder, "currentMediaFolder");
+        requestUpdate.onerror = function(event) {
+            console.log("error updating media folder");
+            // Do something with the error
+        };
+        requestUpdate.onsuccess = function(event) {
+            console.log("success updating media folder");
+            // Success - the data is updated!
+        };
+    };
+
+
+}
 
 // used by bangatron
 function readThumbs() {
@@ -156,6 +187,7 @@ function openDB() {
             var mediaDirectoryStore = baDB.createObjectStore("mediaDirectory");
 
             mediaDirectoryStore.transaction.oncomplete = function(event) {
+                // BOGUS - need key, value pair
                 let mediaDirectoryStorePromise = addRecordToDB("mediaDirectory", "/Users/tedshaffer/Pictures/BangPhotos2");
                 mediaDirectoryStorePromise.then(function(event) {
                     console.log("mediaDirectory record added");
@@ -272,6 +304,9 @@ export function executeSelectMediaFolder(mediaFolder, mediaItemThumbs) {
         console.log("do it carefully");
 
         if (thumbsToCreate.length > 0) {
+
+            let thumbsByPathToMerge = {};
+
             let getThumbsPromise = getThumbs(thumbsToCreate);
             getThumbsPromise.then(function(mediaFilesWithThumbInfo) {
                 console.log("mediaFilesWithThumbInfo returned");
@@ -298,28 +333,26 @@ export function executeSelectMediaFolder(mediaFolder, mediaItemThumbs) {
                         lastModified: ""
                     };
                     let promise = addRecordToDB("thumbFiles", mediaFileWithThumbInfo.filePath, thumbData);
+
+                    thumbsByPathToMerge[mediaFileWithThumbInfo.filePath] = thumbData;
                 });
 
                 Promise.all(promises).then(function(values) {
                     console.log("added thumbs to db: count was ", promises.length);
                     console.log(values);
+
+                    dispatch(mergeThumbs(thumbsByPathToMerge));
+
                 });
-                // once done, figure out how to
-                // add these to the existing mediaItemThumbs
             });
         }
 
-        // // given the list of files, get thumbs for each of them
-        // getThumbs(mediaFolderFiles).then(function(mediaFilesWithThumbInfo) {
-        //
-        //     console.log("executeSelectMediaFolder - number of mediaFiles with thumbs=", mediaFilesWithThumbInfo.length);
-        //
-        //     let thumbFilesByFilePath = {};
-        //     mediaFilesWithThumbInfo.forEach(function(mediaFileWithThumbInfo) {
-        //         thumbFilesByFilePath[mediaFileWithThumbInfo.filePath] = mediaFileWithThumbInfo;
-        //     });
-        //     dispatch(setThumbFiles(mediaFilesWithThumbInfo));
-        // });
+        // update db with selectedMediaFolder
+        updateMediaFolderInDB(mediaFolder);
+
+        // update store with selected media folder
+        dispatch(setMediaFolder(mediaFolder));
+
     }
 }
 
