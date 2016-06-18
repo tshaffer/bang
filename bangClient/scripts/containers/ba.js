@@ -68,6 +68,9 @@ class BA extends Component {
                     <div>
                         <MediaLibrary
                             onBrowseForMediaLibrary={this.baUI.handleBrowseForMediaLibrary.bind(this.baUI)}
+                            mediaLibraryPlaylistItems={this.props.mediaLibraryPlaylistItems}
+                            mediaFolder={this.props.mediaFolder}
+                            mediaItemThumbs={this.props.mediaItemThumbs}
                         />
                         <Playlist />
                     </div>
@@ -80,10 +83,12 @@ class BA extends Component {
 
 function mapStateToProps(state) {
     return {
-        sign: state.sign
+        sign: state.sign,
+        mediaLibraryPlaylistItems: state.mediaLibraryPlaylistItems,
+        mediaFolder: state.mediaFolder,
+        mediaItemThumbs: state.mediaItemThumbs,
     };
 }
-
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({ openDB, loadAppData, fetchSign, saveBSNPresentation, createDefaultSign: createDefaultSign, selectMediaFolder, updateMediaFolder: updateMediaFolder }, dispatch);

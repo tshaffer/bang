@@ -162,16 +162,8 @@ class MediaLibrary extends Component {
     }
 }
 
-function mapStateToProps(state) {
-    return {
-        mediaLibraryPlaylistItems: state.mediaLibraryPlaylistItems,
-        mediaFolder: state.mediaFolder,
-        mediaItemThumbs: state.mediaItemThumbs,
-    };
-}
-
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({ fetchMediaFolder: fetchMediaFolder, setMediaFolder: setMediaFolder }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MediaLibrary);
+export default connect(null, mapDispatchToProps)(MediaLibrary);

@@ -10,6 +10,7 @@ import { setDB, openSign, setCurrentPlaylist, setMediaLibraryFiles, setThumbFile
 
 const mediaFileSuffixes = ['jpg'];
 
+// used by bangatron
 export function executeLoadAppData() {
 
     return function(dispatch) {
@@ -26,7 +27,7 @@ export function executeLoadAppData() {
     }
 }
 
-
+// used by bangatron
 function fetchStartupData(dispatch) {
 
     // startup data required for the app
@@ -47,12 +48,16 @@ function fetchStartupData(dispatch) {
 
         // get the files in the last used media folder
         let mediaFolder = values[1];
+
+        // instead of doing this, executeSelectMediaFolder should get called
         let mediaFolderFiles = [];
         mediaFolderFiles = findMediaFiles(mediaFolder, mediaFolderFiles);
         dispatch(setMediaLibraryFiles(mediaFolderFiles));
     });
 }
 
+
+// used by bangatron
 function readMediaDirectory() {
 
     let mediaDirectory = "";
@@ -75,6 +80,7 @@ function readMediaDirectory() {
 }
 
 
+// used by bangatron
 function readThumbs() {
 
     return new Promise(function(resolve, reject) {
@@ -97,6 +103,7 @@ function readThumbs() {
 }
 
 
+// used by bangatron
 function addRecordToDB ( objectStoreName, key, value ) {
     return new Promise(function(resolve, reject) {
 
@@ -117,8 +124,10 @@ function addRecordToDB ( objectStoreName, key, value ) {
 }
 
 
+// used by bangatron
 function openDB() {
 
+    // use the following flags to determine when to resolve the promise
     let upgrading = false;
     let upgradeComplete = false;
     let success = false;
@@ -128,13 +137,14 @@ function openDB() {
         var request = window.indexedDB.open(dbName, 3);
 
         request.onerror = function(event) {
-            // TODO - what??
             alert("Database error: " + event.target.errorCode);
             reject();
         };
 
         request.onupgradeneeded = function(event) {
 
+            console.log("XXXXXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+            return;
             upgrading = true;
             let mediaDirectoryWritesComplete = false;
             let thumbFilesWritesComplete = false;
@@ -205,7 +215,7 @@ function openDB() {
         };
 
         request.onsuccess = function(event) {
-            // Do something with request.result!
+
             console.log("request.onsuccess invoked");
             let db = event.target.result;
 
@@ -216,10 +226,6 @@ function openDB() {
         };
     });
 }
-
-export function executeOpenDB() {
-}
-
 
 export function executeFetchSign(filePath) {
 
@@ -242,30 +248,83 @@ export function executeFetchSign(filePath) {
     }
 }
 
-export function executeSelectMediaFolder(mediaFolder) {
-
-    let mediaFolderFiles = [];
+// invoked when the user selects a new media folder through the UI
+export function executeSelectMediaFolder(mediaFolder, mediaItemThumbs) {
 
     return function(dispatch) {
 
-        // retrieve the files in the selected media folder
-        const mediaFolderFiles = findMediaFiles(mediaFolder, mediaFolderFiles);
-        dispatch(setMediaFolderFiles(mediaFolderFiles));
+        // copied from fetchStartupData
+        let mediaFolderFiles = [];
+        mediaFolderFiles = findMediaFiles(mediaFolder, mediaFolderFiles);
+        dispatch(setMediaLibraryFiles(mediaFolderFiles));
 
-        // given the list of files, get thumbs for each of them
-        getThumbs(mediaFolderFiles).then(function(mediaFilesWithThumbInfo) {
+        // make a list of thumbs that need to be created
+        let thumbsToCreate = [];
 
-            console.log("executeSelectMediaFolder - number of mediaFiles with thumbs=", mediaFilesWithThumbInfo.length);
-
-            let thumbFilesByFilePath = {};
-            mediaFilesWithThumbInfo.forEach(function(mediaFileWithThumbInfo) {
-                thumbFilesByFilePath[mediaFileWithThumbInfo.filePath] = mediaFileWithThumbInfo;
-            });
-            dispatch(setThumbFiles(mediaFilesWithThumbInfo));
+        mediaFolderFiles.forEach(function(mediaFolderFile) {
+            if (!mediaItemThumbs.hasOwnProperty(mediaFolderFile.filePath)) {
+                // thumb doesn't already exist for this file - create it
+                thumbsToCreate.push(mediaFolderFile);
+            }
         });
+
+        console.log("need to create " + thumbsToCreate.length);
+        console.log("do it carefully");
+
+        if (thumbsToCreate.length > 0) {
+            let getThumbsPromise = getThumbs(thumbsToCreate);
+            getThumbsPromise.then(function(mediaFilesWithThumbInfo) {
+                console.log("mediaFilesWithThumbInfo returned");
+                console.log(mediaFilesWithThumbInfo);
+
+                // at this point, each entry in mediaFilesWithThumbInfo includes the following fields
+                //      dateTaken
+                //      fileName                backend_menu_Notes.jpg
+                //      filePath                /Users/tedshaffer/Pictures/BangPhotos2/backend_menu_Notes.jpg
+                //      imageHeight
+                //      imageWidth
+                //      orientation
+                //      thumbFileName           backend_menu_Notes_thumb.jpg
+                //      thumbUrl                /thumbs/backend_menu_Notes_thumb.jpg
+                // add each of these to the thumbFiles db
+
+                let promises = [];
+                mediaFilesWithThumbInfo.forEach( (mediaFileWithThumbInfo) => {
+                    const thumbData = {
+                        fileName: mediaFileWithThumbInfo.fileName,
+                        thumbFileName: mediaFileWithThumbInfo.thumbFileName,
+                        mediaFolder: "",
+                        url: "",
+                        lastModified: ""
+                    };
+                    let promise = addRecordToDB("thumbFiles", mediaFileWithThumbInfo.filePath, thumbData);
+                });
+
+                Promise.all(promises).then(function(values) {
+                    console.log("added thumbs to db: count was ", promises.length);
+                    console.log(values);
+                });
+                // once done, figure out how to
+                // add these to the existing mediaItemThumbs
+            });
+        }
+
+        // // given the list of files, get thumbs for each of them
+        // getThumbs(mediaFolderFiles).then(function(mediaFilesWithThumbInfo) {
+        //
+        //     console.log("executeSelectMediaFolder - number of mediaFiles with thumbs=", mediaFilesWithThumbInfo.length);
+        //
+        //     let thumbFilesByFilePath = {};
+        //     mediaFilesWithThumbInfo.forEach(function(mediaFileWithThumbInfo) {
+        //         thumbFilesByFilePath[mediaFileWithThumbInfo.filePath] = mediaFileWithThumbInfo;
+        //     });
+        //     dispatch(setThumbFiles(mediaFilesWithThumbInfo));
+        // });
     }
 }
 
+
+// used by bangatron (fetchStartupData - code there needs to be pulled out)
 function findMediaFiles(dir, mediaFiles) {
 
     var files = fs.readdirSync(dir);
@@ -289,6 +348,7 @@ function findMediaFiles(dir, mediaFiles) {
 };
 
 
+// used by executeSelectMediaFolder
 function getThumbs(mediaFiles) {
 
     return new Promise(function(resolve, reject) {
@@ -296,6 +356,7 @@ function getThumbs(mediaFiles) {
         var getExifDataPromise = exifReader.getAllExifData(mediaFiles);
         getExifDataPromise.then(function(mediaFilesWithExif) {
             console.log("getExifDataPromised resolved");
+            console.log("check files here");
             var buildThumbnailsPromise = buildThumbnails(mediaFilesWithExif);
             buildThumbnailsPromise.then(function(obj) {
                 console.log("thumbnails build complete");

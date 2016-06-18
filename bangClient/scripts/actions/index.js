@@ -8,7 +8,7 @@ import fetch from 'isomorphic-fetch';
 import Sign from '../badm/sign';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
-import { executeLoadAppData, executeOpenDB, executeFetchSign, executeSelectMediaFolder } from '../platform/actions';
+import { executeLoadAppData, executeFetchSign, executeSelectMediaFolder } from '../platform/actions';
 
 // used by bangatron
 export function loadAppData() {
@@ -50,8 +50,9 @@ export function openSign(sign) {
 }
 
 
-export function selectMediaFolder(mediaFolder) {
-    return executeSelectMediaFolder(mediaFolder);
+// invoked when the user selects a new media folder through the UI
+export function selectMediaFolder(mediaFolder, mediaItemThumbs) {
+    return executeSelectMediaFolder(mediaFolder, mediaItemThumbs);
 }
 
 
@@ -110,6 +111,7 @@ export function setMediaFolder(mediaFolder) {
     }
 }
 
+// used by bangatron on startup - the mediaLibraryFolder is read from the db, mediaFiles are read from that directory and this function is invoked
 export const SET_MEDIA_LIBRARY_FILES = 'SET_MEDIA_LIBRARY_FILES';
 export function setMediaLibraryFiles(mediaLibraryFiles) {
 
