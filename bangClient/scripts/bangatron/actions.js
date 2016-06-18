@@ -6,7 +6,7 @@ const easyImage = require("easyimage");
 let baDB = null;
 const dbName = "BADatabase-17";
 
-import { setMediaThumbs, setMediaFolder, openSign, setCurrentPlaylist, setMediaLibraryFiles, mergeThumbs } from '../actions/index';
+import { setMediaThumbs, mergeMediaThumbs, setMediaFolder, openSign, setCurrentPlaylist, setMediaLibraryFiles } from '../actions/index';
 
 const mediaFileSuffixes = ['jpg'];
 
@@ -311,8 +311,8 @@ export function executeSelectMediaFolder(mediaFolder, mediaItemThumbs) {
                     console.log("added thumbs to db: count was ", promises.length);
                     console.log(values);
 
-                    // TODO - it's not really necessary to wait for the db updates to invoke mergeThumbs
-                    dispatch(mergeThumbs(thumbsByPathToMerge));
+                    // TODO - it's not really necessary to wait for the db updates to invoke mergeMediaThumbs
+                    dispatch(mergeMediaThumbs(thumbsByPathToMerge));
                 });
             });
         }

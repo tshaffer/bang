@@ -2,12 +2,14 @@
  * Created by tedshaffer on 6/9/16.
  */
 
-import { SET_ALL_THUMBS, MERGE_THUMBS } from '../actions/index';
+import { SET_MEDIA_THUMBS, MERGE_MEDIA_THUMBS } from '../actions/index';
 
 export default function(state = {}, action) {
 
     switch (action.type) {
-        case MERGE_THUMBS:
+        case SET_MEDIA_THUMBS:
+            return action.payload;
+        case MERGE_MEDIA_THUMBS:
             let newMediaItemThumbs = action.payload;
 
             // merge existing thumbs with new thumbs - merging in this direction avoids mutating current state
@@ -17,8 +19,6 @@ export default function(state = {}, action) {
                 }
             }
             return newMediaItemThumbs;
-        case SET_ALL_THUMBS:
-            return action.payload;
     }
 
     return state;

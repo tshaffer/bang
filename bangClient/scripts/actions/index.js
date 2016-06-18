@@ -15,6 +15,39 @@ export function loadAppData() {
     return executeLoadAppData();
 }
 
+
+// invoked when the user selects a new media folder through the UI
+export function selectMediaFolder(mediaFolder, mediaItemThumbs) {
+    return executeSelectMediaFolder(mediaFolder, mediaItemThumbs);
+}
+
+
+export const SET_MEDIA_FOLDER = 'SET_MEDIA_FOLDER'
+export function setMediaFolder(mediaFolder) {
+    return {
+        type: SET_MEDIA_FOLDER,
+        payload: mediaFolder
+    }
+}
+
+
+export const SET_MEDIA_LIBRARY_FILES = 'SET_MEDIA_LIBRARY_FILES';
+export function setMediaLibraryFiles(mediaLibraryFiles) {
+
+    let mediaLibraryPlaylistItems = [];
+
+    mediaLibraryFiles.forEach(function(mediaFolderFile) {
+        const imagePlaylistItem = new ImagePlaylistItem(mediaFolderFile.fileName, mediaFolderFile.filePath);
+        mediaLibraryPlaylistItems.push(imagePlaylistItem);
+    });
+
+    return {
+        type: SET_MEDIA_LIBRARY_FILES,
+        payload: mediaLibraryPlaylistItems
+    }
+}
+
+
 export const CREATE_DEFAULT_SIGN = 'CREATE_DEFAULT_SIGN'
 export function createDefaultSign() {
 
@@ -40,11 +73,6 @@ export function openSign(sign) {
     }
 }
 
-
-// invoked when the user selects a new media folder through the UI
-export function selectMediaFolder(mediaFolder, mediaItemThumbs) {
-    return executeSelectMediaFolder(mediaFolder, mediaItemThumbs);
-}
 
 
 export function fetchSign(signId) {
@@ -76,6 +104,7 @@ export function setCurrentPlaylist(playlist) {
     }
 }
 
+
 export const ADD_PLAYLIST_ITEM = 'ADD_PLAYLIST_ITEM';
 export function addPlaylistItem(playlist, playlistItem, index) {
 
@@ -92,57 +121,6 @@ export function addPlaylistItem(playlist, playlistItem, index) {
         type: ADD_PLAYLIST_ITEM,
         payload: playlist
     }
-}
-
-export const SET_MEDIA_FOLDER = 'SET_MEDIA_FOLDER'
-export function setMediaFolder(mediaFolder) {
-    return {
-        type: SET_MEDIA_FOLDER,
-        payload: mediaFolder
-    }
-}
-
-// used by bangatron on startup - the mediaLibraryFolder is read from the db, mediaFiles are read from that directory and this function is invoked
-export const SET_MEDIA_LIBRARY_FILES = 'SET_MEDIA_LIBRARY_FILES';
-export function setMediaLibraryFiles(mediaLibraryFiles) {
-
-    let mediaLibraryPlaylistItems = [];
-
-    mediaLibraryFiles.forEach(function(mediaFolderFile) {
-        const imagePlaylistItem = new ImagePlaylistItem(mediaFolderFile.fileName, mediaFolderFile.filePath);
-        mediaLibraryPlaylistItems.push(imagePlaylistItem);
-    });
-
-    return {
-        type: SET_MEDIA_LIBRARY_FILES,
-        payload: mediaLibraryPlaylistItems
-    }
-
-    // let mediaLibraryPlaylistItems = [];
-    // let mediaItemThumbs = {};
-    //
-    // mediaLibraryFiles.forEach( mediaLibraryFile =>
-    // {
-    //     const fileName = mediaLibraryFile.fileName;
-    //     const id = mediaLibraryFile.id;
-    //     const filePath = mediaLibraryFile.mediaFilePath;
-    //     const mediaFolder = mediaLibraryFile.mediaFolder;
-    //
-    //     const imagePlaylistItem = new ImagePlaylistItem(fileName, filePath);
-    //     mediaLibraryPlaylistItems.push(imagePlaylistItem);
-    //
-    //     mediaItemThumbs[mediaLibraryFile.mediaFilePath] = mediaLibraryFile.thumbFileName;
-    // });
-    //
-    // const payload = {
-    //     mediaLibraryPlaylistItems,
-    //     mediaItemThumbs
-    // };
-    //
-    // return {
-    //     type: SET_MEDIA_LIBRARY_FILES,
-    //     payload: payload
-    // }
 }
 
 function getMediaFiles(dispatch, mediaFolder) {
@@ -187,49 +165,23 @@ export function fetchMediaFolder() {
 };
 
 
-export const SET_ALL_THUMBS = 'SET_ALL_THUMBS';
+export const SET_MEDIA_THUMBS = 'SET_MEDIA_THUMBS';
 export function setMediaThumbs(thumbsByPath) {
 
     return {
-        type: SET_ALL_THUMBS,
+        type: SET_MEDIA_THUMBS,
         payload: thumbsByPath
     }
 }
 
-export const MERGE_THUMBS = 'MERGE_THUMBS';
-export function mergeThumbs(thumbsByPath) {
+export const MERGE_MEDIA_THUMBS = 'MERGE_MEDIA_THUMBS';
+export function mergeMediaThumbs(thumbsByPath) {
 
     return {
         type: MERGE_THUMBS,
         payload: thumbsByPath
     }
 }
-
-// export const SET_MEDIA_FOLDER_FILES = 'SET_MEDIA_FOLDER_FILES';
-// export function setMediaFolderFiles(mediaFolderFiles) {
-//
-//     let mediaLibraryPlaylistItems = [];
-//
-//     mediaFolderFiles.forEach(function(mediaFolderFile) {
-//         const imagePlaylistItem = new ImagePlaylistItem(mediaFolderFile.fileName, mediaFolderFile.filePath);
-//         mediaLibraryPlaylistItems.push(imagePlaylistItem);
-//     });
-//
-//     return {
-//         type: SET_MEDIA_FOLDER_FILES,
-//         payload: mediaFolderFiles
-//     }
-// }
-
-export const SET_THUMB_FILES = 'SET_THUMB_FILES';
-export function setThumbFiles(thumbsByFilePath) {
-
-    return {
-        type: SET_THUMB_FILES,
-        payload: thumbsByFilePath
-    }
-}
-
 
 
 
