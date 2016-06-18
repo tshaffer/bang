@@ -4,7 +4,6 @@
 const path = require('path');
 
 import React, { Component } from 'react';
-// import ReactDOM from 'react-dom';
 
 import ReactTabs from 'react-tabs';
 var Tab = ReactTabs.Tab;

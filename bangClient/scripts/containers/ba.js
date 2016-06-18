@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import MediaLibrary from '../containers/mediaLibrary';
+import MediaLibrary from '../components/mediaLibrary';
 import Playlist from '../containers/playlist';
 
 import axios from 'axios';
