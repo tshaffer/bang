@@ -116,30 +116,42 @@ export const SET_MEDIA_LIBRARY_FILES = 'SET_MEDIA_LIBRARY_FILES';
 export function setMediaLibraryFiles(mediaLibraryFiles) {
 
     let mediaLibraryPlaylistItems = [];
-    let mediaItemThumbs = {};
 
-    mediaLibraryFiles.forEach( mediaLibraryFile =>
-    {
-        const fileName = mediaLibraryFile.fileName;
-        const id = mediaLibraryFile.id;
-        const filePath = mediaLibraryFile.mediaFilePath;
-        const mediaFolder = mediaLibraryFile.mediaFolder;
-
-        const imagePlaylistItem = new ImagePlaylistItem(fileName, filePath);
+    mediaLibraryFiles.forEach(function(mediaFolderFile) {
+        const imagePlaylistItem = new ImagePlaylistItem(mediaFolderFile.fileName, mediaFolderFile.filePath);
         mediaLibraryPlaylistItems.push(imagePlaylistItem);
-
-        mediaItemThumbs[mediaLibraryFile.mediaFilePath] = mediaLibraryFile.thumbFileName;
     });
-
-    const payload = {
-        mediaLibraryPlaylistItems,
-        mediaItemThumbs
-    };
 
     return {
         type: SET_MEDIA_LIBRARY_FILES,
-        payload: payload
+        payload: mediaLibraryPlaylistItems
     }
+
+    // let mediaLibraryPlaylistItems = [];
+    // let mediaItemThumbs = {};
+    //
+    // mediaLibraryFiles.forEach( mediaLibraryFile =>
+    // {
+    //     const fileName = mediaLibraryFile.fileName;
+    //     const id = mediaLibraryFile.id;
+    //     const filePath = mediaLibraryFile.mediaFilePath;
+    //     const mediaFolder = mediaLibraryFile.mediaFolder;
+    //
+    //     const imagePlaylistItem = new ImagePlaylistItem(fileName, filePath);
+    //     mediaLibraryPlaylistItems.push(imagePlaylistItem);
+    //
+    //     mediaItemThumbs[mediaLibraryFile.mediaFilePath] = mediaLibraryFile.thumbFileName;
+    // });
+    //
+    // const payload = {
+    //     mediaLibraryPlaylistItems,
+    //     mediaItemThumbs
+    // };
+    //
+    // return {
+    //     type: SET_MEDIA_LIBRARY_FILES,
+    //     payload: payload
+    // }
 }
 
 function getMediaFiles(dispatch, mediaFolder) {
@@ -207,14 +219,21 @@ export function getAllThumbs() {
     // }
 }
 
-export const SET_MEDIA_FOLDER_FILES = 'SET_MEDIA_FOLDER_FILES';
-export function setMediaFolderFiles(mediaFolderFiles) {
-
-    return {
-        type: SET_MEDIA_FOLDER_FILES,
-        payload: mediaFolderFiles
-    }
-}
+// export const SET_MEDIA_FOLDER_FILES = 'SET_MEDIA_FOLDER_FILES';
+// export function setMediaFolderFiles(mediaFolderFiles) {
+//
+//     let mediaLibraryPlaylistItems = [];
+//
+//     mediaFolderFiles.forEach(function(mediaFolderFile) {
+//         const imagePlaylistItem = new ImagePlaylistItem(mediaFolderFile.fileName, mediaFolderFile.filePath);
+//         mediaLibraryPlaylistItems.push(imagePlaylistItem);
+//     });
+//
+//     return {
+//         type: SET_MEDIA_FOLDER_FILES,
+//         payload: mediaFolderFiles
+//     }
+// }
 
 export const SET_THUMB_FILES = 'SET_THUMB_FILES';
 export function setThumbFiles(thumbsByFilePath) {

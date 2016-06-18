@@ -35,7 +35,7 @@ class MediaLibrary extends Component {
     componentDidMount() {
 
         console.log("mediaLibrary.js::componentDidMount invoked");
-        this.props.fetchMediaFolder();
+        // this.props.fetchMediaFolder();
     }
 
     handleSelect (index, last) {
@@ -69,6 +69,23 @@ class MediaLibrary extends Component {
     render() {
 
         var self = this;
+
+        let numberOfMediaItemThumbs = "0";
+        if (this.props.mediaItemThumbs) {
+            numberOfMediaItemThumbs = this.props.mediaItemThumbs.length.toString();;
+        }
+        let mediaFolder = "";
+        if (this.props.mediaFolder) {
+            mediaFolder = this.props.mediaFolder;
+        }
+
+        if (this.props.mediaLibraryPlaylistItems && this.props.mediaLibraryPlaylistItems.length > 0) {
+            console.log("mediaLibrayPlaylistItems are here");
+        }
+
+        if (numberOfMediaItemThumbs != "0" && mediaFolder != "" && this.props.mediaLibraryPlaylistItems && this.props.mediaLibraryPlaylistItems.length > 0) {
+            console.log("all data has arrived");
+        }
 
         let mediaLibraryDiv = <div>No thumbs</div>
 
@@ -114,6 +131,8 @@ class MediaLibrary extends Component {
         return (
             <div className="mediaLibraryDiv">
                 <p className="smallishFont">Media Library</p>
+                <p className="smallishFont">{numberOfMediaItemThumbs}</p>
+                <p className="smallishFont">{mediaFolder}</p>
                 <Tabs
                     onSelect={this.handleSelect}
                 >

@@ -8,7 +8,7 @@ export default function(state = [], action) {
 
     switch (action.type) {
         case SET_MEDIA_LIBRARY_FILES:
-            return action.payload.mediaLibraryPlaylistItems;
+            return action.payload;
     }
 
     return state;

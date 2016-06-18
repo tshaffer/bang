@@ -4,9 +4,9 @@ const exifReader = require('./nodeExif');
 const easyImage = require("easyimage");
 
 let baDB = null;
-const dbName = "BADatabase-14";
+const dbName = "BADatabase-17";
 
-import { setDB, openSign, setCurrentPlaylist, setMediaFolderFiles, setThumbFiles, setAllThumbs, setMediaFolder } from '../actions/index';
+import { setDB, openSign, setCurrentPlaylist, setMediaLibraryFiles, setThumbFiles, setAllThumbs, setMediaFolder } from '../actions/index';
 
 const mediaFileSuffixes = ['jpg'];
 
@@ -19,20 +19,38 @@ export function executeGetAllThumbs() {
                 console.log("db successfully opened");
                 baDB = openedDB;
 
-                // now that db is open, fetch all the thumbs
-                let readThumbsPromise = readThumbs();
-                let getMediaDirectoryPromise = readMediaDirectory();
-
-                Promise.all([readThumbsPromise, getMediaDirectoryPromise]).then(function(values) {
-                    console.log("readThumbs and readMediaDirectory complete");
-                    dispatch(setAllThumbs(values[0]));
-                    dispatch(setMediaFolder(values[1]));
-                });
+                fetchStartupData(dispatch);
             });
         }
     }
 }
 
+
+function fetchStartupData(dispatch) {
+
+    // startup data required for the app
+    //      all thumbs in the database, indexed by media file path
+    //      last used media directory
+    //      files in the last used media directory
+
+    let readThumbsPromise = readThumbs();
+    let getMediaDirectoryPromise = readMediaDirectory();
+
+    Promise.all([readThumbsPromise, getMediaDirectoryPromise]).then(function(values) {
+
+        console.log("readThumbs and readMediaDirectory complete");
+        console.log("number of thumbs is " + values[0].length);
+        console.log("media folder is " + values[1]);
+        dispatch(setAllThumbs(values[0]));
+        dispatch(setMediaFolder(values[1]));
+
+        // get the files in the last used media folder
+        let mediaFolder = values[1];
+        let mediaFolderFiles = [];
+        mediaFolderFiles = findMediaFiles(mediaFolder, mediaFolderFiles);
+        dispatch(setMediaLibraryFiles(mediaFolderFiles));
+    });
+}
 
 function readMediaDirectory() {
 
@@ -109,7 +127,7 @@ function openDB() {
 
     return new Promise(function(resolve, reject) {
 
-        var request = window.indexedDB.open(dbName, 1);
+        var request = window.indexedDB.open(dbName, 3);
 
         request.onerror = function(event) {
             // TODO - what??
