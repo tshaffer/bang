@@ -3,22 +3,14 @@
  */
 const path = require('path');
 
-import $ from 'jquery';
-
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+// import ReactDOM from 'react-dom';
 
 import ReactTabs from 'react-tabs';
 var Tab = ReactTabs.Tab;
 var Tabs = ReactTabs.Tabs;
 var TabList = ReactTabs.TabList;
 var TabPanel = ReactTabs.TabPanel;
-
-import { fetchMediaFolder } from '../actions/index';
-import { setMediaFolder } from '../actions/index';
 
 class MediaLibrary extends Component {
 
@@ -29,25 +21,21 @@ class MediaLibrary extends Component {
     }
 
     componentWillMount() {
-        console.log("mediaLibrary: componentWillMount invoked");
     }
 
     componentDidMount() {
-
-        console.log("mediaLibrary.js::componentDidMount invoked");
-        // this.props.fetchMediaFolder();
     }
 
-    handleSelect (index, last) {
+    handleSelectTab (index, last) {
         console.log('Selected tab: ' + index + ', Last tab: ' + last);
     }
 
-    onSync(event) {
-        console.log("onSync invoked");
+    onRefreshMediaLibrary(event) {
+        console.log("onRefreshMediaLibrary invoked");
     }
 
-    onNavigateUp(event) {
-        console.log("onNavigateUp invoked");
+    onNavigateUpMediaLibrary(event) {
+        console.log("onNavigateUpMediaLibrary invoked");
     }
 
     mediaLibraryDragStartHandler(ev) {
@@ -62,23 +50,17 @@ class MediaLibrary extends Component {
         ev.dataTransfer.dropEffect = "copy";
     }
 
+    // prevents build warning - related to readonly text box
     handleChange() {
-
     }
 
     render() {
 
         var self = this;
-        var thumbDataLoaded = false;
-
-        if (this.props.mediaLibraryPlaylistItems && this.props.mediaLibraryPlaylistItems.length > 0) {
-            console.log("mediaLibraryPlaylistItems are here");
-            thumbDataLoaded = true;
-        }
 
         let mediaLibraryDiv = <div>No thumbs</div>
 
-        if (thumbDataLoaded) {
+        if (this.props.mediaLibraryPlaylistItems && this.props.mediaLibraryPlaylistItems.length > 0) {
 
             let mediaLibraryPlaylistItems = this.props.mediaLibraryPlaylistItems.map(function (mediaLibraryPlaylistItem) {
 
@@ -86,6 +68,7 @@ class MediaLibrary extends Component {
 
                     const mediaItem = self.props.mediaItemThumbs[mediaLibraryPlaylistItem.filePath];
                     let thumbUrl = mediaItem.thumbFileName;
+                    // experiments with trying to load the thumb from the local drive when using electron (no server)
                     // let thumbUrl = mediaItem.url;
                     // thumbUrl = "file://localhost/" + mediaItem.url;
                     // thumbUrl = "http://localhost/" + mediaItem.url;
@@ -125,9 +108,7 @@ class MediaLibrary extends Component {
         return (
             <div className="mediaLibraryDiv">
                 <p className="smallishFont">Media Library</p>
-                <Tabs
-                    onSelect={this.handleSelect}
-                >
+                <Tabs onSelect={this.handleSelectTab}>
                     <TabList>
                         <Tab className="smallishFont">files</Tab>
                         <Tab className="smallishFont tabPadding">other</Tab>
@@ -138,8 +119,8 @@ class MediaLibrary extends Component {
                     <TabPanel>
                         <div>
                             <input type="image" src="images/iconBrowse.png" className="plainButton" onClick={this.props.onBrowseForMediaLibrary.bind(this)} />
-                            <input type="image" src="images/24x24_sync.png" onClick={this.onSync.bind(this)}/>
-                            <input type="image" src="images/iconNavigateUp.png" onClick={this.onNavigateUp.bind(this)}/>
+                            <input type="image" src="images/24x24_sync.png" onClick={this.onRefreshMediaLibrary.bind(this)}/>
+                            <input type="image" src="images/iconNavigateUp.png" onClick={this.onNavigateUpMediaLibrary.bind(this)}/>
                         </div>
                         <input type="text" id="mediaLibraryFolder" value={this.props.mediaFolder} onChange={this.handleChange}></input>
                         {mediaLibraryDiv}
@@ -162,8 +143,4 @@ class MediaLibrary extends Component {
     }
 }
 
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ fetchMediaFolder: fetchMediaFolder, setMediaFolder: setMediaFolder }, dispatch);
-}
-
-export default connect(null, mapDispatchToProps)(MediaLibrary);
+export default MediaLibrary;

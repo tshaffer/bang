@@ -48,6 +48,27 @@ export function setMediaLibraryFiles(mediaLibraryFiles) {
 }
 
 
+export const SET_MEDIA_THUMBS = 'SET_MEDIA_THUMBS';
+export function setMediaThumbs(thumbsByPath) {
+
+    return {
+        type: SET_MEDIA_THUMBS,
+        payload: thumbsByPath
+    }
+}
+
+export const MERGE_MEDIA_THUMBS = 'MERGE_MEDIA_THUMBS';
+export function mergeMediaThumbs(thumbsByPath) {
+
+    return {
+        type: MERGE_THUMBS,
+        payload: thumbsByPath
+    }
+}
+
+
+
+
 export const CREATE_DEFAULT_SIGN = 'CREATE_DEFAULT_SIGN'
 export function createDefaultSign() {
 
@@ -72,7 +93,6 @@ export function openSign(sign) {
         payload: sign
     }
 }
-
 
 
 export function fetchSign(signId) {
@@ -164,24 +184,6 @@ export function fetchMediaFolder() {
     }
 };
 
-
-export const SET_MEDIA_THUMBS = 'SET_MEDIA_THUMBS';
-export function setMediaThumbs(thumbsByPath) {
-
-    return {
-        type: SET_MEDIA_THUMBS,
-        payload: thumbsByPath
-    }
-}
-
-export const MERGE_MEDIA_THUMBS = 'MERGE_MEDIA_THUMBS';
-export function mergeMediaThumbs(thumbsByPath) {
-
-    return {
-        type: MERGE_THUMBS,
-        payload: thumbsByPath
-    }
-}
 
 
 
