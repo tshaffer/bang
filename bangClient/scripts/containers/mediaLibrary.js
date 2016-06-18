@@ -71,16 +71,6 @@ class MediaLibrary extends Component {
         var self = this;
         var thumbDataLoaded = false;
 
-        // let numberOfMediaItemThumbs = "0";
-        // if (this.props.mediaItemThumbs) {
-        //     numberOfMediaItemThumbs = this.props.mediaItemThumbs.length.toString();;
-        // }
-
-        let mediaFolder = "";
-        if (this.props.mediaFolder) {
-            mediaFolder = this.props.mediaFolder;
-        }
-
         if (this.props.mediaLibraryPlaylistItems && this.props.mediaLibraryPlaylistItems.length > 0) {
             console.log("mediaLibraryPlaylistItems are here");
             thumbDataLoaded = true;
@@ -135,7 +125,6 @@ class MediaLibrary extends Component {
         return (
             <div className="mediaLibraryDiv">
                 <p className="smallishFont">Media Library</p>
-                <p className="smallishFont">{mediaFolder}</p>
                 <Tabs
                     onSelect={this.handleSelect}
                 >
@@ -178,8 +167,6 @@ function mapStateToProps(state) {
         mediaLibraryPlaylistItems: state.mediaLibraryPlaylistItems,
         mediaFolder: state.mediaFolder,
         mediaItemThumbs: state.mediaItemThumbs,
-        mediaFolderFiles: state.mediaFolderFiles,
-        thumbFiles: state.thumbFiles
     };
 }
 
