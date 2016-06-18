@@ -4,9 +4,9 @@ const exifReader = require('./nodeExif');
 const easyImage = require("easyimage");
 
 let baDB = null;
-const dbName = "BADatabase-8";
+const dbName = "BADatabase-14";
 
-import { setDB, openSign, setCurrentPlaylist, setMediaFolderFiles, setThumbFiles, setAllThumbs } from '../actions/index';
+import { setDB, openSign, setCurrentPlaylist, setMediaFolderFiles, setThumbFiles, setAllThumbs, setMediaFolder } from '../actions/index';
 
 const mediaFileSuffixes = ['jpg'];
 
@@ -20,14 +20,41 @@ export function executeGetAllThumbs() {
                 baDB = openedDB;
 
                 // now that db is open, fetch all the thumbs
-                readThumbs().then(function(thumbsByPath) {
-                    console.log("read thumbs");
-                    dispatch(setAllThumbs(thumbsByPath));
+                let readThumbsPromise = readThumbs();
+                let getMediaDirectoryPromise = readMediaDirectory();
+
+                Promise.all([readThumbsPromise, getMediaDirectoryPromise]).then(function(values) {
+                    console.log("readThumbs and readMediaDirectory complete");
+                    dispatch(setAllThumbs(values[0]));
+                    dispatch(setMediaFolder(values[1]));
                 });
             });
         }
     }
 }
+
+
+function readMediaDirectory() {
+
+    let mediaDirectory = "";
+
+    return new Promise(function(resolve, reject) {
+
+        const objectStore = baDB.transaction("mediaDirectory").objectStore("mediaDirectory");
+
+        objectStore.openCursor().onsuccess = function(event) {
+            var cursor = event.target.result;
+            if (cursor) {
+                mediaDirectory = cursor.key;
+                cursor.continue();
+            }
+            else {
+                resolve(mediaDirectory);
+            }
+        };
+    })
+}
+
 
 function readThumbs() {
 
@@ -93,29 +120,28 @@ function openDB() {
         request.onupgradeneeded = function(event) {
 
             upgrading = true;
+            let mediaDirectoryWritesComplete = false;
+            let thumbFilesWritesComplete = false;
 
             console.log("openDB.onupgradeneeded invoked");
             baDB = event.target.result;
 
-            var store = baDB.createObjectStore("thumbFiles");
+            var thumbFilesStore = baDB.createObjectStore("thumbFiles");
+            var mediaDirectoryStore = baDB.createObjectStore("mediaDirectory");
 
-            store.transaction.oncomplete = function(event) {
+            mediaDirectoryStore.transaction.oncomplete = function(event) {
+                let mediaDirectoryStorePromise = addRecordToDB("mediaDirectory", "/Users/tedshaffer/Pictures/BangPhotos2");
+                mediaDirectoryStorePromise.then(function(event) {
+                    console.log("mediaDirectory record added");
+                    mediaDirectoryWritesComplete = true;
+                });
+            }
+
+            thumbFilesStore.transaction.oncomplete = function(event) {
                 console.log("createObjectStore transaction complete");
-
-                // // Store values in the newly created objectStore.
-                // var transaction = db.transaction(["thumbFiles"], "readwrite");
-                //
-                // var request = objectStore.add();
-                // request.onsuccess = function(event) {
-                //     // event.target.result == customerData[i].ssn;
-                // };
-                // var thumbFilesObjectStore = db.transaction("thumbFiles", "readwrite").objectStore("thumbFiles");
-                // thumbFilesObjectStore.add("thumb1.jpg", "/users/tedshaffer/Projects/thumb1.jpg");
-                // thumbFilesObjectStore.add("thumb2.jpg", "/users/tedshaffer/Projects/thumb2.jpg");
 
                 let mediaFilePath = "";
                 let thumbData = {};
-
 
                 mediaFilePath = "/Users/tedshaffer/Pictures/BangPhotos2/amsterdam(8).JPG";
                 thumbData = {
@@ -148,43 +174,24 @@ function openDB() {
                 var promise2 = addRecordToDB("thumbFiles", mediaFilePath, thumbData);
 
                 Promise.all([promise0, promise1, promise2]).then(function(values) {
-                    console.log(values);
-                    upgradeComplete = true;
-
-                    if (success) {
-                        resolve(baDB);
-                    }
+                    // all the media files have been written to the db
+                    thumbFilesWritesComplete = true;
                 });
             };
+
+            if (mediaDirectoryWritesComplete && thumbFilesWritesComplete) {
+                upgradeComplete = true;
+
+                if (success) {
+                    resolve(baDB);
+                }
+            }
         };
 
         request.onsuccess = function(event) {
             // Do something with request.result!
             console.log("request.onsuccess invoked");
             let db = event.target.result;
-
-            // var tx = this.db.transaction("thumbFiles", "readwrite");
-            // let objectStore = tx.objectStore("thumbFiles");
-            // var request = objectStore.add("/users/tedshaffer/Projects/thumb3.jpg", "thumb3");
-            // request.onsuccess = function(event) {
-            //     console.log("add success 1");
-            //     console.log("add success 2");
-            //     var returnedKey = event.target.result;
-            //     console.log("returnedKey=", returnedKey);
-            // };
-
-            // var objectStore = db.transaction("thumbFiles").objectStore("thumbFiles");
-            //
-            // objectStore.openCursor().onsuccess = function(event) {
-            //     var cursor = event.target.result;
-            //     if (cursor) {
-            //         console.log("Item " + cursor.key + " is " + cursor.value);
-            //         cursor.continue();
-            //     }
-            //     else {
-            //         console.log("No more entries!");
-            //     }
-            // };
 
             success = true;
             if (!upgrading || upgradeComplete) {
@@ -195,72 +202,6 @@ function openDB() {
 }
 
 export function executeOpenDB() {
-
-    return function(dispatch) {
-
-        console.log("openDB");
-
-        // indexedDB tests
-        var request = window.indexedDB.open(dbName, 4);
-
-        request.onerror = function(event) {
-            // TODO - what??
-            alert("Database error: " + event.target.errorCode);
-        };
-
-        request.onupgradeneeded = function(event) {
-
-            console.log("openDB.onupgradeneeded invoked");
-            const db = event.target.result;
-
-            var store = db.createObjectStore("thumbFiles");
-
-            store.transaction.oncomplete = function(event) {
-                console.log("createObjectStore transaction complete");
-
-                // // Store values in the newly created objectStore.
-                // var transaction = db.transaction(["thumbFiles"], "readwrite");
-                //
-                // var request = objectStore.add();
-                // request.onsuccess = function(event) {
-                //     // event.target.result == customerData[i].ssn;
-                // };
-                // var thumbFilesObjectStore = db.transaction("thumbFiles", "readwrite").objectStore("thumbFiles");
-                // thumbFilesObjectStore.add("thumb1.jpg", "/users/tedshaffer/Projects/thumb1.jpg");
-                // thumbFilesObjectStore.add("thumb2.jpg", "/users/tedshaffer/Projects/thumb2.jpg");
-            };
-        };
-
-        request.onsuccess = function(event) {
-            // Do something with request.result!
-            console.log("request.onsuccess invoked");
-            const db = event.target.result;
-            dispatch(setDB(db));
-
-            // var tx = this.db.transaction("thumbFiles", "readwrite");
-            // let objectStore = tx.objectStore("thumbFiles");
-            // var request = objectStore.add("/users/tedshaffer/Projects/thumb3.jpg", "thumb3");
-            // request.onsuccess = function(event) {
-            //     console.log("add success 1");
-            //     console.log("add success 2");
-            //     var returnedKey = event.target.result;
-            //     console.log("returnedKey=", returnedKey);
-            // };
-
-            // var objectStore = db.transaction("thumbFiles").objectStore("thumbFiles");
-            //
-            // objectStore.openCursor().onsuccess = function(event) {
-            //     var cursor = event.target.result;
-            //     if (cursor) {
-            //         console.log("Item " + cursor.key + " is " + cursor.value);
-            //         cursor.continue();
-            //     }
-            //     else {
-            //         console.log("No more entries!");
-            //     }
-            // };
-        };
-    }
 }
 
 
