@@ -4,7 +4,7 @@
 
 import { SET_ALL_THUMBS, SET_MEDIA_LIBRARY_FILES } from '../actions/index';
 
-export default function(state = [], action) {
+export default function(state = {}, action) {
 
     switch (action.type) {
         case SET_MEDIA_LIBRARY_FILES:

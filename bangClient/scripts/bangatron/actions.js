@@ -78,17 +78,14 @@ function readThumbs() {
 
     return new Promise(function(resolve, reject) {
 
-        let thumbs = [];
+        let thumbs = {};
 
         const objectStore = baDB.transaction("thumbFiles").objectStore("thumbFiles");
 
         objectStore.openCursor().onsuccess = function(event) {
             var cursor = event.target.result;
             if (cursor) {
-
-                let thumb = {};
-                thumb[cursor.key] = cursor.value;
-                thumbs.push(thumb);
+                thumbs[cursor.key] = cursor.value;
                 cursor.continue();
             }
             else {
