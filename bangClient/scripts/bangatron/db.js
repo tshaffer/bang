@@ -1,10 +1,26 @@
 /**
  * Created by tedshaffer on 6/19/16.
  */
+var mongoose = require('mongoose');
+
 export let baDB = null;
 const dbName = "BADatabase-17";
 
 export function openDB() {
+
+    console.log("invoke openDB");
+    console.log("for debugging");
+
+    mongoose.connect('mongodb://localhost/bangLocal');
+
+    var db = mongoose.connection;
+    // db.on('error', console.error.bind(console, 'connection error:'));
+    db.on('error', function() {
+        console.log("error opening mongoDB");
+    })
+    db.once('open', function() {
+        console.log("connected to bang");
+    });
 
     // use the following flags to determine when to resolve the promise
     let upgrading = false;

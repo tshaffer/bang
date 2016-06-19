@@ -1,3 +1,5 @@
+var webpack = require('webpack');
+
 module.exports = {
 
     entry: './scripts/index.js',
@@ -7,6 +9,9 @@ module.exports = {
     },
     devtool: "source-map",
     target: 'electron',
+    plugins: [
+        new webpack.IgnorePlugin(/vertx/),
+    ],
     module: {
         loaders: [{
             test: /\.jsx?$/,

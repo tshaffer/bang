@@ -19,7 +19,7 @@ export function executeLoadAppData() {
                 console.log("db successfully opened");
                 fetchStartupData(dispatch);
             });
-        }
+        }``
     }
 }
 
