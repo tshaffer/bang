@@ -11,6 +11,21 @@ let badb_data = {};
 
 export function openDB() {
 
+    return new Promise(function(resolve, reject) {
+        fs.readFile("badb", (err, data) => {
+
+            if (err) {
+                console.log("failed to read badb");
+                reject(err);
+                return;
+            }
+            badb_data = JSON.parse(data);
+            resolve();
+        });
+    });
+
+    return;
+
     fs.open("badb", 'a', function(err, fd) {
 
         if (err) {

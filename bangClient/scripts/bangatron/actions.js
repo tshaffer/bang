@@ -13,13 +13,18 @@ const mediaFileSuffixes = ['jpg'];
 export function executeLoadAppData() {
 
     return function(dispatch) {
-        
-        if (baDB === null) {
+
             openDB().then(function() {
                 console.log("db successfully opened");
-                fetchStartupData(dispatch);
+                // fetchStartupData(dispatch);
             });
-        }
+
+        // if (baDB === null) {
+        //     openDB().then(function() {
+        //         console.log("db successfully opened");
+        //         fetchStartupData(dispatch);
+        //     });
+        // }
     }
 }
 
