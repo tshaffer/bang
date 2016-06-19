@@ -14,7 +14,6 @@ class PropertySheet extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            term: ''
         };
     }
 
@@ -27,12 +26,6 @@ class PropertySheet extends Component {
     }
 
     updateTimeOnScreen(event) {
-        console.log("updateTimeOnScreenInvoked");
-        console.log("updateTimeOnScreenInvoked");
-        console.log(event.target.value);
-
-        // let selectedPlaylistItem = Object.assign({}, this.props.selectedPlaylistItem);
-        // selectedPlaylistItem.timeOnScreen = event.target.value;
         let selectedPlaylistItem = Object.assign({}, this.props.selectedPlaylistItem, { timeOnScreen: event.target.value} );
         this.props.updateSelectedPlaylistItem(selectedPlaylistItem);
     }
@@ -44,24 +37,6 @@ class PropertySheet extends Component {
         let divContent = "Eat more pizza!";
 
         if (this.props.selectedPlaylistItem && this.props.selectedPlaylistItem.timeOnScreen > 0) {
-            console.log("stop here");
-            console.log("and add more code");
-
-            // <input type="text" id="imageTimeOnScreen" value={imagePlaylistItem.timeOnScreen} onChange={this.updateTimeOnScreen}></input>
-            // <input type="text" id="imageTimeOnScreen" onChange={this.updateTimeOnScreen}></input>
-            // <input onChange={ event => imagePlaylistItem.timeOnScreen = event.target.value}></input>
-
-            // doesn't work
-            // <input onChange={self.updateTimeOnScreen(imagePlaylistItem)} />
-
-            // following works reasonably well
-            // <input type="text" id="imageTimeOnScreen" value={imagePlaylistItem.timeOnScreen} onChange={this.updateTimeOnScreen.bind(this)}></input>
-
-            // from video and it works as it does in the video
-            // <input onChange={event => this.setState({ term: event.target.value })}/>
-            // value of the input: {this.state.term}
-
-            // <p>{imagePlaylistItem.timeOnScreen}</p>
 
             const imagePlaylistItem = this.props.selectedPlaylistItem;
             divContent =
