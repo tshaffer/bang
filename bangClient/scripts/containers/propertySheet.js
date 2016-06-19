@@ -30,6 +30,16 @@ class PropertySheet extends Component {
         this.props.updateSelectedPlaylistItem(selectedPlaylistItem);
     }
 
+    updateTransition(event) {
+        let selectedPlaylistItem = Object.assign({}, this.props.selectedPlaylistItem, { transition: event.target.value} );
+        this.props.updateSelectedPlaylistItem(selectedPlaylistItem);
+    }
+
+    updateTransitionDuration(event) {
+        let selectedPlaylistItem = Object.assign({}, this.props.selectedPlaylistItem, { transitionDuration: event.target.value} );
+        this.props.updateSelectedPlaylistItem(selectedPlaylistItem);
+    }
+
     render () {
 
         var self = this;
@@ -42,9 +52,15 @@ class PropertySheet extends Component {
             divContent =
                 <div>
                     <p>{imagePlaylistItem.fileName}</p>
-                    Time on screen: <input type="text" id="imageTimeOnScreen" value={imagePlaylistItem.timeOnScreen} onChange={this.updateTimeOnScreen.bind(this)}></input>
-                    <p>{imagePlaylistItem.transition}</p>
-                    <p>{imagePlaylistItem.transitionDuration}</p>
+                    <p>
+                        Time on screen: <input type="text" value={imagePlaylistItem.timeOnScreen} onChange={this.updateTimeOnScreen.bind(this)}></input>
+                    </p>
+                    <p>
+                        Transition: <input type="text" value={imagePlaylistItem.transition} onChange={this.updateTransition.bind(this)}></input>
+                    </p>
+                    <p>
+                        Transition duration: <input type="text" value={imagePlaylistItem.transitionDuration} onChange={this.updateTransitionDuration.bind(this)}></input>
+                    </p>
                 </div>
             ;
         }
