@@ -24,7 +24,11 @@ class Playlist extends Component {
 
         this.fakePlaylistItem = new ImagePlaylistItem(
             "Drop item here",
-            "/Users/tedshaffer/Pictures/BangPhotos2/backend_menu_Notes.jpg");
+            "/Users/tedshaffer/Pictures/BangPhotos2/backend_menu_Notes.jpg",
+            -1,
+            -1,
+            -1,
+            false);
     }
 
     componentDidMount() {
@@ -53,7 +57,11 @@ class Playlist extends Component {
         // specify playlist item to drop
         const playlistItem = new ImagePlaylistItem(
             stateName,
-            path);
+            path,
+            6,
+            0,
+            2,
+            false);
 
         // determine where the drop occurred relative to the target element
         var offset = $("#" + ev.target.id).offset();

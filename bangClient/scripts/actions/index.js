@@ -164,4 +164,13 @@ export function selectPlaylistItem(playlistItem) {
     }
 }
 
+export const UPDATE_SELECTED_PLAYLIST_ITEM = 'UPDATE_SELECTED_PLAYLIST_ITEM';
+export function updateSelectedPlaylistItem(playlistItem) {
+    return {
+        type: UPDATE_SELECTED_PLAYLIST_ITEM,
+        payload: playlistItem
+    }
+}
+
+
 
