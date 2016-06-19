@@ -7,8 +7,7 @@ import { bindActionCreators } from 'redux';
 
 import MediaLibrary from '../components/mediaLibrary';
 import Playlist from '../containers/playlist';
-
-import axios from 'axios';
+import PropertySheet from '../containers/propertySheet';
 
 import BAUI from '../platform/baUI';
 
@@ -73,6 +72,7 @@ class BA extends Component {
                             mediaThumbs={this.props.mediaThumbs}
                         />
                         <Playlist />
+                        <PropertySheet />
                     </div>
 
                 </div>

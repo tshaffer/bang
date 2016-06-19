@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
-import { addPlaylistItem } from '../actions/index';
+import { addPlaylistItem, selectPlaylistItem } from '../actions/index';
 
 import $ from 'jquery';
 
@@ -101,6 +101,7 @@ class Playlist extends Component {
                             src={thumbUrl}
                             className="mediaLibraryThumbImg"
                             data-index={dataIndex}
+                            onClick={() => self.props.selectPlaylistItem(playlistItem)}
                         />
                         <p className="mediaLibraryThumbLbl">{playlistItem.name}</p>
                     </li>
@@ -135,7 +136,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ addPlaylistItem: addPlaylistItem }, dispatch);
+    return bindActionCreators({ addPlaylistItem: addPlaylistItem, selectPlaylistItem }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Playlist);

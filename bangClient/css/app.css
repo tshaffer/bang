@@ -31,6 +31,25 @@ body {
     display: flex;
 }
 
+.mediaLibraryDiv {
+    flex: 2;
+    overflow-y: scroll;
+    float: left;
+    width: 300px;
+}
+
+.playlistDiv {
+    flex: 8;
+    overflow-y: scroll;
+}
+
+.propertySheetDiv {
+    flex: 2;
+    float: right;
+    width: 300px;
+}
+
+
 .flex-container {
     padding: 0;
     margin: 0;
@@ -71,19 +90,6 @@ body {
 .wrap li {
     /*background: gold;*/
 }
-
-.mediaLibraryDiv {
-    flex: 2;
-    overflow-y: scroll;
-    float: left;
-    width: 300px;
-}
-
-.playlistDiv {
-    flex: 8;
-    overflow-y: scroll;
-}
-
 
 .mediaLibraryThumbDiv {
     margin: 4px;

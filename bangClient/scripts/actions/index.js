@@ -3,10 +3,9 @@
  */
 
 import axios from 'axios';
-import fetch from 'isomorphic-fetch';
 
 import Sign from '../badm/sign';
-import ImagePlaylistItem from '../badm/imagePlaylistItem';
+import ImageMediaItem from '../badm/imageMediaItem';
 
 import { executeLoadAppData, executeFetchSign, executeSelectMediaFolder } from '../platform/actions';
 
@@ -37,8 +36,8 @@ export function setMediaLibraryFiles(mediaLibraryFiles) {
     let mediaLibraryPlaylistItems = [];
 
     mediaLibraryFiles.forEach(function(mediaFolderFile) {
-        const imagePlaylistItem = new ImagePlaylistItem(mediaFolderFile.fileName, mediaFolderFile.filePath);
-        mediaLibraryPlaylistItems.push(imagePlaylistItem);
+        const imageMediaItem = new ImageMediaItem(mediaFolderFile.fileName, mediaFolderFile.filePath);
+        mediaLibraryPlaylistItems.push(imageMediaItem);
     });
 
     return {
@@ -157,6 +156,12 @@ export function updateMediaFolder(mediaFolder) {
     }
 }
 
-
+export const SET_SELECTED_PLAYLIST_ITEM = 'SET_SELECTED_PLAYLIST_ITEM';
+export function selectPlaylistItem(playlistItem) {
+    return {
+        type: SET_SELECTED_PLAYLIST_ITEM,
+        payload: playlistItem
+    }
+}
 
 
