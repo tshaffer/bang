@@ -143,20 +143,6 @@ export function addPlaylistItem(playlist, playlistItem, index) {
     }
 }
 
-function getMediaFiles(dispatch, mediaFolder) {
-
-    dispatch(setMediaFolder(mediaFolder));
-
-    const getThumbsUrl = "http://localhost:6969/" + "getThumbs";
-
-    return axios.get(getThumbsUrl, {
-        params: { mediaFolder: mediaFolder }
-    }).then(function(data) {
-        dispatch(setMediaLibraryFiles(data.data.thumbs));
-    });
-}
-
-
 export function updateMediaFolder(mediaFolder) {
 
     return function(dispatch) {
@@ -170,19 +156,6 @@ export function updateMediaFolder(mediaFolder) {
         })
     }
 }
-
-
-export function fetchMediaFolder() {
-
-    return function (dispatch) {
-
-        fetch(`http://localhost:6969/getMediaFolder`)
-            .then(response => response.json())
-            .then(function(data) {
-                return getMediaFiles(dispatch, data.mediaFolder);
-            });
-    }
-};
 
 
 

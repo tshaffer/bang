@@ -65,7 +65,7 @@ app.get('/getBSNPresentation', function(req, res) {
 
 app.get('/getBSNPresentations', function(req, res) {
 
-    console.log("getMediaFolder invoked");
+    console.log("getBSNPresentations invoked");
     res.set('Access-Control-Allow-Origin', '*');
 
     var promise = dbController.getBSNPresentations();

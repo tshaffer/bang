@@ -155,6 +155,29 @@ function fetchStartupData(dispatch) {
 }
 
 
+// builds and returns a datastructure that maps file paths to thumbData objects
+function getMediaThumbs() {
+
+    return new Promise(function(resolve, reject) {
+
+        let thumbs = {};
+
+        const objectStore = baDB.transaction("thumbFiles").objectStore("thumbFiles");
+
+        objectStore.openCursor().onsuccess = function(event) {
+            var cursor = event.target.result;
+            if (cursor) {
+                thumbs[cursor.key] = cursor.value;
+                cursor.continue();
+            }
+            else {
+                resolve(thumbs);
+            }
+        };
+    })
+}
+
+
 function getMediaLibraryFolder() {
 
     let mediaFolder = "";
@@ -205,28 +228,6 @@ function saveMediaFolder(mediaFolder) {
 
 }
 
-
-// builds and returns a datastructure that maps file paths to thumbData objects
-function getMediaThumbs() {
-
-    return new Promise(function(resolve, reject) {
-
-        let thumbs = {};
-
-        const objectStore = baDB.transaction("thumbFiles").objectStore("thumbFiles");
-
-        objectStore.openCursor().onsuccess = function(event) {
-            var cursor = event.target.result;
-            if (cursor) {
-                thumbs[cursor.key] = cursor.value;
-                cursor.continue();
-            }
-            else {
-                resolve(thumbs);
-            }
-        };
-    })
-}
 
 
 // general purpose method to add a db record with key, value to the db
