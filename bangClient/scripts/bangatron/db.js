@@ -1,10 +1,26 @@
 /**
  * Created by tedshaffer on 6/19/16.
  */
+const fs = require('fs');
+
 export let baDB = null;
 const dbName = "BADatabase-17";
 
+let badb_fd = null;
+let badb_data = {};
+
 export function openDB() {
+
+    fs.open("badb", 'a', function(err, fd) {
+
+        if (err) {
+            console.log("failed to open badb");
+        }
+        else {
+            console.log("successfully opened badb");
+            badb_fd = fd;
+        }
+    });
 
     // use the following flags to determine when to resolve the promise
     let upgrading = false;
@@ -102,6 +118,37 @@ export function openDB() {
             success = true;
             if (!upgrading || upgradeComplete) {
                 baDB = db;
+
+                const getThumbsPromise = dbGetThumbs();
+                const getMediaLibraryFolder = dbGetMediaLibraryFolder();
+                Promise.all([getThumbsPromise, getMediaLibraryFolder]).then(function(values) {
+                    console.log("dbThumbs read complete");
+                    console.log("write the information to a file");
+
+                    badb_data.thumbsByPath = values[0];
+                    badb_data.mediaLibraryFolder = values[1];
+
+                    const badb_data_asString = JSON.stringify(badb_data, null, "\t");
+                    console.log(badb_data_asString);
+
+                    fs.writeFile(badb_fd, badb_data_asString, function(err) {
+                        if (err) {
+                            console.log("badb write error");
+                        }
+                        else {
+                            console.log("badb saved");
+
+                            fs.close(badb_fd, function(err) {
+                                if (err) {
+                                    console.log("badb close error");
+                                }
+                                else {
+                                    console.log("badb closed properly");
+                                }
+                            })
+                        }
+                    });
+                });
                 resolve();
             }
         };
