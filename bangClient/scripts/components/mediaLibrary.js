@@ -11,6 +11,10 @@ var Tabs = ReactTabs.Tabs;
 var TabList = ReactTabs.TabList;
 var TabPanel = ReactTabs.TabPanel;
 
+var fs = require("fs"),
+    util = require("util");
+var mime = require("mime");
+
 class MediaLibrary extends Component {
 
     constructor(props) {
@@ -67,17 +71,19 @@ class MediaLibrary extends Component {
 
                     const mediaItem = self.props.mediaThumbs[mediaLibraryPlaylistItem.filePath];
                     let thumbUrl = mediaItem.thumbFileName;
-                    // experiments with trying to load the thumb from the local drive when using electron (no server)
-                    // let thumbUrl = mediaItem.url;
-                    // thumbUrl = "file://localhost/" + mediaItem.url;
-                    // thumbUrl = "http://localhost/" + mediaItem.url;
-                    // let thumbUrl = "file:///" + mediaItem.url;
 
+                    // TODO - shouldn't hard code this
+                    const filePath = "/Users/tedshaffer/Documents/Projects/bang/bangClient/thumbs/" + mediaItem.thumbFileName;
+                    var data = fs.readFileSync(filePath).toString("base64");
+                    var base64Format = util.format("data:%s;base64,%s", mime.lookup(filePath), data);
+                    console.log("length of base64 string is: ", base64Format.length);
+                    
                     return (
                         <li className="flex-item mediaLibraryThumbDiv" key={mediaLibraryPlaylistItem.id}>
                             <img
                                 id={mediaLibraryPlaylistItem.id}
-                                src={thumbUrl}
+                                // src={thumbUrl}
+                                src={base64Format}
                                 className="mediaLibraryThumbImg"
                                 data-name={mediaLibraryPlaylistItem.fileName}
                                 data-path={mediaLibraryPlaylistItem.filePath}
