@@ -16,7 +16,7 @@ export function executeLoadAppData() {
 
             openDB().then(function() {
                 console.log("db successfully opened");
-                // fetchStartupData(dispatch);
+                fetchStartupData(dispatch);
             });
 
         // if (baDB === null) {
@@ -35,6 +35,17 @@ function fetchStartupData(dispatch) {
     //      last used media directory
     //      files in the last used media directory
 
+    const mediaThumbs = getMediaThumbs();
+    const mediaFolder = getMediaLibraryFolder();
+
+    dispatch(setMediaThumbs(mediaThumbs));
+    dispatch(setMediaFolder(mediaFolder));
+
+    // get the files in the last used media folder
+    let mediaFolderFiles = findFilesThenSetMediaLibraryFiles(dispatch, mediaFolder);
+
+    return;
+
     let getMediaThumbsPromise = getMediaThumbs();
     let getMediaLibraryFolderPromise = getMediaLibraryFolder();
 
@@ -52,7 +63,7 @@ function fetchStartupData(dispatch) {
 }
 
 
-// builds and returns a datastructure that maps file paths to thumbData objects
+// builds and returns a data structure that maps file paths to thumbData objects
 function getMediaThumbs() {
 
     return dbGetThumbs();

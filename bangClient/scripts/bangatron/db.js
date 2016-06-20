@@ -17,7 +17,6 @@ export function openDB() {
             if (err) {
                 console.log("failed to read badb");
                 reject(err);
-                return;
             }
             badb_data = JSON.parse(data);
             resolve();
@@ -190,6 +189,8 @@ export function addRecordToDB ( objectStoreName, key, value ) {
 
 export function dbGetThumbs() {
 
+    return badb_data.thumbsByPath;
+
     return new Promise(function(resolve, reject) {
 
         let thumbs = {};
@@ -211,6 +212,8 @@ export function dbGetThumbs() {
 
 export function dbGetMediaLibraryFolder() {
 
+    return badb_data.mediaLibraryFolder;
+    
     let mediaFolder = "";
 
     return new Promise(function(resolve, reject) {
