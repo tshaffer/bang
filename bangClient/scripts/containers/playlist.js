@@ -11,6 +11,8 @@ import { addPlaylistItem, selectPlaylistItem } from '../actions/index';
 
 import $ from 'jquery';
 
+import { getThumb } from '../platform/actions';
+
 class Playlist extends Component {
 
     constructor(props) {
@@ -98,15 +100,18 @@ class Playlist extends Component {
         let playlistItems = currentPlaylistItems.map(function (playlistItem) {
 
             if (self.props.mediaThumbs.hasOwnProperty(playlistItem.filePath)) {
-                
-                const thumbUrl = self.props.mediaThumbs[playlistItem.filePath].thumbFileName;
+
+                const mediaItem = self.props.mediaThumbs[playlistItem.filePath]
+                const thumb = getThumb(mediaItem.thumbPath);
+
+                // const thumbUrl = self.props.mediaThumbs[playlistItem.filePath].thumbFileName;
                 dataIndex++;
 
                 return (
                     <li className="flex-item mediaLibraryThumbDiv" key={playlistItem.id} onDrop={self.playlistDropHandler.bind(self)} onDragOver={self.playlistDragOverHandler}>
                         <img
                             id={playlistItem.id}
-                            src={thumbUrl}
+                            src={thumb}
                             className="mediaLibraryThumbImg"
                             data-index={dataIndex}
                             onClick={() => self.props.selectPlaylistItem(playlistItem)}

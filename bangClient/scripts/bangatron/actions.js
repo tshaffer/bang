@@ -3,6 +3,9 @@ const path = require('path');
 const exifReader = require('./nodeExif');
 const easyImage = require("easyimage");
 
+var util = require("util");
+var mime = require("mime");
+
 import { setMediaThumbs, mergeMediaThumbs, setMediaFolder, openSign, setCurrentPlaylist, setMediaLibraryFiles } from '../actions/index';
 
 import { openDB, addRecordToDB, dbGetThumbs, dbGetMediaLibraryFolder, dbSaveMediaFolder } from './db';
@@ -36,23 +39,6 @@ function fetchStartupData(dispatch) {
 
     // get the files in the last used media folder
     let mediaFolderFiles = findFilesThenSetMediaLibraryFiles(dispatch, mediaFolder);
-
-    return;
-
-    let getMediaThumbsPromise = getMediaThumbs();
-    let getMediaLibraryFolderPromise = getMediaLibraryFolder();
-
-    Promise.all([getMediaThumbsPromise, getMediaLibraryFolderPromise]).then(function(values) {
-
-        const mediaThumbs = values[0];
-        const mediaFolder = values[1];
-
-        dispatch(setMediaThumbs(mediaThumbs));
-        dispatch(setMediaFolder(mediaFolder));
-
-        // get the files in the last used media folder
-        let mediaFolderFiles = findFilesThenSetMediaLibraryFiles(dispatch, mediaFolder);
-    });
 }
 
 
@@ -78,12 +64,20 @@ function saveMediaFolder(mediaFolder) {
 // TODO - rename me
 function findFilesThenSetMediaLibraryFiles(dispatch, mediaFolder) {
 
-    let mediaFolderFiles = [];
-    mediaFolderFiles = findMediaFiles(mediaFolder, mediaFolderFiles);
-    dispatch(setMediaLibraryFiles(mediaFolderFiles));
-    return mediaFolderFiles;
+    let mediaFiles = [];
+    mediaFiles = findMediaFiles(mediaFolder, mediaFiles);
+    dispatch(setMediaLibraryFiles(mediaFiles));
+    return mediaFiles;
 }
 
+
+export function getThumb(filePath) {
+
+    var data = fs.readFileSync(filePath).toString("base64");
+    var base64Format = util.format("data:%s;base64,%s", mime.lookup(filePath), data);
+    console.log("length of base64 string is: ", base64Format.length);
+    return base64Format;
+}
 
 // invoked when the user selects a new media folder through the UI
 export function executeSelectMediaFolder(mediaFolder, mediaThumbs) {
@@ -122,11 +116,10 @@ export function executeSelectMediaFolder(mediaFolder, mediaThumbs) {
                 let promises = [];
                 mediaFilesWithThumbInfo.forEach( (mediaFileWithThumbInfo) => {
                     const thumbData = {
-                        fileName: mediaFileWithThumbInfo.fileName,
-                        thumbFileName: mediaFileWithThumbInfo.thumbFileName,
-                        mediaFolder: "",
-                        url: "",
-                        lastModified: ""
+                        // fileName: mediaFileWithThumbInfo.fileName,
+                        // thumbFileName: mediaFileWithThumbInfo.thumbFileName,
+                        thumbPath: mediaFileWithThumbInfo.thumbPath,
+                        modified: new Date()
                     };
                     let promise = addRecordToDB("thumbFiles", mediaFileWithThumbInfo.filePath, thumbData);
                     promises.push(promise);
@@ -243,26 +236,25 @@ function buildThumb(mediaFile) {
         var ext = path.extname(mediaFile.filePath);
 
         var thumbFileName = fileName.substring(0,fileName.length - ext.length) + "_thumb" + ext;
-        mediaFile.thumbFileName = thumbFileName;
+        // mediaFile.thumbFileName = thumbFileName;
 
         // var thumbPath = path.join(__dirname, 'thumbs', mediaFile.thumbFileName);
-        // TODO - bogus, but hopefully will use indexeddb anyway - don't use dirName because it's '/'??
-        var thumbPath = path.join('thumbs', mediaFile.thumbFileName);
+        mediaFile.thumbPath = path.join('thumbs', thumbFileName);
 
         // TODO - thumbUrl needs to include dir to distinguish thumbs with the same file name
         // currently it's identical to thumbPath.
-        mediaFile.thumbUrl = path.join(__dirname, 'thumbs', mediaFile.thumbFileName);
+        // mediaFile.thumbUrl = path.join(__dirname, 'thumbs', mediaFile.thumbFileName);
 
         var createThumbPromise = easyImage.resize({
             src: mediaFile.filePath,
-            dst: thumbPath,
+            dst: mediaFile.thumbPath,
             width: targetWidth,
             height: targetHeight,
             quality: 75
         });
         createThumbPromise.then(function (thumbImage) {
             // thumbImage is the object returned from easyimage - it's not used
-            console.log("created thumbnail " + thumbImage.name);
+            // console.log("created thumbnail " + thumbImage.name);
             resolve(thumbImage);
         });
     });

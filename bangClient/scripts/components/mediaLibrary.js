@@ -11,6 +11,8 @@ var Tabs = ReactTabs.Tabs;
 var TabList = ReactTabs.TabList;
 var TabPanel = ReactTabs.TabPanel;
 
+import { getThumb } from '../platform/actions';
+
 class MediaLibrary extends Component {
 
     constructor(props) {
@@ -66,7 +68,9 @@ class MediaLibrary extends Component {
                 if (self.props.mediaThumbs.hasOwnProperty(mediaLibraryPlaylistItem.filePath)) {
 
                     const mediaItem = self.props.mediaThumbs[mediaLibraryPlaylistItem.filePath];
-                    let thumbUrl = mediaItem.thumbFileName;
+                    const thumb = getThumb(mediaItem.thumbPath);
+
+                    // let thumbUrl = mediaItem.thumbFileName;
                     // experiments with trying to load the thumb from the local drive when using electron (no server)
                     // let thumbUrl = mediaItem.url;
                     // thumbUrl = "file://localhost/" + mediaItem.url;
@@ -77,7 +81,7 @@ class MediaLibrary extends Component {
                         <li className="flex-item mediaLibraryThumbDiv" key={mediaLibraryPlaylistItem.id}>
                             <img
                                 id={mediaLibraryPlaylistItem.id}
-                                src={thumbUrl}
+                                src={thumb}
                                 className="mediaLibraryThumbImg"
                                 data-name={mediaLibraryPlaylistItem.fileName}
                                 data-path={mediaLibraryPlaylistItem.filePath}

@@ -1,75 +1,45 @@
 {
 	"thumbsByPath": {
-		"/Users/tedshaffer/Pictures/BangPhotos/BryceCanyonUtah.jpg": {
-			"fileName": "BryceCanyonUtah.jpg",
-			"thumbFileName": "BryceCanyonUtah_thumb.jpg",
-			"mediaFolder": "",
-			"url": "",
-			"lastModified": ""
-		},
-		"/Users/tedshaffer/Pictures/BangPhotos/Colorado.jpg": {
-			"fileName": "Colorado.jpg",
-			"thumbFileName": "Colorado_thumb.jpg",
-			"mediaFolder": "",
-			"url": "",
-			"lastModified": ""
-		},
-		"/Users/tedshaffer/Pictures/BangPhotos/GlacierNationalPark.jpg": {
-			"fileName": "GlacierNationalPark.jpg",
-			"thumbFileName": "GlacierNationalPark_thumb.jpg",
-			"mediaFolder": "",
-			"url": "",
-			"lastModified": ""
-		},
-		"/Users/tedshaffer/Pictures/BangPhotos/GrandTetonWyoming.jpg": {
-			"fileName": "GrandTetonWyoming.jpg",
-			"thumbFileName": "GrandTetonWyoming_thumb.jpg",
-			"mediaFolder": "",
-			"url": "",
-			"lastModified": ""
-		},
 		"/Users/tedshaffer/Pictures/BangPhotos2/WindRiverRange.jpg": {
-			"fileName": "WindRiverRange.jpg",
-			"thumbFileName": "WindRiverRange_thumb.jpg",
-			"mediaFolder": "/Users/tedshaffer/Pictures/BangPhotos2",
-			"url": "/Users/tedshaffer/Documents/Projects/bang/bangServer/thumbs/WindRiverRange_thumb.jpg",
-			"lastModified": "2016-06-05 13:49:04.423Z"
+			"thumbPath": "thumbs/WindRiverRange_thumb.jpg",
+			"lastModified": "2016-06-20T19:26:47.481Z"
 		},
 		"/Users/tedshaffer/Pictures/BangPhotos2/amsterdam(8).JPG": {
-			"fileName": "amsterdam(8).JPG",
-			"thumbFileName": "amsterdam(8)_thumb.JPG",
-			"mediaFolder": "/Users/tedshaffer/Pictures/BangPhotos2",
-			"url": "/Users/tedshaffer/Documents/Projects/bang/bangServer/thumbs/amsterdam(8)_thumb.JPG",
-			"lastModified": "2016-06-05 13:49:04.423Z"
+			"thumbPath": "thumbs/amsterdam(8)_thumb.JPG",
+			"lastModified": "2016-06-20T19:26:47.482Z"
 		},
 		"/Users/tedshaffer/Pictures/BangPhotos2/backend_menu_Notes.jpg": {
-			"fileName": "backend_menu_Notes.jpg",
-			"thumbFileName": "backend_menu_Notes_thumb.jpg",
-			"mediaFolder": "/Users/tedshaffer/Pictures/BangPhotos2",
-			"url": "/Users/tedshaffer/Documents/Projects/bang/bangServer/thumbs/backend_menu_Notes_thumb.jpg",
-			"lastModified": "2016-06-05 13:49:04.423Z"
+			"thumbPath": "thumbs/backend_menu_Notes_thumb.jpg",
+			"lastModified": "2016-06-20T19:26:47.482Z"
 		},
 		"/Users/tedshaffer/Pictures/SanMateoCoast2013/IMG_7093.JPG": {
-			"fileName": "IMG_7093.JPG",
-			"thumbFileName": "IMG_7093_thumb.JPG",
-			"mediaFolder": "",
-			"url": "",
-			"lastModified": ""
+			"thumbPath": "thumbs/IMG_7093_thumb.JPG",
+			"modified": "2016-06-20T19:54:27.296Z"
 		},
 		"/Users/tedshaffer/Pictures/SanMateoCoast2013/IMG_7094.JPG": {
-			"fileName": "IMG_7094.JPG",
-			"thumbFileName": "IMG_7094_thumb.JPG",
-			"mediaFolder": "",
-			"url": "",
-			"lastModified": ""
+			"thumbPath": "thumbs/IMG_7094_thumb.JPG",
+			"modified": "2016-06-20T19:54:27.297Z"
 		},
 		"/Users/tedshaffer/Pictures/SanMateoCoast2013/IMG_7095.JPG": {
-			"fileName": "IMG_7095.JPG",
-			"thumbFileName": "IMG_7095_thumb.JPG",
-			"mediaFolder": "",
-			"url": "",
-			"lastModified": ""
+			"thumbPath": "thumbs/IMG_7095_thumb.JPG",
+			"modified": "2016-06-20T19:54:27.297Z"
+		},
+		"/Users/tedshaffer/Pictures/BangPhotos/BryceCanyonUtah.jpg": {
+			"thumbPath": "thumbs/BryceCanyonUtah_thumb.jpg",
+			"modified": "2016-06-20T19:54:34.724Z"
+		},
+		"/Users/tedshaffer/Pictures/BangPhotos/Colorado.jpg": {
+			"thumbPath": "thumbs/Colorado_thumb.jpg",
+			"modified": "2016-06-20T19:54:34.724Z"
+		},
+		"/Users/tedshaffer/Pictures/BangPhotos/GlacierNationalPark.jpg": {
+			"thumbPath": "thumbs/GlacierNationalPark_thumb.jpg",
+			"modified": "2016-06-20T19:54:34.724Z"
+		},
+		"/Users/tedshaffer/Pictures/BangPhotos/GrandTetonWyoming.jpg": {
+			"thumbPath": "thumbs/GrandTetonWyoming_thumb.jpg",
+			"modified": "2016-06-20T19:54:34.724Z"
 		}
 	},
-	"mediaLibraryFolder": "/Users/tedshaffer/Pictures/SanMateoCoast2013"
+	"mediaLibraryFolder": "/Users/tedshaffer/Pictures/BangPhotos"
 }

@@ -83,6 +83,28 @@ function getMediaFiles(mediaFolder) {
 }
 
 
+export function getThumb(filePath) {
+
+    return null;
+
+    // app.use(express.static(path.join(__dirname, 'thumbs')));
+    // was mediaItem.thumbFileName - I THINK THIS IS IT - may want to rename it to thumbUrl
+
+    //      thumbFileName           backend_menu_Notes_thumb.jpg
+    //      thumbUrl                /thumbs/backend_menu_Notes_thumb.jpg
+
+    // http://localhost:6969/thumbs/BryceCanyonUtah_thumb.jpg
+
+    // OR
+
+    // http://localhost:6969/BryceCanyonUtah_thumb.jpg
+    
+    // var data = fs.readFileSync(filePath).toString("base64");
+    // var base64Format = util.format("data:%s;base64,%s", mime.lookup(filePath), data);
+    // console.log("length of base64 string is: ", base64Format.length);
+    // return base64Format;
+}
+
 
 
 
