@@ -5,7 +5,7 @@ const easyImage = require("easyimage");
 
 import { setMediaThumbs, mergeMediaThumbs, setMediaFolder, openSign, setCurrentPlaylist, setMediaLibraryFiles } from '../actions/index';
 
-import { baDB, openDB, addRecordToDB, dbGetThumbs, dbGetMediaLibraryFolder, dbSaveMediaFolder } from './db';
+import { openDB, addRecordToDB, dbGetThumbs, dbGetMediaLibraryFolder, dbSaveMediaFolder } from './db';
 
 const mediaFileSuffixes = ['jpg'];
 
@@ -18,13 +18,6 @@ export function executeLoadAppData() {
             console.log("db successfully opened");
             fetchStartupData(dispatch);
         });
-
-        // if (baDB === null) {
-        //     openDB().then(function() {
-        //         console.log("db successfully opened");
-        //         fetchStartupData(dispatch);
-        //     });
-        // }
     }
 }
 
