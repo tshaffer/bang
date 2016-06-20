@@ -169,8 +169,39 @@ export function openDB() {
     });
 }
 
+function saveDB() {
+
+    return new Promise(function(resolve, reject) {
+        const badb_data_asString = JSON.stringify(badb_data, null, "\t");
+        console.log(badb_data_asString);
+
+        fs.writeFile("badb", badb_data_asString, function(err) {
+            if (err) {
+                console.log("badb write error");
+                reject(err);
+            }
+            else {
+                console.log("badb saved");
+                resolve();
+            }
+        });
+    });
+}
+
 // general purpose method to add a db record with key, value to the db
 export function addRecordToDB ( objectStoreName, key, value ) {
+
+    return new Promise(function(resolve, reject) {
+
+        // TODO - fix up names - 'thumbFiles' or 'thumbsByPath'
+        if (objectStoreName == "thumbFiles") {
+            badb_data.thumbsByPath[key] = value;
+            saveDB().then(function() {
+                console.log("addRecordToDB: success");
+            });
+        }
+    });
+
     return new Promise(function(resolve, reject) {
 
         var request = baDB.transaction([objectStoreName], "readwrite")
@@ -213,7 +244,7 @@ export function dbGetThumbs() {
 export function dbGetMediaLibraryFolder() {
 
     return badb_data.mediaLibraryFolder;
-    
+
     let mediaFolder = "";
 
     return new Promise(function(resolve, reject) {
@@ -236,6 +267,13 @@ export function dbGetMediaLibraryFolder() {
 }
 
 export function dbSaveMediaFolder(mediaFolder) {
+
+    badb_data.mediaLibraryFolder = mediaFolder;
+    saveDB().then(function() {
+        console.log("dbSaveMediaFolder: success");
+    });
+
+    return;
 
     var objectStore = baDB.transaction(["mediaDirectory"], "readwrite").objectStore("mediaDirectory");
     var request = objectStore.get("currentMediaFolder");
