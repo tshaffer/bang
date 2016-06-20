@@ -60,7 +60,7 @@ export const MERGE_MEDIA_THUMBS = 'MERGE_MEDIA_THUMBS';
 export function mergeMediaThumbs(thumbsByPath) {
 
     return {
-        type: MERGE_THUMBS,
+        type: MERGE_MEDIA_THUMBS,
         payload: thumbsByPath
     }
 }

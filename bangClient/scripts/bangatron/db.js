@@ -198,6 +198,7 @@ export function addRecordToDB ( objectStoreName, key, value ) {
             badb_data.thumbsByPath[key] = value;
             saveDB().then(function() {
                 console.log("addRecordToDB: success");
+                resolve();
             });
         }
     });
