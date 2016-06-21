@@ -22,7 +22,8 @@ class BA extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            bsnPresentations: []
+            bsnPresentations: [],
+            propertySheetOpen: true
         };
 
         this.baUI = new BAUI(this);
@@ -43,6 +44,10 @@ class BA extends Component {
         this.baUI.init();
     }
 
+    handleToggleOpenClosePropertySheet() {
+        this.setState({propertySheetOpen: !this.state.propertySheetOpen});
+    }
+
     render () {
 
         console.log("ba.js::render invoked");
@@ -53,7 +58,12 @@ class BA extends Component {
         }
         
         const openSavePresentationJSX = this.baUI.getOpenSavePresentationJSX(this.state.bsnPresentations);
-        
+
+        let propertySheetTag = <div></div>
+        if (this.state.propertySheetOpen) {
+            propertySheetTag = <PropertySheet />
+        }
+
         return (
 
             <div>
@@ -70,8 +80,11 @@ class BA extends Component {
                             mediaFolder={this.props.mediaFolder}
                             mediaThumbs={this.props.mediaThumbs}
                         />
-                        <Playlist />
-                        <PropertySheet />
+                        <Playlist
+                            onToggleOpenClosePropertySheet={this.handleToggleOpenClosePropertySheet.bind(this)}
+                            propertySheetOpen = {this.state.propertySheetOpen}
+                        />
+                        {propertySheetTag}
                 </div>
             </div>
         )

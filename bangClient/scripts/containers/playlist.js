@@ -96,6 +96,11 @@ class Playlist extends Component {
             currentPlaylistItems.push(this.fakePlaylistItem);
         }
 
+        let openCloseLabel = "=>";
+        if (!this.props.propertySheetOpen) {
+            openCloseLabel = "<=";
+        }
+
         let dataIndex = -1;
         let playlistItems = currentPlaylistItems.map(function (playlistItem) {
 
@@ -134,6 +139,7 @@ class Playlist extends Component {
         return (
             <div className="playlistDiv">
                 Zone 1: Video or Images: Playlist
+                <button id="openCloseIcon" className="plainButton" type="button" onClick={this.props.onToggleOpenClosePropertySheet.bind(this)}>{openCloseLabel}</button>
                 <ul className="playlist-flex-container wrap">
                     {playlistItems}
                 </ul>

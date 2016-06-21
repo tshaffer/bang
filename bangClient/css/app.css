@@ -41,6 +41,7 @@ body {
 .playlistDiv {
     flex: 8;
     overflow-y: scroll;
+    position: relative;
 }
 
 .propertySheetDiv {
@@ -118,6 +119,23 @@ body {
     width: 108px;
     height: 108px;
     padding: 4px;
+}
+
+#openCloseIcon {
+    top: 3px;
+    position: absolute;
+    right: 5px;
+    /*position: fixed;*/
+    /*right: 375px;*/
+}
+
+.plainButton {
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 4px;
+    padding-right: 4px;
+    border: none;
+    background: none;
 }
 
 
