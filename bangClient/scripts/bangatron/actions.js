@@ -71,10 +71,11 @@ function findFilesThenSetMediaLibraryFiles(dispatch, mediaFolder) {
 }
 
 
-export function getThumb(filePath) {
+export function getThumb(mediaItem) {
 
-    var data = fs.readFileSync(filePath).toString("base64");
-    var base64Format = util.format("data:%s;base64,%s", mime.lookup(filePath), data);
+    const filePath = mediaItem.thumbPath;
+    const data = fs.readFileSync(filePath).toString("base64");
+    const base64Format = util.format("data:%s;base64,%s", mime.lookup(filePath), data);
     console.log("length of base64 string is: ", base64Format.length);
     return base64Format;
 }

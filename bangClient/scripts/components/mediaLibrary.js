@@ -68,7 +68,8 @@ class MediaLibrary extends Component {
                 if (self.props.mediaThumbs.hasOwnProperty(mediaLibraryPlaylistItem.filePath)) {
 
                     const mediaItem = self.props.mediaThumbs[mediaLibraryPlaylistItem.filePath];
-                    const thumb = getThumb(mediaItem.thumbPath);
+                    // const thumb = getThumb(mediaItem.thumbPath);
+                    const thumb = getThumb(mediaItem);
 
                     // let thumbUrl = mediaItem.thumbFileName;
                     // experiments with trying to load the thumb from the local drive when using electron (no server)

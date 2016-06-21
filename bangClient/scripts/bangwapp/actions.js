@@ -83,9 +83,9 @@ function getMediaFiles(mediaFolder) {
 }
 
 
-export function getThumb(filePath) {
+export function getThumb(mediaItem) {
 
-    return null;
+    return mediaItem.thumbFileName;
 
     // app.use(express.static(path.join(__dirname, 'thumbs')));
     // was mediaItem.thumbFileName - I THINK THIS IS IT - may want to rename it to thumbUrl

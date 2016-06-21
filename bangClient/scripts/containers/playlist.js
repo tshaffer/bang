@@ -102,7 +102,8 @@ class Playlist extends Component {
             if (self.props.mediaThumbs.hasOwnProperty(playlistItem.filePath)) {
 
                 const mediaItem = self.props.mediaThumbs[playlistItem.filePath]
-                const thumb = getThumb(mediaItem.thumbPath);
+                // const thumb = getThumb(mediaItem.thumbPath);
+                const thumb = getThumb(mediaItem);
 
                 // const thumbUrl = self.props.mediaThumbs[playlistItem.filePath].thumbFileName;
                 dataIndex++;
