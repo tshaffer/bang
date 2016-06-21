@@ -7,7 +7,7 @@ import axios from 'axios';
 import Sign from '../badm/sign';
 import ImageMediaItem from '../badm/imageMediaItem';
 
-import { executeLoadAppData, executeFetchSign, executeSelectMediaFolder } from '../platform/actions';
+import { executeLoadAppData, executeFetchSign, executeSelectMediaFolder, getFileName } from '../platform/actions';
 
 export function loadAppData() {
 
@@ -36,7 +36,8 @@ export function setMediaLibraryFiles(mediaLibraryFiles) {
     let mediaLibraryPlaylistItems = [];
 
     mediaLibraryFiles.forEach(function(mediaFolderFile) {
-        const imageMediaItem = new ImageMediaItem(mediaFolderFile.fileName, mediaFolderFile.filePath);
+        const fileName = getFileName(mediaFolderFile.filePath);
+        const imageMediaItem = new ImageMediaItem(fileName, mediaFolderFile.filePath);
         mediaLibraryPlaylistItems.push(imageMediaItem);
     });
 

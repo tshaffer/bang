@@ -270,6 +270,10 @@ export function executeFetchSign(filePath) {
 }
 
 
+export function getFileName(filePath) {
+    return path.basename(filePath);
+
+}
 
 
 

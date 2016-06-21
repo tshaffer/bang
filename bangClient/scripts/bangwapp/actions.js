@@ -89,6 +89,12 @@ export function getThumb(mediaItem) {
 }
 
 
+// TODO - figure out how to do this in bangwapp when node is not available.
+export function getFileName(filePath) {
+    return filePath;
+}
+
+
 
 
 
