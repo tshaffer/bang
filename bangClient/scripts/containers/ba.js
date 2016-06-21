@@ -64,7 +64,6 @@ class BA extends Component {
                 {openSavePresentationJSX}
 
             <div className="bangPageContainer">
-                    <div>
                         <MediaLibrary
                             onBrowseForMediaLibrary={this.baUI.handleBrowseForMediaLibrary.bind(this.baUI)}
                             mediaLibraryPlaylistItems={this.props.mediaLibraryPlaylistItems}
@@ -73,8 +72,6 @@ class BA extends Component {
                         />
                         <Playlist />
                         <PropertySheet />
-                    </div>
-
                 </div>
             </div>
         )
