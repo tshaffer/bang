@@ -2,15 +2,15 @@
 	"thumbsByPath": {
 		"/Users/tedshaffer/Pictures/BangPhotos2/WindRiverRange.jpg": {
 			"thumbPath": "thumbs/WindRiverRange_thumb.jpg",
-			"lastModified": "2016-06-20T19:26:47.481Z"
+			"modified": "2016-06-20T19:26:47.481Z"
 		},
 		"/Users/tedshaffer/Pictures/BangPhotos2/amsterdam(8).JPG": {
 			"thumbPath": "thumbs/amsterdam(8)_thumb.JPG",
-			"lastModified": "2016-06-20T19:26:47.482Z"
+			"modified": "2016-06-20T19:26:47.482Z"
 		},
 		"/Users/tedshaffer/Pictures/BangPhotos2/backend_menu_Notes.jpg": {
 			"thumbPath": "thumbs/backend_menu_Notes_thumb.jpg",
-			"lastModified": "2016-06-20T19:26:47.482Z"
+			"modified": "2016-06-20T19:26:47.482Z"
 		},
 		"/Users/tedshaffer/Pictures/SanMateoCoast2013/IMG_7093.JPG": {
 			"thumbPath": "thumbs/IMG_7093_thumb.JPG",
@@ -41,5 +41,5 @@
 			"modified": "2016-06-20T19:54:34.724Z"
 		}
 	},
-	"mediaLibraryFolder": "/Users/tedshaffer/Pictures/BangPhotos"
+	"mediaLibraryFolder": "/Users/tedshaffer/Pictures/SanMateoCoast2013"
 }

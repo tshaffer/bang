@@ -105,7 +105,6 @@ export function executeSelectMediaFolder(mediaFolder, mediaThumbs) {
             getThumbsPromise.then(function(mediaFilesWithThumbInfo) {
                 // each entry in mediaFilesWithThumbInfo includes the following fields
                 //      dateTaken
-                //      fileName                backend_menu_Notes.jpg
                 //      filePath                /Users/tedshaffer/Pictures/BangPhotos2/backend_menu_Notes.jpg
                 //      imageHeight
                 //      imageWidth
@@ -117,8 +116,6 @@ export function executeSelectMediaFolder(mediaFolder, mediaThumbs) {
                 let promises = [];
                 mediaFilesWithThumbInfo.forEach( (mediaFileWithThumbInfo) => {
                     const thumbData = {
-                        // fileName: mediaFileWithThumbInfo.fileName,
-                        // thumbFileName: mediaFileWithThumbInfo.thumbFileName,
                         thumbPath: mediaFileWithThumbInfo.thumbPath,
                         modified: new Date()
                     };
@@ -158,8 +155,6 @@ function findMediaFiles(dir, mediaFiles) {
             mediaFileSuffixes.forEach(function(suffix) {
                 if (file.toLowerCase().endsWith(suffix)) {
                     var mediaFile = {};
-
-                    mediaFile.fileName = file;
                     mediaFile.filePath = path.join(dir, file);
                     mediaFiles.push(mediaFile);
                 }
@@ -170,19 +165,14 @@ function findMediaFiles(dir, mediaFiles) {
 };
 
 
-// used by executeSelectMediaFolder
 function getThumbs(mediaFiles) {
 
     return new Promise(function(resolve, reject) {
 
         var getExifDataPromise = exifReader.getAllExifData(mediaFiles);
         getExifDataPromise.then(function(mediaFilesWithExif) {
-            console.log("getExifDataPromised resolved");
-            console.log("check files here");
             var buildThumbnailsPromise = buildThumbnails(mediaFilesWithExif);
             buildThumbnailsPromise.then(function(obj) {
-                console.log("thumbnails build complete");
-                console.log("number of thumbsnails created=", mediaFilesWithExif.length);
 
                 // at this point, each entry in mediaFilesWithExif includes the following fields
                 //      dateTaken
@@ -237,14 +227,8 @@ function buildThumb(mediaFile) {
         var ext = path.extname(mediaFile.filePath);
 
         var thumbFileName = fileName.substring(0,fileName.length - ext.length) + "_thumb" + ext;
-        // mediaFile.thumbFileName = thumbFileName;
 
-        // var thumbPath = path.join(__dirname, 'thumbs', mediaFile.thumbFileName);
         mediaFile.thumbPath = path.join('thumbs', thumbFileName);
-
-        // TODO - thumbUrl needs to include dir to distinguish thumbs with the same file name
-        // currently it's identical to thumbPath.
-        // mediaFile.thumbUrl = path.join(__dirname, 'thumbs', mediaFile.thumbFileName);
 
         var createThumbPromise = easyImage.resize({
             src: mediaFile.filePath,
@@ -255,11 +239,13 @@ function buildThumb(mediaFile) {
         });
         createThumbPromise.then(function (thumbImage) {
             // thumbImage is the object returned from easyimage - it's not used
-            // console.log("created thumbnail " + thumbImage.name);
             resolve(thumbImage);
         });
     });
 }
+
+
+
 
 
 export function executeFetchSign(filePath) {
