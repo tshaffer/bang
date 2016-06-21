@@ -29,8 +29,8 @@ function createWindow() {
     console.log("__dirname=", __dirname);
 
     // and load the index.html of the app.
-    // win.loadURL(`file://${__dirname}/indextron.html`);
-    win.loadURL("http://localhost:6969/indextron.html")
+    win.loadURL(`file://${__dirname}/indextron.html`);
+    // win.loadURL("http://localhost:6969/indextron.html")
 
     // Open the DevTools.
     win.webContents.openDevTools();
