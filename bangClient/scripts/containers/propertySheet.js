@@ -159,14 +159,16 @@ class PropertySheet extends Component {
                 <div>
                     <p>{imagePlaylistItem.fileName}</p>
                     <p>
-                        Time on screen: <input type="text" value={imagePlaylistItem.timeOnScreen} onChange={this.updateTimeOnScreen.bind(this)}></input>
+                        Time on screen:
+                        <input type="text" value={imagePlaylistItem.timeOnScreen} onChange={this.updateTimeOnScreen.bind(this)}></input>
                     </p>
                     <div>
                         Transition:
                         <select id="transitionsSelect" defaultValue={imagePlaylistItem.transition} onChange={this.updateTransition.bind(this)}>{selectOptions}</select>
                     </div>
                     <p>
-                        Transition duration: <input type="text" value={imagePlaylistItem.transitionDuration} onChange={this.updateTransitionDuration.bind(this)}></input>
+                        Transition duration:
+                        <input type="text" value={imagePlaylistItem.transitionDuration} onChange={this.updateTransitionDuration.bind(this)}></input>
                     </p>
                 </div>
             ;

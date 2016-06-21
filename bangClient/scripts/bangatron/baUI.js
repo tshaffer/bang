@@ -129,7 +129,7 @@ export default class BAUI {
     
     savePresentation(filePath) {
     
-        const presentation = JSON.stringify(this.props.sign, null, 2);
+        const presentation = JSON.stringify(this.ba.props.sign, null, 2);
     
         fs.writeFile(filePath, presentation, () => {
             console.log("writeFile successful");
