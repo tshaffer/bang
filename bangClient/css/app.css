@@ -45,7 +45,7 @@ body {
 }
 
 .propertySheetDiv {
-    flex: 2;
+    flex: 4;
     float: right;
     width: 300px;
 }
@@ -138,4 +138,6 @@ body {
     background: none;
 }
 
-
+.leftOffsetButton {
+    margin-left: 6px;
+}

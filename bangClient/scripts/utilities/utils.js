@@ -10,3 +10,30 @@ export function guid() {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
         s4() + '-' + s4() + s4() + s4();
 }
+
+export function getShortenedFilePath(filePath, maxLength) {
+
+    if (!filePath) return "";
+
+    let shortenedFilePath = filePath;
+
+    if (shortenedFilePath.length > maxLength) {
+
+        let split = shortenedFilePath.split('/');
+
+        if (split && split.length > 2) {
+            let currentLength = split[0].length + split[split.length - 1].length + 5;
+            shortenedFilePath = '/' + split[split.length - 1];
+            let index = split.length - 2;
+            while ((currentLength < maxLength) & (index > 0)) {
+                currentLength += 1 + split[index].length;
+                if (currentLength < maxLength) {
+                    shortenedFilePath = "/" + split[index] + shortenedFilePath;
+                }
+                index--;
+            }
+            shortenedFilePath = split[0] + "//..." + shortenedFilePath;
+        }
+    }
+    return shortenedFilePath;
+}

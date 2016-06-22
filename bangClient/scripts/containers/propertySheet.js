@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
 import { updateSelectedPlaylistItem, updateSign } from '../actions/index';
+import { getShortenedFilePath } from '../utilities/utils';
 
 import ReactTabs from 'react-tabs';
 var Tab = ReactTabs.Tab;
@@ -204,21 +205,22 @@ class PropertySheet extends Component {
                     Video mode: <br/>
                     <select id="videoModeSelect" defaultValue={this.props.sign.videoMode} onChange={this.updateVideoMode.bind(this)}>{selectOptions}</select>
                 </div>
-            
+
+            const shortenedHtmlSitePath = getShortenedFilePath(this.state.htmlSitePath, 36);
             htmlProperties =
                 <div>
-                    <span className="smallFont">Name: </span><input type="text" id="htmlSiteName" value={this.htmlSiteName} onChange={this.updateHTMLSiteName.bind(this)}></input>
+                    <span className="smallishFont">Name: </span><input type="text" id="htmlSiteName" value={this.htmlSiteName} onChange={this.updateHTMLSiteName.bind(this)}></input>
+
+                    <br/><br/>
+                    <span className="smallishFont">Local: </span><br/>
+                    <span className="smallishFont" id="htmlLocalSitePath">{shortenedHtmlSitePath}</span>
+                    <button className="leftOffsetButton" type="button" id="btnBrowseForSite" onClick={this.browseForHTMLSite.bind(this)}>Browse</button>
+
+                    <br/><br/>
+                    <span className="smallishFont">URL: </span><input type="text" id="htmlSiteURL" value={this.htmlSiteURL} onChange={this.updateSiteURL.bind(this)}></input>
 
                     <br/>
-                    <span className="smallFont">Local: </span><br/>
-                    <span className="smallFont" id="htmlLocalSitePath">{this.state.htmlSitePath}</span>
-                    <button type="button" id="btnBrowseForSite" onClick={this.browseForHTMLSite.bind(this)}>..</button>
-
-                    <br/>
-                    <span className="smallFont">URL: </span><input type="text" id="htmlSiteURL" value={this.htmlSiteURL} onChange={this.updateSiteURL.bind(this)}></input>
-
-                    <br/>
-                    <button className="smallFont" type="button" id="btnAddHTMLSite" onClick={this.addHTMLSite.bind(this)}>Add Site</button>
+                    <button className="smallishFont" type="button" id="btnAddHTMLSite" onClick={this.addHTMLSite.bind(this)}>Add Site</button>
                 </div>
         }
 
