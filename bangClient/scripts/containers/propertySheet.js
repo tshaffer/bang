@@ -200,6 +200,7 @@ class PropertySheet extends Component {
         // <span className="smallFont">Local: </span><input type="text" id="htmlLocalSitePath" value={this.htmlLocalSitePath} onChange={this.updateLocalHTMLSitePath.bind(this)}>{this.state.htmlSitePath}</input>
         // <input type="radio" name="html" className="smallishFont" onChange={this.updateRemoteHTMLSiteSelection.bind(this)} value="remote"/><span className="smallishFont">URL</span>
         // <input type="radio" name="html" className="smallishFont" onChange={this.updateLocalHTMLSiteSelection.bind(this)} value="local" checked/><span className="smallishFont">Local</span>
+        // <span className="smallishFont" id="htmlLocalSitePath">{shortenedHtmlSitePath}</span>
 
     if (this.props.sign) {
 
@@ -221,17 +222,16 @@ class PropertySheet extends Component {
                 <div>
                     <span className="smallishFont">Name: </span><input type="text" id="htmlSiteName" value={this.htmlSiteName} onChange={this.updateHTMLSiteName.bind(this)}></input>
 
-
                     <br/><br/>
 
                     <form>
                         <input type="radio" name="html" className="smallishFont" value="local"/><span className="smallishFont">Local</span>
-                        <span className="smallishFont" id="htmlLocalSitePath">{shortenedHtmlSitePath}</span>
+                        <input className="leftSpacing htmlSiteSpec smallishFont" type="text" id="htmlLocalSitePath" value={shortenedHtmlSitePath} onChange={this.addHTMLSite.bind(this)}></input>
                         <button className="leftSpacing" type="button" id="btnBrowseForSite" onClick={this.browseForHTMLSite.bind(this)}>Browse</button>
 
                         <br/>
                         <input type="radio" name="html" className="smallishFont" value="remote"/><span className="smallishFont">URL</span>
-                        <input className="leftSpacing" type="text" id="htmlSiteURL" value={this.htmlSiteURL} onChange={this.updateSiteURL.bind(this)}></input>
+                        <input className="leftSpacing htmlSiteSpec smallishFont" type="text" id="htmlSiteURL" value={this.htmlSiteURL} onChange={this.updateSiteURL.bind(this)}></input>
                     </form>
 
                     <br/>
