@@ -211,13 +211,18 @@ class PropertySheet extends Component {
                 <div>
                     <span className="smallishFont">Name: </span><input type="text" id="htmlSiteName" value={this.htmlSiteName} onChange={this.updateHTMLSiteName.bind(this)}></input>
 
-                    <br/><br/>
-                    <span className="smallishFont">Local: </span><br/>
-                    <span className="smallishFont" id="htmlLocalSitePath">{shortenedHtmlSitePath}</span>
-                    <button className="leftOffsetButton" type="button" id="btnBrowseForSite" onClick={this.browseForHTMLSite.bind(this)}>Browse</button>
 
                     <br/><br/>
-                    <span className="smallishFont">URL: </span><input type="text" id="htmlSiteURL" value={this.htmlSiteURL} onChange={this.updateSiteURL.bind(this)}></input>
+
+                    <form>
+                        <input type="radio" name="html" className="smallishFont" value="local"/><span className="smallishFont">Local</span>
+                        <span className="smallishFont" id="htmlLocalSitePath">{shortenedHtmlSitePath}</span>
+                        <button className="leftOffsetButton" type="button" id="btnBrowseForSite" onClick={this.browseForHTMLSite.bind(this)}>Browse</button>
+
+                        <br/><br/>
+                        <input type="radio" name="html" className="smallishFont" value="remote"/><span className="smallishFont">URL</span>
+                        <input type="text" id="htmlSiteURL" value={this.htmlSiteURL} onChange={this.updateSiteURL.bind(this)}></input>
+                    </form>
 
                     <br/>
                     <button className="smallishFont" type="button" id="btnAddHTMLSite" onClick={this.addHTMLSite.bind(this)}>Add Site</button>
@@ -257,7 +262,7 @@ class PropertySheet extends Component {
 
         return (
             <div className="propertySheetDiv">
-                <p className="smallishFont">Properties</p>
+                <p className="smallishishFont">Properties</p>
                 <Tabs onSelect={this.handleSelectTab}>
 
                     <TabList>
