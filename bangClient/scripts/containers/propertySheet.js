@@ -7,7 +7,13 @@ import { connect } from 'react-redux';
 
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
-import { updateSelectedPlaylistItem } from '../actions/index';
+import { updateSelectedPlaylistItem, updateSign } from '../actions/index';
+
+import ReactTabs from 'react-tabs';
+var Tab = ReactTabs.Tab;
+var Tabs = ReactTabs.Tabs;
+var TabList = ReactTabs.TabList;
+var TabPanel = ReactTabs.TabPanel;
 
 class PropertySheet extends Component {
 
@@ -15,6 +21,13 @@ class PropertySheet extends Component {
         super(props);
         this.state = {
         };
+
+        this.videoModes = [];
+        this.videoModes.push("1920x1080x60p");
+        this.videoModes.push("1920x1080x30p");
+        this.videoModes.push("1920x1080x24p");
+        this.videoModes.push("1920x1080x60i");
+        this.videoModes.push("1920x1080x30i");
 
         this.transitionSpecs = [];
 
@@ -116,6 +129,12 @@ class PropertySheet extends Component {
         console.log("PropertySheet::componentDidMount invoked");
     }
 
+    updateVideoMode(event) {
+        const sign = Object.assign({}, this.props.sign, {videoMode: event.target.value });
+        console.log("updateVideoMode:", event.target.value);
+        this.props.updateSign(sign);
+    }
+
     updateTimeOnScreen(event) {
         let selectedPlaylistItem = Object.assign({}, this.props.selectedPlaylistItem, { timeOnScreen: event.target.value} );
         this.props.updateSelectedPlaylistItem(selectedPlaylistItem);
@@ -141,7 +160,25 @@ class PropertySheet extends Component {
 
         var self = this;
 
-        let divContent = "Eat more pizza!";
+        let signProperties = "Sign Properties";
+        let selectedMediaProperties = "Media Properties";
+
+        if (this.props.sign) {
+            // const videoMode = this.props.sign.videoMode;
+
+            let selectOptions = this.videoModes.map(function(videoMode, index) {
+
+                return (
+                    <option value={videoMode} key={index}>{videoMode}</option>
+                );
+            });
+
+            signProperties =
+                <div>
+                    Video mode: <br/>
+                    <select id="videoModeSelect" defaultValue={this.props.sign.videoMode} onChange={this.updateVideoMode.bind(this)}>{selectOptions}</select>
+                </div>
+        }
 
         if (this.props.selectedPlaylistItem && this.props.selectedPlaylistItem.timeOnScreen > 0) {
 
@@ -155,7 +192,7 @@ class PropertySheet extends Component {
                 );
             });
 
-            divContent =
+            selectedMediaProperties =
                 <div>
                     <p>{imagePlaylistItem.fileName}</p>
                     <p>
@@ -176,7 +213,22 @@ class PropertySheet extends Component {
 
         return (
             <div className="propertySheetDiv">
-                {divContent}
+                <p className="smallishFont">Properties</p>
+                <Tabs onSelect={this.handleSelectTab}>
+
+                    <TabList>
+                        <Tab className="smallishFont">sign</Tab>
+                        <Tab className="smallishFont tabPadding">content</Tab>
+                    </TabList>
+
+                    <TabPanel>
+                        {signProperties}
+                    </TabPanel>
+
+                    <TabPanel>
+                        {selectedMediaProperties}
+                    </TabPanel>
+                </Tabs>
             </div>
         );
     }
@@ -184,12 +236,13 @@ class PropertySheet extends Component {
 
 function mapStateToProps(state) {
     return {
+        sign: state.sign,
         selectedPlaylistItem: state.selectedPlaylistItem
     };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ updateSelectedPlaylistItem }, dispatch);
+    return bindActionCreators({ updateSign, updateSelectedPlaylistItem }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PropertySheet);

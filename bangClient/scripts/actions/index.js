@@ -94,6 +94,17 @@ export function openSign(sign) {
     }
 }
 
+export const UPDATE_SIGN = 'UPDATE_SIGN'
+export function updateSign(sign) {
+
+    console.log("actions::updateSign");
+
+    return {
+        type: UPDATE_SIGN,
+        payload: sign
+    }
+}
+
 
 export function fetchSign(signId) {
     return executeFetchSign(signId);

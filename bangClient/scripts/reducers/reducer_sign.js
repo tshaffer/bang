@@ -1,7 +1,7 @@
 /**
  * Created by tedshaffer on 6/10/16.
  */
-import { CREATE_DEFAULT_SIGN, OPEN_SIGN } from '../actions/index';
+import { CREATE_DEFAULT_SIGN, OPEN_SIGN, UPDATE_SIGN } from '../actions/index';
 
 export default function(state = [], action) {
 
@@ -12,6 +12,9 @@ export default function(state = [], action) {
             return action.payload.sign;
         case OPEN_SIGN:
             console.log("reducer_sign:OPEN_SIGN");
+            return action.payload;
+        case UPDATE_SIGN:
+            console.log("reducer_sign:UPDATE_SIGN");
             return action.payload;
     }
 

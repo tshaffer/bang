@@ -52,9 +52,11 @@ class BA extends Component {
 
         console.log("ba.js::render invoked");
 
-        let signName = <p>No sign yet</p>;
+        let signName = <span>No sign yet</span>;
+        let signVideoMode = <span>No videoMode yet</span>;
         if (this.props.sign) {
             signName = this.props.sign.name;
+            signVideoMode = this.props.sign.videoMode;
         }
         
         const openSavePresentationJSX = this.baUI.getOpenSavePresentationJSX(this.state.bsnPresentations);
@@ -68,7 +70,8 @@ class BA extends Component {
 
             <div>
                 <div>
-                    <p>{signName}</p>
+                    <span>{signName}</span>
+                    <span>{signVideoMode}</span>
                 </div>
 
                 {openSavePresentationJSX}
