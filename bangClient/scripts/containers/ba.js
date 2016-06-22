@@ -63,7 +63,10 @@ class BA extends Component {
 
         let propertySheetTag = <div></div>
         if (this.state.propertySheetOpen) {
-            propertySheetTag = <PropertySheet />
+            propertySheetTag =
+                <PropertySheet
+                    onBrowseForHTMLSite={this.baUI.handleBrowseForHTMLSite.bind(this.baUI)}
+                />
         }
 
         return (

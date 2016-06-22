@@ -151,6 +151,26 @@ export default class BAUI {
         })
     }
 
+    handleBrowseForHTMLSite() {
+
+        var self = this;
+
+        return new Promise(function(resolve, reject) {
+
+            dialog.showOpenDialog({
+                properties: ['openFile']
+            }, function (files) {
+                console.log(files);
+                if (files) {
+                    resolve(files[0]);
+                }
+                else {
+                    reject();
+                }
+            })
+        })
+    }
+
     getOpenSavePresentationJSX(bsnPresentations) {
 
         return (

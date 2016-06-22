@@ -20,6 +20,7 @@ class PropertySheet extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            htmlSitePath: "browse to html site"
         };
 
         this.videoModes = [];
@@ -135,6 +136,29 @@ class PropertySheet extends Component {
         this.props.updateSign(sign);
     }
 
+    updateHTMLSiteName(event) {
+
+    }
+
+    updateLocalHTMLSitePath(event) {
+
+    }
+
+    browseForHTMLSite(event) {
+        var self = this;
+        this.props.onBrowseForHTMLSite().then(function(myHtmlSitePath)  {
+            self.setState( { htmlSitePath: myHtmlSitePath })
+        });
+    }
+
+    updateSiteURL(event) {
+
+    }
+
+    addHTMLSite(event) {
+
+    }
+
     updateTimeOnScreen(event) {
         let selectedPlaylistItem = Object.assign({}, this.props.selectedPlaylistItem, { timeOnScreen: event.target.value} );
         this.props.updateSelectedPlaylistItem(selectedPlaylistItem);
@@ -161,10 +185,12 @@ class PropertySheet extends Component {
         var self = this;
 
         let signProperties = "Sign Properties";
+        let htmlProperties = "HTML Sites";
         let selectedMediaProperties = "Media Properties";
 
-        if (this.props.sign) {
-            // const videoMode = this.props.sign.videoMode;
+        // <span className="smallFont">Local: </span><input type="text" id="htmlLocalSitePath" value={this.htmlLocalSitePath} onChange={this.updateLocalHTMLSitePath.bind(this)}>{this.state.htmlSitePath}</input>
+
+    if (this.props.sign) {
 
             let selectOptions = this.videoModes.map(function(videoMode, index) {
 
@@ -177,6 +203,22 @@ class PropertySheet extends Component {
                 <div>
                     Video mode: <br/>
                     <select id="videoModeSelect" defaultValue={this.props.sign.videoMode} onChange={this.updateVideoMode.bind(this)}>{selectOptions}</select>
+                </div>
+            
+            htmlProperties =
+                <div>
+                    <span className="smallFont">Name: </span><input type="text" id="htmlSiteName" value={this.htmlSiteName} onChange={this.updateHTMLSiteName.bind(this)}></input>
+
+                    <br/>
+                    <span className="smallFont">Local: </span><br/>
+                    <span className="smallFont" id="htmlLocalSitePath">{this.state.htmlSitePath}</span>
+                    <button type="button" id="btnBrowseForSite" onClick={this.browseForHTMLSite.bind(this)}>..</button>
+
+                    <br/>
+                    <span className="smallFont">URL: </span><input type="text" id="htmlSiteURL" value={this.htmlSiteURL} onChange={this.updateSiteURL.bind(this)}></input>
+
+                    <br/>
+                    <button className="smallFont" type="button" id="btnAddHTMLSite" onClick={this.addHTMLSite.bind(this)}>Add Site</button>
                 </div>
         }
 
@@ -219,6 +261,7 @@ class PropertySheet extends Component {
                     <TabList>
                         <Tab className="smallishFont">sign</Tab>
                         <Tab className="smallishFont tabPadding">content</Tab>
+                        <Tab className="smallishFont tabPadding">html</Tab>
                     </TabList>
 
                     <TabPanel>
@@ -227,6 +270,10 @@ class PropertySheet extends Component {
 
                     <TabPanel>
                         {selectedMediaProperties}
+                    </TabPanel>
+                    
+                    <TabPanel>
+                        {htmlProperties}
                     </TabPanel>
                 </Tabs>
             </div>
