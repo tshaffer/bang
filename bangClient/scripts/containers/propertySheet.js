@@ -21,7 +21,9 @@ class PropertySheet extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            htmlSitePath: ""
+            htmlSitePath: "",
+            localDisabled: false,
+            remoteDisabled: true,
         };
 
         this.videoModes = [];
@@ -141,15 +143,15 @@ class PropertySheet extends Component {
 
     }
 
-    updateLocalHTMLSitePath(event) {
-
-    }
-
     browseForHTMLSite(event) {
         var self = this;
         this.props.onBrowseForHTMLSite().then(function(myHtmlSitePath)  {
             self.setState( { htmlSitePath: myHtmlSitePath })
         });
+    }
+
+    updateLocalHTMLSitePath(event) {
+
     }
 
     updateSiteURL(event) {
@@ -160,12 +162,15 @@ class PropertySheet extends Component {
 
     }
 
-    updateLocalHTMLSiteSelection(event) {
-
-    }
-
-    updateRemoteHTMLSiteSelection(event) {
-
+    htmlSiteTypeSelected(event) {
+        if (event.target.value == "local") {
+            this.setState( { remoteDisabled: true });
+            this.setState( { localDisabled: false });
+        }
+        else {
+            this.setState( { remoteDisabled: false });
+            this.setState( { localDisabled: true });
+        }
     }
 
     updateTimeOnScreen(event) {
@@ -197,11 +202,6 @@ class PropertySheet extends Component {
         let htmlProperties = "HTML Sites";
         let selectedMediaProperties = "Media Properties";
 
-        // <span className="smallFont">Local: </span><input type="text" id="htmlLocalSitePath" value={this.htmlLocalSitePath} onChange={this.updateLocalHTMLSitePath.bind(this)}>{this.state.htmlSitePath}</input>
-        // <input type="radio" name="html" className="smallishFont" onChange={this.updateRemoteHTMLSiteSelection.bind(this)} value="remote"/><span className="smallishFont">URL</span>
-        // <input type="radio" name="html" className="smallishFont" onChange={this.updateLocalHTMLSiteSelection.bind(this)} value="local" checked/><span className="smallishFont">Local</span>
-        // <span className="smallishFont" id="htmlLocalSitePath">{shortenedHtmlSitePath}</span>
-
     if (this.props.sign) {
 
             let selectOptions = this.videoModes.map(function(videoMode, index) {
@@ -218,20 +218,21 @@ class PropertySheet extends Component {
                 </div>
 
             const shortenedHtmlSitePath = getShortenedFilePath(this.state.htmlSitePath, 36);
+
             htmlProperties =
                 <div>
-                    <span className="smallishFont">Name: </span><input type="text" id="htmlSiteName" value={this.htmlSiteName} onChange={this.updateHTMLSiteName.bind(this)}></input>
+                    <span className="smallishFont">Name: </span><input className="smallishFont htmlSiteSpec" type="text" id="htmlSiteName" value={this.htmlSiteName} onChange={this.updateHTMLSiteName.bind(this)}></input>
 
                     <br/><br/>
 
                     <form>
-                        <input type="radio" name="html" className="smallishFont" value="local"/><span className="smallishFont">Local</span>
-                        <input className="leftSpacing htmlSiteSpec smallishFont" type="text" id="htmlLocalSitePath" value={shortenedHtmlSitePath} onChange={this.addHTMLSite.bind(this)}></input>
-                        <button className="leftSpacing" type="button" id="btnBrowseForSite" onClick={this.browseForHTMLSite.bind(this)}>Browse</button>
+                        <input type="radio" name="html" className="smallishFont" id="rbLocal" value="local" checked={this.state.remoteDisabled} onChange={this.htmlSiteTypeSelected.bind(this)}/><span className="smallishFont">Local</span>
+                        <input className="leftSpacing htmlSiteSpec smallishFont" type="text" id="txtBoxLocal" disabled={this.state.localDisabled}  value={shortenedHtmlSitePath} onChange={this.updateLocalHTMLSitePath.bind(this)}></input>
+                        <button className="leftSpacing" type="button" id="btnBrowseForSite" disabled={this.state.localDisabled} onClick={this.browseForHTMLSite.bind(this)}>Browse</button>
 
                         <br/>
-                        <input type="radio" name="html" className="smallishFont" value="remote"/><span className="smallishFont">URL</span>
-                        <input className="leftSpacing htmlSiteSpec smallishFont" type="text" id="htmlSiteURL" value={this.htmlSiteURL} onChange={this.updateSiteURL.bind(this)}></input>
+                        <input type="radio" name="html" className="smallishFont" id="rbRemote" value="remote" checked={this.state.localDisabled} onChange={this.htmlSiteTypeSelected.bind(this)}/><span className="smallishFont">URL</span>
+                        <input className="leftSpacing htmlSiteSpec smallishFont" type="text" id="txtBoxRemote" disabled={this.state.remoteDisabled} value={this.htmlSiteURL} onChange={this.updateSiteURL.bind(this)}></input>
                     </form>
 
                     <br/>
