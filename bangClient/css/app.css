@@ -148,5 +148,9 @@ body {
 
 .floatMeRight {
     float: right;
-    mnargin-right: 6px;
+    margin-right: 6px;
+}
+
+.noVertSpacing {
+    margin: 0px;
 }

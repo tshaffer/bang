@@ -223,7 +223,7 @@ class PropertySheet extends Component {
 
         if (this.props.sign) {
 
-            let selectOptions = this.videoModes.map(function(videoMode, index) {
+            let selectOptions = this.videoModes.map(function (videoMode, index) {
 
                 return (
                     <option value={videoMode} key={index}>{videoMode}</option>
@@ -233,10 +233,31 @@ class PropertySheet extends Component {
             signProperties =
                 <div>
                     Video mode: <br/>
-                    <select id="videoModeSelect" defaultValue={this.props.sign.videoMode} onChange={this.updateVideoMode.bind(this)}>{selectOptions}</select>
+                    <select id="videoModeSelect" defaultValue={this.props.sign.videoMode}
+                            onChange={this.updateVideoMode.bind(this)}>{selectOptions}</select>
                 </div>
 
             const shortenedHtmlSitePath = getShortenedFilePath(this.state.htmlSitePath, 36);
+
+            let existingSites = <span></span>
+            if (this.props.sign.htmlSites !== undefined && this.props.sign.htmlSites.length > 0) {
+
+                let existingHtmlSites = this.props.sign.htmlSites.map(function (htmlSite, index) {
+                    return (
+                        <div key={index}>
+                            <br/>
+                            <p className="smallishFont noVertSpacing">{htmlSite.name}</p>
+                            <p className="smallishFont noVertSpacing">{htmlSite.spec}</p>
+                        </div>
+                    );
+                });
+
+                existingSites =
+                    <div>
+                        <span className="smallishFont">Existing Sites</span>
+                        {existingHtmlSites}
+                    </div>
+            }
 
             htmlProperties =
                 <div>
@@ -255,6 +276,9 @@ class PropertySheet extends Component {
                     </form>
 
                     <button className="smallishFont floatMeRight" type="button" id="btnAddHTMLSite" onClick={this.onAddHTMLSite.bind(this)}>Add Site</button>
+
+                    <br/>
+                    {existingSites}
                 </div>
         }
 
