@@ -47,7 +47,7 @@ body {
 .propertySheetDiv {
     flex: 4;
     float: right;
-    width: 300px;
+    width: 290px;
 }
 
 
@@ -144,4 +144,9 @@ body {
 
 .htmlSiteSpec {
     width: 250px;
+}
+
+.floatMeRight {
+    float: right;
+    mnargin-right: 6px;
 }

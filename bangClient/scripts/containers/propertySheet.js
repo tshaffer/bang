@@ -221,7 +221,7 @@ class PropertySheet extends Component {
         let htmlProperties = "HTML Sites";
         let selectedMediaProperties = "Media Properties";
 
-    if (this.props.sign) {
+        if (this.props.sign) {
 
             let selectOptions = this.videoModes.map(function(videoMode, index) {
 
@@ -254,8 +254,7 @@ class PropertySheet extends Component {
                         <input className="leftSpacing htmlSiteSpec smallishFont" type="text" id="txtBoxRemote" disabled={this.state.remoteDisabled} value={this.htmlSiteURL} onChange={this.updateRemoteHTMLSiteSpec.bind(this)}></input>
                     </form>
 
-                    <br/>
-                    <button className="smallishFont" type="button" id="btnAddHTMLSite" onClick={this.onAddHTMLSite.bind(this)}>Add Site</button>
+                    <button className="smallishFont floatMeRight" type="button" id="btnAddHTMLSite" onClick={this.onAddHTMLSite.bind(this)}>Add Site</button>
                 </div>
         }
 
