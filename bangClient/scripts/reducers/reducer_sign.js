@@ -1,7 +1,7 @@
 /**
  * Created by tedshaffer on 6/10/16.
  */
-import { CREATE_DEFAULT_SIGN, OPEN_SIGN, UPDATE_SIGN } from '../actions/index';
+import { CREATE_DEFAULT_SIGN, OPEN_SIGN, UPDATE_SIGN, ADD_HTML_SITE } from '../actions/index';
 
 export default function(state = [], action) {
 
@@ -9,6 +9,7 @@ export default function(state = [], action) {
 
     switch (action.type) {
         case CREATE_DEFAULT_SIGN:
+            console.log("reducer_sign:CREATE_DEFAULT_SIGN");
             return action.payload.sign;
         case OPEN_SIGN:
             console.log("reducer_sign:OPEN_SIGN");
@@ -16,6 +17,11 @@ export default function(state = [], action) {
         case UPDATE_SIGN:
             console.log("reducer_sign:UPDATE_SIGN");
             return action.payload;
+        case ADD_HTML_SITE:
+            console.log("reducer_sign:ADD_HTML_SITE");
+            let newSign = Object.assign({}, state);
+            newSign.htmlSites.push(action.payload);
+            return newSign;
     }
 
     return state;

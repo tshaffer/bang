@@ -185,4 +185,13 @@ export function updateSelectedPlaylistItem(playlistItem) {
 }
 
 
+export const ADD_HTML_SITE = 'ADD_HTML_SITE';
+export function addHtmlSite(htmlSite) {
+    
+    return {
+        type: ADD_HTML_SITE,
+        payload: htmlSite
+    }
+}
+
 

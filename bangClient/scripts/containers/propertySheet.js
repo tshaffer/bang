@@ -6,8 +6,9 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
+import HtmlSite from '../badm/htmlSite';
 
-import { updateSelectedPlaylistItem, updateSign } from '../actions/index';
+import { updateSelectedPlaylistItem, updateSign, addHtmlSite } from '../actions/index';
 import { getShortenedFilePath } from '../utilities/utils';
 
 import ReactTabs from 'react-tabs';
@@ -25,6 +26,9 @@ class PropertySheet extends Component {
             localDisabled: false,
             remoteDisabled: true,
         };
+
+        this.localHtmlSitePath = "";
+        this.remoteHtmlSitePath = "";
 
         this.videoModes = [];
         this.videoModes.push("1920x1080x60p");
@@ -140,26 +144,41 @@ class PropertySheet extends Component {
     }
 
     updateHTMLSiteName(event) {
-
+        this.htmlSiteName = event.target.value;
     }
 
     browseForHTMLSite(event) {
         var self = this;
         this.props.onBrowseForHTMLSite().then(function(myHtmlSitePath)  {
-            self.setState( { htmlSitePath: myHtmlSitePath })
+            self.setState( { htmlSitePath: myHtmlSitePath });
+            self.localHtmlSiteSpec = myHtmlSitePath;
         });
     }
 
-    updateLocalHTMLSitePath(event) {
-
+    updateLocalHTMLSiteSpec(event) {
+        // this.localHtmlSiteSpec = event.target.value;
     }
 
-    updateSiteURL(event) {
-
+    updateRemoteHTMLSiteSpec(event) {
+        this.remoteHtmlSiteSpec = event.target.value;
     }
 
-    addHTMLSite(event) {
+    onAddHTMLSite(event) {
 
+        let type = "";
+        let htmlSiteSpec = "";
+
+        if (this.refs.localRB.checked) {
+            type = "local";
+            htmlSiteSpec = this.localHtmlSiteSpec;
+        }
+        else {
+            type = "remote";
+            htmlSiteSpec = this.remoteHtmlSiteSpec;
+        }
+        
+        const htmlSite = new HtmlSite(this.htmlSiteName, type, htmlSiteSpec);
+        this.props.addHtmlSite(htmlSite);
     }
 
     htmlSiteTypeSelected(event) {
@@ -226,17 +245,17 @@ class PropertySheet extends Component {
                     <br/><br/>
 
                     <form>
-                        <input type="radio" name="html" className="smallishFont" id="rbLocal" value="local" checked={this.state.remoteDisabled} onChange={this.htmlSiteTypeSelected.bind(this)}/><span className="smallishFont">Local</span>
-                        <input className="leftSpacing htmlSiteSpec smallishFont" type="text" id="txtBoxLocal" disabled={this.state.localDisabled}  value={shortenedHtmlSitePath} onChange={this.updateLocalHTMLSitePath.bind(this)}></input>
+                        <input ref="localRB" type="radio" name="html" className="smallishFont" id="rbLocal" value="local" checked={this.state.remoteDisabled} onChange={this.htmlSiteTypeSelected.bind(this)}/><span className="smallishFont">Local</span>
+                        <input className="leftSpacing htmlSiteSpec smallishFont" type="text" id="txtBoxLocal" disabled={this.state.localDisabled}  value={shortenedHtmlSitePath} onChange={this.updateLocalHTMLSiteSpec.bind(this)}></input>
                         <button className="leftSpacing" type="button" id="btnBrowseForSite" disabled={this.state.localDisabled} onClick={this.browseForHTMLSite.bind(this)}>Browse</button>
 
                         <br/>
-                        <input type="radio" name="html" className="smallishFont" id="rbRemote" value="remote" checked={this.state.localDisabled} onChange={this.htmlSiteTypeSelected.bind(this)}/><span className="smallishFont">URL</span>
-                        <input className="leftSpacing htmlSiteSpec smallishFont" type="text" id="txtBoxRemote" disabled={this.state.remoteDisabled} value={this.htmlSiteURL} onChange={this.updateSiteURL.bind(this)}></input>
+                        <input ref="remoteFB" type="radio" name="html" className="smallishFont" id="rbRemote" value="remote" checked={this.state.localDisabled} onChange={this.htmlSiteTypeSelected.bind(this)}/><span className="smallishFont">URL</span>
+                        <input className="leftSpacing htmlSiteSpec smallishFont" type="text" id="txtBoxRemote" disabled={this.state.remoteDisabled} value={this.htmlSiteURL} onChange={this.updateRemoteHTMLSiteSpec.bind(this)}></input>
                     </form>
 
                     <br/>
-                    <button className="smallishFont" type="button" id="btnAddHTMLSite" onClick={this.addHTMLSite.bind(this)}>Add Site</button>
+                    <button className="smallishFont" type="button" id="btnAddHTMLSite" onClick={this.onAddHTMLSite.bind(this)}>Add Site</button>
                 </div>
         }
 
@@ -307,7 +326,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ updateSign, updateSelectedPlaylistItem }, dispatch);
+    return bindActionCreators({ updateSign, updateSelectedPlaylistItem, addHtmlSite }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PropertySheet);
