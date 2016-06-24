@@ -109,16 +109,14 @@ class MediaLibrary extends Component {
                 </ul>
         }
 
-        // <li className="flex-item mediaLibraryThumbDiv" key={0}>
-        // </li>
-
         let theOtherPlaylistItems = [];
         theOtherPlaylistItems.push(
             {
                 id: "1",
                 thumb: "images/html.png",
                 fileName: "HTML5",
-                filePath: "HTML5"
+                filePath: "HTML5",
+                type: "html5"
             }
         )
         theOtherPlaylistItems.push(
@@ -126,7 +124,8 @@ class MediaLibrary extends Component {
                 id: "2",
                 thumb: "images/mediaList.png",
                 fileName: "Media List",
-                filePath: "Media List"
+                filePath: "Media List",
+                type: "mediaList"
             }
         )
 
@@ -140,7 +139,7 @@ class MediaLibrary extends Component {
                         className="otherThumbImg"
                         data-name={otherPlaylistItem.fileName}
                         data-path={otherPlaylistItem.filePath}
-                        data-type="image"
+                        data-type={otherPlaylistItem.type}
                         draggable={true}
                         onDragStart={self.mediaLibraryDragStartHandler}
                     />

@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
+import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
 import { addPlaylistItem, selectPlaylistItem } from '../actions/index';
 
@@ -57,13 +58,31 @@ class Playlist extends Component {
         const type = ev.dataTransfer.getData("type");
 
         // specify playlist item to drop
-        const playlistItem = new ImagePlaylistItem(
-            stateName,
-            path,
-            6,
-            0,
-            2,
-            false);
+        let playlistItem = null;
+        if (type === "image") {
+            playlistItem = new ImagePlaylistItem(
+                stateName,
+                path,
+                6,
+                0,
+                2,
+                false);
+        }
+        else if (type == "html5") {
+            playlistItem = new HTML5PlaylistItem(
+                "html5Name", //name,
+                "html5SiteName", //htmlSiteName,
+                true, //enableExternalData,
+                true, //enableMouseEvents,
+                true, //displayCursor,
+                true, //hwzOn,
+                false, //useUserStylesheet,
+                null //userStyleSheet
+            )
+        }
+        else if (type == "mediaList") {
+            
+        }
 
         // determine where the drop occurred relative to the target element
         var offset = $("#" + ev.target.id).offset();
