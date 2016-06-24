@@ -121,6 +121,14 @@ body {
     padding: 4px;
 }
 
+.otherThumbImg {
+    margin-left: 22px;
+    margin-top: 22px;
+    width: 64px;
+    height: 64px;
+    padding: 4px;
+}
+
 #openCloseIcon {
     top: 3px;
     position: absolute;

@@ -109,6 +109,51 @@ class MediaLibrary extends Component {
                 </ul>
         }
 
+        // <li className="flex-item mediaLibraryThumbDiv" key={0}>
+        // </li>
+
+        let theOtherPlaylistItems = [];
+        theOtherPlaylistItems.push(
+            {
+                id: "1",
+                thumb: "images/html.png",
+                fileName: "HTML5",
+                filePath: "HTML5"
+            }
+        )
+        theOtherPlaylistItems.push(
+            {
+                id: "2",
+                thumb: "images/mediaList.png",
+                fileName: "Media List",
+                filePath: "Media List"
+            }
+        )
+
+        let otherPlaylistItems = theOtherPlaylistItems.map(function (otherPlaylistItem) {
+
+            return (
+                <li className="flex-item mediaLibraryThumbDiv" key={otherPlaylistItem.id}>
+                    <img
+                        id={otherPlaylistItem.id}
+                        src={otherPlaylistItem.thumb}
+                        className="otherThumbImg"
+                        data-name={otherPlaylistItem.fileName}
+                        data-path={otherPlaylistItem.filePath}
+                        data-type="image"
+                        draggable={true}
+                        onDragStart={self.mediaLibraryDragStartHandler}
+                    />
+                    <p className="mediaLibraryThumbLbl">{otherPlaylistItem.fileName}</p>
+                </li>
+            );
+        });
+
+        let otherDiv =
+            <ul className="flex-container wrap">
+                {otherPlaylistItems}
+            </ul>
+
         return (
             <div className="mediaLibraryDiv">
                 <p className="smallishFont">Media Library</p>
@@ -131,7 +176,7 @@ class MediaLibrary extends Component {
                     </TabPanel>
 
                     <TabPanel>
-                        <p className="smallishFont">other</p>
+                        {otherDiv}
                     </TabPanel>
 
                     <TabPanel>
