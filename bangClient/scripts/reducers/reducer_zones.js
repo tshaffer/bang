@@ -1,7 +1,7 @@
 /**
  * Created by tedshaffer on 6/24/16.
  */
-import { NEW_ZONE } from '../actions/index';
+import { NEW_ZONE, SET_ZONE_PLAYLIST } from '../actions/index';
 
 const initialState =
 {
@@ -13,33 +13,60 @@ export default function(state = initialState, action) {
 
     console.log("reducer_zones:: action.type=" + action.type);
 
+    let newZone = null;
+    let newState = null;
+
     switch (action.type) {
         case NEW_ZONE:
             const zoneData = action.payload;
 
-            const newZone =
+            newZone =
             {
                 id: zoneData.id,
                 type: zoneData.type,
-                name: zoneData.name
+                name: zoneData.name,
+                zonePlaylistId: null
             };
-
-            // works for first zone only
-            // let newZonesById = {};
-            // newZonesById[zoneData.id] = newZone;
 
             // const newZonesById = {
             //     ...state.zonesById,
             //     [zoneData.id]: newZone
             // };
 
+            // TODO - figure out best way to do this in ES6
             const newItem = {};
             newItem[zoneData.id] = newZone;
             const newZonesById = Object.assign({}, state.zonesById, newItem);
 
-            const newState = {
+            newState = {
                 zones: state.zones.concat(newZone),
                 zonesById: newZonesById
+            }
+            return newState;
+
+        case SET_ZONE_PLAYLIST:
+            const zoneId = action.payload.zoneId;
+            const zonePlaylistId = action.payload.zonePlaylistId;
+
+            // TODO - figure out best way to do this in ES6
+            const zone = state.zonesById[zoneId];
+            newZone = Object.assign({}, zone);
+            newZone.zonePlaylistId = zonePlaylistId;
+
+            let zoneIndex = -1;
+            const newZones = Object.assign([], state.zones);
+            newZones.forEach(function(zone, index) {
+                if (zone.id == zoneId) {
+                    zoneIndex = index;
+                }
+            });
+            if (zoneIndex >= 0) {
+                newZones[zoneIndex] = newZone;
+            }
+
+            newState = {
+                zones: newZones,
+                zonesById: state.zonesById
             }
             return newState;
     }

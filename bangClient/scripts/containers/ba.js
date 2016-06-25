@@ -17,7 +17,7 @@ import { getAllThumbs, createDefaultSign, selectMediaFolder, updateMediaFolder }
 import { saveBSNPresentation } from '../actions/index';
 import { openDB, loadAppData, fetchSign }  from '../actions/index';
 
-import { newSign, newZone, addZone } from '../actions/index';
+import { newSign, newZone, addZone, newZonePlaylist, setZonePlaylist } from '../actions/index';
 import { guid } from '../utilities/utils';
 
 class BA extends Component {
@@ -40,6 +40,10 @@ class BA extends Component {
         const zoneId = guid();
         this.props.newZone(zoneId, "images", "imageZone");
         this.props.addZone(zoneId);
+        
+        const zonePlaylistId = guid();
+        this.props.newZonePlaylist(zonePlaylistId);
+        this.props.setZonePlaylist(zoneId, zonePlaylistId);
         
         this.props.loadAppData();
     }
@@ -116,7 +120,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ newSign, newZone, addZone, openDB, loadAppData, fetchSign, saveBSNPresentation, createDefaultSign: createDefaultSign, selectMediaFolder, updateMediaFolder: updateMediaFolder }, dispatch);
+    return bindActionCreators({ newSign, newZone, addZone, newZonePlaylist, setZonePlaylist, openDB, loadAppData, fetchSign, saveBSNPresentation, createDefaultSign: createDefaultSign, selectMediaFolder, updateMediaFolder: updateMediaFolder }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);

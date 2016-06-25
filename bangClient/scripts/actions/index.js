@@ -108,12 +108,40 @@ export function newZone(id, type, name) {
 // assumes there is a single, defined sign
 export const ADD_ZONE = 'ADD_ZONE';
 export function addZone(zoneId) {
-    
+
     return {
         type: ADD_ZONE,
         payload: zoneId
     }
 }
+
+export const NEW_ZONE_PLAYLIST = 'NEW_ZONE_PLAYLIST';
+export function newZonePlaylist(id) {
+
+    const zonePlaylist = {
+        id: id
+    };
+
+    return {
+        type: NEW_ZONE_PLAYLIST,
+        payload: zonePlaylist
+    }
+}
+
+export const SET_ZONE_PLAYLIST = 'SET_ZONE_PLAYLIST';
+export function setZonePlaylist(zoneId, zonePlaylistId) {
+
+    const payload = {
+        zoneId: zoneId,
+        zonePlaylistId: zonePlaylistId
+    };
+
+    return {
+        type: SET_ZONE_PLAYLIST,
+        payload: payload
+    }
+}
+
 
 
 
