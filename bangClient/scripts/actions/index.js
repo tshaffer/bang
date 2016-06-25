@@ -1,6 +1,7 @@
 /**
  * Created by tedshaffer on 6/3/16.
  */
+import { guid } from '../utilities/utils';
 
 import axios from 'axios';
 
@@ -69,19 +70,58 @@ export function mergeMediaThumbs(thumbsByPath) {
 
 
 
-export const CREATE_DEFAULT_SIGN = 'CREATE_DEFAULT_SIGN'
-export function createDefaultSign() {
+
+
+
+export const NEW_SIGN = 'NEW_SIGN';
+export function newSign(id, name) {
 
     // create a default sign
-    const sign = new Sign("Project 1");
-    const currentPlaylist = sign.zones[0].zonePlaylist;
-    const signData = { sign: sign, currentPlaylist: currentPlaylist };
-    
+    // const sign = new Sign(signName);
+
+    const signData =
+    {
+        id: id,
+        name: name
+    }
     return {
-        type: CREATE_DEFAULT_SIGN,
+        type: NEW_SIGN,
         payload: signData
     }
 }
+
+export const NEW_ZONE = 'NEW_ZONE';
+export function newZone(id, type, name) {
+
+    // const zone = new Zone(zoneType, zoneName);
+
+    const zoneData = {
+        id: id,
+        type: type,
+        name: name
+    };
+    
+    return {
+        type: NEW_ZONE,
+        payload: zoneData
+    }
+}
+
+// assumes there is a single, defined sign
+export const ADD_ZONE = 'ADD_ZONE';
+export function addZone(zoneId) {
+
+    // sign.addZone(zone.id);
+
+    return {
+        type: ADD_ZONE,
+        payload: zoneId
+    }
+}
+
+
+
+
 
 export const OPEN_SIGN = 'OPEN_SIGN'
 export function openSign(sign) {
@@ -94,7 +134,7 @@ export function openSign(sign) {
     }
 }
 
-export const UPDATE_SIGN = 'UPDATE_SIGN'
+export const UPDATE_SIGN = 'UPDATE_SIGN';
 export function updateSign(sign) {
 
     console.log("actions::updateSign");

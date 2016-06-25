@@ -13,9 +13,12 @@ import BAUI from '../platform/baUI';
 
 import { getAllThumbs, createDefaultSign, selectMediaFolder, updateMediaFolder } from '../actions/index';
 
-// these should be mutually exclusive
+// bangatron vs. bangwapp?
 import { saveBSNPresentation } from '../actions/index';
 import { openDB, loadAppData, fetchSign }  from '../actions/index';
+
+import { newSign, newZone, addZone } from '../actions/index';
+import { guid } from '../utilities/utils';
 
 class BA extends Component {
 
@@ -32,6 +35,12 @@ class BA extends Component {
 
     componentWillMount() {
 
+        this.props.newSign(guid(), "Project 1");
+        
+        const zoneId = guid();
+        this.props.newZone(zoneId, "images", "imageZone");
+        this.props.addZone(zoneId);
+        
         this.props.loadAppData();
     }
 
@@ -39,7 +48,7 @@ class BA extends Component {
 
         console.log("ba.js::componentDidMount invoked");
 
-        this.props.createDefaultSign();
+        // this.props.createDefaultSign();
 
         this.baUI.init();
     }
@@ -107,7 +116,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ openDB, loadAppData, fetchSign, saveBSNPresentation, createDefaultSign: createDefaultSign, selectMediaFolder, updateMediaFolder: updateMediaFolder }, dispatch);
+    return bindActionCreators({ newSign, newZone, addZone, openDB, loadAppData, fetchSign, saveBSNPresentation, createDefaultSign: createDefaultSign, selectMediaFolder, updateMediaFolder: updateMediaFolder }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);

@@ -6,6 +6,7 @@ import { guid } from '../utilities/utils';
 export default class ZonePlaylist   {
     constructor() {
         this.id = guid();
-        this.playlistItems = [];
+        this.playlistItemIds = [];
+        // future - mediaStates
     }
 }

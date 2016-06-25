@@ -10,6 +10,7 @@ export default class Zone   {
         this.id = guid();
         this.name = zoneName;
         this.type = zoneType;
+        
         this.zonePlaylist = new ZonePlaylist();
     }
 }
