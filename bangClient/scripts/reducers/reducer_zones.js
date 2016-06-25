@@ -25,8 +25,17 @@ export default function(state = initialState, action) {
             };
 
             // works for first zone only
-            let newZonesById = {};
-            newZonesById[zoneData.id] = newZone;
+            // let newZonesById = {};
+            // newZonesById[zoneData.id] = newZone;
+
+            // const newZonesById = {
+            //     ...state.zonesById,
+            //     [zoneData.id]: newZone
+            // };
+
+            const newItem = {};
+            newItem[zoneData.id] = newZone;
+            const newZonesById = Object.assign({}, state.zonesById, newItem);
 
             const newState = {
                 zones: state.zones.concat(newZone),
