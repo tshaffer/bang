@@ -24,16 +24,9 @@ export default function(state = initialState, action) {
                 name: zoneData.name
             };
 
-            // not convinced this is right - I don't think it is
-            // let newZonesById = [ ...state.zonesById ];
-            // newZonesById[zoneData.id] = newZone;
-
-            // works for first zone only (at best)
+            // works for first zone only
             let newZonesById = {};
-            newZonesById = {
-                id: zoneData.id,
-                zone: newZone
-            };
+            newZonesById[zoneData.id] = newZone;
 
             const newState = {
                 zones: state.zones.concat(newZone),

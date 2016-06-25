@@ -19,6 +19,7 @@ class Playlist extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            currentZoneId: null
         };
     }
 
@@ -36,6 +37,8 @@ class Playlist extends Component {
 
     componentDidMount() {
         console.log("playlist.js::componentDidMount invoked");
+
+        this.setState( { currentZoneId: this.props.zones.zones[0].id });
     }
 
 
@@ -102,9 +105,41 @@ class Playlist extends Component {
         this.props.addPlaylistItem(this.props.currentPlaylist, playlistItem, index);
     }
 
+    onSelectZone(event) {
+        console.log("onSelectZone invoked");
+
+        // if (this.refs.localRB.checked) {
+        //     type = "local";
+        //     htmlSiteSpec = this.localHtmlSiteSpec;
+        // }
+        // else {
+        //     type = "remote";
+        //     htmlSiteSpec = this.remoteHtmlSiteSpec;
+        // }
+
+    }
+
     render () {
 
         let self = this;
+
+        let zoneDropDown = <div></div>
+
+        let selectOptions = this.props.zones.zones.map(function (zone, index) {
+            return (
+                <option value={zone.id} key={zone.id}>{zone.name}</option>
+            );
+        });
+
+        const defaultZone = this.props.zones.zonesById[this.state.currentZoneId];
+
+        zoneDropDown =
+            <div>
+                Current zone:
+                <select className="leftSpacing" ref="zoneSelect" defaultValue={defaultZone}
+                        onChange={this.onSelectZone.bind(this)}>{selectOptions}</select>
+            </div>
+
 
         let currentPlaylistItems = [];
         if (typeof this.props.currentPlaylist.playlistItems != "undefined") {
@@ -157,7 +192,7 @@ class Playlist extends Component {
 
         return (
             <div className="playlistDiv">
-                Zone 1: Video or Images: Playlist
+                {zoneDropDown}
                 <button id="openCloseIcon" className="plainButton" type="button" onClick={this.props.onToggleOpenClosePropertySheet.bind(this)}>{openCloseLabel}</button>
                 <ul className="playlist-flex-container wrap">
                     {playlistItems}
@@ -169,6 +204,7 @@ class Playlist extends Component {
 
 function mapStateToProps(state) {
     return {
+        zones: state.zones,
         mediaThumbs: state.mediaThumbs,
         currentPlaylist: state.currentPlaylist
     };
