@@ -142,6 +142,28 @@ export function setZonePlaylist(zoneId, zonePlaylistId) {
     }
 }
 
+// this.props.addPlaylistItem(this.state.currentZonePlaylistId, playlistItem, index);
+
+export const ADD_PLAYLIST_ITEM = 'ADD_PLAYLIST_ITEM';
+export function addPlaylistItem(zonePlaylistId, playlistItem, index) {
+
+    // if (index >= 0) {
+    //     // insert prior to index
+    //     playlist.playlistItems.splice(index, 0, playlistItem);
+    // }
+    // else {
+    //     // append to list
+    //     playlist.playlistItems.push(playlistItem);
+    // }
+
+    return {
+        type: ADD_PLAYLIST_ITEM,
+        zonePlaylistId: zonePlaylistId,
+        playlistItem: playlistItem,
+        index: index
+    }
+}
+
 
 
 
@@ -200,23 +222,23 @@ export function setCurrentPlaylist(playlist) {
 }
 
 
-export const ADD_PLAYLIST_ITEM = 'ADD_PLAYLIST_ITEM';
-export function addPlaylistItem(playlist, playlistItem, index) {
-
-    if (index >= 0) {
-        // insert prior to index
-        playlist.playlistItems.splice(index, 0, playlistItem);
-    }
-    else {
-        // append to list
-        playlist.playlistItems.push(playlistItem);
-    }
-
-    return {
-        type: ADD_PLAYLIST_ITEM,
-        payload: playlist
-    }
-}
+// export const ADD_PLAYLIST_ITEM = 'ADD_PLAYLIST_ITEM';
+// export function addPlaylistItem(playlist, playlistItem, index) {
+//
+//     if (index >= 0) {
+//         // insert prior to index
+//         playlist.playlistItems.splice(index, 0, playlistItem);
+//     }
+//     else {
+//         // append to list
+//         playlist.playlistItems.push(playlistItem);
+//     }
+//
+//     return {
+//         type: ADD_PLAYLIST_ITEM,
+//         payload: playlist
+//     }
+// }
 
 export function updateMediaFolder(mediaFolder) {
 

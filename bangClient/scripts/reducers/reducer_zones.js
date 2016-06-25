@@ -15,6 +15,7 @@ export default function(state = initialState, action) {
 
     let newZone = null;
     let newState = null;
+    let newZonesById = null;
 
     switch (action.type) {
         case NEW_ZONE:
@@ -36,7 +37,7 @@ export default function(state = initialState, action) {
             // TODO - figure out best way to do this in ES6
             const newItem = {};
             newItem[zoneData.id] = newZone;
-            const newZonesById = Object.assign({}, state.zonesById, newItem);
+            newZonesById = Object.assign({}, state.zonesById, newItem);
 
             newState = {
                 zones: state.zones.concat(newZone),
@@ -64,9 +65,13 @@ export default function(state = initialState, action) {
                 newZones[zoneIndex] = newZone;
             }
 
+            // update zonesById to point to new zone
+            newZonesById = Object.assign({}, state.zonesById);
+            newZonesById[zoneId] = newZone;
+
             newState = {
                 zones: newZones,
-                zonesById: state.zonesById
+                zonesById: newZonesById
             }
             return newState;
     }

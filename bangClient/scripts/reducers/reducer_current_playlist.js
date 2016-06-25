@@ -12,8 +12,8 @@ export default function(state = [], action) {
             return action.payload.currentPlaylist;
         case SET_CURRENT_PLAYLIST:
             return action.payload;
-        case ADD_PLAYLIST_ITEM:
-            return Object.assign({}, action.payload);
+        // case ADD_PLAYLIST_ITEM:
+        //     return Object.assign({}, action.payload);
     }
 
     return state;

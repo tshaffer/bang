@@ -19,7 +19,7 @@ class Playlist extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentZoneId: null
+            currentZoneId: null,
         };
     }
 
@@ -51,7 +51,21 @@ class Playlist extends Component {
 
     playlistDropHandler (ev) {
 
-        let playlistItems = this.props.currentPlaylist.playlistItems;
+        // TODO - create function to get this info
+        let currentZone = null;
+        let currentZonePlaylist = null;
+        let currentZonePlaylistId = null;
+        if (this.state.currentZoneId) {
+            currentZone = this.props.zones.zonesById[this.state.currentZoneId];
+            currentZonePlaylistId = currentZone.zonePlaylistId;
+            if (currentZonePlaylistId) {
+                currentZonePlaylist = this.props.zonePlaylists.zonePlaylistsById[currentZonePlaylistId];
+            }
+        }
+
+        if (!currentZonePlaylist) return;
+
+        let playlistItems = currentZonePlaylist.playlistItems;
 
         ev.preventDefault();
 
@@ -98,11 +112,11 @@ class Playlist extends Component {
         if (left < (targetWidth / 2)) {
             index = indexOfDropTarget;
         }
-        else if (indexOfDropTarget < (this.props.currentPlaylist.playlistItems.length - 1)) {
+        else if (indexOfDropTarget < (playlistItems.length - 1)) {
             index = indexOfDropTarget + 1;
         }
 
-        this.props.addPlaylistItem(this.props.currentPlaylist, playlistItem, index);
+        this.props.addPlaylistItem(currentZonePlaylistId, playlistItem, index);
     }
 
     onSelectZone(event) {
@@ -119,6 +133,15 @@ class Playlist extends Component {
 
     }
 
+    // getZonePlaylistId() {
+    //
+    //     let zonePlaylistId = null;
+    //     if (this.state.currentZoneId) {
+    //         const currentZone = this.props.zones.zonesById[this.state.currentZoneId];
+    //         zonePlaylistId = currentZone.zonePlaylistId;
+    //     }
+    // }
+
     render () {
 
         let self = this;
@@ -131,21 +154,36 @@ class Playlist extends Component {
             );
         });
 
-        const defaultZone = this.props.zones.zonesById[this.state.currentZoneId];
+        // TODO - create function to get this info
+        let currentZone = null;
+        let currentZonePlaylist = null;
+        if (this.state.currentZoneId) {
+            currentZone = this.props.zones.zonesById[this.state.currentZoneId];
+            const zonePlaylistId = currentZone.zonePlaylistId;
+
+            // TODO - this approach needs to be thought through more
+            // this.setState( { currentZonePlaylistId: zonePlaylistId });
+            if (zonePlaylistId) {
+                currentZonePlaylist = this.props.zonePlaylists.zonePlaylistsById[zonePlaylistId];
+            }
+        }
 
         zoneDropDown =
             <div>
                 Current zone:
-                <select className="leftSpacing" ref="zoneSelect" defaultValue={defaultZone}
+                <select className="leftSpacing" ref="zoneSelect" defaultValue={currentZone}
                         onChange={this.onSelectZone.bind(this)}>{selectOptions}</select>
             </div>
 
 
         let currentPlaylistItems = [];
-        if (typeof this.props.currentPlaylist.playlistItems != "undefined") {
-            currentPlaylistItems = Object.assign([], this.props.currentPlaylist.playlistItems);
+        // if (typeof this.props.currentPlaylist.playlistItems != "undefined") {
+        //     currentPlaylistItems = Object.assign([], this.props.currentPlaylist.playlistItems);
+        // }
+        if (currentZonePlaylist) {
+            currentPlaylistItems = currentZonePlaylist.playlistItems;
+            
         }
-
         if (currentPlaylistItems.length == 0) {
             currentPlaylistItems.push(this.fakePlaylistItem);
         }
@@ -205,13 +243,14 @@ class Playlist extends Component {
 function mapStateToProps(state) {
     return {
         zones: state.zones,
+        zonePlaylists: state.zonePlaylists,
         mediaThumbs: state.mediaThumbs,
-        currentPlaylist: state.currentPlaylist
+        // currentPlaylist: state.currentPlaylist
     };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ addPlaylistItem: addPlaylistItem, selectPlaylistItem }, dispatch);
+    return bindActionCreators({ addPlaylistItem, selectPlaylistItem }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Playlist);
