@@ -3,7 +3,13 @@
  */
 import { NEW_ZONE } from '../actions/index';
 
-export default function(state = [], action) {
+const initialState =
+{
+    zones: [],
+    zonesById: {}
+};
+
+export default function(state = initialState, action) {
 
     console.log("reducer_zones:: action.type=" + action.type);
 
@@ -11,33 +17,40 @@ export default function(state = [], action) {
         case NEW_ZONE:
             const zoneData = action.payload;
 
-            const newState = state.concat(
-                {
-                    id: zoneData.id,
-                    type: zoneData.type,
-                    name: zoneData.name
-                }
-            );
+            const newZone =
+            {
+                id: zoneData.id,
+                type: zoneData.type,
+                name: zoneData.name
+            };
 
-            // const newState = Object.assign({},
-            //     ...state,
-            //     {
-            //         type: zoneData.zoneType,
-            //         name: zoneData.zoneName
-            //     }
-            // );
-            // const newState = Object.assign({}, state, {
-            //     zones: [
-            //         ...state.zones,
-            //         {
-            //             type: zoneData.zoneType,
-            //             name: zoneData.zoneName
-            //         }
-            //     ]
-            // });
-            // return newState;
+            // not convinced this is right - I don't think it is
+            // let newZonesById = [ ...state.zonesById ];
+            // newZonesById[zoneData.id] = newZone;
+
+            // works for first zone only (at best)
+            let newZonesById = {};
+            newZonesById = {
+                id: zoneData.id,
+                zone: newZone
+            };
+
+            const newState = {
+                zones: state.zones.concat(newZone),
+                zonesById: newZonesById
+            }
             return newState;
     }
 
     return state;
 };
+
+// http://redux.js.org/docs/recipes/UsingObjectSpreadOperator.html
+// didn't work
+// zonesById: {
+// ...state.zonesById,
+//         [id]: {
+//         id: zoneData.id,
+//             zone: newZone
+//     }
+// }

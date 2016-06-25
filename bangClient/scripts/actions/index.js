@@ -93,8 +93,6 @@ export function newSign(id, name) {
 export const NEW_ZONE = 'NEW_ZONE';
 export function newZone(id, type, name) {
 
-    // const zone = new Zone(zoneType, zoneName);
-
     const zoneData = {
         id: id,
         type: type,
@@ -110,9 +108,7 @@ export function newZone(id, type, name) {
 // assumes there is a single, defined sign
 export const ADD_ZONE = 'ADD_ZONE';
 export function addZone(zoneId) {
-
-    // sign.addZone(zone.id);
-
+    
     return {
         type: ADD_ZONE,
         payload: zoneId

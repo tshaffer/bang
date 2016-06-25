@@ -12,12 +12,6 @@ export default function(state = {}, action) {
 
     switch (action.type) {
         case NEW_SIGN:
-            // return action.payload;
-            // initialize other sign parameters here?
-            // return Object.assign({}, {
-            //     name: action.payload,
-            //     zoneIds: []
-            // });
             newState = Object.assign({}, {
                 id: action.payload.id,
                 name: action.payload.name,
@@ -27,26 +21,10 @@ export default function(state = {}, action) {
         case ADD_ZONE:
             const zoneId = action.payload;
 
-            // newState = state.zoneIds.concat(zoneId);
-
             const newZoneIds = state.zoneIds.concat(zoneId);
             newState = Object.assign({}, state,
                 { zoneIds: newZoneIds } );
-            // newState = Object.assign({}, state, {
-            //     zoneIds: [
-            //         ...state.zoneIds, { zoneId }
-            //     ]
-            // });
             return newState;
-            // return Object.assign({}, state, {
-            //     todos: [
-            //         ...state.todos,
-            //         {
-            //             text: action.text,
-            //             completed: false
-            //         }
-            //     ]
-            // })
         // case CREATE_DEFAULT_SIGN:
         //     console.log("reducer_sign:CREATE_DEFAULT_SIGN");
         //     return action.payload.sign;
