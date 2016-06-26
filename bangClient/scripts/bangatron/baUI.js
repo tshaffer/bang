@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 
 const {remote} = require('electron');
-const {Menu, MenuItem, dialog} = remote;
+const {Menu, dialog} = remote;
 const fs = require('fs');
 const path = require('path');
 
@@ -145,7 +145,6 @@ export default class BAUI {
         }, function (directories) {
             if (directories) {
                 const mediaFolder = directories[0];
-                // self.ba.props.updateMediaFolder(mediaFolder);
                 self.ba.props.selectMediaFolder(mediaFolder, self.ba.props.mediaThumbs);
             }
         })
