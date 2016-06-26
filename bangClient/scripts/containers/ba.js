@@ -50,18 +50,6 @@ class BA extends Component {
         this.props.newZonePlaylist(zonePlaylistId);
         this.props.setZonePlaylist(zoneId, zonePlaylistId);
 
-        const fakePlaylistItemId = guid();
-        const fakePlaylistItem = {
-            id: fakePlaylistItemId,
-            fileName: "Drop item here",
-            filePath: "/Users/tedshaffer/Pictures/BangPhotos2/backend_menu_Notes.jpg",
-            timeOnScreen: -1,
-            transition: 0,
-            transitionDuration: -1
-        };
-        this.props.newPlaylistItem(fakePlaylistItem);
-        this.props.addPlaylistItem(zonePlaylistId, fakePlaylistItemId);
-        
         this.props.loadAppData();
     }
 
@@ -81,8 +69,6 @@ class BA extends Component {
     
     handleSelectPlaylistItem(playlistItem) {
         console.log("handleSelectPlaylistItem:", playlistItem.fileName);
-
-        // const playlistItem = this.props.playlistItems.playlistItemsById[playlistItem.id];
         this.setState({ selectedPlaylistItemId: playlistItem.id });
     }
 
