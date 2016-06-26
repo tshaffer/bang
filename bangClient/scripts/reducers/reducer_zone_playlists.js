@@ -6,6 +6,8 @@
  */
 import { NEW_ZONE_PLAYLIST, ADD_PLAYLIST_ITEM, UPDATE_SELECTED_PLAYLIST_ITEM } from '../actions/index';
 
+// var deepEqual = require('deep-equal');
+
 const initialState =
 {
     zonePlaylists: [],
@@ -88,6 +90,10 @@ export default function(state = initialState, action) {
 
         case UPDATE_SELECTED_PLAYLIST_ITEM:
 
+            const savedState = Object.assign({}, state);
+            console.log("UPDATE_SELECTED_PLAYLIST_ITEM");
+            console.log(action.playlistItem);
+
             const zone = action.zone;
             playlistItem = action.playlistItem;
 
@@ -127,6 +133,14 @@ export default function(state = initialState, action) {
                 zonePlaylistsById: newZonePlaylistsById
             };
 
+            var equal = require('deep-equal');
+            console.log("equal");
+            console.dir([
+                equal(
+                    savedState,
+                    state
+                )
+            ]);
             return newState;
     }
 

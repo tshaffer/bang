@@ -196,8 +196,9 @@ class PropertySheet extends Component {
 
         console.log("udpateTimeOnScreen:", event.target.value);
 
-        let selectedPlaylistItem = Object.assign({}, this.props.selectedPlaylistItem, { timeOnScreen: event.target.value} );
+        let selectedPlaylistItem = Object.assign({}, this.props.selectedPlaylistItem, { timeOnScreen: Number(event.target.value) } );
         this.props.updateSelectedPlaylistItem(this.props.zones.selectedZone, selectedPlaylistItem);
+        // setTimeout(() => { this.props.updateSelectedPlaylistItem(this.props.zones.selectedZone, selectedPlaylistItem); }, 0);
     }
 
     updateTransition(event) {
@@ -217,6 +218,8 @@ class PropertySheet extends Component {
 
 
     render () {
+
+        console.log("propertySheet.js::render");
 
         var self = this;
 
@@ -322,29 +325,31 @@ class PropertySheet extends Component {
         return (
             <div className="propertySheetDiv">
                 <p className="smallishFont">Properties</p>
-                <Tabs onSelect={this.handleSelectTab}>
-                    <TabList>
-                        <Tab className="smallishFont">sign</Tab>
-                        <Tab className="smallishFont tabPadding">content</Tab>
-                        <Tab className="smallishFont tabPadding">html</Tab>
-                    </TabList>
-
-                    <TabPanel>
-                        {signProperties}
-                    </TabPanel>
-
-                    <TabPanel>
-                        {selectedMediaProperties}
-                    </TabPanel>
-
-                    <TabPanel>
-                        {htmlProperties}
-                    </TabPanel>
-                </Tabs>
+                {selectedMediaProperties}
             </div>
         );
     }
 }
+
+// <Tabs onSelect={this.handleSelectTab}>
+//     <TabList>
+//         <Tab className="smallishFont">sign</Tab>
+//         <Tab className="smallishFont tabPadding">content</Tab>
+//         <Tab className="smallishFont tabPadding">html</Tab>
+//     </TabList>
+//
+//     <TabPanel>
+//         {signProperties}
+//     </TabPanel>
+//
+//     <TabPanel>
+//         {selectedMediaProperties}
+//     </TabPanel>
+//
+//     <TabPanel>
+//         {htmlProperties}
+//     </TabPanel>
+// </Tabs>
 
 function mapStateToProps(state) {
     return {
