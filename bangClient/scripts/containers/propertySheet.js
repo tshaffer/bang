@@ -192,6 +192,13 @@ class PropertySheet extends Component {
         }
     }
 
+    updateMe(event) {
+
+        const selectedPlaylistItemId = this.props.selectedPlaylistItem.id;
+        const existingPlaylistItem = this.props.playlistItems.playlistItemsById[selectedPlaylistItemId];
+        this.setState({timeOnScreen: existingPlaylistItem.timeOnScreen});
+    }
+
     updateTimeOnScreen(event) {
 
         console.log("updateTimeOnScreen:", event.target.value);
@@ -310,6 +317,7 @@ class PropertySheet extends Component {
             selectedMediaProperties =
                 <div>
                     <p>{imagePlaylistItem.fileName}</p>
+                    <button onClick={this.updateMe.bind(this)}>Update Me</button>
                     <p>
                         Time on screen:
                         <input type="text" value={this.state.timeOnScreen} onChange={this.updateTimeOnScreen.bind(this)}></input>

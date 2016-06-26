@@ -51,7 +51,6 @@ export default function(state = initialState, action) {
             newPlaylistItems = Object.assign([], state.playlistItems);
             newPlaylistItemsById = Object.assign({}, state.playlistItemsById);
 
-            // newPlaylistItemsById[playlistItemId].timeOnScreen = playlistItem.timeOnScreen;
             newPlaylistItems.forEach(function(newPlaylistItem, index) {
                 if (newPlaylistItem.id === playlistItemId) {
                     newPlaylistItems[index] = playlistItem;
