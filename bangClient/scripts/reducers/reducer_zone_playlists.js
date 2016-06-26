@@ -175,6 +175,12 @@ export default function(state = initialState, action) {
                     state
                 )
             ]);
+            console.dir([
+                equal(
+                    savedState,
+                    newState
+                )
+            ]);
             return newState;
     }
 
