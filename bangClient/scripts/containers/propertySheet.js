@@ -194,13 +194,13 @@ class PropertySheet extends Component {
 
     updateTimeOnScreen(event) {
         let selectedPlaylistItem = Object.assign({}, this.props.selectedPlaylistItem, { timeOnScreen: event.target.value} );
-        this.props.updateSelectedPlaylistItem(selectedPlaylistItem);
+        this.props.updateSelectedPlaylistItem(this.props.zones.selectedZone, selectedPlaylistItem);
     }
 
     updateTransition(event) {
         if (event !== undefined) {
             let selectedPlaylistItem = Object.assign({}, this.props.selectedPlaylistItem, { transition: event.target.value} );
-            this.props.updateSelectedPlaylistItem(selectedPlaylistItem);
+            this.props.updateSelectedPlaylistItem(this.props.zones.selectedZone, selectedPlaylistItem);
 
             console.log("selectedPlaylistItem.transition=", selectedPlaylistItem.transition);
             console.log("this.props.selectedPlaylistItem.transition=", this.props.selectedPlaylistItem.transition);
@@ -209,7 +209,7 @@ class PropertySheet extends Component {
 
     updateTransitionDuration(event) {
         let selectedPlaylistItem = Object.assign({}, this.props.selectedPlaylistItem, { transitionDuration: event.target.value} );
-        this.props.updateSelectedPlaylistItem(selectedPlaylistItem);
+        this.props.updateSelectedPlaylistItem(this.props.zones.selectedZone, selectedPlaylistItem);
     }
 
 
@@ -344,6 +344,8 @@ class PropertySheet extends Component {
 function mapStateToProps(state) {
     return {
         sign: state.sign,
+        zones: state.zones,
+        // selectedZone: state.selectedZone,
         selectedPlaylistItem: state.selectedPlaylistItem
     };
 }

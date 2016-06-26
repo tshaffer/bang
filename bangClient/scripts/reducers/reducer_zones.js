@@ -41,7 +41,8 @@ export default function(state = initialState, action) {
 
             newState = {
                 zones: state.zones.concat(newZone),
-                zonesById: newZonesById
+                zonesById: newZonesById,
+                selectedZone: newZone
             }
             return newState;
 
@@ -71,7 +72,8 @@ export default function(state = initialState, action) {
 
             newState = {
                 zones: newZones,
-                zonesById: newZonesById
+                zonesById: newZonesById,
+                selectedZone: newZone
             }
             return newState;
     }

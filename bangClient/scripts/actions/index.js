@@ -115,6 +115,14 @@ export function addZone(zoneId) {
     }
 }
 
+export const SET_SELECTED_ZONE = 'SET_SELECTED_ZONE';
+export function selectZone(zone) {
+    return {
+        type: SET_SELECTED_ZONE,
+        payload: zone
+    }
+}
+
 export const NEW_ZONE_PLAYLIST = 'NEW_ZONE_PLAYLIST';
 export function newZonePlaylist(id) {
 
@@ -212,6 +220,11 @@ export function saveBSNPresentation(name, sign) {
 }
 
 
+
+
+
+
+
 export const SET_CURRENT_PLAYLIST = 'SET_CURRENT_PLAYLIST'
 export function setCurrentPlaylist(playlist) {
 
@@ -254,6 +267,9 @@ export function updateMediaFolder(mediaFolder) {
     }
 }
 
+
+
+
 export const SET_SELECTED_PLAYLIST_ITEM = 'SET_SELECTED_PLAYLIST_ITEM';
 export function selectPlaylistItem(playlistItem) {
     return {
@@ -263,10 +279,11 @@ export function selectPlaylistItem(playlistItem) {
 }
 
 export const UPDATE_SELECTED_PLAYLIST_ITEM = 'UPDATE_SELECTED_PLAYLIST_ITEM';
-export function updateSelectedPlaylistItem(playlistItem) {
+export function updateSelectedPlaylistItem(zone, playlistItem) {
     return {
         type: UPDATE_SELECTED_PLAYLIST_ITEM,
-        payload: playlistItem
+        zone: zone,
+        playlistItem: playlistItem
     }
 }
 

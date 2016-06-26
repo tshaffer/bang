@@ -8,8 +8,8 @@ export default function(state = [], action) {
     switch (action.type) {
         case SET_SELECTED_PLAYLIST_ITEM:
             return action.payload;
-        case UPDATE_SELECTED_PLAYLIST_ITEM:
-            return Object.assign({}, action.payload);
+        // case UPDATE_SELECTED_PLAYLIST_ITEM:
+        //     return Object.assign({}, action.payload);
     }
 
     return state;

@@ -17,7 +17,7 @@ import { getAllThumbs, createDefaultSign, selectMediaFolder, updateMediaFolder }
 import { saveBSNPresentation } from '../actions/index';
 import { openDB, loadAppData, fetchSign }  from '../actions/index';
 
-import { newSign, newZone, addZone, newZonePlaylist, setZonePlaylist } from '../actions/index';
+import { newSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist } from '../actions/index';
 import { guid } from '../utilities/utils';
 
 class BA extends Component {
@@ -40,7 +40,11 @@ class BA extends Component {
         const zoneId = guid();
         this.props.newZone(zoneId, "images", "imageZone");
         this.props.addZone(zoneId);
-        
+
+        // this.props.zones.zonesById was not updated by the time that the following statement was executed
+        // const zone = this.props.zones.zonesById[zoneId];
+        // this.props.selectZone(zone);
+
         const zonePlaylistId = guid();
         this.props.newZonePlaylist(zonePlaylistId);
         this.props.setZonePlaylist(zoneId, zonePlaylistId);
@@ -113,6 +117,7 @@ class BA extends Component {
 function mapStateToProps(state) {
     return {
         sign: state.sign,
+        zones: state.zones,
         mediaLibraryPlaylistItems: state.mediaLibraryPlaylistItems,
         mediaFolder: state.mediaFolder,
         mediaThumbs: state.mediaThumbs,
@@ -120,7 +125,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ newSign, newZone, addZone, newZonePlaylist, setZonePlaylist, openDB, loadAppData, fetchSign, saveBSNPresentation, createDefaultSign: createDefaultSign, selectMediaFolder, updateMediaFolder: updateMediaFolder }, dispatch);
+    return bindActionCreators({ newSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, openDB, loadAppData, fetchSign, saveBSNPresentation, createDefaultSign: createDefaultSign, selectMediaFolder, updateMediaFolder: updateMediaFolder }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);
