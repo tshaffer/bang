@@ -17,7 +17,7 @@ import { getAllThumbs, createDefaultSign, selectMediaFolder, updateMediaFolder }
 import { saveBSNPresentation } from '../actions/index';
 import { openDB, loadAppData, fetchSign }  from '../actions/index';
 
-import { newSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, updatePlaylistItem } from '../actions/index';
+import { newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, updatePlaylistItem } from '../actions/index';
 import { guid } from '../utilities/utils';
 
 class BA extends Component {
@@ -72,6 +72,12 @@ class BA extends Component {
         this.setState({ selectedPlaylistItemId: playlistItem.id });
     }
 
+    handleUpdateVideoMode(videoMode) {
+        const sign = Object.assign({}, this.props.sign, {videoMode: videoMode });
+        console.log("updateVideoMode:", videoMode);
+        this.props.updateSign(sign);
+    }
+
     handleUpdateImageTimeOnScreen(selectedPlaylistItemId, timeOnScreen) {
 
         const existingPlaylistItem = this.props.playlistItems.playlistItemsById[selectedPlaylistItemId];
@@ -114,6 +120,7 @@ class BA extends Component {
             propertySheetTag =
                 <PropertySheet
                     onBrowseForHTMLSite={this.baUI.handleBrowseForHTMLSite.bind(this.baUI)}
+                    onUpdateVideoMode = {this.handleUpdateVideoMode.bind(this)}
                     onUpdateImageTimeOnScreen = {this.handleUpdateImageTimeOnScreen.bind(this)}
                     onUpdateImageTransition = {this.handleUpdateImageTransition.bind(this)}
                     onUpdateImageTransitionDuration = {this.handleUpdateImageTransitionDuration.bind(this)}
@@ -164,7 +171,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ newSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, updatePlaylistItem, loadAppData, fetchSign, saveBSNPresentation, createDefaultSign, selectMediaFolder, updateMediaFolder }, dispatch);
+    return bindActionCreators({ newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, updatePlaylistItem, loadAppData, fetchSign, saveBSNPresentation, createDefaultSign, selectMediaFolder, updateMediaFolder }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);

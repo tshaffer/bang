@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 import HtmlSite from '../badm/htmlSite';
 
-import { updatePlaylistItem, updateSign, addHtmlSite } from '../actions/index';
+import { addHtmlSite } from '../actions/index';
 import { getShortenedFilePath } from '../utilities/utils';
 
 import ReactTabs from 'react-tabs';
@@ -136,10 +136,14 @@ class PropertySheet extends Component {
         console.log("PropertySheet::componentDidMount invoked");
     }
 
-    updateVideoMode(event) {
-        const sign = Object.assign({}, this.props.sign, {videoMode: event.target.value });
-        console.log("updateVideoMode:", event.target.value);
-        this.props.updateSign(sign);
+    onUpdateVideoMode(event) {
+
+        console.log("onUpdateVideoMode");
+
+        if (event != undefined) {
+            const videoMode = event.target.value;
+            this.props.onUpdateVideoMode(videoMode);
+        }
     }
 
     updateHTMLSiteName(event) {
@@ -240,11 +244,14 @@ class PropertySheet extends Component {
                 );
             });
 
+            // <input type="text" value={imagePlaylistItem.timeOnScreen} onChange={this.onUpdateImageTimeOnScreen.bind(this)}></input>                    </p>
+            // onChange={this.updateVideoMode.bind(this)}>{selectOptions}</select>
+
             signProperties =
                 <div>
                     Video mode: <br/>
                     <select id="videoModeSelect" defaultValue={this.props.sign.videoMode}
-                            onChange={this.updateVideoMode.bind(this)}>{selectOptions}</select>
+                            onChange={this.onUpdateVideoMode.bind(this)}>{selectOptions}</select>
                 </div>
 
             const shortenedHtmlSitePath = getShortenedFilePath(this.state.htmlSitePath, 36);
@@ -364,7 +371,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ updateSign, updatePlaylistItem, addHtmlSite }, dispatch);
+    return bindActionCreators({ addHtmlSite }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PropertySheet);
