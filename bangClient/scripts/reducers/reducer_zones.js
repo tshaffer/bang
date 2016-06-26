@@ -51,19 +51,18 @@ export default function(state = initialState, action) {
             const zonePlaylistId = action.payload.zonePlaylistId;
 
             // TODO - figure out best way to do this in ES6
-            const zone = state.zonesById[zoneId];
-            newZone = Object.assign({}, zone);
-            newZone.zonePlaylistId = zonePlaylistId;
+            // const zone = state.zonesById[zoneId];
+            // newZone = Object.assign({}, zone);
+            // newZone.zonePlaylistId = zonePlaylistId;
+            newZone = Object.assign({}, state.zonesById[zoneId], {zonePlaylistId: zonePlaylistId});
 
-            let zoneIndex = -1;
+            // update newZones with newZone
             const newZones = Object.assign([], state.zones);
-            newZones.forEach(function(zone, index) {
-                if (zone.id == zoneId) {
-                    zoneIndex = index;
+            for (let zoneIndex = 0; zoneIndex < state.zones.length; zoneIndex++) {
+                if (newZones[zoneIndex].id === zoneId) {
+                    newZones[zoneIndex] = newZone;
+                    break;
                 }
-            });
-            if (zoneIndex >= 0) {
-                newZones[zoneIndex] = newZone;
             }
 
             // update zonesById to point to new zone

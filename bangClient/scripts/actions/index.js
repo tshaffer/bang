@@ -150,8 +150,6 @@ export function setZonePlaylist(zoneId, zonePlaylistId) {
     }
 }
 
-// this.props.addPlaylistItem(this.state.currentZonePlaylistId, playlistItem, index);
-
 export const NEW_PLAYLIST_ITEM = 'NEW_PLAYLIST_ITEM';
 export function newPlaylistItem(playlistItem) {
     return {
@@ -183,8 +181,8 @@ export function addPlaylistItem(zonePlaylistId, playlistItemId) {
 }
 
 
-export const ADD_PLAYLIST_ITEM0 = 'ADD_PLAYLIST_ITEM0';
-export function addPlaylistItem0(zonePlaylistId, playlistItemId, index) {
+export const ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST = 'ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST';
+export function addPlaylistItemToZonePlaylist(zonePlaylistId, playlistItemId, index) {
 
     // if (index >= 0) {
     //     // insert prior to index
@@ -196,7 +194,7 @@ export function addPlaylistItem0(zonePlaylistId, playlistItemId, index) {
     // }
 
     return {
-        type: ADD_PLAYLIST_ITEM0,
+        type: ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST,
         zonePlaylistId: zonePlaylistId,
         playlistItemId: playlistItemId,
         index: index
@@ -262,14 +260,6 @@ export function updateMediaFolder(mediaFolder) {
 
             return getMediaFiles(dispatch, mediaFolder);
         })
-    }
-}
-
-export const SET_SELECTED_PLAYLIST_ITEM = 'SET_SELECTED_PLAYLIST_ITEM';
-export function selectPlaylistItem(playlistItem) {
-    return {
-        type: SET_SELECTED_PLAYLIST_ITEM,
-        payload: playlistItem
     }
 }
 

@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
-import { newPlaylistItem, addPlaylistItem, selectPlaylistItem, addPlaylistItem0 } from '../actions/index';
+import { newPlaylistItem, addPlaylistItem, addPlaylistItemToZonePlaylist } from '../actions/index';
 import { guid } from '../utilities/utils';
 
 import $ from 'jquery';
@@ -122,7 +122,7 @@ class Playlist extends Component {
             index = indexOfDropTarget + 1;
         }
 
-        this.props.addPlaylistItem0(currentZonePlaylistId, playlistItemId, index);
+        this.props.addPlaylistItemToZonePlaylist(currentZonePlaylistId, playlistItemId, index);
     }
 
     onSelectZone(event) {
@@ -242,7 +242,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ newPlaylistItem, addPlaylistItem, selectPlaylistItem, addPlaylistItem0 }, dispatch);
+    return bindActionCreators({ newPlaylistItem, addPlaylistItem, addPlaylistItemToZonePlaylist }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Playlist);

@@ -4,7 +4,7 @@
 /**
  * Created by tedshaffer on 6/24/16.
  */
-import { NEW_ZONE_PLAYLIST, ADD_PLAYLIST_ITEM, ADD_PLAYLIST_ITEM0, UPDATE_SELECTED_PLAYLIST_ITEM } from '../actions/index';
+import { NEW_ZONE_PLAYLIST, ADD_PLAYLIST_ITEM, ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST, UPDATE_SELECTED_PLAYLIST_ITEM } from '../actions/index';
 
 // var deepEqual = require('deep-equal');
 
@@ -41,6 +41,7 @@ export default function(state = initialState, action) {
                 playlistItemIds: []
             };
 
+            // ES6
             const newItem = {};
             newItem[zonePlaylist.id] = newZonePlaylist;
             newZonePlaylistsById = Object.assign({}, state.zonePlaylistsById, newItem);
@@ -82,7 +83,7 @@ export default function(state = initialState, action) {
 
             return newState;
 
-        case ADD_PLAYLIST_ITEM0:
+        case ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST:
             zonePlaylistId = action.zonePlaylistId;
             playlistItemId = action.playlistItemId;
             const index = action.index;
