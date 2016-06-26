@@ -152,8 +152,27 @@ export function setZonePlaylist(zoneId, zonePlaylistId) {
 
 // this.props.addPlaylistItem(this.state.currentZonePlaylistId, playlistItem, index);
 
+export const NEW_PLAYLIST_ITEM = 'NEW_PLAYLIST_ITEM';
+export function newPlaylistItem(playlistItem) {
+    return {
+        type: NEW_PLAYLIST_ITEM,
+        payload: playlistItem
+    }
+}
+
+
 export const ADD_PLAYLIST_ITEM = 'ADD_PLAYLIST_ITEM';
-export function addPlaylistItem(zonePlaylistId, playlistItem, index) {
+export function addPlaylistItem(zonePlaylistId, playlistItemId) {
+    return {
+        type: ADD_PLAYLIST_ITEM,
+        zonePlaylistId: zonePlaylistId,
+        playlistItemId: playlistItemId
+    }
+}
+
+
+export const ADD_PLAYLIST_ITEM0 = 'ADD_PLAYLIST_ITEM0';
+export function addPlaylistItem0(zonePlaylistId, playlistItemId, index) {
 
     // if (index >= 0) {
     //     // insert prior to index
@@ -165,9 +184,9 @@ export function addPlaylistItem(zonePlaylistId, playlistItem, index) {
     // }
 
     return {
-        type: ADD_PLAYLIST_ITEM,
+        type: ADD_PLAYLIST_ITEM0,
         zonePlaylistId: zonePlaylistId,
-        playlistItem: playlistItem,
+        playlistItemId: playlistItemId,
         index: index
     }
 }

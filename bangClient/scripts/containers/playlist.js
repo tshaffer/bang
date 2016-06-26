@@ -8,7 +8,8 @@ import { connect } from 'react-redux';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
-import { addPlaylistItem, selectPlaylistItem } from '../actions/index';
+import { newPlaylistItem, addPlaylistItem, selectPlaylistItem, addPlaylistItem0 } from '../actions/index';
+import { guid } from '../utilities/utils';
 
 import $ from 'jquery';
 
@@ -65,7 +66,7 @@ class Playlist extends Component {
 
         if (!currentZonePlaylist) return;
 
-        let playlistItems = currentZonePlaylist.playlistItems;
+        let playlistItemIds = currentZonePlaylist.playlistItemIds;
 
         ev.preventDefault();
 
@@ -76,14 +77,19 @@ class Playlist extends Component {
 
         // specify playlist item to drop
         let playlistItem = null;
+        const playlistItemId = guid();
         if (type === "image") {
-            playlistItem = new ImagePlaylistItem(
-                stateName,
-                path,
-                6,
-                0,
-                2,
-                false);
+
+            playlistItem = {
+                id: playlistItemId,
+                fileName: stateName,
+                filePath: path,
+                timeOnScreen: 6,
+                transition: 0,
+                transitionDuration: 2
+            };
+            this.props.newPlaylistItem(playlistItem);
+            // this.props.addPlaylistItem(currentZonePlaylistId, playlistItemId);
         }
         else if (type == "html5") {
             playlistItem = new HTML5PlaylistItem(
@@ -112,11 +118,11 @@ class Playlist extends Component {
         if (left < (targetWidth / 2)) {
             index = indexOfDropTarget;
         }
-        else if (indexOfDropTarget < (playlistItems.length - 1)) {
+        else if (indexOfDropTarget < (playlistItemIds.length - 1)) {
             index = indexOfDropTarget + 1;
         }
 
-        this.props.addPlaylistItem(currentZonePlaylistId, playlistItem, index);
+        this.props.addPlaylistItem0(currentZonePlaylistId, playlistItemId, index);
     }
 
     onSelectZone(event) {
@@ -157,6 +163,7 @@ class Playlist extends Component {
         // TODO - create function to get this info
         let currentZone = null;
         let currentZonePlaylist = null;
+        let currentZonePlaylistItemIds = [];
         if (this.state.currentZoneId) {
             currentZone = this.props.zones.zonesById[this.state.currentZoneId];
             const zonePlaylistId = currentZone.zonePlaylistId;
@@ -165,6 +172,7 @@ class Playlist extends Component {
             // this.setState( { currentZonePlaylistId: zonePlaylistId });
             if (zonePlaylistId) {
                 currentZonePlaylist = this.props.zonePlaylists.zonePlaylistsById[zonePlaylistId];
+                currentZonePlaylistItemIds = currentZonePlaylist.playlistItemIds;
             }
         }
 
@@ -177,16 +185,22 @@ class Playlist extends Component {
 
 
         let currentPlaylistItems = [];
+
+        // for now, resolve currentZonePlaylistIds => currentPlaylistItems
+        currentZonePlaylistItemIds.forEach(function(currentZonePlaylistItemId, index) {
+            const playlistItem = self.props.playlistItems.playlistItemsById[currentZonePlaylistItemId];
+            currentPlaylistItems.push(playlistItem);
+        });
+
         // if (typeof this.props.currentPlaylist.playlistItems != "undefined") {
         //     currentPlaylistItems = Object.assign([], this.props.currentPlaylist.playlistItems);
         // }
-        if (currentZonePlaylist) {
-            currentPlaylistItems = currentZonePlaylist.playlistItems;
-            
-        }
-        if (currentPlaylistItems.length == 0) {
-            currentPlaylistItems.push(this.fakePlaylistItem);
-        }
+        // if (currentZonePlaylist) {
+        //     currentPlaylistItems = currentZonePlaylist.playlistItems;
+        // }
+        // if (currentPlaylistItems.length == 0) {
+        //     currentPlaylistItems.push(this.fakePlaylistItem);
+        // }
 
         let openCloseLabel = "=>";
         if (!this.props.propertySheetOpen) {
@@ -244,13 +258,15 @@ function mapStateToProps(state) {
     return {
         zones: state.zones,
         zonePlaylists: state.zonePlaylists,
+        playlistItems: state.playlistItems,
+
         mediaThumbs: state.mediaThumbs,
         // currentPlaylist: state.currentPlaylist
     };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ addPlaylistItem, selectPlaylistItem }, dispatch);
+    return bindActionCreators({ newPlaylistItem, addPlaylistItem, selectPlaylistItem, addPlaylistItem0 }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Playlist);

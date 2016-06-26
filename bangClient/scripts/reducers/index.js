@@ -9,6 +9,7 @@ import MediaLibraryPlaylistItemsReducer from './reducer_media_library_playlist_i
 import SignReducer from './reducer_sign';
 import ZonesReducer from './reducer_zones';
 import ZonePlaylistsReducer from './reducer_zone_playlists';
+import PlaylistItemsReducer from './reducer_playlist_items';
 
 import SelectedZoneReducer from './reducer_selected_zone';
 import SelectedPlaylistItemReducer from './reducer_selected_playlist_item';
@@ -23,8 +24,8 @@ const rootReducer = combineReducers({
 
     sign: SignReducer,
     zones: ZonesReducer,
-    zonePlaylists: ZonePlaylistsReducer
-
+    zonePlaylists: ZonePlaylistsReducer,
+    playlistItems: PlaylistItemsReducer
 });
 
 export default rootReducer;

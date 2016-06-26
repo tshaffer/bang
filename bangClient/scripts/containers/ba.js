@@ -17,7 +17,7 @@ import { getAllThumbs, createDefaultSign, selectMediaFolder, updateMediaFolder }
 import { saveBSNPresentation } from '../actions/index';
 import { openDB, loadAppData, fetchSign }  from '../actions/index';
 
-import { newSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist } from '../actions/index';
+import { newSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem } from '../actions/index';
 import { guid } from '../utilities/utils';
 
 class BA extends Component {
@@ -48,6 +48,18 @@ class BA extends Component {
         const zonePlaylistId = guid();
         this.props.newZonePlaylist(zonePlaylistId);
         this.props.setZonePlaylist(zoneId, zonePlaylistId);
+
+        const fakePlaylistItemId = guid();
+        const fakePlaylistItem = {
+            id: fakePlaylistItemId,
+            fileName: "Drop item here",
+            filePath: "/Users/tedshaffer/Pictures/BangPhotos2/backend_menu_Notes.jpg",
+            timeOnScreen: -1,
+            transition: 0,
+            transitionDuration: -1
+        };
+        this.props.newPlaylistItem(fakePlaylistItem);
+        this.props.addPlaylistItem(zonePlaylistId, fakePlaylistItemId);
         
         this.props.loadAppData();
     }
@@ -125,7 +137,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ newSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, openDB, loadAppData, fetchSign, saveBSNPresentation, createDefaultSign: createDefaultSign, selectMediaFolder, updateMediaFolder: updateMediaFolder }, dispatch);
+    return bindActionCreators({ newSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, loadAppData, fetchSign, saveBSNPresentation, createDefaultSign: createDefaultSign, selectMediaFolder, updateMediaFolder: updateMediaFolder }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);
