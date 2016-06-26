@@ -80,6 +80,22 @@ class BA extends Component {
         this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
     }
 
+    handleUpdateImageTransition(selectedPlaylistItemId, transition) {
+
+        const existingPlaylistItem = this.props.playlistItems.playlistItemsById[selectedPlaylistItemId];
+        let updatedPlaylistItem = Object.assign({}, existingPlaylistItem);
+        updatedPlaylistItem.transition = transition;
+        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+    }
+
+    handleUpdateImageTransitionDuration(selectedPlaylistItemId, transitionDuration) {
+
+        const existingPlaylistItem = this.props.playlistItems.playlistItemsById[selectedPlaylistItemId];
+        let updatedPlaylistItem = Object.assign({}, existingPlaylistItem);
+        updatedPlaylistItem.transitionDuration = transitionDuration;
+        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+    }
+
     render () {
 
         console.log("ba.js::render invoked");
@@ -99,6 +115,8 @@ class BA extends Component {
                 <PropertySheet
                     onBrowseForHTMLSite={this.baUI.handleBrowseForHTMLSite.bind(this.baUI)}
                     onUpdateImageTimeOnScreen = {this.handleUpdateImageTimeOnScreen.bind(this)}
+                    onUpdateImageTransition = {this.handleUpdateImageTransition.bind(this)}
+                    onUpdateImageTransitionDuration = {this.handleUpdateImageTransitionDuration.bind(this)}
                     selectedPlaylistItemId={this.state.selectedPlaylistItemId}
                 />
         }

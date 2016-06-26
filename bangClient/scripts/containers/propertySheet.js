@@ -201,32 +201,25 @@ class PropertySheet extends Component {
         }
     }
 
-    updateTransition(event) {
+    onUpdateImageTransition(event) {
 
-        console.log("updateTransition:", event.target.value);
+        console.log("onUpdateTransition:");
 
-        const transition = event.target.value;
-
-        const selectedPlaylistItemId = this.props.selectedPlaylistItemId;
-        const existingPlaylistItem = this.props.playlistItems.playlistItemsById[selectedPlaylistItemId];
-        let updatedPlaylistItem = Object.assign({}, existingPlaylistItem);
-        updatedPlaylistItem.transition = transition;
-        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+        if (event != undefined) {
+            const transition = event.target.value;
+            this.props.onUpdateImageTransition(this.props.selectedPlaylistItemId, transition);
+        }
     }
 
-    updateTransitionDuration(event) {
+    onUpdateImageTransitionDuration(event) {
 
-        console.log("updateTransitionDuration:", event.target.value);
+        console.log("onUpdateImageTransitionDuration:");
 
-        const transitionDuration = Number(event.target.value);
-
-        const selectedPlaylistItemId = this.props.selectedPlaylistItemId;
-        const existingPlaylistItem = this.props.playlistItems.playlistItemsById[selectedPlaylistItemId];
-        let updatedPlaylistItem = Object.assign({}, existingPlaylistItem);
-        updatedPlaylistItem.transitionDuration = transitionDuration;
-        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+        if (event != undefined) {
+            const transitionDuration = Number(event.target.value);
+            this.props.onUpdateImageTransitionDuration(this.props.selectedPlaylistItemId, transitionDuration);
+        }
     }
-
 
     render () {
 
@@ -321,11 +314,11 @@ class PropertySheet extends Component {
                         <input type="text" value={imagePlaylistItem.timeOnScreen} onChange={this.onUpdateImageTimeOnScreen.bind(this)}></input>                    </p>
                     <div>
                         Transition:
-                        <select ref="transitionsSelect" value={imagePlaylistItem.transition} onChange={this.updateTransition.bind(this)}>{selectOptions}</select>
+                        <select ref="transitionsSelect" value={imagePlaylistItem.transition} onChange={this.onUpdateImageTransition.bind(this)}>{selectOptions}</select>
                     </div>
                     <p>
                         Transition duration:
-                        <input type="text" value={imagePlaylistItem.transitionDuration} onChange={this.updateTransitionDuration.bind(this)}></input>
+                        <input type="text" value={imagePlaylistItem.transitionDuration} onChange={this.onUpdateImageTransitionDuration.bind(this)}></input>
                     </p>
                 </div>
             ;
