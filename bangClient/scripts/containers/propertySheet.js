@@ -204,7 +204,7 @@ class PropertySheet extends Component {
         console.log("updateTimeOnScreen:", event.target.value);
 
         const timeOnScreen = Number(event.target.value);
-        this.setState({timeOnScreen: timeOnScreen});
+        // this.setState({timeOnScreen: timeOnScreen});
 
         // const selectedPlaylistItemId = this.props.selectedPlaylistItem.id;
         const selectedPlaylistItemId = this.props.selectedPlaylistItemId;
@@ -302,7 +302,6 @@ class PropertySheet extends Component {
         }
 
         if (this.props.selectedPlaylistItemId) {
-        // if (this.props.selectedPlaylistItem && this.props.selectedPlaylistItem.timeOnScreen > 0) {
 
             const imagePlaylistItem = this.props.playlistItems.playlistItemsById[this.props.selectedPlaylistItemId];
 
@@ -315,11 +314,10 @@ class PropertySheet extends Component {
                 );
             });
 
-            // <input type="text" value={imagePlaylistItem.timeOnScreen} onChange={this.updateTimeOnScreen.bind(this)}></input>
-
             // <input type="text" value={this.state.timeOnScreen} onChange={this.updateTimeOnScreen.bind(this)}></input>
-            // let timeOnScreenLbl = "";
-            // timeOnScreenLbl = imagePlaylistItem.timeOnScreen;
+
+            let timeOnScreenLbl = "";
+            timeOnScreenLbl = imagePlaylistItem.timeOnScreen;
             // <input type="text" value={timeOnScreenLbl} onChange={this.updateTimeOnScreen.bind(this)}></input>
 
             selectedMediaProperties =
@@ -328,7 +326,7 @@ class PropertySheet extends Component {
                     <button onClick={this.updateMe.bind(this)}>Update Me</button>
                     <p>
                         Time on screen:
-                        <input type="text" value={this.state.timeOnScreen} onChange={this.updateTimeOnScreen.bind(this)}></input>
+                        <input type="text" value={timeOnScreenLbl} onChange={this.updateTimeOnScreen.bind(this)}></input>
                     </p>
                     <div>
                         Transition:
