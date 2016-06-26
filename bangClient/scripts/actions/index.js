@@ -160,6 +160,18 @@ export function newPlaylistItem(playlistItem) {
     }
 }
 
+export const UPDATE_PLAYLIST_ITEM = 'UPDATE_PLAYLIST_ITEM';
+export function updatePlaylistItem(playlistItemId, playlistItem) {
+    return {
+        type: UPDATE_PLAYLIST_ITEM,
+        playlistItemId: playlistItemId,
+        playlistItem: playlistItem
+    }
+}
+
+
+
+
 
 export const ADD_PLAYLIST_ITEM = 'ADD_PLAYLIST_ITEM';
 export function addPlaylistItem(zonePlaylistId, playlistItemId) {

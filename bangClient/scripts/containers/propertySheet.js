@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 import HtmlSite from '../badm/htmlSite';
 
-import { updateSelectedPlaylistItem, updateSign, addHtmlSite } from '../actions/index';
+import { updateSelectedPlaylistItem, updatePlaylistItem, updateSign, addHtmlSite } from '../actions/index';
 import { getShortenedFilePath } from '../utilities/utils';
 
 import ReactTabs from 'react-tabs';
@@ -24,6 +24,7 @@ class PropertySheet extends Component {
             htmlSitePath: "",
             localDisabled: false,
             remoteDisabled: true,
+            timeOnScreen: 69
         };
 
         this.localHtmlSitePath = "";
@@ -193,10 +194,19 @@ class PropertySheet extends Component {
 
     updateTimeOnScreen(event) {
 
-        console.log("udpateTimeOnScreen:", event.target.value);
+        console.log("updateTimeOnScreen:", event.target.value);
 
-        let selectedPlaylistItem = Object.assign({}, this.props.selectedPlaylistItem, { timeOnScreen: Number(event.target.value) } );
-        this.props.updateSelectedPlaylistItem(this.props.zones.selectedZone, selectedPlaylistItem);
+        const timeOnScreen = Number(event.target.value);
+        this.setState({timeOnScreen: timeOnScreen});
+
+        const selectedPlaylistItemId = this.props.selectedPlaylistItem.id;
+        const existingPlaylistItem = this.props.playlistItems.playlistItemsById[selectedPlaylistItemId];
+        let updatedPlaylistItem = Object.assign({}, existingPlaylistItem);
+        updatedPlaylistItem.timeOnScreen = timeOnScreen;
+        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+
+        // let selectedPlaylistItem = Object.assign({}, this.props.selectedPlaylistItem, { timeOnScreen: timeOnScreen } );
+        // this.props.updateSelectedPlaylistItem(this.props.zones.selectedZone, selectedPlaylistItem);
     }
 
     updateTransition(event) {
@@ -295,12 +305,14 @@ class PropertySheet extends Component {
                 );
             });
 
+            // <input type="text" value={imagePlaylistItem.timeOnScreen} onChange={this.updateTimeOnScreen.bind(this)}></input>
+
             selectedMediaProperties =
                 <div>
                     <p>{imagePlaylistItem.fileName}</p>
                     <p>
                         Time on screen:
-                        <input type="text" value={imagePlaylistItem.timeOnScreen} onChange={this.updateTimeOnScreen.bind(this)}></input>
+                        <input type="text" value={this.state.timeOnScreen} onChange={this.updateTimeOnScreen.bind(this)}></input>
                     </p>
                     <div>
                         Transition:
@@ -348,13 +360,14 @@ function mapStateToProps(state) {
     return {
         sign: state.sign,
         zones: state.zones,
+        playlistItems: state.playlistItems,
         // selectedZone: state.selectedZone,
         selectedPlaylistItem: state.selectedPlaylistItem
     };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ updateSign, updateSelectedPlaylistItem, addHtmlSite }, dispatch);
+    return bindActionCreators({ updateSign, updatePlaylistItem, updateSelectedPlaylistItem, addHtmlSite }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PropertySheet);

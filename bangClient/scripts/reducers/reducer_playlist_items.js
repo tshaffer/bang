@@ -1,7 +1,7 @@
 /**
  * Created by tedshaffer on 6/26/16.
  */
-import { NEW_PLAYLIST_ITEM } from '../actions/index';
+import { NEW_PLAYLIST_ITEM, UPDATE_PLAYLIST_ITEM } from '../actions/index';
 
 const initialState =
 {
@@ -14,10 +14,14 @@ export default function(state = initialState, action) {
     console.log("reducer_playlist_items:: action.type=" + action.type);
 
     let newState;
+    let playlistItem;
+
+    let newPlaylistItems;
+    let newPlaylistItemsById;
 
     switch (action.type) {
         case NEW_PLAYLIST_ITEM:
-            const playlistItem = action.payload;
+            playlistItem = action.payload;
             
             const newPlaylistItem =
             {
@@ -31,10 +35,32 @@ export default function(state = initialState, action) {
 
             const newItem = {};
             newItem[newPlaylistItem.id] = newPlaylistItem;
-            const newPlaylistItemsById = Object.assign({}, state.playlistItemsById, newItem);
+            newPlaylistItemsById = Object.assign({}, state.playlistItemsById, newItem);
 
             newState = {
                 playlistItems: state.playlistItems.concat(newPlaylistItem),
+                playlistItemsById: newPlaylistItemsById
+            }
+            return newState;
+        
+        case UPDATE_PLAYLIST_ITEM:
+
+            const playlistItemId = action.playlistItemId;
+            playlistItem = action.playlistItem;
+
+            newPlaylistItems = Object.assign([], state.playlistItems);
+            newPlaylistItemsById = Object.assign({}, state.playlistItemsById);
+
+            // newPlaylistItemsById[playlistItemId].timeOnScreen = playlistItem.timeOnScreen;
+            newPlaylistItems.forEach(function(newPlaylistItem, index) {
+                if (newPlaylistItem.id === playlistItemId) {
+                    newPlaylistItems[index] = playlistItem;
+                }
+            })
+            newPlaylistItemsById[playlistItemId] = playlistItem;
+
+            newState = {
+                playlistItems: newPlaylistItems,
                 playlistItemsById: newPlaylistItemsById
             }
             return newState;
