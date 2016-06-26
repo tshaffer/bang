@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 import HtmlSite from '../badm/htmlSite';
 
-import { updateSelectedPlaylistItem, updatePlaylistItem, updateSign, addHtmlSite } from '../actions/index';
+import { updatePlaylistItem, updateSign, addHtmlSite } from '../actions/index';
 import { getShortenedFilePath } from '../utilities/utils';
 
 import ReactTabs from 'react-tabs';
@@ -330,7 +330,7 @@ class PropertySheet extends Component {
                     </p>
                 </div>
             ;
-            
+
         }
         else {
             selectedMediaProperties = <div></div>
@@ -372,7 +372,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ updateSign, updatePlaylistItem, updateSelectedPlaylistItem, addHtmlSite }, dispatch);
+    return bindActionCreators({ updateSign, updatePlaylistItem, addHtmlSite }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PropertySheet);

@@ -263,15 +263,6 @@ export function updateMediaFolder(mediaFolder) {
     }
 }
 
-export const UPDATE_SELECTED_PLAYLIST_ITEM = 'UPDATE_SELECTED_PLAYLIST_ITEM';
-export function updateSelectedPlaylistItem(zone, playlistItem) {
-    return {
-        type: UPDATE_SELECTED_PLAYLIST_ITEM,
-        zone: zone,
-        playlistItem: playlistItem
-    }
-}
-
 
 export const ADD_HTML_SITE = 'ADD_HTML_SITE';
 export function addHtmlSite(htmlSite) {
