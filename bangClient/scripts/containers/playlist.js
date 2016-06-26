@@ -129,6 +129,11 @@ class Playlist extends Component {
         console.log("onSelectZone invoked");
     }
 
+    onSelectPlaylistItem(playlistItem) {
+        console.log("onSelectPlaylistItem");
+        this.props.onSelectPlaylistItem(playlistItem);
+    }
+
     render () {
 
         let self = this;
@@ -187,6 +192,10 @@ class Playlist extends Component {
 
                 dataIndex++;
 
+                // onClick={() => self.props.selectPlaylistItem(playlistItem)}
+                // onClick={self.props.onSelectPlaylistItem(playlistItem)}
+                // onClick={() => self.onSelectPlaylistItem(playlistItem)}
+
                 return (
                     <li className="flex-item mediaLibraryThumbDiv" key={playlistItem.id} onDrop={self.playlistDropHandler.bind(self)} onDragOver={self.playlistDragOverHandler}>
                         <img
@@ -194,7 +203,7 @@ class Playlist extends Component {
                             src={thumb}
                             className="mediaLibraryThumbImg"
                             data-index={dataIndex}
-                            onClick={() => self.props.selectPlaylistItem(playlistItem)}
+                            onClick={() => self.onSelectPlaylistItem(playlistItem)}
                         />
                         <p className="mediaLibraryThumbLbl">{playlistItem.name}</p>
                     </li>

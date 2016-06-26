@@ -194,7 +194,7 @@ class PropertySheet extends Component {
 
     updateMe(event) {
 
-        const selectedPlaylistItemId = this.props.selectedPlaylistItem.id;
+        const selectedPlaylistItemId = this.props.selectedPlaylistItemId;
         const existingPlaylistItem = this.props.playlistItems.playlistItemsById[selectedPlaylistItemId];
         this.setState({timeOnScreen: existingPlaylistItem.timeOnScreen});
     }
@@ -206,7 +206,8 @@ class PropertySheet extends Component {
         const timeOnScreen = Number(event.target.value);
         this.setState({timeOnScreen: timeOnScreen});
 
-        const selectedPlaylistItemId = this.props.selectedPlaylistItem.id;
+        // const selectedPlaylistItemId = this.props.selectedPlaylistItem.id;
+        const selectedPlaylistItemId = this.props.selectedPlaylistItemId;
         const existingPlaylistItem = this.props.playlistItems.playlistItemsById[selectedPlaylistItemId];
         let updatedPlaylistItem = Object.assign({}, existingPlaylistItem);
         updatedPlaylistItem.timeOnScreen = timeOnScreen;
@@ -300,10 +301,12 @@ class PropertySheet extends Component {
                 </div>
         }
 
-        if (this.props.selectedPlaylistItem && this.props.selectedPlaylistItem.timeOnScreen > 0) {
+        if (this.props.selectedPlaylistItemId) {
+        // if (this.props.selectedPlaylistItem && this.props.selectedPlaylistItem.timeOnScreen > 0) {
 
-            const imagePlaylistItem = this.props.selectedPlaylistItem;
-            console.log("imagePlaylistItem.transition=", imagePlaylistItem.transition);
+            const imagePlaylistItem = this.props.playlistItems.playlistItemsById[this.props.selectedPlaylistItemId];
+
+            // const imagePlaylistItem = this.props.selectedPlaylistItem;
 
             let selectOptions = this.transitionSpecs.map(function(transitionSpec, index) {
 
@@ -313,6 +316,11 @@ class PropertySheet extends Component {
             });
 
             // <input type="text" value={imagePlaylistItem.timeOnScreen} onChange={this.updateTimeOnScreen.bind(this)}></input>
+
+            // <input type="text" value={this.state.timeOnScreen} onChange={this.updateTimeOnScreen.bind(this)}></input>
+            // let timeOnScreenLbl = "";
+            // timeOnScreenLbl = imagePlaylistItem.timeOnScreen;
+            // <input type="text" value={timeOnScreenLbl} onChange={this.updateTimeOnScreen.bind(this)}></input>
 
             selectedMediaProperties =
                 <div>

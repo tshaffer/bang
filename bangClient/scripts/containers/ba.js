@@ -26,7 +26,8 @@ class BA extends Component {
         super(props);
         this.state = {
             bsnPresentations: [],
-            propertySheetOpen: true
+            propertySheetOpen: true,
+            selectedPlaylistItemId: null
         };
 
         this.baUI = new BAUI(this);
@@ -77,6 +78,14 @@ class BA extends Component {
         this.setState({propertySheetOpen: !this.state.propertySheetOpen});
     }
 
+    
+    handleSelectPlaylistItem(playlistItem) {
+        console.log("handleSelectPlaylistItem:", playlistItem.fileName);
+
+        // const playlistItem = this.props.playlistItems.playlistItemsById[playlistItem.id];
+        this.setState({ selectedPlaylistItemId: playlistItem.id });
+    }
+
     render () {
 
         console.log("ba.js::render invoked");
@@ -95,6 +104,7 @@ class BA extends Component {
             propertySheetTag =
                 <PropertySheet
                     onBrowseForHTMLSite={this.baUI.handleBrowseForHTMLSite.bind(this.baUI)}
+                    selectedPlaylistItemId={this.state.selectedPlaylistItemId}
                 />
         }
 
@@ -117,6 +127,7 @@ class BA extends Component {
                         />
                         <Playlist
                             onToggleOpenClosePropertySheet={this.handleToggleOpenClosePropertySheet.bind(this)}
+                            onSelectPlaylistItem={this.handleSelectPlaylistItem.bind(this)}
                             propertySheetOpen = {this.state.propertySheetOpen}
                         />
                         {propertySheetTag}
@@ -130,6 +141,8 @@ function mapStateToProps(state) {
     return {
         sign: state.sign,
         zones: state.zones,
+        zonePlaylists: state.zonePlaylists,
+        playlistItems: state.playlistItems,
         mediaLibraryPlaylistItems: state.mediaLibraryPlaylistItems,
         mediaFolder: state.mediaFolder,
         mediaThumbs: state.mediaThumbs,
