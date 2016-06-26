@@ -23,8 +23,7 @@ class PropertySheet extends Component {
         this.state = {
             htmlSitePath: "",
             localDisabled: false,
-            remoteDisabled: true,
-            timeOnScreen: 69
+            remoteDisabled: true
         };
 
         this.localHtmlSitePath = "";
@@ -192,41 +191,43 @@ class PropertySheet extends Component {
         }
     }
 
-    updateMe(event) {
-
-        const selectedPlaylistItemId = this.props.selectedPlaylistItemId;
-        const existingPlaylistItem = this.props.playlistItems.playlistItemsById[selectedPlaylistItemId];
-        this.setState({timeOnScreen: existingPlaylistItem.timeOnScreen});
-    }
-
     updateTimeOnScreen(event) {
 
         console.log("updateTimeOnScreen:", event.target.value);
 
         const timeOnScreen = Number(event.target.value);
-        // this.setState({timeOnScreen: timeOnScreen});
 
-        // const selectedPlaylistItemId = this.props.selectedPlaylistItem.id;
         const selectedPlaylistItemId = this.props.selectedPlaylistItemId;
         const existingPlaylistItem = this.props.playlistItems.playlistItemsById[selectedPlaylistItemId];
         let updatedPlaylistItem = Object.assign({}, existingPlaylistItem);
         updatedPlaylistItem.timeOnScreen = timeOnScreen;
         this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
-
-        // let selectedPlaylistItem = Object.assign({}, this.props.selectedPlaylistItem, { timeOnScreen: timeOnScreen } );
-        // this.props.updateSelectedPlaylistItem(this.props.zones.selectedZone, selectedPlaylistItem);
     }
 
     updateTransition(event) {
-        if (event !== undefined) {
-            let selectedPlaylistItem = Object.assign({}, this.props.selectedPlaylistItem, { transition: event.target.value} );
-            this.props.updateSelectedPlaylistItem(this.props.zones.selectedZone, selectedPlaylistItem);
-        }
+
+        console.log("updateTransition:", event.target.value);
+
+        const transition = event.target.value;
+
+        const selectedPlaylistItemId = this.props.selectedPlaylistItemId;
+        const existingPlaylistItem = this.props.playlistItems.playlistItemsById[selectedPlaylistItemId];
+        let updatedPlaylistItem = Object.assign({}, existingPlaylistItem);
+        updatedPlaylistItem.transition = transition;
+        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
     }
 
     updateTransitionDuration(event) {
-        let selectedPlaylistItem = Object.assign({}, this.props.selectedPlaylistItem, { transitionDuration: event.target.value} );
-        this.props.updateSelectedPlaylistItem(this.props.zones.selectedZone, selectedPlaylistItem);
+
+        console.log("updateTransitionDuration:", event.target.value);
+
+        const transitionDuration = Number(event.target.value);
+
+        const selectedPlaylistItemId = this.props.selectedPlaylistItemId;
+        const existingPlaylistItem = this.props.playlistItems.playlistItemsById[selectedPlaylistItemId];
+        let updatedPlaylistItem = Object.assign({}, existingPlaylistItem);
+        updatedPlaylistItem.transitionDuration = transitionDuration;
+        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
     }
 
 
@@ -305,8 +306,6 @@ class PropertySheet extends Component {
 
             const imagePlaylistItem = this.props.playlistItems.playlistItemsById[this.props.selectedPlaylistItemId];
 
-            // const imagePlaylistItem = this.props.selectedPlaylistItem;
-
             let selectOptions = this.transitionSpecs.map(function(transitionSpec, index) {
 
                 return (
@@ -314,23 +313,16 @@ class PropertySheet extends Component {
                 );
             });
 
-            // <input type="text" value={this.state.timeOnScreen} onChange={this.updateTimeOnScreen.bind(this)}></input>
-
-            let timeOnScreenLbl = "";
-            timeOnScreenLbl = imagePlaylistItem.timeOnScreen;
-            // <input type="text" value={timeOnScreenLbl} onChange={this.updateTimeOnScreen.bind(this)}></input>
-
             selectedMediaProperties =
                 <div>
                     <p>{imagePlaylistItem.fileName}</p>
-                    <button onClick={this.updateMe.bind(this)}>Update Me</button>
                     <p>
                         Time on screen:
-                        <input type="text" value={timeOnScreenLbl} onChange={this.updateTimeOnScreen.bind(this)}></input>
+                        <input type="text" value={imagePlaylistItem.timeOnScreen} onChange={this.updateTimeOnScreen.bind(this)}></input>
                     </p>
                     <div>
                         Transition:
-                        <select id="transitionsSelect" defaultValue={imagePlaylistItem.transition} onChange={this.updateTransition.bind(this)}>{selectOptions}</select>
+                        <select ref="transitionsSelect" value={imagePlaylistItem.transition} onChange={this.updateTransition.bind(this)}>{selectOptions}</select>
                     </div>
                     <p>
                         Transition duration:
@@ -338,6 +330,7 @@ class PropertySheet extends Component {
                     </p>
                 </div>
             ;
+            
         }
         else {
             selectedMediaProperties = <div></div>
@@ -375,8 +368,6 @@ function mapStateToProps(state) {
         sign: state.sign,
         zones: state.zones,
         playlistItems: state.playlistItems,
-        // selectedZone: state.selectedZone,
-        selectedPlaylistItem: state.selectedPlaylistItem
     };
 }
 
