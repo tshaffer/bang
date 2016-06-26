@@ -5,7 +5,6 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HtmlSite from '../badm/htmlSite';
 
 import { updateSelectedPlaylistItem, updateSign, addHtmlSite } from '../actions/index';
@@ -198,16 +197,12 @@ class PropertySheet extends Component {
 
         let selectedPlaylistItem = Object.assign({}, this.props.selectedPlaylistItem, { timeOnScreen: Number(event.target.value) } );
         this.props.updateSelectedPlaylistItem(this.props.zones.selectedZone, selectedPlaylistItem);
-        // setTimeout(() => { this.props.updateSelectedPlaylistItem(this.props.zones.selectedZone, selectedPlaylistItem); }, 0);
     }
 
     updateTransition(event) {
         if (event !== undefined) {
             let selectedPlaylistItem = Object.assign({}, this.props.selectedPlaylistItem, { transition: event.target.value} );
             this.props.updateSelectedPlaylistItem(this.props.zones.selectedZone, selectedPlaylistItem);
-
-            console.log("selectedPlaylistItem.transition=", selectedPlaylistItem.transition);
-            console.log("this.props.selectedPlaylistItem.transition=", this.props.selectedPlaylistItem.transition);
         }
     }
 
@@ -325,31 +320,29 @@ class PropertySheet extends Component {
         return (
             <div className="propertySheetDiv">
                 <p className="smallishFont">Properties</p>
-                {selectedMediaProperties}
+                <Tabs onSelect={this.handleSelectTab}>
+                    <TabList>
+                        <Tab className="smallishFont">sign</Tab>
+                        <Tab className="smallishFont tabPadding">content</Tab>
+                        <Tab className="smallishFont tabPadding">html</Tab>
+                    </TabList>
+
+                    <TabPanel>
+                        {signProperties}
+                    </TabPanel>
+
+                    <TabPanel>
+                        {selectedMediaProperties}
+                    </TabPanel>
+
+                    <TabPanel>
+                        {htmlProperties}
+                    </TabPanel>
+                </Tabs>
             </div>
         );
     }
 }
-
-// <Tabs onSelect={this.handleSelectTab}>
-//     <TabList>
-//         <Tab className="smallishFont">sign</Tab>
-//         <Tab className="smallishFont tabPadding">content</Tab>
-//         <Tab className="smallishFont tabPadding">html</Tab>
-//     </TabList>
-//
-//     <TabPanel>
-//         {signProperties}
-//     </TabPanel>
-//
-//     <TabPanel>
-//         {selectedMediaProperties}
-//     </TabPanel>
-//
-//     <TabPanel>
-//         {htmlProperties}
-//     </TabPanel>
-// </Tabs>
 
 function mapStateToProps(state) {
     return {

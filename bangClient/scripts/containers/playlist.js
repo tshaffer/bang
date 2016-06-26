@@ -127,26 +127,7 @@ class Playlist extends Component {
 
     onSelectZone(event) {
         console.log("onSelectZone invoked");
-
-        // if (this.refs.localRB.checked) {
-        //     type = "local";
-        //     htmlSiteSpec = this.localHtmlSiteSpec;
-        // }
-        // else {
-        //     type = "remote";
-        //     htmlSiteSpec = this.remoteHtmlSiteSpec;
-        // }
-
     }
-
-    // getZonePlaylistId() {
-    //
-    //     let zonePlaylistId = null;
-    //     if (this.state.currentZoneId) {
-    //         const currentZone = this.props.zones.zonesById[this.state.currentZoneId];
-    //         zonePlaylistId = currentZone.zonePlaylistId;
-    //     }
-    // }
 
     render () {
 
@@ -169,7 +150,6 @@ class Playlist extends Component {
             const zonePlaylistId = currentZone.zonePlaylistId;
 
             // TODO - this approach needs to be thought through more
-            // this.setState( { currentZonePlaylistId: zonePlaylistId });
             if (zonePlaylistId) {
                 currentZonePlaylist = this.props.zonePlaylists.zonePlaylistsById[zonePlaylistId];
                 currentZonePlaylistItemIds = currentZonePlaylist.playlistItemIds;
@@ -192,16 +172,6 @@ class Playlist extends Component {
             currentPlaylistItems.push(playlistItem);
         });
 
-        // if (typeof this.props.currentPlaylist.playlistItems != "undefined") {
-        //     currentPlaylistItems = Object.assign([], this.props.currentPlaylist.playlistItems);
-        // }
-        // if (currentZonePlaylist) {
-        //     currentPlaylistItems = currentZonePlaylist.playlistItems;
-        // }
-        // if (currentPlaylistItems.length == 0) {
-        //     currentPlaylistItems.push(this.fakePlaylistItem);
-        // }
-
         let openCloseLabel = "=>";
         if (!this.props.propertySheetOpen) {
             openCloseLabel = "<=";
@@ -213,10 +183,8 @@ class Playlist extends Component {
             if (self.props.mediaThumbs.hasOwnProperty(playlistItem.filePath)) {
 
                 const mediaItem = self.props.mediaThumbs[playlistItem.filePath]
-                // const thumb = getThumb(mediaItem.thumbPath);
                 const thumb = getThumb(mediaItem);
 
-                // const thumbUrl = self.props.mediaThumbs[playlistItem.filePath].thumbFileName;
                 dataIndex++;
 
                 return (
@@ -260,8 +228,7 @@ function mapStateToProps(state) {
         zonePlaylists: state.zonePlaylists,
         playlistItems: state.playlistItems,
 
-        mediaThumbs: state.mediaThumbs,
-        // currentPlaylist: state.currentPlaylist
+        mediaThumbs: state.mediaThumbs
     };
 }
 
