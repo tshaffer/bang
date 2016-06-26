@@ -6,7 +6,7 @@ const easyImage = require("easyimage");
 var util = require("util");
 var mime = require("mime");
 
-import { setMediaThumbs, mergeMediaThumbs, setMediaFolder, openSign, setCurrentPlaylist, setMediaLibraryFiles } from '../actions/index';
+import { setMediaThumbs, mergeMediaThumbs, setMediaFolder, openSign, setMediaLibraryFiles } from '../actions/index';
 
 import { openDB, addRecordToDB, dbGetThumbs, dbGetMediaLibraryFolder, dbSaveMediaFolder } from './db';
 
@@ -264,7 +264,7 @@ export function executeFetchSign(filePath) {
             console.log("fs.ReadFile successful");
             var sign = JSON.parse(data);
             dispatch(openSign(sign));
-            dispatch(setCurrentPlaylist(sign.zones[0].zonePlaylist));
+            // dispatch(setCurrentPlaylist(sign.zones[0].zonePlaylist));
         })
     }
 }

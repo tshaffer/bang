@@ -220,39 +220,6 @@ export function saveBSNPresentation(name, sign) {
 }
 
 
-
-
-
-
-
-export const SET_CURRENT_PLAYLIST = 'SET_CURRENT_PLAYLIST'
-export function setCurrentPlaylist(playlist) {
-
-    return {
-        type: SET_CURRENT_PLAYLIST,
-        payload: playlist
-    }
-}
-
-
-// export const ADD_PLAYLIST_ITEM = 'ADD_PLAYLIST_ITEM';
-// export function addPlaylistItem(playlist, playlistItem, index) {
-//
-//     if (index >= 0) {
-//         // insert prior to index
-//         playlist.playlistItems.splice(index, 0, playlistItem);
-//     }
-//     else {
-//         // append to list
-//         playlist.playlistItems.push(playlistItem);
-//     }
-//
-//     return {
-//         type: ADD_PLAYLIST_ITEM,
-//         payload: playlist
-//     }
-// }
-
 export function updateMediaFolder(mediaFolder) {
 
     return function(dispatch) {
@@ -266,9 +233,6 @@ export function updateMediaFolder(mediaFolder) {
         })
     }
 }
-
-
-
 
 export const SET_SELECTED_PLAYLIST_ITEM = 'SET_SELECTED_PLAYLIST_ITEM';
 export function selectPlaylistItem(playlistItem) {

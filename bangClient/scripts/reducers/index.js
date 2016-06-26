@@ -5,7 +5,6 @@ import {combineReducers} from 'redux';
 import MediaThumbsReducer from './reducer_media_thumbs';
 import MediaFolderReducer from './reducer_media_folder';
 import MediaLibraryPlaylistItemsReducer from './reducer_media_library_playlist_items';
-import CurrentPlaylistReducer from './reducer_current_playlist';
 
 import SignReducer from './reducer_sign';
 import ZonesReducer from './reducer_zones';
@@ -18,7 +17,6 @@ const rootReducer = combineReducers({
     mediaThumbs: MediaThumbsReducer,
     mediaFolder: MediaFolderReducer,
     mediaLibraryPlaylistItems: MediaLibraryPlaylistItemsReducer,
-    currentPlaylist: CurrentPlaylistReducer,
     
     selectedPlaylistItem: SelectedPlaylistItemReducer,
     selectedZone: SelectedZoneReducer,

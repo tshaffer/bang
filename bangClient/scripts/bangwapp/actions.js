@@ -3,7 +3,7 @@
  */
 import axios from 'axios';
 
-import { openSign, setCurrentPlaylist } from '../actions/index';
+import { openSign } from '../actions/index';
 import { setMediaThumbs, setMediaFolder, setMediaLibraryFiles } from '../actions/index';
 
 const bangServerUrl = "http://localhost:6969/";
