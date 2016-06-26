@@ -193,6 +193,9 @@ class PropertySheet extends Component {
     }
 
     updateTimeOnScreen(event) {
+
+        console.log("udpateTimeOnScreen:", event.target.value);
+
         let selectedPlaylistItem = Object.assign({}, this.props.selectedPlaylistItem, { timeOnScreen: event.target.value} );
         this.props.updateSelectedPlaylistItem(this.props.zones.selectedZone, selectedPlaylistItem);
     }
@@ -312,12 +315,14 @@ class PropertySheet extends Component {
                 </div>
             ;
         }
+        else {
+            selectedMediaProperties = <div></div>
+        }
 
         return (
             <div className="propertySheetDiv">
-                <p className="smallishishFont">Properties</p>
+                <p className="smallishFont">Properties</p>
                 <Tabs onSelect={this.handleSelectTab}>
-
                     <TabList>
                         <Tab className="smallishFont">sign</Tab>
                         <Tab className="smallishFont tabPadding">content</Tab>
@@ -331,7 +336,7 @@ class PropertySheet extends Component {
                     <TabPanel>
                         {selectedMediaProperties}
                     </TabPanel>
-                    
+
                     <TabPanel>
                         {htmlProperties}
                     </TabPanel>

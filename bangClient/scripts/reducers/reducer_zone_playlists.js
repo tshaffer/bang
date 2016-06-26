@@ -112,6 +112,14 @@ export default function(state = initialState, action) {
                     newZonePlaylist.playlistItems[index] = playlistItem;
                 }
             });
+
+            // find and replace the zonePlaylist
+            newZonePlaylists.forEach(function(existingZonePlaylist, index) {
+                if (existingZonePlaylist.id == zonePlaylistId) {
+                    newZonePlaylists[index] = newZonePlaylist;
+                }
+            })
+
             newZonePlaylistsById[zonePlaylistId] = newZonePlaylist;
 
             newState = {
