@@ -14,7 +14,7 @@ import BAUI from '../platform/baUI';
 import { getAllThumbs, createDefaultSign, selectMediaFolder, updateMediaFolder } from '../actions/index';
 
 // bangatron vs. bangwapp?
-import { saveBSNPresentation } from '../actions/index';
+import { createDefaultPresentation, saveBSNPresentation } from '../actions/index';
 import { openDB, loadAppData, fetchSign }  from '../actions/index';
 
 import { newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, updatePlaylistItem } from '../actions/index';
@@ -36,19 +36,20 @@ class BA extends Component {
 
     componentWillMount() {
 
-        this.props.newSign(guid(), "Project 1");
+        this.props.createDefaultPresentation("Project 1");
         
-        const zoneId = guid();
-        this.props.newZone(zoneId, "images", "imageZone");
-        this.props.addZone(zoneId);
+        // this.props.newSign(guid(), "Project 1");
+        // const zoneId = guid();
+        // this.props.newZone(zoneId, "images", "imageZone");
+        // this.props.addZone(zoneId);
 
         // this.props.zones.zonesById was not updated by the time that the following statement was executed
         // const zone = this.props.zones.zonesById[zoneId];
         // this.props.selectZone(zone);
 
-        const zonePlaylistId = guid();
-        this.props.newZonePlaylist(zonePlaylistId);
-        this.props.setZonePlaylist(zoneId, zonePlaylistId);
+        // const zonePlaylistId = guid();
+        // this.props.newZonePlaylist(zonePlaylistId);
+        // this.props.setZonePlaylist(zoneId, zonePlaylistId);
 
         this.props.loadAppData();
     }
@@ -171,7 +172,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, updatePlaylistItem, loadAppData, fetchSign, saveBSNPresentation, createDefaultSign, selectMediaFolder, updateMediaFolder }, dispatch);
+    return bindActionCreators({ createDefaultPresentation, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, updatePlaylistItem, loadAppData, fetchSign, saveBSNPresentation, createDefaultSign, selectMediaFolder, updateMediaFolder }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);

@@ -229,6 +229,26 @@ export function updateSign(sign) {
 }
 
 
+export function createDefaultPresentation(presentationName) {
+
+    return function (dispatch) {
+
+        console.log("createDefaultPresentation, presentationName=", presentationName);
+
+        const signId = guid();
+        dispatch(newSign(signId, presentationName));
+
+        const zoneId = guid();
+        dispatch(newZone(zoneId, "images", "imageZone"));
+        dispatch(addZone(zoneId));
+
+        const zonePlaylistId = guid();
+        dispatch(newZonePlaylist(zonePlaylistId));
+        dispatch(setZonePlaylist(zoneId, zonePlaylistId));
+    }
+}
+
+
 export function fetchSign(signId) {
     return executeFetchSign(signId);
 }
