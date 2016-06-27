@@ -74,14 +74,10 @@ export function mergeMediaThumbs(thumbsByPath) {
 
 
 export const NEW_SIGN = 'NEW_SIGN';
-export function newSign(id, name) {
-
-    // create a default sign
-    // const sign = new Sign(signName);
+export function newSign(name) {
 
     const signData =
     {
-        id: id,
         name: name
     }
     return {
@@ -91,10 +87,9 @@ export function newSign(id, name) {
 }
 
 export const NEW_ZONE = 'NEW_ZONE';
-export function newZone(id, type, name) {
+export function newZone(type, name) {
 
     const zoneData = {
-        id: id,
         type: type,
         name: name
     };
@@ -124,15 +119,11 @@ export function selectZone(zone) {
 }
 
 export const NEW_ZONE_PLAYLIST = 'NEW_ZONE_PLAYLIST';
-export function newZonePlaylist(id) {
-
-    const zonePlaylist = {
-        id: id
-    };
+export function newZonePlaylist() {
 
     return {
         type: NEW_ZONE_PLAYLIST,
-        payload: zonePlaylist
+        payload: null
     }
 }
 
@@ -228,6 +219,11 @@ export function updateSign(sign) {
     }
 }
 
+// to get first property in an object - want first key here though
+// http://stackoverflow.com/questions/983267/access-the-first-property-of-an-object
+function getFirstKey(obj) {
+    return Object.keys(obj)[0];
+}
 
 export function createDefaultPresentation(presentationName) {
 
@@ -237,23 +233,19 @@ export function createDefaultPresentation(presentationName) {
 
         let nextState = null;
 
-        const signId = guid();
-        dispatch(newSign(signId, presentationName));
+        dispatch(newSign(presentationName));
+
+        dispatch(newZone("images", "imageZone"));
         nextState = getState();
 
-        const zoneId = guid();
-        dispatch(newZone(zoneId, "images", "imageZone"));
-        nextState = getState();
-
+        const zoneId = getFirstKey(nextState.zones.zonesById);
         dispatch(addZone(zoneId));
+
+        dispatch(newZonePlaylist());
         nextState = getState();
 
-        const zonePlaylistId = guid();
-        dispatch(newZonePlaylist(zonePlaylistId));
-        nextState = getState();
-
+        const zonePlaylistId = getFirstKey(nextState.zonePlaylists.zonePlaylistsById);
         dispatch(setZonePlaylist(zoneId, zonePlaylistId));
-        nextState = getState();
     }
 }
 

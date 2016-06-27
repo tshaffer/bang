@@ -3,6 +3,7 @@
  */
 // import { CREATE_DEFAULT_SIGN, OPEN_SIGN, UPDATE_SIGN, ADD_HTML_SITE } from '../actions/index';
 import { NEW_SIGN, ADD_ZONE } from '../actions/index';
+import { guid } from '../utilities/utils';
 
 export default function(state = {}, action) {
 
@@ -13,7 +14,7 @@ export default function(state = {}, action) {
     switch (action.type) {
         case NEW_SIGN:
             newState = Object.assign({}, {
-                id: action.payload.id,
+                id: guid(),
                 name: action.payload.name,
                 zoneIds: []
             });

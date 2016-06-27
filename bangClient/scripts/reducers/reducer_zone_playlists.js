@@ -5,6 +5,7 @@
  * Created by tedshaffer on 6/24/16.
  */
 import { NEW_ZONE_PLAYLIST, ADD_PLAYLIST_ITEM, ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST } from '../actions/index';
+import { guid } from '../utilities/utils';
 
 // var deepEqual = require('deep-equal');
 
@@ -32,17 +33,19 @@ export default function(state = initialState, action) {
 
     switch (action.type) {
         case NEW_ZONE_PLAYLIST:
-            const zonePlaylist = action.payload;
+            // const zonePlaylist = action.payload;
 
+            const id = guid();
+            
             newZonePlaylist =
             {
-                id: zonePlaylist.id,
+                id: id,
                 playlistItemIds: []
             };
 
             // ES6
             const newItem = {};
-            newItem[zonePlaylist.id] = newZonePlaylist;
+            newItem[id] = newZonePlaylist;
             newZonePlaylistsById = Object.assign({}, state.zonePlaylistsById, newItem);
 
             newState = {
