@@ -5,7 +5,6 @@ import { NEW_ZONE, SET_ZONE_PLAYLIST } from '../actions/index';
 
 const initialState =
 {
-    zones: [],
     zonesById: {}
 };
 
@@ -40,7 +39,6 @@ export default function(state = initialState, action) {
             newZonesById = Object.assign({}, state.zonesById, newItem);
 
             newState = {
-                zones: state.zones.concat(newZone),
                 zonesById: newZonesById,
                 selectedZone: newZone
             }
@@ -50,27 +48,13 @@ export default function(state = initialState, action) {
             const zoneId = action.payload.zoneId;
             const zonePlaylistId = action.payload.zonePlaylistId;
 
-            // TODO - figure out best way to do this in ES6
-            // const zone = state.zonesById[zoneId];
-            // newZone = Object.assign({}, zone);
-            // newZone.zonePlaylistId = zonePlaylistId;
             newZone = Object.assign({}, state.zonesById[zoneId], {zonePlaylistId: zonePlaylistId});
-
-            // update newZones with newZone
-            const newZones = Object.assign([], state.zones);
-            for (let zoneIndex = 0; zoneIndex < state.zones.length; zoneIndex++) {
-                if (newZones[zoneIndex].id === zoneId) {
-                    newZones[zoneIndex] = newZone;
-                    break;
-                }
-            }
 
             // update zonesById to point to new zone
             newZonesById = Object.assign({}, state.zonesById);
             newZonesById[zoneId] = newZone;
 
             newState = {
-                zones: newZones,
                 zonesById: newZonesById,
                 selectedZone: newZone
             }

@@ -31,7 +31,16 @@ class Playlist extends Component {
     componentDidMount() {
         console.log("playlist.js::componentDidMount invoked");
 
-        this.setState( { currentZoneId: this.props.zones.zones[0].id });
+        // TODO - fix this somehow??
+        let presentationZones = [];
+        for (var zoneId in this.props.zones.zonesById) {
+            const zone = this.props.zones.zonesById[zoneId];
+            if (this.props.zones.zonesById.hasOwnProperty(zoneId)) {
+                presentationZones.push(zone);
+            }
+        }
+
+        this.setState( { currentZoneId: presentationZones[0].id });
     }
 
 
@@ -133,7 +142,16 @@ class Playlist extends Component {
 
         let zoneDropDown = <div></div>
 
-        let selectOptions = this.props.zones.zones.map(function (zone, index) {
+        console.log("playlist.js::render()");
+        let presentationZones = [];
+        for (var zoneId in this.props.zones.zonesById) {
+            const zone = this.props.zones.zonesById[zoneId];
+            if (this.props.zones.zonesById.hasOwnProperty(zoneId)) {
+                presentationZones.push(zone);
+            }
+        }
+        // let selectOptions = this.props.zones.zones.map(function (zone, index) {
+        let selectOptions = presentationZones.map(function (zone, index) {
             return (
                 <option value={zone.id} key={zone.id}>{zone.name}</option>
             );
