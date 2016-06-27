@@ -5,7 +5,6 @@ import { NEW_PLAYLIST_ITEM, UPDATE_PLAYLIST_ITEM } from '../actions/index';
 
 const initialState =
 {
-    playlistItems: [],
     playlistItemsById: {}
 };
 
@@ -16,7 +15,6 @@ export default function(state = initialState, action) {
     let newState;
     let playlistItem;
 
-    let newPlaylistItems;
     let newPlaylistItemsById;
 
     switch (action.type) {
@@ -33,15 +31,10 @@ export default function(state = initialState, action) {
                 transitionDuration: playlistItem.transitionDuration
             }
 
-            // const newItem = {};
-            // newItem[newPlaylistItem.id] = newPlaylistItem;
-            // newPlaylistItemsById = Object.assign({}, state.playlistItemsById, newItem);
-
             newPlaylistItemsById = Object.assign({}, state.playlistItemsById);
             newPlaylistItemsById[newPlaylistItem.id] = newPlaylistItem;
 
             newState = {
-                playlistItems: state.playlistItems.concat(newPlaylistItem),
                 playlistItemsById: newPlaylistItemsById
             }
             return newState;
@@ -51,18 +44,10 @@ export default function(state = initialState, action) {
             const playlistItemId = action.playlistItemId;
             playlistItem = action.playlistItem;
 
-            newPlaylistItems = Object.assign([], state.playlistItems);
             newPlaylistItemsById = Object.assign({}, state.playlistItemsById);
-
-            newPlaylistItems.forEach(function(newPlaylistItem, index) {
-                if (newPlaylistItem.id === playlistItemId) {
-                    newPlaylistItems[index] = playlistItem;
-                }
-            })
             newPlaylistItemsById[playlistItemId] = playlistItem;
 
             newState = {
-                playlistItems: newPlaylistItems,
                 playlistItemsById: newPlaylistItemsById
             }
             return newState;
