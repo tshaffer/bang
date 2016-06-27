@@ -10,7 +10,6 @@ import { NEW_ZONE_PLAYLIST, ADD_PLAYLIST_ITEM, ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIS
 
 const initialState =
 {
-    zonePlaylists: [],
     zonePlaylistsById: {}
 };
 
@@ -47,7 +46,6 @@ export default function(state = initialState, action) {
             newZonePlaylistsById = Object.assign({}, state.zonePlaylistsById, newItem);
 
             newState = {
-                zonePlaylists: state.zonePlaylists.concat(newZonePlaylist),
                 zonePlaylistsById: newZonePlaylistsById
             }
             return newState;
@@ -58,7 +56,6 @@ export default function(state = initialState, action) {
             playlistItemId = action.playlistItemId;
 
             // make copy of existing fields
-            newZonePlaylists = Object.assign([], state.zonePlaylists);
             newZonePlaylistsById = Object.assign({}, state.zonePlaylistsById);
 
             existingZonePlaylist = state.zonePlaylistsById[zonePlaylistId];
@@ -68,16 +65,9 @@ export default function(state = initialState, action) {
             newZonePlaylist = Object.assign({}, existingZonePlaylist);
             newZonePlaylist.playlistItemIds = newPlaylistItemIds;
 
-            // find and replace this zonePlaylist in both zonePlaylists and zonePlaylistsById
-            newZonePlaylists.forEach(function(zonePlaylist, index) {
-                if (zonePlaylist.id == zonePlaylistId) {
-                    newZonePlaylists[index] = newZonePlaylist;
-                }
-            });
             newZonePlaylistsById[zonePlaylistId] = newZonePlaylist;
 
             newState = {
-                zonePlaylists: newZonePlaylists,
                 zonePlaylistsById: newZonePlaylistsById
             };
 
@@ -89,7 +79,6 @@ export default function(state = initialState, action) {
             const index = action.index;
 
             // make copy of existing fields
-            newZonePlaylists = Object.assign([], state.zonePlaylists);
             newZonePlaylistsById = Object.assign({}, state.zonePlaylistsById);
 
             existingZonePlaylist = state.zonePlaylistsById[zonePlaylistId];
@@ -108,16 +97,9 @@ export default function(state = initialState, action) {
             newZonePlaylist = Object.assign({}, existingZonePlaylist);
             newZonePlaylist.playlistItemIds = newPlaylistItemIds;
 
-            // find and replace this zonePlaylist in both zonePlaylists and zonePlaylistsById
-            newZonePlaylists.forEach(function(zonePlaylist, index) {
-                if (zonePlaylist.id == zonePlaylistId) {
-                    newZonePlaylists[index] = newZonePlaylist;
-                }
-            });
             newZonePlaylistsById[zonePlaylistId] = newZonePlaylist;
 
             newState = {
-                zonePlaylists: newZonePlaylists,
                 zonePlaylistsById: newZonePlaylistsById
             };
 
