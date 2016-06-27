@@ -231,20 +231,29 @@ export function updateSign(sign) {
 
 export function createDefaultPresentation(presentationName) {
 
-    return function (dispatch) {
+    return function (dispatch, getState) {
 
         console.log("createDefaultPresentation, presentationName=", presentationName);
 
+        let nextState = null;
+
         const signId = guid();
         dispatch(newSign(signId, presentationName));
+        nextState = getState();
 
         const zoneId = guid();
         dispatch(newZone(zoneId, "images", "imageZone"));
+        nextState = getState();
+
         dispatch(addZone(zoneId));
+        nextState = getState();
 
         const zonePlaylistId = guid();
         dispatch(newZonePlaylist(zonePlaylistId));
+        nextState = getState();
+
         dispatch(setZonePlaylist(zoneId, zonePlaylistId));
+        nextState = getState();
     }
 }
 
