@@ -195,12 +195,14 @@ class PropertySheet extends Component {
         }
     }
 
+    // TODO - these lines of code should be in BA.js. If the handler directly calls the props that were passed in, along with .bind(this),
+    // the code in ba.js can be identical to what is written below.
     onUpdateImageTimeOnScreen(event) {
 
         console.log("onUpdateImageTimeOnScreen");
 
         if (event != undefined) {
-            const timeOnScreen = Number(event.target.value)
+            const timeOnScreen = Number(event.target.value);
             this.props.onUpdateImageTimeOnScreen(this.props.selectedPlaylistItemId, timeOnScreen);
         }
     }

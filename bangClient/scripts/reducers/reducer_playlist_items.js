@@ -33,9 +33,12 @@ export default function(state = initialState, action) {
                 transitionDuration: playlistItem.transitionDuration
             }
 
-            const newItem = {};
-            newItem[newPlaylistItem.id] = newPlaylistItem;
-            newPlaylistItemsById = Object.assign({}, state.playlistItemsById, newItem);
+            // const newItem = {};
+            // newItem[newPlaylistItem.id] = newPlaylistItem;
+            // newPlaylistItemsById = Object.assign({}, state.playlistItemsById, newItem);
+
+            newPlaylistItemsById = Object.assign({}, state.playlistItemsById);
+            newPlaylistItemsById[newPlaylistItem.id] = newPlaylistItem;
 
             newState = {
                 playlistItems: state.playlistItems.concat(newPlaylistItem),

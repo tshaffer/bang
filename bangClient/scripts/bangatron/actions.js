@@ -83,7 +83,7 @@ export function getThumb(mediaItem) {
 // invoked when the user selects a new media folder through the UI
 export function executeSelectMediaFolder(mediaFolder, mediaThumbs) {
 
-    return function(dispatch) {
+    return function(dispatch, getState) {
 
         let mediaFolderFiles = findFilesThenSetMediaLibraryFiles(dispatch, mediaFolder);
 
