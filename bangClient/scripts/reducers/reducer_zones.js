@@ -43,7 +43,6 @@ export default function(state = initialState, action) {
 
             newState = {
                 zonesById: newZonesById,
-                selectedZone: newZone
             }
             return newState;
 
@@ -59,7 +58,6 @@ export default function(state = initialState, action) {
 
             newState = {
                 zonesById: newZonesById,
-                selectedZone: newZone
             }
             return newState;
     }

@@ -241,6 +241,10 @@ export function createDefaultPresentation(presentationName) {
         const zoneId = getFirstKey(nextState.zones.zonesById);
         dispatch(addZone(zoneId));
 
+
+        // select zone here - no, I think the selected zone should just be a user interface thing
+
+
         dispatch(newZonePlaylist());
         nextState = getState();
 

@@ -37,19 +37,9 @@ class BA extends Component {
     componentWillMount() {
 
         this.props.createDefaultPresentation("Project 1");
-        
-        // this.props.newSign(guid(), "Project 1");
-        // const zoneId = guid();
-        // this.props.newZone(zoneId, "images", "imageZone");
-        // this.props.addZone(zoneId);
 
-        // this.props.zones.zonesById was not updated by the time that the following statement was executed
-        // const zone = this.props.zones.zonesById[zoneId];
-        // this.props.selectZone(zone);
-
-        // const zonePlaylistId = guid();
-        // this.props.newZonePlaylist(zonePlaylistId);
-        // this.props.setZonePlaylist(zoneId, zonePlaylistId);
+        // TODO
+        // select a zone here
 
         this.props.loadAppData();
     }

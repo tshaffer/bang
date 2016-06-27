@@ -11,15 +11,11 @@ import ZonesReducer from './reducer_zones';
 import ZonePlaylistsReducer from './reducer_zone_playlists';
 import PlaylistItemsReducer from './reducer_playlist_items';
 
-import SelectedZoneReducer from './reducer_selected_zone';
-
 const rootReducer = combineReducers({
     mediaThumbs: MediaThumbsReducer,
     mediaFolder: MediaFolderReducer,
     mediaLibraryPlaylistItems: MediaLibraryPlaylistItemsReducer,
     
-    selectedZone: SelectedZoneReducer,
-
     sign: SignReducer,
     zones: ZonesReducer,
     zonePlaylists: ZonePlaylistsReducer,
