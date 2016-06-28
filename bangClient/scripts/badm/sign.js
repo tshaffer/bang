@@ -4,18 +4,15 @@
 
 import Zone from './zone';
 
-import { guid } from '../utilities/utils';
-
 export default class Sign {
     constructor(signName) {
-        this.id = guid();
         this.name = signName;
         this.videoMode = "1920x1080x60p";
-        this.htmlSitesIds = [];
-        this.zoneIds = [];
+        this.htmlSites = [];
+        this.zones = [];
     }
     
-    addZone(zoneId) {
-        this.zoneIds.push(zoneId);
+    addZone(zone) {
+        this.zones.push(zone);
     }
 }
