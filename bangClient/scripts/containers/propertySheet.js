@@ -259,14 +259,23 @@ class PropertySheet extends Component {
             const shortenedHtmlSitePath = getShortenedFilePath(this.state.htmlSitePath, 36);
 
             let existingSites = <span></span>
-            if (this.props.sign.htmlSites !== undefined && this.props.sign.htmlSites.length > 0) {
+            if (this.props.htmlSites !== undefined && Object.keys(this.props.htmlSites.htmlSitesById).length > 0) {
 
-                let existingHtmlSites = this.props.sign.htmlSites.map(function (htmlSite, index) {
+                let htmlSites = [];
+                for (var htmlSiteId in this.props.htmlSites.htmlSitesById) {
+                    const htmlSite = this.props.htmlSites.htmlSitesById[htmlSiteId];
+                    if (this.props.htmlSites.htmlSitesById.hasOwnProperty(htmlSiteId)) {
+                        htmlSites.push(htmlSite);
+                    }
+                }
+
+                let existingHtmlSites = htmlSites.map(function (htmlSite, index) {
+
                     return (
                         <div key={index}>
                             <br/>
                             <p className="smallishFont noVertSpacing">{htmlSite.name}</p>
-                            <p className="smallishFont noVertSpacing">{htmlSite.spec}</p>
+                            <p className="smallishFont noVertSpacing">{htmlSite.siteSpec}</p>
                         </div>
                     );
                 });
