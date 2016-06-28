@@ -2,10 +2,18 @@
  * Created by tedshaffer on 6/10/16.
  */
 // import { CREATE_DEFAULT_SIGN, OPEN_SIGN, UPDATE_SIGN, ADD_HTML_SITE } from '../actions/index';
-import { NEW_SIGN, ADD_ZONE } from '../actions/index';
+import { NEW_SIGN, ADD_ZONE, ADD_HTML_SITE } from '../actions/index';
 import { guid } from '../utilities/utils';
 
-export default function(state = {}, action) {
+const initialState =
+{
+    id: "",
+    name: "",
+    zoneIds: [],
+    htmlSiteIds: []
+};
+
+export default function(state = initialState, action) {
 
     console.log("reducer_sign:: action.type=" + action.type);
 
@@ -35,11 +43,13 @@ export default function(state = {}, action) {
         // case UPDATE_SIGN:
         //     console.log("reducer_sign:UPDATE_SIGN");
         //     return action.payload;
-        // case ADD_HTML_SITE:
-        //     console.log("reducer_sign:ADD_HTML_SITE");
-        //     let newSign = Object.assign({}, state);
-        //     newSign.htmlSites.push(action.payload);
-        //     return newSign;
+        case ADD_HTML_SITE:
+            const htmlSiteId = action.payload;
+
+            const newHtmlSiteIds = state.htmlSiteIds.concat(htmlSiteId);
+            newState = Object.assign({}, state,
+                { htmlSiteIds: newHtmlSiteIds } );
+            return newState;
     }
 
     return state;

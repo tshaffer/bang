@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 import HtmlSite from '../badm/htmlSite';
 
-import { addHtmlSite } from '../actions/index';
+import { newHtmlSite } from '../actions/index';
 import { getShortenedFilePath } from '../utilities/utils';
 
 import ReactTabs from 'react-tabs';
@@ -169,19 +169,24 @@ class PropertySheet extends Component {
     onAddHTMLSite(event) {
 
         let type = "";
-        let htmlSiteSpec = "";
+        let siteSpec = "";
 
         if (this.refs.localRB.checked) {
+            siteSpec = this.localHtmlSiteSpec;
             type = "local";
-            htmlSiteSpec = this.localHtmlSiteSpec;
         }
         else {
+            siteSpec = this.remoteHtmlSiteSpec;
             type = "remote";
-            htmlSiteSpec = this.remoteHtmlSiteSpec;
         }
-        
-        const htmlSite = new HtmlSite(this.htmlSiteName, type, htmlSiteSpec);
-        this.props.addHtmlSite(htmlSite);
+
+        const htmlSite = {
+            name: this.htmlSiteName,
+            siteSpec: siteSpec,
+            type: type
+        };
+
+        this.props.newHtmlSite(htmlSite);
     }
 
     htmlSiteTypeSelected(event) {
@@ -195,8 +200,6 @@ class PropertySheet extends Component {
         }
     }
 
-    // TODO - these lines of code should be in BA.js. If the handler directly calls the props that were passed in, along with .bind(this),
-    // the code in ba.js can be identical to what is written below.
     onUpdateImageTimeOnScreen(event) {
 
         console.log("onUpdateImageTimeOnScreen");
@@ -245,9 +248,6 @@ class PropertySheet extends Component {
                     <option value={videoMode} key={index}>{videoMode}</option>
                 );
             });
-
-            // <input type="text" value={imagePlaylistItem.timeOnScreen} onChange={this.onUpdateImageTimeOnScreen.bind(this)}></input>                    </p>
-            // onChange={this.updateVideoMode.bind(this)}>{selectOptions}</select>
 
             signProperties =
                 <div>
@@ -312,9 +312,6 @@ class PropertySheet extends Component {
                 );
             });
 
-            // <input type="text" value={imagePlaylistItem.timeOnScreen} onChange={this.onUpdateImageTimeOnScreen.bind(this)}></input>
-            // <input type="text" value={imagePlaylistItem.timeOnScreen} onChange={this.props.onUpdateImageTimeOnScreen(this.props.selectedPlaylistItemId, Number(event.target.value))}></input>
-
             selectedMediaProperties =
                 <div>
                     <p>{imagePlaylistItem.fileName}</p>
@@ -369,11 +366,12 @@ function mapStateToProps(state) {
         sign: state.sign,
         zones: state.zones,
         playlistItems: state.playlistItems,
+        htmlSites: state.htmlSites
     };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ addHtmlSite }, dispatch);
+    return bindActionCreators({ newHtmlSite }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PropertySheet);

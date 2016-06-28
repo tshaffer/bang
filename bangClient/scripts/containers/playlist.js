@@ -31,7 +31,7 @@ class Playlist extends Component {
     componentDidMount() {
         console.log("playlist.js::componentDidMount invoked");
 
-        // TODO - fix this somehow??
+        // TODO - redo this code when zone objects have an index (sort by that index)
         let presentationZones = [];
         for (var zoneId in this.props.zones.zonesById) {
             const zone = this.props.zones.zonesById[zoneId];
@@ -81,6 +81,7 @@ class Playlist extends Component {
         const playlistItemId = guid();
         if (type === "image") {
 
+            // TODO - move to ba.js
             playlistItem = {
                 id: playlistItemId,
                 fileName: stateName,

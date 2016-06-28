@@ -10,6 +10,7 @@ import SignReducer from './reducer_sign';
 import ZonesReducer from './reducer_zones';
 import ZonePlaylistsReducer from './reducer_zone_playlists';
 import PlaylistItemsReducer from './reducer_playlist_items';
+import HtmlSitesReducer from './reducer_html_sites';
 
 const rootReducer = combineReducers({
     mediaThumbs: MediaThumbsReducer,
@@ -19,7 +20,8 @@ const rootReducer = combineReducers({
     sign: SignReducer,
     zones: ZonesReducer,
     zonePlaylists: ZonePlaylistsReducer,
-    playlistItems: PlaylistItemsReducer
+    playlistItems: PlaylistItemsReducer,
+    htmlSites: HtmlSitesReducer
 });
 
 export default rootReducer;

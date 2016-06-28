@@ -289,11 +289,11 @@ export function updateMediaFolder(mediaFolder) {
 }
 
 
-export const ADD_HTML_SITE = 'ADD_HTML_SITE';
-export function addHtmlSite(htmlSite) {
+export const NEW_HTML_SITE = 'NEW_HTML_SITE';
+export function newHtmlSite(htmlSite) {
     
     return {
-        type: ADD_HTML_SITE,
+        type: NEW_HTML_SITE,
         payload: htmlSite
     }
 }
