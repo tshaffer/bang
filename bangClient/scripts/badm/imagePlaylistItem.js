@@ -7,9 +7,9 @@ export default class ImagePlaylistItem extends FilePlaylistItem  {
     constructor(fileName, filePath, timeOnScreen, transition, transitionDuration, videoPlayerRequired) {
         super(fileName, filePath);
 
-        this.timeOnScreen = 6;
-        this.transition = 0;
-        this.transitionDuration = 2;
-        this.videoPlayerRequired = false;
+        this.timeOnScreen = timeOnScreen;
+        this.transition = transition;
+        this.transitionDuration = transitionDuration;
+        this.videoPlayerRequired = videoPlayerRequired;
     }
 }

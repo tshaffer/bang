@@ -128,12 +128,14 @@ export default class BAUI {
     }
     
     savePresentation(filePath) {
+
+        this.ba.props.saveSign();
+
+        // const presentation = JSON.stringify(this.ba.props.sign, null, 2);
     
-        const presentation = JSON.stringify(this.ba.props.sign, null, 2);
-    
-        fs.writeFile(filePath, presentation, () => {
-            console.log("writeFile successful");
-        })
+        // fs.writeFile(filePath, presentation, () => {
+        //     console.log("writeFile successful");
+        // })
     }
     
     handleBrowseForMediaLibrary() {

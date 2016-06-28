@@ -8,13 +8,16 @@ import axios from 'axios';
 import Sign from '../badm/sign';
 import ImageMediaItem from '../badm/imageMediaItem';
 
-import { executeLoadAppData, executeFetchSign, executeSelectMediaFolder, getFileName } from '../platform/actions';
+import { executeLoadAppData, executeFetchSign, executeSelectMediaFolder, getFileName, executeSaveSign } from '../platform/actions';
 
 export function loadAppData() {
 
     return executeLoadAppData();
 }
 
+export function saveSign() {
+    return executeSaveSign();
+}
 
 // invoked when the user selects a new media folder through the UI
 export function selectMediaFolder(mediaFolder, mediaThumbs) {

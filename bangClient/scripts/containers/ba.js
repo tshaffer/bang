@@ -11,7 +11,7 @@ import PropertySheet from '../containers/propertySheet';
 
 import BAUI from '../platform/baUI';
 
-import { getAllThumbs, createDefaultSign, selectMediaFolder, updateMediaFolder } from '../actions/index';
+import { getAllThumbs, createDefaultSign, selectMediaFolder, updateMediaFolder, saveSign } from '../actions/index';
 
 // bangatron vs. bangwapp?
 import { createDefaultPresentation, saveBSNPresentation } from '../actions/index';
@@ -162,7 +162,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ createDefaultPresentation, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, updatePlaylistItem, loadAppData, fetchSign, saveBSNPresentation, createDefaultSign, selectMediaFolder, updateMediaFolder }, dispatch);
+    return bindActionCreators({ createDefaultPresentation, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, updatePlaylistItem, loadAppData, fetchSign, saveBSNPresentation, createDefaultSign, selectMediaFolder, updateMediaFolder, saveSign }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);

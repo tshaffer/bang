@@ -10,6 +10,10 @@ import { setMediaThumbs, mergeMediaThumbs, setMediaFolder, openSign, setMediaLib
 
 import { openDB, addRecordToDB, dbGetThumbs, dbGetMediaLibraryFolder, dbSaveMediaFolder } from './db';
 
+import Sign from '../badm/sign';
+import Zone from '../badm/zone';
+import ImagePlaylistItem from '../badm/imagePlaylistItem';
+
 const mediaFileSuffixes = ['jpg'];
 
 // used by bangatron
@@ -275,5 +279,35 @@ export function getFileName(filePath) {
 
 }
 
+
+export function executeSaveSign() {
+
+    return function (dispatch, getState) {
+
+        console.log("executeGetSignForPersistence");
+
+        const state = getState();
+
+        let badmSign = new Sign(state.sign.name);
+        // badmSign.videoMode = ??
+
+        state.sign.zoneIds.forEach( zoneId => {
+
+            const zone = state.zones.zonesById[zoneId];
+            let badmZone = new Zone(zone.name, zone.type);
+            badmSign.addZone(badmZone);
+
+            const badmZonePlaylist = badmZone.zonePlaylist;
+
+            const zonePlaylist = state.zonePlaylists.zonePlaylistsById[zone.zonePlaylistId];
+            zonePlaylist.playlistItemIds.forEach(playlistItemId => {
+                const playlistItem = state.playlistItems.playlistItemsById[playlistItemId];
+                // TODO only support imagePlaylistItems now
+                let badmPlaylistItem = new ImagePlaylistItem(playlistItem.fileName, playlistItem.filePath, playlistItem.timeOnScreen, playlistItem.transition, playlistItem.transitionDuration, "false");
+                badmZonePlaylist.playlistItems.push(badmPlaylistItem);
+            });
+        })
+    }
+}
 
 
