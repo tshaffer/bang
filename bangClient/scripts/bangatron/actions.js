@@ -9,6 +9,7 @@ var mime = require("mime");
 import { setMediaThumbs, mergeMediaThumbs, setMediaFolder, openSign, setMediaLibraryFiles } from '../actions/index';
 
 import { openDB, addRecordToDB, dbGetThumbs, dbGetMediaLibraryFolder, dbSaveMediaFolder } from './db';
+import { newSign, newZone, addZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, getFirstKey } from '../actions/index';
 
 import Sign from '../badm/sign';
 import Zone from '../badm/zone';
@@ -254,10 +255,13 @@ function buildThumb(mediaFile) {
 
 export function executeFetchSign(filePath) {
 
-    return function (dispatch) {
+    return function (dispatch, getState) {
 
         console.log("fetchSign, filePath=", filePath);
 
+        let nextState = null;
+
+        // get data in badm format
         fs.readFile(filePath, 'utf8', (err, data) => {
 
             // TODO - proper error handling?
@@ -266,9 +270,46 @@ export function executeFetchSign(filePath) {
                 return;
             }
             console.log("fs.ReadFile successful");
-            var sign = JSON.parse(data);
-            dispatch(openSign(sign));
-            // dispatch(setCurrentPlaylist(sign.zones[0].zonePlaylist));
+            var badmSign = JSON.parse(data);
+            
+            // convert to redux sign format
+            dispatch(newSign(badmSign.name));
+
+            badmSign.zones.forEach( zone => {
+                dispatch(newZone(zone.type, zone.name));
+
+                nextState = getState();
+
+                // TODO - I think this only works if there's a single zone
+                const zoneId = getFirstKey(nextState.zones.zonesById);
+                dispatch(addZone(zoneId));
+
+                dispatch(newZonePlaylist());
+                nextState = getState();
+
+                const zonePlaylistId = getFirstKey(nextState.zonePlaylists.zonePlaylistsById);
+                dispatch(setZonePlaylist(zoneId, zonePlaylistId));
+
+                nextState = getState();
+                let zonePlaylist = nextState.zonePlaylists.zonePlaylistsById[zonePlaylistId];
+
+                zone.zonePlaylist.playlistItems.forEach( playlistItem => {
+
+                    // const reduxPlaylistItem = {
+                    //     id: guid(),
+                    //     fileName: playlistItem.fileName,
+                    //     filePath: playlistItem.filePath,
+                    //     timeOnScreen: playlistItem.timeOnScreen,
+                    //     transition: 0,
+                    //     transitionDuration: 2
+                    // };
+                    dispatch(newPlaylistItem(playlistItem));
+
+                    // add playlist item from badm to redux store
+                    dispatch(addPlaylistItem(zonePlaylistId, playlistItem.id));
+                });
+
+            });
         })
     }
 }

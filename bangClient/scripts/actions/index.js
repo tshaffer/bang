@@ -224,7 +224,7 @@ export function updateSign(sign) {
 
 // to get first property in an object - want first key here though
 // http://stackoverflow.com/questions/983267/access-the-first-property-of-an-object
-function getFirstKey(obj) {
+export function getFirstKey(obj) {
     return Object.keys(obj)[0];
 }
 

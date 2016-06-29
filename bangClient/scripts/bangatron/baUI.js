@@ -123,19 +123,8 @@ export default class BAUI {
             ]
         }
         dialog.showSaveDialog(options, filename => {
-            self.savePresentation(filename);
+            this.ba.props.saveSign(filename);
         })
-    }
-    
-    savePresentation(filePath) {
-
-        this.ba.props.saveSign(filePath);
-
-        // const presentation = JSON.stringify(this.ba.props.sign, null, 2);
-    
-        // fs.writeFile(filePath, presentation, () => {
-        //     console.log("writeFile successful");
-        // })
     }
     
     handleBrowseForMediaLibrary() {
