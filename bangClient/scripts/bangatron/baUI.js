@@ -129,7 +129,7 @@ export default class BAUI {
     
     savePresentation(filePath) {
 
-        this.ba.props.saveSign();
+        this.ba.props.saveSign(filePath);
 
         // const presentation = JSON.stringify(this.ba.props.sign, null, 2);
     

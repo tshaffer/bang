@@ -280,7 +280,7 @@ export function getFileName(filePath) {
 }
 
 
-export function executeSaveSign() {
+export function executeSaveSign(filePath) {
 
     return function (dispatch, getState) {
 
@@ -306,6 +306,12 @@ export function executeSaveSign() {
                 let badmPlaylistItem = new ImagePlaylistItem(playlistItem.fileName, playlistItem.filePath, playlistItem.timeOnScreen, playlistItem.transition, playlistItem.transitionDuration, "false");
                 badmZonePlaylist.playlistItems.push(badmPlaylistItem);
             });
+        })
+
+        const presentation = JSON.stringify(badmSign, null, 2);
+
+        fs.writeFile(filePath, presentation, () => {
+            console.log("bpf writeFile successful");
         })
     }
 }

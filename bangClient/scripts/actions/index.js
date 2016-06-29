@@ -15,8 +15,8 @@ export function loadAppData() {
     return executeLoadAppData();
 }
 
-export function saveSign() {
-    return executeSaveSign();
+export function saveSign(filePath) {
+    return executeSaveSign(filePath);
 }
 
 // invoked when the user selects a new media folder through the UI
