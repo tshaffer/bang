@@ -6,6 +6,8 @@ const easyImage = require("easyimage");
 var util = require("util");
 var mime = require("mime");
 
+import { normalize, Schema, arrayOf } from 'normalizr';
+
 import { setMediaThumbs, mergeMediaThumbs, setMediaFolder, openSign, setMediaLibraryFiles } from '../actions/index';
 
 import { openDB, addRecordToDB, dbGetThumbs, dbGetMediaLibraryFolder, dbSaveMediaFolder } from './db';
@@ -251,7 +253,103 @@ function buildThumb(mediaFile) {
 
 
 
+// const sampleZone =
+// {
+//     "id": "sampleZoneId",
+//     "name": "sampleZone",
+//     "type": "imageZone",
+//     "playlistItems": [
+//         {
+//             "id": "p1",
+//             "itemLabel": "",
+//             "fileName": "file1",
+//             "filePath": "",
+//             "timeOnScreen": 6,
+//             "transition": 0,
+//             "transitionDuration": 5,
+//             "videoPlayerRequired": false
+//         },
+//         {
+//             "id": "p2",
+//             "itemLabel": "",
+//             "fileName": "file2",
+//             "filePath": "",
+//             "timeOnScreen": 5,
+//             "transition": 4,
+//             "transitionDuration": 3,
+//             "videoPlayerRequired": false
+//         }
+//     ]
+// };
 
+const sampleSign =
+{
+    "signId": "signId",
+    "videoMode": "1920x1080x60p",
+    "zones": [
+        {
+            "id": "zone1Id",
+            "name": "sampleZone",
+            "type": "imageZone",
+            "playlistItems": [
+                {
+                    "id": "p1",
+                    "itemLabel": "",
+                    "fileName": "file1",
+                    "filePath": "",
+                    "timeOnScreen": 6,
+                    "transition": 0,
+                    "transitionDuration": 5,
+                    "videoPlayerRequired": false
+                },
+                {
+                    "id": "p2",
+                    "itemLabel": "",
+                    "fileName": "file2",
+                    "filePath": "",
+                    "timeOnScreen": 5,
+                    "transition": 4,
+                    "transitionDuration": 3,
+                    "videoPlayerRequired": false
+                }
+            ]
+        },
+        {
+            "id": "zone2Id",
+            "name": "sampleZone",
+            "type": "imageZone",
+            "playlistItems": [
+                {
+                    "id": "p1",
+                    "itemLabel": "",
+                    "fileName": "file1",
+                    "filePath": "",
+                    "timeOnScreen": 6,
+                    "transition": 0,
+                    "transitionDuration": 5,
+                    "videoPlayerRequired": false
+                },
+                {
+                    "id": "p2",
+                    "itemLabel": "",
+                    "fileName": "file2",
+                    "filePath": "",
+                    "timeOnScreen": 5,
+                    "transition": 4,
+                    "transitionDuration": 3,
+                    "videoPlayerRequired": false
+                }
+            ]
+        },
+    ]
+}
+
+const zoneSchema = new Schema ('zones', { idAttribute: 'id' });
+const zonePlaylistItemSchema = new Schema ('playlistItems', {idAttribute: 'id' });
+
+zoneSchema.define ({
+    zonePlaylistItems: arrayOf(zonePlaylistItemSchema)
+});
 
 export function executeFetchSign(filePath) {
 
@@ -273,6 +371,11 @@ export function executeFetchSign(filePath) {
 
             // NOT A REAL badmSIGN - just a json object
             var badmSign = JSON.parse(data);
+            // let testZone = new Zone(badmSign.zones[0].name, badmSign.zones[0].type);
+            // testZone.id = "testId";
+            // testZone.playlistItems = [];
+
+            const response = normalize(sampleSign, zoneSchema);
 
             // dispatch(newSign(badm))
 
