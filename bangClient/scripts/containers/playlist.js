@@ -145,6 +145,7 @@ class Playlist extends Component {
 
         console.log("playlist.js::render()");
         let presentationZones = [];
+        // zoneId's should be in the order in which they were inserted into the zonesById object
         for (var zoneId in this.props.zones.zonesById) {
             const zone = this.props.zones.zonesById[zoneId];
             if (this.props.zones.zonesById.hasOwnProperty(zoneId)) {

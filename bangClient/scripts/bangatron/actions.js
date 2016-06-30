@@ -270,8 +270,12 @@ export function executeFetchSign(filePath) {
                 return;
             }
             console.log("fs.ReadFile successful");
+
+            // NOT A REAL badmSIGN - just a json object
             var badmSign = JSON.parse(data);
-            
+
+            // dispatch(newSign(badm))
+
             // convert to redux sign format
             dispatch(newSign(badmSign.name));
 
@@ -346,6 +350,11 @@ export function executeSaveSign(filePath) {
                 // TODO only support imagePlaylistItems now
                 let badmPlaylistItem = new ImagePlaylistItem(playlistItem.fileName, playlistItem.filePath, playlistItem.timeOnScreen, playlistItem.transition, playlistItem.transitionDuration, "false");
                 badmZonePlaylist.playlistItems.push(badmPlaylistItem);
+
+                // TODO - test
+                // let obj = new ImagePlaylistItem("", "", -1, "", -1, "false");
+                let obj = new ImagePlaylistItem();
+                const newObj = Object.assign(obj, badmPlaylistItem);
             });
         })
 
