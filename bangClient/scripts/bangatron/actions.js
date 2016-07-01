@@ -15,6 +15,9 @@ import Sign from '../badm/sign';
 import Zone from '../badm/zone';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
+import Norm_Sign from '../normalizedBADM/norm_sign';
+import Norm_Zone from '../normalizedBADM/norm_zone';
+
 const mediaFileSuffixes = ['jpg'];
 
 // used by bangatron
@@ -272,9 +275,41 @@ export function executeFetchSign(filePath) {
             console.log("fs.ReadFile successful");
 
             // NOT A REAL badmSIGN - just a json object
-            var badmSign = JSON.parse(data);
+            const jsonSign = JSON.parse(data);
 
-            // dispatch(newSign(badm))
+            // convert to real sign - better way?
+            let badmSign = new Sign(jsonSign.name);
+            badmSign.videoMode = jsonSign.videoMode;
+
+            jsonSign.zones.forEach( jsonZone => {
+                let badmZone = new Zone(jsonZone.name, jsonZone.type);
+                badmSign.zones.push(badmZone);
+
+                let badmZonePlaylist = badmZone.zonePlaylist;
+
+                jsonZone.zonePlaylist.playlistItems.forEach( jsonPlaylistItem => {
+                    const imagePlaylistItem = new ImagePlaylistItem(jsonPlaylistItem.fileName,jsonPlaylistItem.filePath,
+                        jsonPlaylistItem.timeOnScreen, jsonPlaylistItem.transition, jsonPlaylistItem.transitionDuration, jsonPlaylistItem.videoPlayerRequired);
+                    badmZonePlaylist.playlistItems.push(imagePlaylistItem);
+                })
+            });
+
+            // flatten sign for storage in redux - better approach?
+            let normSign = new Norm_Sign(badmSign.name);
+            normSign.videoMode = badmSign.videoMode;
+
+            badmSign.zones.forEach( badmZone => {
+                let normZone = new Norm_Zone(badmZone.name, badmZone.type);
+                normSign.addZone(normZone);
+
+                let normZonePlaylist = normZone.zonePlaylist;
+
+                badmZone.zonePlaylist.playlistItems.forEach( badmPlaylistItem => {
+                    normZonePlaylist.playlistItems.push(badmPlaylistItem);
+                });
+            });
+
+
 
             // convert to redux sign format
             dispatch(newSign(badmSign.name));

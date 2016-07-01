@@ -1,20 +1,18 @@
 /**
- * Created by tedshaffer on 6/10/16.
+ * Created by tedshaffer on 7/1/16.
  */
 import { guid } from '../utilities/utils';
 
-import Zone from './zone';
-
-export default class Sign {
+export default class Norm_Sign {
     constructor(signName) {
         this.id = guid();
         this.name = signName;
         this.videoMode = "1920x1080x60p";
-        this.htmlSites = [];
-        this.zones = [];
+        this.htmlSitesById = {};
+        this.zonesById = {};
     }
-    
+
     addZone(zone) {
-        this.zones.push(zone);
+        this.zonesById[zone.id] = zone;
     }
 }
