@@ -23,23 +23,9 @@ export default function(state = initialState, action) {
     switch (action.type) {
         case NEW_PLAYLIST_ITEM:
             playlistItem = action.payload;
-            
-
-            const newPlaylistItem =
-            {
-                id: playlistItem.id,
-                fileName: playlistItem.fileName,
-                filePath: playlistItem.filePath,
-                timeOnScreen: playlistItem.timeOnScreen,
-                transition: playlistItem.transition,
-                transitionDuration: playlistItem.transitionDuration
-            }
 
             newPlaylistItemsById = Object.assign({}, state.playlistItemsById);
-            newPlaylistItemsById[newPlaylistItem.id] = newPlaylistItem;
-
-            // newPlaylistItemsById = Object.assign({}, state.playlistItemsById);
-            // newPlaylistItemsById[playlistItem.id] = playlistItem;
+            newPlaylistItemsById[playlistItem.id] = playlistItem;
 
             newState = {
                 playlistItemsById: newPlaylistItemsById

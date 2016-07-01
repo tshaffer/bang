@@ -78,11 +78,11 @@ class Playlist extends Component {
 
         // specify playlist item to drop
         let playlistItem = null;
-        const playlistItemId = guid();
         if (type === "image") {
 
             // TODO - move to ba.js
             playlistItem = new ImagePlaylistItem (stateName, path, 6, 0, 2,false);
+
             this.props.newPlaylistItem(playlistItem);
         }
         else if (type == "html5") {
@@ -118,7 +118,7 @@ class Playlist extends Component {
             }
         }
 
-        this.props.addPlaylistItemToZonePlaylist(currentZonePlaylistId, playlistItemId, index);
+        this.props.addPlaylistItemToZonePlaylist(currentZonePlaylistId, playlistItem.id, index);
     }
 
     onSelectZone(event) {
