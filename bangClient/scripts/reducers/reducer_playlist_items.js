@@ -2,6 +2,7 @@
  * Created by tedshaffer on 6/26/16.
  */
 import { NEW_PLAYLIST_ITEM, UPDATE_PLAYLIST_ITEM } from '../actions/index';
+import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
 const initialState =
 {
@@ -17,10 +18,13 @@ export default function(state = initialState, action) {
 
     let newPlaylistItemsById;
 
+    const emptyPlaylistItem = new ImagePlaylistItem();
+    
     switch (action.type) {
         case NEW_PLAYLIST_ITEM:
             playlistItem = action.payload;
             
+
             const newPlaylistItem =
             {
                 id: playlistItem.id,
@@ -33,6 +37,9 @@ export default function(state = initialState, action) {
 
             newPlaylistItemsById = Object.assign({}, state.playlistItemsById);
             newPlaylistItemsById[newPlaylistItem.id] = newPlaylistItem;
+
+            // newPlaylistItemsById = Object.assign({}, state.playlistItemsById);
+            // newPlaylistItemsById[playlistItem.id] = playlistItem;
 
             newState = {
                 playlistItemsById: newPlaylistItemsById

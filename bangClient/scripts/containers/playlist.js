@@ -82,14 +82,7 @@ class Playlist extends Component {
         if (type === "image") {
 
             // TODO - move to ba.js
-            playlistItem = {
-                id: playlistItemId,
-                fileName: stateName,
-                filePath: path,
-                timeOnScreen: 6,
-                transition: 0,
-                transitionDuration: 2
-            };
+            playlistItem = new ImagePlaylistItem (stateName, path, 6, 0, 2,false);
             this.props.newPlaylistItem(playlistItem);
         }
         else if (type == "html5") {

@@ -299,15 +299,15 @@ export function executeFetchSign(filePath) {
 
                 zone.zonePlaylist.playlistItems.forEach( playlistItem => {
 
-                    // const reduxPlaylistItem = {
-                    //     id: guid(),
-                    //     fileName: playlistItem.fileName,
-                    //     filePath: playlistItem.filePath,
-                    //     timeOnScreen: playlistItem.timeOnScreen,
-                    //     transition: 0,
-                    //     transitionDuration: 2
-                    // };
-                    dispatch(newPlaylistItem(playlistItem));
+                    const reduxPlaylistItem = {
+                        id: guid(),
+                        fileName: playlistItem.fileName,
+                        filePath: playlistItem.filePath,
+                        timeOnScreen: playlistItem.timeOnScreen,
+                        transition: 0,
+                        transitionDuration: 2
+                    };
+                    dispatch(newPlaylistItem(reduxPlaylistItem));
 
                     // add playlist item from badm to redux store
                     dispatch(addPlaylistItem(zonePlaylistId, playlistItem.id));
