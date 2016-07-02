@@ -295,11 +295,14 @@ export function executeFetchSign(filePath) {
             });
 
             // flatten sign for storage in redux - better approach?
-            let normSign = new Norm_Sign(badmSign.name);
+            let normSign = null;
+            let normZone = null;
+
+            normSign = new Norm_Sign(badmSign.name);
             normSign.videoMode = badmSign.videoMode;
 
             badmSign.zones.forEach( badmZone => {
-                let normZone = new Norm_Zone(badmZone.name, badmZone.type);
+                normZone = new Norm_Zone(badmZone.name, badmZone.type);
                 normSign.addZone(normZone);
 
                 let normZonePlaylist = normZone.zonePlaylist;
@@ -309,10 +312,23 @@ export function executeFetchSign(filePath) {
                 });
             });
 
+            dispatch(newSign(normSign));
 
+            for (var zoneId in normSign.zonesById) {
+                if (normSign.zonesById.hasOwnProperty(zoneId)) {
+                    normZone = normSign.zonesById[zoneId];
+                    dispatch(newZone(normZone));
+                    dispatch(addZone(normZone));
 
-            // convert to redux sign format
-            dispatch(newSign(badmSign.name));
+                    let normZonePlaylist = normZone.zonePlaylist;
+                    normZonePlaylist.playlistItems.forEach( playlistItem => {
+                        dispatch(newPlaylistItem(playlistItem));
+                    });
+                }
+            }
+
+            nextState = getState();
+            return;
 
             badmSign.zones.forEach( zone => {
                 dispatch(newZone(zone.type, zone.name));

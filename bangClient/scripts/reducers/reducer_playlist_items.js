@@ -4,10 +4,9 @@
 import { NEW_PLAYLIST_ITEM, UPDATE_PLAYLIST_ITEM } from '../actions/index';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
-const initialState =
-{
-    playlistItemsById: {}
-};
+const emptyPlaylistItem = new ImagePlaylistItem();
+
+const initialState = emptyPlaylistItem;
 
 export default function(state = initialState, action) {
 
@@ -18,19 +17,20 @@ export default function(state = initialState, action) {
 
     let newPlaylistItemsById;
 
-    const emptyPlaylistItem = new ImagePlaylistItem();
-    
+
     switch (action.type) {
         case NEW_PLAYLIST_ITEM:
             playlistItem = action.payload;
-
-            newPlaylistItemsById = Object.assign({}, state.playlistItemsById);
-            newPlaylistItemsById[playlistItem.id] = playlistItem;
-
-            newState = {
-                playlistItemsById: newPlaylistItemsById
-            }
+            newState = Object.assign(state, playlistItem);
             return newState;
+
+            // newPlaylistItemsById = Object.assign({}, state.playlistItemsById);
+            // newPlaylistItemsById[playlistItem.id] = playlistItem;
+            //
+            // newState = {
+            //     playlistItemsById: newPlaylistItemsById
+            // }
+            // return newState;
         
         case UPDATE_PLAYLIST_ITEM:
 

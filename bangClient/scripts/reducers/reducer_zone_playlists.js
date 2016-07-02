@@ -35,7 +35,6 @@ export default function(state = initialState, action) {
         case NEW_ZONE_PLAYLIST:
             // const zonePlaylist = action.payload;
 
-            const id = guid();
             
             newZonePlaylist =
             {

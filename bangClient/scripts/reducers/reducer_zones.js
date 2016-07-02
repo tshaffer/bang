@@ -2,7 +2,6 @@
  * Created by tedshaffer on 6/24/16.
  */
 import { NEW_ZONE, SET_ZONE_PLAYLIST } from '../actions/index';
-import { guid } from '../utilities/utils';
 
 const initialState =
 {
@@ -20,23 +19,9 @@ export default function(state = initialState, action) {
     switch (action.type) {
         case NEW_ZONE:
 
-            const id = guid();
-            const zoneData = action.payload;
+            newZone = action.payload;
+            const id = newZone.id;
 
-            newZone =
-            {
-                id: id,
-                type: zoneData.type,
-                name: zoneData.name,
-                zonePlaylistId: null
-            };
-
-            // const newZonesById = {
-            //     ...state.zonesById,
-            //     [id]: newZone
-            // };
-
-            // TODO - figure out best way to do this in ES6
             const newItem = {};
             newItem[id] = newZone;
             newZonesById = Object.assign({}, state.zonesById, newItem);

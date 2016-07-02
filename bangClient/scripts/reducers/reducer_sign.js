@@ -5,13 +5,18 @@
 import { NEW_SIGN, ADD_ZONE, ADD_HTML_SITE } from '../actions/index';
 import { guid } from '../utilities/utils';
 
-const initialState =
-{
-    id: "",
-    name: "",
-    zoneIds: [],
-    htmlSiteIds: []
-};
+import Norm_Sign from '../normalizedBADM/norm_sign';
+
+const emptySign = new Norm_Sign();
+
+const initialState = emptySign;
+// const initialState =
+// {
+//     id: "",
+//     name: "",
+//     zoneIds: [],
+//     htmlSiteIds: []
+// };
 
 export default function(state = initialState, action) {
 
@@ -21,19 +26,19 @@ export default function(state = initialState, action) {
 
     switch (action.type) {
         case NEW_SIGN:
-            newState = Object.assign({}, {
-                id: guid(),
-                name: action.payload.name,
-                zoneIds: []
-            });
-            return newState;
+            return action.payload;
         case ADD_ZONE:
-            const zoneId = action.payload;
+            const normZone = action.payload;
+            const id = normZone.id;
 
-            const newZoneIds = state.zoneIds.concat(zoneId);
-            newState = Object.assign({}, state,
-                { zoneIds: newZoneIds } );
+            const newItem = {};
+            newItem[id] = normZone;
+            const newZonesById = Object.assign({}, state.zonesById, newItem);
+
+            newState = Object.assign(emptySign, state,
+                { zonesById: newZonesById } );
             return newState;
+
         // case CREATE_DEFAULT_SIGN:
         //     console.log("reducer_sign:CREATE_DEFAULT_SIGN");
         //     return action.payload.sign;

@@ -6,7 +6,7 @@ import { guid } from '../utilities/utils';
 import Norm_ZonePlaylist from './norm_zonePlaylist';
 
 export default class Norm_Zone   {
-    constructor(zoneName, zoneType) {
+    constructor(zoneName = "", zoneType = "") {
         this.id = guid();
         this.name = zoneName;
         this.type = zoneType;

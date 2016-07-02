@@ -4,7 +4,7 @@
 import { guid } from '../utilities/utils';
 
 export default class Norm_Sign {
-    constructor(signName) {
+    constructor(signName = "") {
         this.id = guid();
         this.name = signName;
         this.videoMode = "1920x1080x60p";

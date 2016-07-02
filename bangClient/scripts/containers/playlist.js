@@ -32,15 +32,15 @@ class Playlist extends Component {
         console.log("playlist.js::componentDidMount invoked");
 
         // TODO - redo this code when zone objects have an index (sort by that index)
-        let presentationZones = [];
-        for (var zoneId in this.props.zones.zonesById) {
-            const zone = this.props.zones.zonesById[zoneId];
-            if (this.props.zones.zonesById.hasOwnProperty(zoneId)) {
-                presentationZones.push(zone);
-            }
-        }
-
-        this.setState( { currentZoneId: presentationZones[0].id });
+        // let presentationZones = [];
+        // for (var zoneId in this.props.zones.zonesById) {
+        //     const zone = this.props.zones.zonesById[zoneId];
+        //     if (this.props.zones.zonesById.hasOwnProperty(zoneId)) {
+        //         presentationZones.push(zone);
+        //     }
+        // }
+        //
+        // this.setState( { currentZoneId: presentationZones[0].id });
     }
 
 

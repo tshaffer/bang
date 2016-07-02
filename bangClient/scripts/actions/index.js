@@ -77,39 +77,30 @@ export function mergeMediaThumbs(thumbsByPath) {
 
 
 export const NEW_SIGN = 'NEW_SIGN';
-export function newSign(name) {
+export function newSign(normSign) {
 
-    const signData =
-    {
-        name: name
-    }
     return {
         type: NEW_SIGN,
-        payload: signData
+        payload: normSign
     }
 }
 
 export const NEW_ZONE = 'NEW_ZONE';
-export function newZone(type, name) {
+export function newZone(normZone) {
 
-    const zoneData = {
-        type: type,
-        name: name
-    };
-    
     return {
         type: NEW_ZONE,
-        payload: zoneData
+        payload: normZone
     }
 }
 
 // assumes there is a single, defined sign
 export const ADD_ZONE = 'ADD_ZONE';
-export function addZone(zoneId) {
+export function addZone(normZone) {
 
     return {
         type: ADD_ZONE,
-        payload: zoneId
+        payload: normZone
     }
 }
 
