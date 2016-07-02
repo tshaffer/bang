@@ -44,6 +44,17 @@ class Playlist extends Component {
     }
 
 
+    hackGetCurrentZone() {
+
+        let zone = null;
+        for (let zoneId in this.props.sign.zonesById) {
+            if (this.props.sign.zonesById.hasOwnProperty(zoneId)) {
+                zone = this.props.sign.zonesById[zoneId];
+            }
+        }
+        return zone;
+    }
+
     playlistDragOverHandler (ev) {
 
         console.log("playlistDragOverHandler");
@@ -54,20 +65,18 @@ class Playlist extends Component {
     playlistDropHandler (ev) {
 
         // TODO - create function to get this info
-        let currentZone = null;
+        // let currentZone = null;
         let currentZonePlaylist = null;
         let currentZonePlaylistId = null;
-        if (this.state.currentZoneId) {
-            currentZone = this.props.zones.zonesById[this.state.currentZoneId];
-            currentZonePlaylistId = currentZone.zonePlaylistId;
-            if (currentZonePlaylistId) {
-                currentZonePlaylist = this.props.zonePlaylists.zonePlaylistsById[currentZonePlaylistId];
-            }
+
+        let currentZone = this.hackGetCurrentZone();
+        if (currentZone) {
+            currentZonePlaylist = currentZone.zonePlaylist;
         }
 
         if (!currentZonePlaylist) return;
 
-        let playlistItemIds = currentZonePlaylist.playlistItemIds;
+        // let playlistItemIds = currentZonePlaylist.playlistItemIds;
 
         ev.preventDefault();
 
@@ -83,7 +92,7 @@ class Playlist extends Component {
             // TODO - move to ba.js
             playlistItem = new ImagePlaylistItem (stateName, path, 6, 0, 2,false);
 
-            this.props.newPlaylistItem(playlistItem);
+            // this.props.newPlaylistItem(playlistItem);
         }
         else if (type == "html5") {
             playlistItem = new HTML5PlaylistItem(
@@ -134,54 +143,44 @@ class Playlist extends Component {
 
         let self = this;
 
+        let zoneId = "";
+
         let zoneDropDown = <div></div>
 
         console.log("playlist.js::render()");
         let presentationZones = [];
-        // zoneId's should be in the order in which they were inserted into the zonesById object
-        for (var zoneId in this.props.zones.zonesById) {
-            const zone = this.props.zones.zonesById[zoneId];
-            if (this.props.zones.zonesById.hasOwnProperty(zoneId)) {
+
+        // Joel says: zoneId's should be in the order in which they were inserted into the zonesById object
+        for (zoneId in this.props.sign.zonesById) {
+            if (this.props.sign.zonesById.hasOwnProperty(zoneId)) {
+                const zone = this.props.sign.zonesById[zoneId];
                 presentationZones.push(zone);
             }
         }
-        // let selectOptions = this.props.zones.zones.map(function (zone, index) {
+
         let selectOptions = presentationZones.map(function (zone, index) {
             return (
                 <option value={zone.id} key={zone.id}>{zone.name}</option>
             );
         });
 
-        // TODO - create function to get this info
-        let currentZone = null;
-        let currentZonePlaylist = null;
-        let currentZonePlaylistItemIds = [];
-        if (this.state.currentZoneId) {
-            currentZone = this.props.zones.zonesById[this.state.currentZoneId];
-            const zonePlaylistId = currentZone.zonePlaylistId;
-
-            // TODO - this approach needs to be thought through more
-            if (zonePlaylistId) {
-                currentZonePlaylist = this.props.zonePlaylists.zonePlaylistsById[zonePlaylistId];
-                currentZonePlaylistItemIds = currentZonePlaylist.playlistItemIds;
-            }
-        }
-
         zoneDropDown =
             <div>
                 Current zone:
-                <select className="leftSpacing" ref="zoneSelect" defaultValue={currentZone}
+                <select className="leftSpacing" ref="zoneSelect"
                         onChange={this.onSelectZone.bind(this)}>{selectOptions}</select>
             </div>
 
 
+        // TODO - get currentZone properly
+        let currentZone = null;
         let currentPlaylistItems = [];
-
-        // for now, resolve currentZonePlaylistIds => currentPlaylistItems
-        currentZonePlaylistItemIds.forEach(function(currentZonePlaylistItemId, index) {
-            const playlistItem = self.props.playlistItems.playlistItemsById[currentZonePlaylistItemId];
-            currentPlaylistItems.push(playlistItem);
-        });
+        if (presentationZones.length > 0) {
+            currentZone = presentationZones[0];
+        }
+        if (currentZone != null) {
+            currentPlaylistItems = currentZone.zonePlaylist.playlistItems;
+        }
 
         let openCloseLabel = "=>";
         if (!this.props.propertySheetOpen) {
@@ -245,9 +244,10 @@ class Playlist extends Component {
 
 function mapStateToProps(state) {
     return {
-        zones: state.zones,
-        zonePlaylists: state.zonePlaylists,
-        playlistItems: state.playlistItems,
+        sign: state.sign,
+        // zones: state.zones,
+        // zonePlaylists: state.zonePlaylists,
+        // playlistItems: state.playlistItems,
 
         mediaThumbs: state.mediaThumbs
     };

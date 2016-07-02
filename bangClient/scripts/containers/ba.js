@@ -36,7 +36,7 @@ class BA extends Component {
 
     componentWillMount() {
 
-        // this.props.createDefaultPresentation("Project 1");
+        this.props.createDefaultPresentation("Project 1");
 
         // TODO
         // select a zone here

@@ -10,6 +10,9 @@ import ImageMediaItem from '../badm/imageMediaItem';
 
 import { executeLoadAppData, executeFetchSign, executeSelectMediaFolder, getFileName, executeSaveSign } from '../platform/actions';
 
+import Norm_Sign from '../normalizedBADM/norm_sign';
+import Norm_Zone from '../normalizedBADM/norm_zone';
+
 export function loadAppData() {
 
     return executeLoadAppData();
@@ -225,25 +228,13 @@ export function createDefaultPresentation(presentationName) {
 
         console.log("createDefaultPresentation, presentationName=", presentationName);
 
-        let nextState = null;
+        const normSign = new Norm_Sign(presentationName);
+        const normZone = new Norm_Zone("Images", "images");
+        normSign.addZone(normZone);
 
-        dispatch(newSign(presentationName));
+        dispatch(newSign(normSign));
 
-        dispatch(newZone("images", "imageZone"));
-        nextState = getState();
-
-        const zoneId = getFirstKey(nextState.zones.zonesById);
-        dispatch(addZone(zoneId));
-
-
-        // select zone here - no, I think the selected zone should just be a user interface thing
-
-
-        dispatch(newZonePlaylist());
-        nextState = getState();
-
-        const zonePlaylistId = getFirstKey(nextState.zonePlaylists.zonePlaylistsById);
-        dispatch(setZonePlaylist(zoneId, zonePlaylistId));
+        let nextState = getState();
     }
 }
 
