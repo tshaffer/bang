@@ -314,18 +314,18 @@ export function executeFetchSign(filePath) {
 
             dispatch(newSign(normSign));
 
-            for (var zoneId in normSign.zonesById) {
-                if (normSign.zonesById.hasOwnProperty(zoneId)) {
-                    normZone = normSign.zonesById[zoneId];
-                    dispatch(newZone(normZone));
-                    dispatch(addZone(normZone));
-
-                    let normZonePlaylist = normZone.zonePlaylist;
-                    normZonePlaylist.playlistItems.forEach( playlistItem => {
-                        dispatch(newPlaylistItem(playlistItem));
-                    });
-                }
-            }
+            // for (var zoneId in normSign.zonesById) {
+            //     if (normSign.zonesById.hasOwnProperty(zoneId)) {
+            //         normZone = normSign.zonesById[zoneId];
+            //         dispatch(newZone(normZone));
+            //         dispatch(addZone(normZone));
+            //
+            //         let normZonePlaylist = normZone.zonePlaylist;
+            //         normZonePlaylist.playlistItems.forEach( playlistItem => {
+            //             dispatch(newPlaylistItem(playlistItem));
+            //         });
+            //     }
+            // }
 
             nextState = getState();
             return;
