@@ -15,7 +15,7 @@ let htmlSite = null;
 
 export default function(state = initialState, action) {
 
-    console.log("reducer_html_sites:: action.type=" + action.type);
+    // console.log("reducer_html_sites:: action.type=" + action.type);
 
     switch (action.type) {
         case NEW_HTML_SITE:

@@ -6,12 +6,12 @@ import BA from '../containers/ba';
 export default class App extends Component {
 
     componentDidMount() {
-        console.log("app.js::componentDidMount invoked");
+        // console.log("app.js::componentDidMount invoked");
     }
     
     render() {
 
-        console.log("app.js render invoked");
+        // console.log("app.js render invoked");
 
         return (
             <div className = "container bangContainer">

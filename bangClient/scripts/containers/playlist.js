@@ -25,11 +25,11 @@ class Playlist extends Component {
     }
 
     componentWillMount() {
-        console.log("playlist: componentWillMount invoked");
+        // console.log("playlist: componentWillMount invoked");
     }
 
     componentDidMount() {
-        console.log("playlist.js::componentDidMount invoked");
+        // console.log("playlist.js::componentDidMount invoked");
 
         if (this.props.sign.zoneIds.length > 0) {
             this.setState( { selectedZoneId: this.props.sign.zoneIds[0] });
@@ -58,10 +58,25 @@ class Playlist extends Component {
         let currentZonePlaylist = null;
         let currentZonePlaylistId = null;
 
+        // let selectedZone = this.hackGetCurrentZone();
+        // if (selectedZone) {
+        //     currentZonePlaylist = selectedZone.zonePlaylist;
+        // }
+
         let selectedZone = this.hackGetCurrentZone();
         if (selectedZone) {
-            currentZonePlaylist = selectedZone.zonePlaylist;
+            currentZonePlaylist = this.props.zonePlaylists.zonePlaylistsById[selectedZone.zonePlaylistId];
+            if (currentZonePlaylist) {
+                currentZonePlaylistId = currentZonePlaylist.id;
+            }
+            // if (currentZonePlaylist) {
+            //     currentPlaylistItems = currentZonePlaylist.playlistItems;
+            // }
         }
+
+
+
+
 
         if (!currentZonePlaylist) return;
 
@@ -111,12 +126,13 @@ class Playlist extends Component {
             if (left < (targetWidth / 2)) {
                 index = indexOfDropTarget;
             }
-            else if (indexOfDropTarget < (playlistItemIds.length - 1)) {
+            else if (indexOfDropTarget < (currentZonePlaylist.playlistItems.length - 1)) {
                 index = indexOfDropTarget + 1;
             }
         }
 
-        this.props.addPlaylistItemToZonePlaylist(currentZonePlaylistId, playlistItem.id, index);
+        // this.props.addPlaylistItemToZonePlaylist(currentZonePlaylistId, playlistItem.id, index);
+        this.props.addPlaylistItemToZonePlaylist(currentZonePlaylistId, playlistItem, index);
     }
 
     onSelectZone(event) {
@@ -136,7 +152,7 @@ class Playlist extends Component {
 
         let zoneDropDown = <div></div>;
 
-        console.log("playlist.js::render()");
+        // console.log("playlist.js::render()");
         let presentationZones = [];
 
         if (this.props.sign && this.props.sign.zoneIds) {

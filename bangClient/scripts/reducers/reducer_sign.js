@@ -20,7 +20,7 @@ const initialState = emptySign;
 
 export default function(state = initialState, action) {
 
-    console.log("reducer_sign:: action.type=" + action.type);
+    // console.log("reducer_sign:: action.type=" + action.type);
 
     let newState = null;
 

@@ -10,7 +10,7 @@ const initialState =
 
 export default function(state = initialState, action) {
 
-    console.log("reducer_zones:: action.type=" + action.type);
+    // console.log("reducer_zones:: action.type=" + action.type);
 
     let newZone = null;
     let newState = null;

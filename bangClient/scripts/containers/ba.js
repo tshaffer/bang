@@ -46,7 +46,7 @@ class BA extends Component {
 
     componentDidMount() {
 
-        console.log("ba.js::componentDidMount invoked");
+        // console.log("ba.js::componentDidMount invoked");
 
         // this.props.createDefaultSign();
 
@@ -95,7 +95,7 @@ class BA extends Component {
 
     render () {
 
-        console.log("ba.js::render invoked");
+        // console.log("ba.js::render invoked");
 
         let signName = <span>No sign yet</span>;
         let signVideoMode = <span>No videoMode yet</span>;

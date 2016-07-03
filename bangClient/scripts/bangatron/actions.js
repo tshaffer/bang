@@ -26,7 +26,7 @@ export function executeLoadAppData() {
     return function(dispatch) {
 
         openDB().then(function() {
-            console.log("db successfully opened");
+            // console.log("db successfully opened");
             fetchStartupData(dispatch);
         });
     }
@@ -84,7 +84,7 @@ export function getThumb(mediaItem) {
     const filePath = mediaItem.thumbPath;
     const data = fs.readFileSync(filePath).toString("base64");
     const base64Format = util.format("data:%s;base64,%s", mime.lookup(filePath), data);
-    console.log("length of base64 string is: ", base64Format.length);
+    // console.log("length of base64 string is: ", base64Format.length);
     return base64Format;
 }
 

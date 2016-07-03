@@ -178,7 +178,7 @@ export function addPlaylistItem(zonePlaylistId, playlistItemId) {
 
 
 export const ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST = 'ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST';
-export function addPlaylistItemToZonePlaylist(zonePlaylistId, playlistItemId, index) {
+export function addPlaylistItemToZonePlaylist(zonePlaylistId, playlistItem, index) {
 
     // if (index >= 0) {
     //     // insert prior to index
@@ -192,7 +192,7 @@ export function addPlaylistItemToZonePlaylist(zonePlaylistId, playlistItemId, in
     return {
         type: ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST,
         zonePlaylistId: zonePlaylistId,
-        playlistItemId: playlistItemId,
+        playlistItem: playlistItem,
         index: index
     }
 }
@@ -239,6 +239,10 @@ export function createDefaultPresentation(presentationName) {
         const normSign = new Norm_Sign(presentationName);
         const normZone = new Norm_Zone("Images", "images");
         normSign.addZone(normZone);
+
+        let normZonePlaylistId = normZone.zonePlaylistId;
+        let normZonePlaylist = normZone.zonePlaylistById[normZonePlaylistId];
+        dispatch(newZonePlaylist(normZonePlaylist));
 
         dispatch(newSign(normSign));
 

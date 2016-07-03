@@ -129,11 +129,11 @@ class PropertySheet extends Component {
     }
 
     componentWillMount() {
-        console.log("PropertySheet: componentWillMount invoked");
+        // console.log("PropertySheet: componentWillMount invoked");
     }
 
     componentDidMount() {
-        console.log("PropertySheet::componentDidMount invoked");
+        // console.log("PropertySheet::componentDidMount invoked");
     }
 
     onUpdateVideoMode(event) {
@@ -232,7 +232,7 @@ class PropertySheet extends Component {
 
     render () {
 
-        console.log("propertySheet.js::render");
+        // console.log("propertySheet.js::render");
 
         var self = this;
 
