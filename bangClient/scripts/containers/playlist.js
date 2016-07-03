@@ -20,7 +20,7 @@ class Playlist extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentZoneId: null,
+            selectedZoneId: null,
         };
     }
 
@@ -31,28 +31,9 @@ class Playlist extends Component {
     componentDidMount() {
         console.log("playlist.js::componentDidMount invoked");
 
-        // TODO - redo this code when zone objects have an index (sort by that index)
-        // let presentationZones = [];
-        // for (var zoneId in this.props.zones.zonesById) {
-        //     const zone = this.props.zones.zonesById[zoneId];
-        //     if (this.props.zones.zonesById.hasOwnProperty(zoneId)) {
-        //         presentationZones.push(zone);
-        //     }
-        // }
-        //
-        // this.setState( { currentZoneId: presentationZones[0].id });
-    }
-
-
-    hackGetCurrentZone() {
-
-        let zone = null;
-        for (let zoneId in this.props.sign.zonesById) {
-            if (this.props.sign.zonesById.hasOwnProperty(zoneId)) {
-                zone = this.props.sign.zonesById[zoneId];
-            }
+        if (this.props.sign.zoneIds.length > 0) {
+            this.setState( { selectedZoneId: this.props.sign.zoneIds[0] });
         }
-        return zone;
     }
 
     playlistDragOverHandler (ev) {
@@ -145,41 +126,43 @@ class Playlist extends Component {
 
         let zoneId = "";
 
-        let zoneDropDown = <div></div>
+        let zoneDropDown = <div></div>;
 
         console.log("playlist.js::render()");
         let presentationZones = [];
 
-        // Joel says: zoneId's should be in the order in which they were inserted into the zonesById object
-        for (zoneId in this.props.sign.zonesById) {
-            if (this.props.sign.zonesById.hasOwnProperty(zoneId)) {
+        if (this.props.sign && this.props.sign.zoneIds) {
+            let selectOptions = this.props.sign.zoneIds.map( (zoneId) => {
                 const zone = this.props.sign.zonesById[zoneId];
-                presentationZones.push(zone);
-            }
+                return (
+                    <option value={zone.id} key={zone.id}>{zone.name}</option>
+                );
+            })
+
+            zoneDropDown =
+                <div>
+                    Current zone:
+                    <select className="leftSpacing" ref="zoneSelect"
+                            onChange={this.onSelectZone.bind(this)}>{selectOptions}</select>
+                </div>
         }
 
-        let selectOptions = presentationZones.map(function (zone, index) {
-            return (
-                <option value={zone.id} key={zone.id}>{zone.name}</option>
-            );
-        });
-
-        zoneDropDown =
-            <div>
-                Current zone:
-                <select className="leftSpacing" ref="zoneSelect"
-                        onChange={this.onSelectZone.bind(this)}>{selectOptions}</select>
-            </div>
-
-
-        // TODO - get currentZone properly
-        let currentZone = null;
+        let selectedZone = null;
         let currentPlaylistItems = [];
-        if (presentationZones.length > 0) {
-            currentZone = presentationZones[0];
+
+        // if (this.state.selectedZoneId) {
+        //     selectedZone = this.props.sign.zonesById[this.state.selectedZoneId];
+        // }
+        // else if (this.props.sign && this.props.sign.zoneIds.length > 0) {
+        //     selectedZone = this.props.sign.zonesById[this.props.sign.zoneIds[0]];
+        // }
+
+        if (this.props.sign && this.props.sign.zoneIds.length > 0) {
+            selectedZone = this.props.sign.zonesById[this.props.sign.zoneIds[0]];
         }
-        if (currentZone != null) {
-            currentPlaylistItems = currentZone.zonePlaylist.playlistItems;
+
+        if (selectedZone) {
+            currentPlaylistItems = selectedZone.zonePlaylist.playlistItems;
         }
 
         let openCloseLabel = "=>";

@@ -78,6 +78,14 @@ export function mergeMediaThumbs(thumbsByPath) {
 
 
 
+export const OPEN_SIGN = 'OPEN_SIGN';
+export function openSign(normSign) {
+
+    return {
+        type: OPEN_SIGN,
+        payload: normSign
+    }
+}
 
 export const NEW_SIGN = 'NEW_SIGN';
 export function newSign(normSign) {
@@ -194,16 +202,16 @@ export function addPlaylistItemToZonePlaylist(zonePlaylistId, playlistItemId, in
 
 
 
-export const OPEN_SIGN = 'OPEN_SIGN'
-export function openSign(sign) {
-    
-    console.log("actions::openSign");
-    
-    return {
-        type: OPEN_SIGN,
-        payload: sign
-    }
-}
+// export const OPEN_SIGN = 'OPEN_SIGN'
+// export function openSign(sign) {
+//
+//     console.log("actions::openSign");
+//
+//     return {
+//         type: OPEN_SIGN,
+//         payload: sign
+//     }
+// }
 
 export const UPDATE_SIGN = 'UPDATE_SIGN';
 export function updateSign(sign) {
