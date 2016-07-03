@@ -9,7 +9,7 @@ var mime = require("mime");
 import { setMediaThumbs, mergeMediaThumbs, setMediaFolder, openSign, setMediaLibraryFiles } from '../actions/index';
 
 import { openDB, addRecordToDB, dbGetThumbs, dbGetMediaLibraryFolder, dbSaveMediaFolder } from './db';
-import { newSign, newZone, addZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, getFirstKey } from '../actions/index';
+import { newSign, newZone, addZone, clearZonePlaylists, newZonePlaylist, setZonePlaylist, clearPlaylistItems, newPlaylistItem, addPlaylistItem, getFirstKey } from '../actions/index';
 
 import Sign from '../badm/sign';
 import Zone from '../badm/zone';
@@ -302,20 +302,38 @@ export function executeFetchSign(filePath) {
             normSign = new Norm_Sign(badmSign.name);
             normSign.videoMode = badmSign.videoMode;
 
+            // dispatch(clearZonePlaylists());
+            // dispatch(clearPlaylistItems());
+
             badmSign.zones.forEach( badmZone => {
                 normZone = new Norm_Zone(badmZone.name, badmZone.type);
                 normSign.addZone(normZone);
 
                 let normZonePlaylistId = normZone.zonePlaylistId;
                 normZonePlaylist = normZone.zonePlaylistById[normZonePlaylistId];
-                dispatch(newZonePlaylist(normZonePlaylist));
+                // dispatch(newZonePlaylist(normZonePlaylist));
 
                 badmZone.zonePlaylist.playlistItems.forEach( badmPlaylistItem => {
-                    normZonePlaylist.playlistItems.push(badmPlaylistItem);
+                    // IS IT A PROBLEM THAT THIS MUTATES THE STORE?? I believe so.
+                    normZonePlaylist.playlistItemsById[badmPlaylistItem.id] = badmPlaylistItem;
+                    // dispatch(newPlaylistItem(badmPlaylistItem));
+                    // dispatch(addPlaylistItem(normZonePlaylist.id, badmPlaylistItem.id));
+
                 });
             });
 
+            // I think I need to fully create normSign, then perform the appropriate calls to dispatch to create the store from normSign, etc., then
+            // not use normSign again.
+            dispatch(clearZonePlaylists());
+            dispatch(clearPlaylistItems());
             dispatch(newSign(normSign));
+
+            normSign.zoneIds.forEach( zoneId => {
+                normZone = normSign.zonesById[zoneId];
+                const zonePlaylistId = normZone.zonePlaylistId;
+                normZonePlaylist = normZone.zonePlaylistById[zonePlaylistId];
+                dispatch(newZonePlaylist(normZonePlaylist));
+            })
 
             // for (var zoneId in normSign.zonesById) {
             //     if (normSign.zonesById.hasOwnProperty(zoneId)) {

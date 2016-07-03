@@ -1,12 +1,12 @@
 /**
  * Created by tedshaffer on 6/26/16.
  */
-import { NEW_PLAYLIST_ITEM, UPDATE_PLAYLIST_ITEM } from '../actions/index';
+import { CLEAR_PLAYLIST_ITEMS, NEW_PLAYLIST_ITEM, UPDATE_PLAYLIST_ITEM } from '../actions/index';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
 const emptyPlaylistItem = new ImagePlaylistItem();
 
-const initialState = emptyPlaylistItem;
+const initialState = {};
 
 export default function(state = initialState, action) {
 
@@ -19,18 +19,21 @@ export default function(state = initialState, action) {
 
 
     switch (action.type) {
+        case CLEAR_PLAYLIST_ITEMS:
+            return initialState;
+        
         case NEW_PLAYLIST_ITEM:
-            playlistItem = action.payload;
-            newState = Object.assign(state, playlistItem);
-            return newState;
-
-            // newPlaylistItemsById = Object.assign({}, state.playlistItemsById);
-            // newPlaylistItemsById[playlistItem.id] = playlistItem;
-            //
-            // newState = {
-            //     playlistItemsById: newPlaylistItemsById
-            // }
+            // newState = Object.assign(state, playlistItem);
             // return newState;
+
+            playlistItem = action.payload;
+            newPlaylistItemsById = Object.assign({}, state.playlistItemsById);
+            newPlaylistItemsById[playlistItem.id] = playlistItem;
+
+            newState = {
+                playlistItemsById: newPlaylistItemsById
+            }
+            return newState;
         
         case UPDATE_PLAYLIST_ITEM:
 

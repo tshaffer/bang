@@ -123,6 +123,13 @@ export function selectZone(zone) {
     }
 }
 
+export const CLEAR_ZONE_PLAYLISTS = 'CLEAR_ZONE_PLAYLISTS';
+export function clearZonePlaylists() {
+    return {
+        type: CLEAR_ZONE_PLAYLISTS
+    }
+}
+
 export const NEW_ZONE_PLAYLIST = 'NEW_ZONE_PLAYLIST';
 export function newZonePlaylist(zonePlaylist) {
 
@@ -143,6 +150,13 @@ export function setZonePlaylist(zoneId, zonePlaylistId) {
     return {
         type: SET_ZONE_PLAYLIST,
         payload: payload
+    }
+}
+
+export const CLEAR_PLAYLIST_ITEMS = 'CLEAR_PLAYLIST_ITEMS';
+export function clearPlaylistItems() {
+    return {
+        type: CLEAR_PLAYLIST_ITEMS
     }
 }
 
@@ -178,12 +192,12 @@ export function addPlaylistItem(zonePlaylistId, playlistItemId) {
 
 
 export const ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST = 'ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST';
-export function addPlaylistItemToZonePlaylist(zonePlaylistId, playlistItem, index) {
+export function addPlaylistItemToZonePlaylist(zonePlaylistId, playlistItemId, index) {
 
     return {
         type: ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST,
         zonePlaylistId: zonePlaylistId,
-        playlistItem: playlistItem,
+        playlistItemId: playlistItemId,
         index: index
     }
 }

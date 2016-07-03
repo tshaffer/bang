@@ -131,8 +131,7 @@ class Playlist extends Component {
             }
         }
 
-        // this.props.addPlaylistItemToZonePlaylist(currentZonePlaylistId, playlistItem.id, index);
-        this.props.addPlaylistItemToZonePlaylist(currentZonePlaylistId, playlistItem, index);
+        this.props.addPlaylistItemToZonePlaylist(currentZonePlaylistId, playlistItem.id, index);
     }
 
     onSelectZone(event) {
@@ -173,6 +172,7 @@ class Playlist extends Component {
 
         let selectedZone = null;
         let currentPlaylistItems = [];
+        let currentPlaylistItemsById = {};
 
         // if (this.state.selectedZoneId) {
         //     selectedZone = this.props.sign.zonesById[this.state.selectedZoneId];
@@ -186,7 +186,7 @@ class Playlist extends Component {
         if (selectedZone) {
             const currentZonePlaylist = this.props.zonePlaylists.zonePlaylistsById[selectedZone.zonePlaylistId];
             if (currentZonePlaylist) {
-                currentPlaylistItems = currentZonePlaylist.playlistItems;
+                currentPlaylistItemsById = currentZonePlaylist.playlistItemsById;
             }
         }
 
@@ -198,7 +198,15 @@ class Playlist extends Component {
         let dataIndex = -1;
         let playlistItems = null;
 
-        if (currentPlaylistItems.length > 0) {
+        if (Object.keys(currentPlaylistItemsById).length > 0) {
+
+            console.log("here");
+
+            for (var currentPlaylistItemId in currentPlaylistItemsById) {
+                console.log("here");
+                currentPlaylistItems.push(this.props.playlistItems.playlistItemsById[currentPlaylistItemId]);
+            }
+
             playlistItems = currentPlaylistItems.map(function (playlistItem) {
 
                 if (self.props.mediaThumbs.hasOwnProperty(playlistItem.filePath)) {
@@ -255,7 +263,7 @@ function mapStateToProps(state) {
         sign: state.sign,
         // zones: state.zones,
         zonePlaylists: state.zonePlaylists,
-        // playlistItems: state.playlistItems,
+        playlistItems: state.playlistItems,
 
         mediaThumbs: state.mediaThumbs
     };

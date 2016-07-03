@@ -4,7 +4,7 @@
 /**
  * Created by tedshaffer on 6/24/16.
  */
-import { NEW_ZONE_PLAYLIST, ADD_PLAYLIST_ITEM, ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST } from '../actions/index';
+import { NEW_ZONE_PLAYLIST, CLEAR_ZONE_PLAYLISTS, ADD_PLAYLIST_ITEM, ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST } from '../actions/index';
 import { guid } from '../utilities/utils';
 
 // var deepEqual = require('deep-equal');
@@ -32,6 +32,9 @@ export default function(state = initialState, action) {
     let playlistItemId;
 
     switch (action.type) {
+        case CLEAR_ZONE_PLAYLISTS:
+            return initialState;
+
         case NEW_ZONE_PLAYLIST:
 
             newZonePlaylist = action.payload;
@@ -46,52 +49,53 @@ export default function(state = initialState, action) {
             }
             return newState;
 
-        // case ADD_PLAYLIST_ITEM:
-        //
-        //     zonePlaylistId = action.zonePlaylistId;
-        //     playlistItemId = action.playlistItemId;
-        //
-        //     // make copy of existing fields
-        //     newZonePlaylistsById = Object.assign({}, state.zonePlaylistsById);
-        //
-        //     existingZonePlaylist = state.zonePlaylistsById[zonePlaylistId];
-        //     newPlaylistItemIds = Object.assign([], existingZonePlaylist.playlistItemIds);
-        //     newPlaylistItemIds.push(playlistItemId);
-        //
-        //     newZonePlaylist = Object.assign({}, existingZonePlaylist);
-        //     newZonePlaylist.playlistItemIds = newPlaylistItemIds;
-        //
-        //     newZonePlaylistsById[zonePlaylistId] = newZonePlaylist;
-        //
-        //     newState = {
-        //         zonePlaylistsById: newZonePlaylistsById
-        //     };
-        //
-        //     return newState;
+        case ADD_PLAYLIST_ITEM:
+
+            zonePlaylistId = action.zonePlaylistId;
+            playlistItemId = action.playlistItemId;
+
+            existingZonePlaylist = state.zonePlaylistsById[zonePlaylistId];
+
+            // make copy of existing fields
+            newZonePlaylistsById = Object.assign({}, state.zonePlaylistsById);
+            newPlaylistItemIds = Object.assign([], existingZonePlaylist.playlistItemIds);
+            newPlaylistItemIds.push(playlistItemId);
+
+            newZonePlaylist = Object.assign({}, existingZonePlaylist);
+            newZonePlaylist.playlistItemIds = newPlaylistItemIds;
+
+            newZonePlaylistsById[zonePlaylistId] = newZonePlaylist;
+
+            newState = {
+                zonePlaylistsById: newZonePlaylistsById
+            };
+
+            return newState;
 
         case ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST:
+            
             zonePlaylistId = action.zonePlaylistId;
-            playlistItem = action.playlistItem;
+            playlistItemId = action.playlistItemId;
             const index = action.index;
 
             existingZonePlaylist = state.zonePlaylistsById[zonePlaylistId];
 
             // make copy of existing fields
             newZonePlaylistsById = Object.assign({}, state.zonePlaylistsById);
-            newPlaylistItems = Object.assign([], existingZonePlaylist.playlistItems);
+            newPlaylistItemIds = Object.assign([], existingZonePlaylist.playlistItemIds);
 
             // add playlist item in proper position
             if (index >= 0) {
                 // insert prior to index
-                newPlaylistItems.splice(index, 0, playlistItem);
+                newPlaylistItemIds.splice(index, 0, playlistItemId);
             }
             else {
                 // append to list
-                newPlaylistItems.push(playlistItem);
+                newPlaylistItemIds.push(playlistItemId);
             }
 
             newZonePlaylist = Object.assign({}, existingZonePlaylist);
-            newZonePlaylist.playlistItems = newPlaylistItems;
+            newZonePlaylist.playlistItemIds = newPlaylistItemIds;
 
             newZonePlaylistsById[zonePlaylistId] = newZonePlaylist;
 
