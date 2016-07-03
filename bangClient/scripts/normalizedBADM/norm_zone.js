@@ -12,6 +12,9 @@ export default class Norm_Zone   {
         this.type = zoneType;
 
         // TODO - long term, probably don't want to do this as not all zones will have zone playlists
-        this.zonePlaylist = new Norm_ZonePlaylist();
+        const zonePlaylist = new Norm_ZonePlaylist();
+        this.zonePlaylistId = zonePlaylist.id;
+        this.zonePlaylistById = {};
+        this.zonePlaylistById[zonePlaylist.id] = zonePlaylist;
     }
 }

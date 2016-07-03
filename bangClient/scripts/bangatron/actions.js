@@ -297,6 +297,7 @@ export function executeFetchSign(filePath) {
             // flatten sign for storage in redux - better approach?
             let normSign = null;
             let normZone = null;
+            let normZonePlaylist = null;
 
             normSign = new Norm_Sign(badmSign.name);
             normSign.videoMode = badmSign.videoMode;
@@ -305,7 +306,9 @@ export function executeFetchSign(filePath) {
                 normZone = new Norm_Zone(badmZone.name, badmZone.type);
                 normSign.addZone(normZone);
 
-                let normZonePlaylist = normZone.zonePlaylist;
+                let normZonePlaylistId = normZone.zonePlaylistId;
+                normZonePlaylist = normZone.zonePlaylistById[normZonePlaylistId];
+                dispatch(newZonePlaylist(normZonePlaylist));
 
                 badmZone.zonePlaylist.playlistItems.forEach( badmPlaylistItem => {
                     normZonePlaylist.playlistItems.push(badmPlaylistItem);

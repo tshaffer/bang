@@ -124,11 +124,11 @@ export function selectZone(zone) {
 }
 
 export const NEW_ZONE_PLAYLIST = 'NEW_ZONE_PLAYLIST';
-export function newZonePlaylist() {
+export function newZonePlaylist(zonePlaylist) {
 
     return {
         type: NEW_ZONE_PLAYLIST,
-        payload: null
+        payload: zonePlaylist
     }
 }
 

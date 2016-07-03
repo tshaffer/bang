@@ -34,13 +34,13 @@ export default function(state = initialState, action) {
         case SET_ZONE_PLAYLIST:
             const zoneId = action.payload.zoneId;
             const zonePlaylistId = action.payload.zonePlaylistId;
-
+        
             newZone = Object.assign({}, state.zonesById[zoneId], {zonePlaylistId: zonePlaylistId});
-
+        
             // update zonesById to point to new zone
             newZonesById = Object.assign({}, state.zonesById);
             newZonesById[zoneId] = newZone;
-
+        
             newState = {
                 zonesById: newZonesById,
             }

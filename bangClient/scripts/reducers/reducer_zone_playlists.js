@@ -33,18 +33,12 @@ export default function(state = initialState, action) {
 
     switch (action.type) {
         case NEW_ZONE_PLAYLIST:
-            // const zonePlaylist = action.payload;
 
-            
-            newZonePlaylist =
-            {
-                id: id,
-                playlistItemIds: []
-            };
+            newZonePlaylist = action.payload;
 
             // ES6
             const newItem = {};
-            newItem[id] = newZonePlaylist;
+            newItem[newZonePlaylist.id] = newZonePlaylist;
             newZonePlaylistsById = Object.assign({}, state.zonePlaylistsById, newItem);
 
             newState = {

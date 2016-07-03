@@ -36,6 +36,15 @@ class Playlist extends Component {
         }
     }
 
+    hackGetCurrentZone() {
+
+        let selectedZone = null;
+        if (this.props.sign && this.props.sign.zoneIds.length > 0) {
+            selectedZone = this.props.sign.zonesById[this.props.sign.zoneIds[0]];
+        }
+        return selectedZone;
+    }
+
     playlistDragOverHandler (ev) {
 
         console.log("playlistDragOverHandler");
@@ -46,13 +55,12 @@ class Playlist extends Component {
     playlistDropHandler (ev) {
 
         // TODO - create function to get this info
-        // let currentZone = null;
         let currentZonePlaylist = null;
         let currentZonePlaylistId = null;
 
-        let currentZone = this.hackGetCurrentZone();
-        if (currentZone) {
-            currentZonePlaylist = currentZone.zonePlaylist;
+        let selectedZone = this.hackGetCurrentZone();
+        if (selectedZone) {
+            currentZonePlaylist = selectedZone.zonePlaylist;
         }
 
         if (!currentZonePlaylist) return;
@@ -71,7 +79,7 @@ class Playlist extends Component {
         if (type === "image") {
 
             // TODO - move to ba.js
-            playlistItem = new ImagePlaylistItem (stateName, path, 6, 0, 2,false);
+            playlistItem = new ImagePlaylistItem (stateName, path, 6, 0, 2, false);
 
             // this.props.newPlaylistItem(playlistItem);
         }
@@ -157,12 +165,13 @@ class Playlist extends Component {
         //     selectedZone = this.props.sign.zonesById[this.props.sign.zoneIds[0]];
         // }
 
-        if (this.props.sign && this.props.sign.zoneIds.length > 0) {
-            selectedZone = this.props.sign.zonesById[this.props.sign.zoneIds[0]];
-        }
+        selectedZone = this.hackGetCurrentZone();
 
         if (selectedZone) {
-            currentPlaylistItems = selectedZone.zonePlaylist.playlistItems;
+            const currentZonePlaylist = this.props.zonePlaylists.zonePlaylistsById[selectedZone.zonePlaylistId];
+            if (currentZonePlaylist) {
+                currentPlaylistItems = currentZonePlaylist.playlistItems;
+            }
         }
 
         let openCloseLabel = "=>";
@@ -229,7 +238,7 @@ function mapStateToProps(state) {
     return {
         sign: state.sign,
         // zones: state.zones,
-        // zonePlaylists: state.zonePlaylists,
+        zonePlaylists: state.zonePlaylists,
         // playlistItems: state.playlistItems,
 
         mediaThumbs: state.mediaThumbs
