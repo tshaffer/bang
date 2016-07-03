@@ -180,15 +180,6 @@ export function addPlaylistItem(zonePlaylistId, playlistItemId) {
 export const ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST = 'ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST';
 export function addPlaylistItemToZonePlaylist(zonePlaylistId, playlistItem, index) {
 
-    // if (index >= 0) {
-    //     // insert prior to index
-    //     playlist.playlistItems.splice(index, 0, playlistItem);
-    // }
-    // else {
-    //     // append to list
-    //     playlist.playlistItems.push(playlistItem);
-    // }
-
     return {
         type: ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST,
         zonePlaylistId: zonePlaylistId,
@@ -201,17 +192,6 @@ export function addPlaylistItemToZonePlaylist(zonePlaylistId, playlistItem, inde
 
 
 
-
-// export const OPEN_SIGN = 'OPEN_SIGN'
-// export function openSign(sign) {
-//
-//     console.log("actions::openSign");
-//
-//     return {
-//         type: OPEN_SIGN,
-//         payload: sign
-//     }
-// }
 
 export const UPDATE_SIGN = 'UPDATE_SIGN';
 export function updateSign(sign) {

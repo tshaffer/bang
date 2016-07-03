@@ -312,7 +312,21 @@ class PropertySheet extends Component {
 
         if (this.props.selectedPlaylistItemId) {
 
-            const imagePlaylistItem = this.props.playlistItems.playlistItemsById[this.props.selectedPlaylistItemId];
+            let imagePlaylistItem = null;
+            
+            let selectedZone = this.hackGetCurrentZone();
+            if (selectedZone) {
+                const currentZonePlaylist = this.props.zonePlaylists.zonePlaylistsById[selectedZone.zonePlaylistId];
+                const playlistItems = currentZonePlaylist.playlistItems;
+                playlistItems.forEach( playlistItem => {
+                   if (playlistItem.id === this.props.selectedPlaylistItemId) {
+                       imagePlaylistItem = playlistItem;
+                       // break?
+                   }
+                });
+            }
+
+            // const imagePlaylistItem = this.props.playlistItems.playlistItemsById[this.props.selectedPlaylistItemId];
 
             let selectOptions = this.transitionSpecs.map(function(transitionSpec, index) {
 
@@ -368,6 +382,17 @@ class PropertySheet extends Component {
             </div>
         );
     }
+
+    hackGetCurrentZone() {
+
+        let selectedZone = null;
+        if (this.props.sign && this.props.sign.zoneIds.length > 0) {
+            selectedZone = this.props.sign.zonesById[this.props.sign.zoneIds[0]];
+        }
+        return selectedZone;
+    }
+
+
 }
 
 function mapStateToProps(state) {
@@ -375,7 +400,8 @@ function mapStateToProps(state) {
         sign: state.sign,
         zones: state.zones,
         playlistItems: state.playlistItems,
-        htmlSites: state.htmlSites
+        htmlSites: state.htmlSites,
+        zonePlaylists: state.zonePlaylists
     };
 }
 

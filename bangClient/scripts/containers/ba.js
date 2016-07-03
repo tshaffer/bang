@@ -47,9 +47,7 @@ class BA extends Component {
     componentDidMount() {
 
         // console.log("ba.js::componentDidMount invoked");
-
-        // this.props.createDefaultSign();
-
+        
         this.baUI.init();
     }
 
