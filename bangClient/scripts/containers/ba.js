@@ -17,8 +17,9 @@ import { getAllThumbs, createDefaultSign, selectMediaFolder, updateMediaFolder, 
 import { createDefaultPresentation, saveBSNPresentation } from '../actions/index';
 import { openDB, loadAppData, fetchSign }  from '../actions/index';
 
-import { newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, updatePlaylistItem } from '../actions/index';
-import { guid } from '../utilities/utils';
+import { addPlaylistItemToZonePlaylist, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, updatePlaylistItem } from '../actions/index';
+
+import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
 class BA extends Component {
 
@@ -52,6 +53,27 @@ class BA extends Component {
         this.baUI.init();
     }
 
+    handleCreatePlaylistItem(type, stateName, path, index) {
+
+        let playlistItem = null;
+        let currentZonePlaylistId = null;
+
+        const currentZonePlaylist = this.getCurrentZonePlaylist();
+        if (currentZonePlaylist) {
+            currentZonePlaylistId = currentZonePlaylist.id;
+        }
+        else {
+            return;
+        }
+
+        if (type === "image") {
+            playlistItem = new ImagePlaylistItem (stateName, path, 6, 0, 2, false);
+            this.props.newPlaylistItem(playlistItem);
+        }
+
+        this.props.addPlaylistItemToZonePlaylist(currentZonePlaylistId, playlistItem.id, index);
+    }
+    
     handleToggleOpenClosePropertySheet() {
         this.setState({propertySheetOpen: !this.state.propertySheetOpen});
     }
@@ -164,6 +186,7 @@ class BA extends Component {
                             propertySheetOpen = {this.state.propertySheetOpen}
                             getCurrentZone = {this.getCurrentZone.bind(this)}
                             getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
+                            onCreatePlaylistItem={this.handleCreatePlaylistItem.bind(this)}
                         />
                         {propertySheetTag}
                 </div>
@@ -186,7 +209,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ createDefaultPresentation, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, updatePlaylistItem, loadAppData, fetchSign, saveBSNPresentation, createDefaultSign, selectMediaFolder, updateMediaFolder, saveSign }, dispatch);
+    return bindActionCreators({ addPlaylistItemToZonePlaylist, createDefaultPresentation, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, updatePlaylistItem, loadAppData, fetchSign, saveBSNPresentation, createDefaultSign, selectMediaFolder, updateMediaFolder, saveSign }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);

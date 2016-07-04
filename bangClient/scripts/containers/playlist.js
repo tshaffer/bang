@@ -5,10 +5,8 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
-import { newPlaylistItem, addPlaylistItem, addPlaylistItemToZonePlaylist } from '../actions/index';
 import { guid } from '../utilities/utils';
 
 import $ from 'jquery';
@@ -62,31 +60,6 @@ class Playlist extends Component {
         const stateName = ev.dataTransfer.getData("name");
         const type = ev.dataTransfer.getData("type");
 
-        // specify playlist item to drop
-        let playlistItem = null;
-        if (type === "image") {
-
-            // TODO - move to ba.js
-            playlistItem = new ImagePlaylistItem (stateName, path, 6, 0, 2, false);
-
-            this.props.newPlaylistItem(playlistItem);
-        }
-        else if (type == "html5") {
-            playlistItem = new HTML5PlaylistItem(
-                "html5Name", //name,
-                "html5SiteName", //htmlSiteName,
-                true, //enableExternalData,
-                true, //enableMouseEvents,
-                true, //displayCursor,
-                true, //hwzOn,
-                false, //useUserStylesheet,
-                null //userStyleSheet
-            )
-        }
-        else if (type == "mediaList") {
-            
-        }
-
         // determine where the drop occurred relative to the target element
         console.log("event.target.id=", ev.target.id);
         let index = -1;
@@ -113,7 +86,28 @@ class Playlist extends Component {
             // console.log("drop event onto dropItemHere");
         }
 
-        this.props.addPlaylistItemToZonePlaylist(currentZonePlaylistId, playlistItem.id, index);
+        // specify playlist item to drop
+        let playlistItem = null;
+        if (type === "image") {
+            this.props.onCreatePlaylistItem(type, stateName, path, index);
+        }
+        else if (type == "html5") {
+            playlistItem = new HTML5PlaylistItem(
+                "html5Name", //name,
+                "html5SiteName", //htmlSiteName,
+                true, //enableExternalData,
+                true, //enableMouseEvents,
+                true, //displayCursor,
+                true, //hwzOn,
+                false, //useUserStylesheet,
+                null //userStyleSheet
+            )
+        }
+        else if (type == "mediaList") {
+            
+        }
+
+        // this.props.addPlaylistItemToZonePlaylist(currentZonePlaylistId, playlistItem.id, index);
     }
 
     onSelectZone(event) {
@@ -241,8 +235,4 @@ function mapStateToProps(state) {
     };
 }
 
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ newPlaylistItem, addPlaylistItem, addPlaylistItemToZonePlaylist }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Playlist);
+export default connect(mapStateToProps)(Playlist);
