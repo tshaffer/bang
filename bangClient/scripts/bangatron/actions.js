@@ -9,14 +9,11 @@ var mime = require("mime");
 import { setMediaThumbs, mergeMediaThumbs, setMediaFolder, openSign, setMediaLibraryFiles } from '../actions/index';
 
 import { openDB, addRecordToDB, dbGetThumbs, dbGetMediaLibraryFolder, dbSaveMediaFolder } from './db';
-import { newSign, newZone, addZone, clearZonePlaylists, newZonePlaylist, setZonePlaylist, clearPlaylistItems, newPlaylistItem, addPlaylistItem, getFirstKey } from '../actions/index';
+import { newZone, addZone, clearZonePlaylists, newZonePlaylist, setZonePlaylist, clearPlaylistItems, newPlaylistItem, addPlaylistItem, getFirstKey } from '../actions/index';
 
 import Sign from '../badm/sign';
 import Zone from '../badm/zone';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
-
-import Norm_Sign from '../normalizedBADM/norm_sign';
-import Norm_Zone from '../normalizedBADM/norm_zone';
 
 const mediaFileSuffixes = ['jpg'];
 

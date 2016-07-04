@@ -312,7 +312,7 @@ class PropertySheet extends Component {
 
             let imagePlaylistItem = null;
 
-            let selectedZone = this.hackGetCurrentZone();
+            let selectedZone = this.props.getCurrentZone();
             if (selectedZone) {
                 const currentZonePlaylist = this.props.zonePlaylists.zonePlaylistsById[selectedZone.zonePlaylistId];
                 currentZonePlaylist.playlistItemIds.forEach( playlistItemId => {
@@ -375,18 +375,6 @@ class PropertySheet extends Component {
                 </Tabs>
             </div>
         );
-    }
-
-    hackGetCurrentZone() {
-
-        let selectedZone = null;
-        if (this.props.sign && this.props.sign.zoneIds.length > 0 && this.props.zones && this.props.zones.zonesById) {
-            selectedZone = this.props.zones.zonesById[this.props.sign.zoneIds[0]];
-            if (!selectedZone) {
-                selectedZone = null;
-            }
-        }
-        return selectedZone;
     }
 }
 

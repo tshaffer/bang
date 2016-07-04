@@ -36,18 +36,6 @@ class Playlist extends Component {
         }
     }
 
-    hackGetCurrentZone() {
-
-        let selectedZone = null;
-        if (this.props.sign && this.props.sign.zoneIds.length > 0 && this.props.zones && this.props.zones.zonesById) {
-            selectedZone = this.props.zones.zonesById[this.props.sign.zoneIds[0]];
-            if (!selectedZone) {
-                selectedZone = null;
-            }
-        }
-        return selectedZone;
-    }
-
     playlistDragOverHandler (ev) {
 
         console.log("playlistDragOverHandler");
@@ -61,7 +49,7 @@ class Playlist extends Component {
         let currentZonePlaylist = null;
         let currentZonePlaylistId = null;
 
-        let selectedZone = this.hackGetCurrentZone();
+        let selectedZone = this.props.getCurrentZone();
         if (selectedZone) {
             currentZonePlaylist = this.props.zonePlaylists.zonePlaylistsById[selectedZone.zonePlaylistId];
             if (currentZonePlaylist) {
@@ -116,6 +104,9 @@ class Playlist extends Component {
             if (left < (targetWidth / 2)) {
                 index = indexOfDropTarget;
             }
+            else {
+                index = indexOfDropTarget + 1;
+            }
         }
         else if (indexOfDropTarget < (currentZonePlaylist.playlistItemIds).length - 1)  {
             index = indexOfDropTarget + 1;
@@ -167,8 +158,8 @@ class Playlist extends Component {
         let currentPlaylistItems = [];
         let currentPlaylistItemIds = [];
 
-        selectedZone = this.hackGetCurrentZone();
-
+        selectedZone = this.props.getCurrentZone();
+        
         if (selectedZone) {
             const currentZonePlaylist = this.props.zonePlaylists.zonePlaylistsById[selectedZone.zonePlaylistId];
             if (currentZonePlaylist) {

@@ -27,6 +27,7 @@ class BA extends Component {
         this.state = {
             bsnPresentations: [],
             propertySheetOpen: true,
+            selectedZone: null,
             selectedPlaylistItemId: null
         };
 
@@ -91,6 +92,18 @@ class BA extends Component {
         this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
     }
 
+    getCurrentZone() {
+
+        let selectedZone = null;
+        if (this.props.sign && this.props.sign.zoneIds.length > 0 && this.props.zones && this.props.zones.zonesById) {
+            selectedZone = this.props.zones.zonesById[this.props.sign.zoneIds[0]];
+            if (!selectedZone) {
+                selectedZone = null;
+            }
+        }
+        return selectedZone;
+    }
+
     render () {
         
         let signName = <span>No sign yet</span>;
@@ -112,6 +125,7 @@ class BA extends Component {
                     onUpdateImageTransition = {this.handleUpdateImageTransition.bind(this)}
                     onUpdateImageTransitionDuration = {this.handleUpdateImageTransitionDuration.bind(this)}
                     selectedPlaylistItemId={this.state.selectedPlaylistItemId}
+                    getCurrentZone = {this.getCurrentZone.bind(this)}
                 />
         }
 
@@ -136,6 +150,7 @@ class BA extends Component {
                             onToggleOpenClosePropertySheet={this.handleToggleOpenClosePropertySheet.bind(this)}
                             onSelectPlaylistItem={this.handleSelectPlaylistItem.bind(this)}
                             propertySheetOpen = {this.state.propertySheetOpen}
+                            getCurrentZone = {this.getCurrentZone.bind(this)}
                         />
                         {propertySheetTag}
                 </div>
