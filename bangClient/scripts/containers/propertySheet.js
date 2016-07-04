@@ -313,20 +313,16 @@ class PropertySheet extends Component {
         if (this.props.selectedPlaylistItemId) {
 
             let imagePlaylistItem = null;
-            
+
             let selectedZone = this.hackGetCurrentZone();
             if (selectedZone) {
                 const currentZonePlaylist = this.props.zonePlaylists.zonePlaylistsById[selectedZone.zonePlaylistId];
-                const playlistItems = currentZonePlaylist.playlistItems;
-                playlistItems.forEach( playlistItem => {
-                   if (playlistItem.id === this.props.selectedPlaylistItemId) {
-                       imagePlaylistItem = playlistItem;
-                       // break?
-                   }
+                currentZonePlaylist.playlistItemIds.forEach( playlistItemId => {
+                    if (playlistItemId === this.props.selectedPlaylistItemId) {
+                        imagePlaylistItem = this.props.playlistItems.playlistItemsById[playlistItemId];
+                    }
                 });
             }
-
-            // const imagePlaylistItem = this.props.playlistItems.playlistItemsById[this.props.selectedPlaylistItemId];
 
             let selectOptions = this.transitionSpecs.map(function(transitionSpec, index) {
 
@@ -386,13 +382,14 @@ class PropertySheet extends Component {
     hackGetCurrentZone() {
 
         let selectedZone = null;
-        if (this.props.sign && this.props.sign.zoneIds.length > 0) {
-            selectedZone = this.props.sign.zonesById[this.props.sign.zoneIds[0]];
+        if (this.props.sign && this.props.sign.zoneIds.length > 0 && this.props.zones && this.props.zones.zonesById) {
+            selectedZone = this.props.zones.zonesById[this.props.sign.zoneIds[0]];
+            if (!selectedZone) {
+                selectedZone = null;
+            }
         }
         return selectedZone;
     }
-
-
 }
 
 function mapStateToProps(state) {
