@@ -100,12 +100,9 @@ class Playlist extends Component {
             if (left < (targetWidth / 2)) {
                 index = indexOfDropTarget;
             }
-            else {
+            else if (indexOfDropTarget < (currentZonePlaylist.playlistItemIds).length - 1) {
                 index = indexOfDropTarget + 1;
             }
-        }
-        else if (indexOfDropTarget < (currentZonePlaylist.playlistItemIds).length - 1)  {
-            index = indexOfDropTarget + 1;
         }
 
         this.props.addPlaylistItemToZonePlaylist(currentZonePlaylistId, playlistItem.id, index);
@@ -220,6 +217,8 @@ class Playlist extends Component {
         );
     }
 }
+
+// <ul className="playlist-flex-container wrap onDrop={self.playlistDropHandler.bind(self)}">
 
 function mapStateToProps(state) {
     return {
