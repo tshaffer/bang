@@ -187,6 +187,11 @@ class BA extends Component {
                             getCurrentZone = {this.getCurrentZone.bind(this)}
                             getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
                             onCreatePlaylistItem={this.handleCreatePlaylistItem.bind(this)}
+                            sign={this.props.sign}
+                            zones= {this.props.zones}
+                            zonePlaylists= {this.props.zonePlaylists}
+                            playlistItems= {this.props.playlistItems}
+                            mediaThumbs= {this.props.mediaThumbs}
                         />
                         {propertySheetTag}
                 </div>

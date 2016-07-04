@@ -2,8 +2,6 @@
  * Created by tedshaffer on 6/8/16.
  */
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
@@ -177,9 +175,7 @@ class Playlist extends Component {
                     const thumb = getThumb(mediaItem);
 
                     dataIndex++;
-
-                    // <li className="flex-item mediaLibraryThumbDiv" key={playlistItem.id} onDrop={self.playlistDropHandler.bind(self)} onDragOver={self.playlistDragOverHandler}>
-
+                    
                     return (
                         <li className="flex-item mediaLibraryThumbDiv" key={playlistItem.id}>
                             <img
@@ -209,7 +205,6 @@ class Playlist extends Component {
                     <p id="lblDropItemHere" className="mediaLibraryThumbLbl">Drop Item Here</p>
                 </li>
         }
-        // <li id="liDropItemHere" className="mediaLibraryThumbDiv" key={guid()} onDrop={self.playlistDropHandler.bind(self)} onDragOver={self.playlistDragOverHandler}>
 
         return (
             <div className="playlistDiv" >
@@ -223,16 +218,4 @@ class Playlist extends Component {
     }
 }
 
-
-function mapStateToProps(state) {
-    return {
-        sign: state.sign,
-        zones: state.zones,
-        zonePlaylists: state.zonePlaylists,
-        playlistItems: state.playlistItems,
-
-        mediaThumbs: state.mediaThumbs
-    };
-}
-
-export default connect(mapStateToProps)(Playlist);
+export default Playlist;
