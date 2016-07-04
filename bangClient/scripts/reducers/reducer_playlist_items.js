@@ -6,7 +6,10 @@ import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
 const emptyPlaylistItem = new ImagePlaylistItem();
 
-const initialState = {};
+const initialState =
+    {
+        playlistItemsById: {}
+    };
 
 export default function(state = initialState, action) {
 

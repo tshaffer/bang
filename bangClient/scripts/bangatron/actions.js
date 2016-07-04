@@ -294,6 +294,9 @@ export function executeFetchSign(filePath) {
                 })
             });
 
+            dispatch(clearZonePlaylists());
+            dispatch(clearPlaylistItems());
+
             dispatch(openSign(badmSign.name, badmSign.videoMode));
             badmSign.zones.forEach( badmZone => {
 

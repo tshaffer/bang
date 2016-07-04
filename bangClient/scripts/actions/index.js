@@ -245,19 +245,24 @@ export function createDefaultPresentation(presentationName) {
 
     return function (dispatch, getState) {
 
-        console.log("createDefaultPresentation, presentationName=", presentationName);
+        dispatch(newSign(presentationName, "1920x1080x60p"));
+        dispatch(newZone("Images", "images"));
 
-        const normSign = new Norm_Sign(presentationName);
-        const normZone = new Norm_Zone("Images", "images");
-        normSign.addZone(normZone);
-
-        let normZonePlaylistId = normZone.zonePlaylistId;
-        let normZonePlaylist = normZone.zonePlaylistById[normZonePlaylistId];
-        dispatch(newZonePlaylist(normZonePlaylist));
-
-        dispatch(newSign(normSign));
-
+        // HACK - must fix
         let nextState = getState();
+        const zoneId = getFirstKey(nextState.zones.zonesById);
+        dispatch(addZone(zoneId));
+
+        nextState = getState();
+        const zone = nextState.zones.zonesById[zoneId];
+
+        dispatch(newZonePlaylist());
+
+        // HACK
+        nextState = getState();
+        const zonePlaylistId = getFirstKey(nextState.zonePlaylists.zonePlaylistsById);
+
+        dispatch(setZonePlaylist(zoneId, zonePlaylistId));
     }
 }
 

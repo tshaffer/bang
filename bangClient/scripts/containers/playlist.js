@@ -99,7 +99,7 @@ class Playlist extends Component {
             // TODO - move to ba.js
             playlistItem = new ImagePlaylistItem (stateName, path, 6, 0, 2, false);
 
-            // this.props.newPlaylistItem(playlistItem);
+            this.props.newPlaylistItem(playlistItem);
         }
         else if (type == "html5") {
             playlistItem = new HTML5PlaylistItem(
@@ -119,19 +119,20 @@ class Playlist extends Component {
 
         // determine where the drop occurred relative to the target element
         let index = -1;
+        let indexOfDropTarget = -1;
         if (ev.target.id != "lblDropItemHere" && ev.target.id != "liDropItemHere") {
             var offset = $("#" + ev.target.id).offset();
             const left = ev.pageX - offset.left;
             const targetWidth = ev.target.width;
 
-            let indexOfDropTarget = ev.target.dataset.index;
+            indexOfDropTarget = ev.target.dataset.index;
 
             if (left < (targetWidth / 2)) {
                 index = indexOfDropTarget;
             }
-            else if (indexOfDropTarget < (currentZonePlaylist.playlistItems.length - 1)) {
-                index = indexOfDropTarget + 1;
-            }
+        }
+        else if (indexOfDropTarget < (currentZonePlaylist.playlistItemIds).length - 1)  {
+            index = indexOfDropTarget + 1;
         }
 
         this.props.addPlaylistItemToZonePlaylist(currentZonePlaylistId, playlistItem.id, index);
@@ -212,9 +213,9 @@ class Playlist extends Component {
             console.log("here");
 
             currentPlaylistItemIds.forEach( currentPlaylistItemId => {
-                currentPlaylistItems.push(this.props.playlistItems.playlistItemsById[currentPlaylistItemId]);
+                currentPlaylistItems.push(self.props.playlistItems.playlistItemsById[currentPlaylistItemId]);
             });
-            
+
             playlistItems = currentPlaylistItems.map(function (playlistItem) {
 
                 if (self.props.mediaThumbs.hasOwnProperty(playlistItem.filePath)) {

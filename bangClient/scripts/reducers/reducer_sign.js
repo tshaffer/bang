@@ -2,7 +2,7 @@
  * Created by tedshaffer on 6/10/16.
  */
 // import { CREATE_DEFAULT_SIGN, OPEN_SIGN, UPDATE_SIGN, ADD_HTML_SITE } from '../actions/index';
-import { OPEN_SIGN, ADD_ZONE } from '../actions/index';
+import { NEW_SIGN, OPEN_SIGN, ADD_ZONE } from '../actions/index';
 import { guid } from '../utilities/utils';
 
 import Norm_Sign from '../normalizedBADM/norm_sign';
@@ -18,8 +18,9 @@ export default function(state = initialState, action) {
     let newState = null;
 
     switch (action.type) {
-        // case NEW_SIGN:
-        //     return action.payload;
+        case NEW_SIGN:
+            let newSign = new Norm_Sign(action.payload.name, action.payload.videoMode);
+            return newSign;
 
         case OPEN_SIGN:
             let openedSign = new Norm_Sign(action.payload.name)
@@ -28,7 +29,6 @@ export default function(state = initialState, action) {
 
         case ADD_ZONE:
             const id = action.payload;
-
             const newZoneIds = state.zoneIds.concat(id);
 
             newState = Object.assign(emptySign, state,
