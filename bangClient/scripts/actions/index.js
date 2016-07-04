@@ -5,13 +5,9 @@ import { guid } from '../utilities/utils';
 
 import axios from 'axios';
 
-import Sign from '../badm/sign';
 import ImageMediaItem from '../badm/imageMediaItem';
 
 import { executeLoadAppData, executeFetchSign, executeSelectMediaFolder, getFileName, executeSaveSign } from '../platform/actions';
-
-import Norm_Sign from '../normalizedBADM/norm_sign';
-import Norm_Zone from '../normalizedBADM/norm_zone';
 
 export function loadAppData() {
 
@@ -72,11 +68,6 @@ export function mergeMediaThumbs(thumbsByPath) {
         payload: thumbsByPath
     }
 }
-
-
-
-
-
 
 export const OPEN_SIGN = 'OPEN_SIGN';
 export function openSign(name, videoMode) {
@@ -194,10 +185,6 @@ export function updatePlaylistItem(playlistItemId, playlistItem) {
     }
 }
 
-
-
-
-
 export const ADD_PLAYLIST_ITEM = 'ADD_PLAYLIST_ITEM';
 export function addPlaylistItem(zonePlaylistId, playlistItemId) {
     return {
@@ -206,7 +193,6 @@ export function addPlaylistItem(zonePlaylistId, playlistItemId) {
         playlistItemId: playlistItemId
     }
 }
-
 
 export const ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST = 'ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST';
 export function addPlaylistItemToZonePlaylist(zonePlaylistId, playlistItemId, index) {
@@ -218,11 +204,6 @@ export function addPlaylistItemToZonePlaylist(zonePlaylistId, playlistItemId, in
         index: index
     }
 }
-
-
-
-
-
 
 export const UPDATE_SIGN = 'UPDATE_SIGN';
 export function updateSign(sign) {

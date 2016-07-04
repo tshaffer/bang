@@ -2,7 +2,7 @@
  * Created by tedshaffer on 6/10/16.
  */
 // import { CREATE_DEFAULT_SIGN, OPEN_SIGN, UPDATE_SIGN, ADD_HTML_SITE } from '../actions/index';
-import { NEW_SIGN, OPEN_SIGN, ADD_ZONE } from '../actions/index';
+import { NEW_SIGN, OPEN_SIGN, ADD_ZONE, UPDATE_SIGN } from '../actions/index';
 import { guid } from '../utilities/utils';
 
 import Norm_Sign from '../normalizedBADM/norm_sign';
@@ -34,13 +34,13 @@ export default function(state = initialState, action) {
             newState = Object.assign(emptySign, state,
                 { zoneIds: newZoneIds } );
             return newState;
+        
+        case UPDATE_SIGN:
+            return action.payload;
 
         // case CREATE_DEFAULT_SIGN:
         //     console.log("reducer_sign:CREATE_DEFAULT_SIGN");
         //     return action.payload.sign;
-        // case UPDATE_SIGN:
-        //     console.log("reducer_sign:UPDATE_SIGN");
-        //     return action.payload;
         // case ADD_HTML_SITE:
         //     const htmlSiteId = action.payload;
         //

@@ -92,9 +92,7 @@ class BA extends Component {
     }
 
     render () {
-
-        // console.log("ba.js::render invoked");
-
+        
         let signName = <span>No sign yet</span>;
         let signVideoMode = <span>No videoMode yet</span>;
         if (this.props.sign) {

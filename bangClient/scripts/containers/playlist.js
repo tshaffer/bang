@@ -61,29 +61,15 @@ class Playlist extends Component {
         let currentZonePlaylist = null;
         let currentZonePlaylistId = null;
 
-        // let selectedZone = this.hackGetCurrentZone();
-        // if (selectedZone) {
-        //     currentZonePlaylist = selectedZone.zonePlaylist;
-        // }
-
         let selectedZone = this.hackGetCurrentZone();
         if (selectedZone) {
             currentZonePlaylist = this.props.zonePlaylists.zonePlaylistsById[selectedZone.zonePlaylistId];
             if (currentZonePlaylist) {
                 currentZonePlaylistId = currentZonePlaylist.id;
             }
-            // if (currentZonePlaylist) {
-            //     currentPlaylistItems = currentZonePlaylist.playlistItems;
-            // }
         }
 
-
-
-
-
         if (!currentZonePlaylist) return;
-
-        // let playlistItemIds = currentZonePlaylist.playlistItemIds;
 
         ev.preventDefault();
 
@@ -155,14 +141,11 @@ class Playlist extends Component {
 
         let zoneDropDown = <div></div>;
 
-        // console.log("playlist.js::render()");
         let presentationZones = [];
 
         if (this.props.sign && this.props.sign.zoneIds) {
             let selectOptions = this.props.sign.zoneIds.map( (zoneId) => {
-                console.log("pizza 1");
                 if (self.props.zones && self.props.zones.zonesById) {
-                    console.log("pizza 2");
                     const zone = self.props.zones.zonesById[zoneId]
                     if (zone) {
                         return (
@@ -184,13 +167,6 @@ class Playlist extends Component {
         let currentPlaylistItems = [];
         let currentPlaylistItemIds = [];
 
-        // if (this.state.selectedZoneId) {
-        //     selectedZone = this.props.sign.zonesById[this.state.selectedZoneId];
-        // }
-        // else if (this.props.sign && this.props.sign.zoneIds.length > 0) {
-        //     selectedZone = this.props.sign.zonesById[this.props.sign.zoneIds[0]];
-        // }
-
         selectedZone = this.hackGetCurrentZone();
 
         if (selectedZone) {
@@ -209,8 +185,6 @@ class Playlist extends Component {
         let playlistItems = null;
 
         if (currentPlaylistItemIds.length > 0) {
-
-            console.log("here");
 
             currentPlaylistItemIds.forEach( currentPlaylistItemId => {
                 currentPlaylistItems.push(self.props.playlistItems.playlistItemsById[currentPlaylistItemId]);

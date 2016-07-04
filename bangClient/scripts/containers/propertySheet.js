@@ -231,9 +231,7 @@ class PropertySheet extends Component {
     }
 
     render () {
-
-        // console.log("propertySheet.js::render");
-
+        
         var self = this;
 
         let signProperties = "Sign Properties";
@@ -252,7 +250,7 @@ class PropertySheet extends Component {
             signProperties =
                 <div>
                     Video mode: <br/>
-                    <select id="videoModeSelect" defaultValue={this.props.sign.videoMode}
+                    <select id="videoModeSelect" value={this.props.sign.videoMode}
                             onChange={this.onUpdateVideoMode.bind(this)}>{selectOptions}</select>
                 </div>
 

@@ -6,10 +6,10 @@ import { guid } from '../utilities/utils';
 import Zone from './zone';
 
 export default class Sign {
-    constructor(signName) {
+    constructor(signName = "", videoMode = "1920x1080x60p") {
         this.id = guid();
         this.name = signName;
-        this.videoMode = "1920x1080x60p";
+        this.videoMode = videoMode;
         this.htmlSites = [];
         this.zones = [];
     }

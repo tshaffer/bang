@@ -26,7 +26,6 @@ export function executeLoadAppData() {
     return function(dispatch) {
 
         openDB().then(function() {
-            // console.log("db successfully opened");
             fetchStartupData(dispatch);
         });
     }
@@ -252,10 +251,6 @@ function buildThumb(mediaFile) {
     });
 }
 
-
-
-
-
 export function executeFetchSign(filePath) {
 
     return function (dispatch, getState) {
@@ -323,102 +318,7 @@ export function executeFetchSign(filePath) {
                 });
             } );
 
-            nextState = getState();
-            return;
-
-
-
-            let normSign = null;
-            let normZone = null;
-            let normZonePlaylist = null;
-
-            normSign = new Norm_Sign(badmSign.name);
-            normSign.videoMode = badmSign.videoMode;
-
-            // dispatch(clearZonePlaylists());
-            // dispatch(clearPlaylistItems());
-
-            badmSign.zones.forEach( badmZone => {
-                normZone = new Norm_Zone(badmZone.name, badmZone.type);
-                normSign.addZone(normZone);
-
-                let normZonePlaylistId = normZone.zonePlaylistId;
-                normZonePlaylist = normZone.zonePlaylistById[normZonePlaylistId];
-                // dispatch(newZonePlaylist(normZonePlaylist));
-
-                badmZone.zonePlaylist.playlistItems.forEach( badmPlaylistItem => {
-                    // IS IT A PROBLEM THAT THIS MUTATES THE STORE?? I believe so.
-                    normZonePlaylist.playlistItemsById[badmPlaylistItem.id] = badmPlaylistItem;
-                    // dispatch(newPlaylistItem(badmPlaylistItem));
-                    // dispatch(addPlaylistItem(normZonePlaylist.id, badmPlaylistItem.id));
-
-                });
-            });
-
-            // I think I need to fully create normSign, then perform the appropriate calls to dispatch to create the store from normSign, etc., then
-            // not use normSign again.
-            dispatch(clearZonePlaylists());
-            dispatch(clearPlaylistItems());
-            dispatch(newSign(normSign));
-
-            normSign.zoneIds.forEach( zoneId => {
-                normZone = normSign.zonesById[zoneId];
-                const zonePlaylistId = normZone.zonePlaylistId;
-                normZonePlaylist = normZone.zonePlaylistById[zonePlaylistId];
-                dispatch(newZonePlaylist(normZonePlaylist));
-            })
-
-            // for (var zoneId in normSign.zonesById) {
-            //     if (normSign.zonesById.hasOwnProperty(zoneId)) {
-            //         normZone = normSign.zonesById[zoneId];
-            //         dispatch(newZone(normZone));
-            //         dispatch(addZone(normZone));
-            //
-            //         let normZonePlaylist = normZone.zonePlaylist;
-            //         normZonePlaylist.playlistItems.forEach( playlistItem => {
-            //             dispatch(newPlaylistItem(playlistItem));
-            //         });
-            //     }
-            // }
-
-            nextState = getState();
-            return;
-
-            badmSign.zones.forEach( zone => {
-                dispatch(newZone(zone.type, zone.name));
-
-                nextState = getState();
-
-                // TODO - I think this only works if there's a single zone
-                const zoneId = getFirstKey(nextState.zones.zonesById);
-                dispatch(addZone(zoneId));
-
-                dispatch(newZonePlaylist());
-                nextState = getState();
-
-                const zonePlaylistId = getFirstKey(nextState.zonePlaylists.zonePlaylistsById);
-                dispatch(setZonePlaylist(zoneId, zonePlaylistId));
-
-                nextState = getState();
-                let zonePlaylist = nextState.zonePlaylists.zonePlaylistsById[zonePlaylistId];
-
-                zone.zonePlaylist.playlistItems.forEach( playlistItem => {
-
-                    const reduxPlaylistItem = {
-                        id: guid(),
-                        fileName: playlistItem.fileName,
-                        filePath: playlistItem.filePath,
-                        timeOnScreen: playlistItem.timeOnScreen,
-                        transition: 0,
-                        transitionDuration: 2
-                    };
-                    dispatch(newPlaylistItem(reduxPlaylistItem));
-
-                    // add playlist item from badm to redux store
-                    dispatch(addPlaylistItem(zonePlaylistId, playlistItem.id));
-                });
-
-            });
+            // nextState = getState();
         })
     }
 }
@@ -433,13 +333,10 @@ export function getFileName(filePath) {
 export function executeSaveSign(filePath) {
 
     return function (dispatch, getState) {
-
-        console.log("executeGetSignForPersistence");
-
+        
         const state = getState();
 
-        let badmSign = new Sign(state.sign.name);
-        // badmSign.videoMode = ??
+        let badmSign = new Sign(state.sign.name, state.sign.videoMode);
 
         state.sign.zoneIds.forEach( zoneId => {
 
@@ -455,11 +352,6 @@ export function executeSaveSign(filePath) {
                 // TODO only support imagePlaylistItems now
                 let badmPlaylistItem = new ImagePlaylistItem(playlistItem.fileName, playlistItem.filePath, playlistItem.timeOnScreen, playlistItem.transition, playlistItem.transitionDuration, "false");
                 badmZonePlaylist.playlistItems.push(badmPlaylistItem);
-
-                // TODO - test
-                // let obj = new ImagePlaylistItem("", "", -1, "", -1, "false");
-                let obj = new ImagePlaylistItem();
-                const newObj = Object.assign(obj, badmPlaylistItem);
             });
         })
 

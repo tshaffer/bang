@@ -26,9 +26,6 @@ export default function(state = initialState, action) {
             return initialState;
         
         case NEW_PLAYLIST_ITEM:
-            // newState = Object.assign(state, playlistItem);
-            // return newState;
-
             playlistItem = action.payload;
             newPlaylistItemsById = Object.assign({}, state.playlistItemsById);
             newPlaylistItemsById[playlistItem.id] = playlistItem;
