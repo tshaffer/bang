@@ -218,8 +218,19 @@ export function updateSign(sign) {
 
 // to get first property in an object - want first key here though
 // http://stackoverflow.com/questions/983267/access-the-first-property-of-an-object
+function getKey(obj, keyIndex) {
+    return Object.keys(obj)[keyIndex];
+}
+
 export function getFirstKey(obj) {
-    return Object.keys(obj)[0];
+    return getKey(obj, 0);
+    // return Object.keys(obj)[0];
+}
+
+export function getLastKey(obj) {
+    const numKeys = Object.keys(obj).length;
+    return getKey(obj, numKeys-1);
+    // return Objects.key(obj)[numKeys-1];
 }
 
 export function createDefaultPresentation(presentationName) {
@@ -229,9 +240,8 @@ export function createDefaultPresentation(presentationName) {
         dispatch(newSign(presentationName, "1920x1080x60p"));
         dispatch(newZone("Images", "images"));
 
-        // HACK - must fix
         let nextState = getState();
-        const zoneId = getFirstKey(nextState.zones.zonesById);
+        const zoneId = getLastKey(nextState.zones.zonesById);
         dispatch(addZone(zoneId));
 
         nextState = getState();
@@ -239,9 +249,8 @@ export function createDefaultPresentation(presentationName) {
 
         dispatch(newZonePlaylist());
 
-        // HACK
         nextState = getState();
-        const zonePlaylistId = getFirstKey(nextState.zonePlaylists.zonePlaylistsById);
+        const zonePlaylistId = getLastKey(nextState.zonePlaylists.zonePlaylistsById);
 
         dispatch(setZonePlaylist(zoneId, zonePlaylistId));
     }

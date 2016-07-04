@@ -9,7 +9,7 @@ var mime = require("mime");
 import { setMediaThumbs, mergeMediaThumbs, setMediaFolder, openSign, setMediaLibraryFiles } from '../actions/index';
 
 import { openDB, addRecordToDB, dbGetThumbs, dbGetMediaLibraryFolder, dbSaveMediaFolder } from './db';
-import { newZone, addZone, clearZonePlaylists, newZonePlaylist, setZonePlaylist, clearPlaylistItems, newPlaylistItem, addPlaylistItem, getFirstKey } from '../actions/index';
+import { newZone, addZone, clearZonePlaylists, newZonePlaylist, setZonePlaylist, clearPlaylistItems, newPlaylistItem, addPlaylistItem, getLastKey } from '../actions/index';
 
 import Sign from '../badm/sign';
 import Zone from '../badm/zone';
@@ -294,18 +294,16 @@ export function executeFetchSign(filePath) {
 
                 dispatch(newZone(badmZone.name, badmZone.type));
 
-                // HACK - must fix
                 nextState = getState();
-                const zoneId = getFirstKey(nextState.zones.zonesById);
+                const zoneId = getLastKey(nextState.zones.zonesById);
                 dispatch(addZone(zoneId));
 
                 nextState = getState();
                 const zone = nextState.zones.zonesById[zoneId];
 
                 dispatch(newZonePlaylist());
-                // HACK
                 nextState = getState();
-                const zonePlaylistId = getFirstKey(nextState.zonePlaylists.zonePlaylistsById);
+                const zonePlaylistId = getLastKey(nextState.zonePlaylists.zonePlaylistsById);
 
                 dispatch(setZonePlaylist(zoneId, zonePlaylistId));
 
