@@ -5,7 +5,7 @@ import { getLastKey } from '../utilities/utils';
 
 import axios from 'axios';
 
-import ImageMediaItem from '../badm/imageMediaItem';
+import ImageMediaItem from '../entities/imageMediaItem';
 
 import { executeLoadAppData, executeFetchSign, executeSelectMediaFolder, getFileName, executeSaveSign } from '../platform/actions';
 
