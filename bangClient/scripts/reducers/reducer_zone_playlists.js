@@ -7,6 +7,8 @@
 import { NEW_ZONE_PLAYLIST, CLEAR_ZONE_PLAYLISTS, ADD_PLAYLIST_ITEM, ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST } from '../actions/index';
 import { guid } from '../utilities/utils';
 
+import Norm_ZonePlaylist from '../normalizedBADM/norm_zonePlaylist';
+
 // var deepEqual = require('deep-equal');
 
 const initialState =
@@ -37,9 +39,8 @@ export default function(state = initialState, action) {
 
         case NEW_ZONE_PLAYLIST:
 
-            newZonePlaylist = action.payload;
+            newZonePlaylist = new Norm_ZonePlaylist();
 
-            // ES6
             const newItem = {};
             newItem[newZonePlaylist.id] = newZonePlaylist;
             newZonePlaylistsById = Object.assign({}, state.zonePlaylistsById, newItem);

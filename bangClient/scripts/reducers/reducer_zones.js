@@ -3,6 +3,8 @@
  */
 import { NEW_ZONE, SET_ZONE_PLAYLIST } from '../actions/index';
 
+import Norm_Zone from '../normalizedBADM/norm_zone';
+
 const initialState =
 {
     zonesById: {}
@@ -19,11 +21,10 @@ export default function(state = initialState, action) {
     switch (action.type) {
         case NEW_ZONE:
 
-            newZone = action.payload;
-            const id = newZone.id;
+            newZone = new Norm_Zone(action.payload.name, action.payload.type);
 
             const newItem = {};
-            newItem[id] = newZone;
+            newItem[newZone.id] = newZone;
             newZonesById = Object.assign({}, state.zonesById, newItem);
 
             newState = {

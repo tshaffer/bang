@@ -10,11 +10,9 @@ export default class Norm_Sign {
         this.videoMode = "1920x1080x60p";
         this.htmlSitesById = {};
         this.zoneIds = [];
-        this.zonesById = {};
     }
 
     addZone(zone) {
         this.zoneIds.push(zone.id);
-        this.zonesById[zone.id] = zone;
     }
 }

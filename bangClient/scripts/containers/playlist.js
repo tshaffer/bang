@@ -39,8 +39,11 @@ class Playlist extends Component {
     hackGetCurrentZone() {
 
         let selectedZone = null;
-        if (this.props.sign && this.props.sign.zoneIds.length > 0) {
-            selectedZone = this.props.sign.zonesById[this.props.sign.zoneIds[0]];
+        if (this.props.sign && this.props.sign.zoneIds.length > 0 && this.props.zones && this.props.zones.zonesById) {
+            selectedZone = this.props.zones.zonesById[this.props.sign.zoneIds[0]];
+            if (!selectedZone) {
+                selectedZone = null;
+            }
         }
         return selectedZone;
     }
@@ -156,10 +159,16 @@ class Playlist extends Component {
 
         if (this.props.sign && this.props.sign.zoneIds) {
             let selectOptions = this.props.sign.zoneIds.map( (zoneId) => {
-                const zone = this.props.sign.zonesById[zoneId];
-                return (
-                    <option value={zone.id} key={zone.id}>{zone.name}</option>
-                );
+                console.log("pizza 1");
+                if (self.props.zones && self.props.zones.zonesById) {
+                    console.log("pizza 2");
+                    const zone = self.props.zones.zonesById[zoneId]
+                    if (zone) {
+                        return (
+                            <option value={zone.id} key={zone.id}>{zone.name}</option>
+                        );
+                    }
+                }
             })
 
             zoneDropDown =
@@ -172,7 +181,7 @@ class Playlist extends Component {
 
         let selectedZone = null;
         let currentPlaylistItems = [];
-        let currentPlaylistItemsById = {};
+        let currentPlaylistItemIds = [];
 
         // if (this.state.selectedZoneId) {
         //     selectedZone = this.props.sign.zonesById[this.state.selectedZoneId];
@@ -186,7 +195,7 @@ class Playlist extends Component {
         if (selectedZone) {
             const currentZonePlaylist = this.props.zonePlaylists.zonePlaylistsById[selectedZone.zonePlaylistId];
             if (currentZonePlaylist) {
-                currentPlaylistItemsById = currentZonePlaylist.playlistItemsById;
+                currentPlaylistItemIds = currentZonePlaylist.playlistItemIds;
             }
         }
 
@@ -198,15 +207,14 @@ class Playlist extends Component {
         let dataIndex = -1;
         let playlistItems = null;
 
-        if (Object.keys(currentPlaylistItemsById).length > 0) {
+        if (currentPlaylistItemIds.length > 0) {
 
             console.log("here");
 
-            for (var currentPlaylistItemId in currentPlaylistItemsById) {
-                console.log("here");
+            currentPlaylistItemIds.forEach( currentPlaylistItemId => {
                 currentPlaylistItems.push(this.props.playlistItems.playlistItemsById[currentPlaylistItemId]);
-            }
-
+            });
+            
             playlistItems = currentPlaylistItems.map(function (playlistItem) {
 
                 if (self.props.mediaThumbs.hasOwnProperty(playlistItem.filePath)) {
@@ -261,7 +269,7 @@ class Playlist extends Component {
 function mapStateToProps(state) {
     return {
         sign: state.sign,
-        // zones: state.zones,
+        zones: state.zones,
         zonePlaylists: state.zonePlaylists,
         playlistItems: state.playlistItems,
 

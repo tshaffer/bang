@@ -79,39 +79,57 @@ export function mergeMediaThumbs(thumbsByPath) {
 
 
 export const OPEN_SIGN = 'OPEN_SIGN';
-export function openSign(normSign) {
+export function openSign(name, videoMode) {
+
+    const signData =
+    {
+        name,
+        videoMode
+    };
 
     return {
         type: OPEN_SIGN,
-        payload: normSign
+        payload: signData
     }
 }
 
 export const NEW_SIGN = 'NEW_SIGN';
-export function newSign(normSign) {
+export function newSign(name, videoMode) {
 
+    const signData =
+    {
+        name,
+        videoMode
+    };
+    
     return {
         type: NEW_SIGN,
-        payload: normSign
+        payload: signData
     }
 }
 
 export const NEW_ZONE = 'NEW_ZONE';
-export function newZone(normZone) {
+export function newZone(name, type) {
+
+    const zoneData =
+    {
+        name,
+        type
+    };
 
     return {
         type: NEW_ZONE,
-        payload: normZone
+        payload: zoneData
     }
 }
 
 // assumes there is a single, defined sign
 export const ADD_ZONE = 'ADD_ZONE';
-export function addZone(normZone) {
+export function addZone(zoneId) {
 
     return {
         type: ADD_ZONE,
-        payload: normZone
+        payload: zoneId
     }
 }
 
@@ -131,11 +149,10 @@ export function clearZonePlaylists() {
 }
 
 export const NEW_ZONE_PLAYLIST = 'NEW_ZONE_PLAYLIST';
-export function newZonePlaylist(zonePlaylist) {
+export function newZonePlaylist() {
 
     return {
-        type: NEW_ZONE_PLAYLIST,
-        payload: zonePlaylist
+        type: NEW_ZONE_PLAYLIST
     }
 }
 

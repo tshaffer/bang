@@ -294,7 +294,37 @@ export function executeFetchSign(filePath) {
                 })
             });
 
-            // flatten sign for storage in redux - better approach?
+            dispatch(openSign(badmSign.name, badmSign.videoMode));
+            badmSign.zones.forEach( badmZone => {
+
+                dispatch(newZone(badmZone.name, badmZone.type));
+
+                // HACK - must fix
+                nextState = getState();
+                const zoneId = getFirstKey(nextState.zones.zonesById);
+                dispatch(addZone(zoneId));
+
+                nextState = getState();
+                const zone = nextState.zones.zonesById[zoneId];
+
+                dispatch(newZonePlaylist());
+                // HACK
+                nextState = getState();
+                const zonePlaylistId = getFirstKey(nextState.zonePlaylists.zonePlaylistsById);
+
+                dispatch(setZonePlaylist(zoneId, zonePlaylistId));
+
+                badmZone.zonePlaylist.playlistItems.forEach( badmPlaylistItem => {
+                    dispatch(newPlaylistItem(badmPlaylistItem));
+                    dispatch(addPlaylistItem(zonePlaylistId, badmPlaylistItem.id));
+                });
+            } );
+
+            nextState = getState();
+            return;
+
+
+
             let normSign = null;
             let normZone = null;
             let normZonePlaylist = null;
