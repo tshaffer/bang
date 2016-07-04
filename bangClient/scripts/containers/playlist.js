@@ -88,14 +88,19 @@ class Playlist extends Component {
         }
 
         // determine where the drop occurred relative to the target element
+        console.log("event.target.id=", ev.target.id);
         let index = -1;
         let indexOfDropTarget = -1;
-        if (ev.target.id != "lblDropItemHere" && ev.target.id != "liDropItemHere") {
+        if (ev.target.id === "playlistItemsUl") {
+            // console.log("drop event onto ul");
+        }
+        else if (ev.target.id != "lblDropItemHere" && ev.target.id != "liDropItemHere") {
+            // console.log("drop event not onto dropItemHere");
             var offset = $("#" + ev.target.id).offset();
             const left = ev.pageX - offset.left;
             const targetWidth = ev.target.width;
 
-            indexOfDropTarget = ev.target.dataset.index;
+            indexOfDropTarget = Number(ev.target.dataset.index);
 
             if (left < (targetWidth / 2)) {
                 index = indexOfDropTarget;
@@ -103,6 +108,9 @@ class Playlist extends Component {
             else if (indexOfDropTarget < (currentZonePlaylist.playlistItemIds).length - 1) {
                 index = indexOfDropTarget + 1;
             }
+        }
+        else {
+            // console.log("drop event onto dropItemHere");
         }
 
         this.props.addPlaylistItemToZonePlaylist(currentZonePlaylistId, playlistItem.id, index);
@@ -176,8 +184,10 @@ class Playlist extends Component {
 
                     dataIndex++;
 
+                    // <li className="flex-item mediaLibraryThumbDiv" key={playlistItem.id} onDrop={self.playlistDropHandler.bind(self)} onDragOver={self.playlistDragOverHandler}>
+
                     return (
-                        <li className="flex-item mediaLibraryThumbDiv" key={playlistItem.id} onDrop={self.playlistDropHandler.bind(self)} onDragOver={self.playlistDragOverHandler}>
+                        <li className="flex-item mediaLibraryThumbDiv" key={playlistItem.id}>
                             <img
                                 id={playlistItem.id}
                                 src={thumb}
@@ -201,16 +211,17 @@ class Playlist extends Component {
         }
         else {
             playlistItems =
-                <li id="liDropItemHere" className="mediaLibraryThumbDiv" key={guid()} onDrop={self.playlistDropHandler.bind(self)} onDragOver={self.playlistDragOverHandler}>
+                <li id="liDropItemHere" className="mediaLibraryThumbDiv" key={guid()}>
                     <p id="lblDropItemHere" className="mediaLibraryThumbLbl">Drop Item Here</p>
                 </li>
         }
+        // <li id="liDropItemHere" className="mediaLibraryThumbDiv" key={guid()} onDrop={self.playlistDropHandler.bind(self)} onDragOver={self.playlistDragOverHandler}>
 
         return (
-            <div className="playlistDiv">
+            <div className="playlistDiv" >
                 {zoneDropDown}
                 <button id="openCloseIcon" className="plainButton" type="button" onClick={this.props.onToggleOpenClosePropertySheet.bind(this)}>{openCloseLabel}</button>
-                <ul className="playlist-flex-container wrap">
+                <ul id="playlistItemsUl" className="playlist-flex-container wrap" onDrop={self.playlistDropHandler.bind(self)} onDragOver={self.playlistDragOverHandler}>
                     {playlistItems}
                 </ul>
             </div>
@@ -218,7 +229,6 @@ class Playlist extends Component {
     }
 }
 
-// <ul className="playlist-flex-container wrap onDrop={self.playlistDropHandler.bind(self)}">
 
 function mapStateToProps(state) {
     return {
