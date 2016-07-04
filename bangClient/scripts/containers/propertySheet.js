@@ -93,39 +93,82 @@ class PropertySheet extends Component {
             }
         );
 
-        // case 9:
-        // slideTransitionSpec = "Explode bottom right";
-        // break;
-        // case 10:
-        // slideTransitionSpec = "Venetian blinds - vertical";
-        // break;
-        // case 11:
-        // slideTransitionSpec = "Venetian blinds - horizontal";
-        // break;
-        // case 12:
-        // slideTransitionSpec = "Comb effect - vertical";
-        // break;
-        // case 13:
-        // slideTransitionSpec = "Comb effect - horizontal";
-        // break;
-        // case 14:
-        // slideTransitionSpec = "Fade to background color";
-        // break;
-        // case 15:
-        // slideTransitionSpec = "Fade to new image";
-        // break;
-        // case 16:
-        // slideTransitionSpec = "Slide from top";
-        // break;
-        // case 17:
-        // slideTransitionSpec = "Slide from bottom";
-        // break;
-        // case 18:
-        // slideTransitionSpec = "Slide from left";
-        // break;
-        // case 19:
-        // slideTransitionSpec = "Slide from right";
+        this.transitionSpecs.push(
+            {
+                label: "Explode bottom right",
+                value: 9
+            }
+        );
 
+        this.transitionSpecs.push(
+            {
+                label: "Venetian blinds - vertical",
+                value: 10
+            }
+        );
+
+        this.transitionSpecs.push(
+            {
+                label: "Venetian blinds - horizontal",
+                value: 11
+            }
+        );
+
+        this.transitionSpecs.push(
+            {
+                label: "Comb effect - vertical",
+                value: 12
+            }
+        );
+
+        this.transitionSpecs.push(
+            {
+                label: "Comb effect - horizontal",
+                value: 13
+            }
+        );
+
+        this.transitionSpecs.push(
+            {
+                label: "Fade to background color",
+                value: 14
+            }
+        );
+
+        this.transitionSpecs.push(
+            {
+                label: "Fade to new image",
+                value: 15
+            }
+        );
+
+        this.transitionSpecs.push(
+            {
+                label: "Slide from top",
+                value: 16
+            }
+        );
+
+        this.transitionSpecs.push(
+            {
+                label: "Slide from bottom",
+                value: 17
+            }
+        );
+
+        this.transitionSpecs.push(
+            {
+                label: "Slide from left",
+                value: 18
+            }
+        );
+
+        this.transitionSpecs.push(
+            {
+                label: "Slide from right",
+                value: 19
+            }
+        );
     }
 
     componentWillMount() {

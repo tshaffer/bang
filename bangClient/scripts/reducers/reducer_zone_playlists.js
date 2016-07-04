@@ -23,11 +23,8 @@ export default function(state = initialState, action) {
     let newState;
     let newZonePlaylist;
     let newZonePlaylistsById;
-    let playlistItem;
 
-    let newZonePlaylists;
     let existingZonePlaylist;
-    let newPlaylistItems;
     let newPlaylistItemIds;
 
     let zonePlaylistId;
