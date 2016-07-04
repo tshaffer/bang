@@ -6,10 +6,12 @@ const easyImage = require("easyimage");
 var util = require("util");
 var mime = require("mime");
 
+import { getLastKey } from '../utilities/utils';
+
 import { setMediaThumbs, mergeMediaThumbs, setMediaFolder, openSign, setMediaLibraryFiles } from '../actions/index';
 
 import { openDB, addRecordToDB, dbGetThumbs, dbGetMediaLibraryFolder, dbSaveMediaFolder } from './db';
-import { newZone, addZone, clearZonePlaylists, newZonePlaylist, setZonePlaylist, clearPlaylistItems, newPlaylistItem, addPlaylistItem, getLastKey } from '../actions/index';
+import { newZone, addZone, clearZonePlaylists, newZonePlaylist, setZonePlaylist, clearPlaylistItems, newPlaylistItem, addPlaylistItem } from '../actions/index';
 
 import Sign from '../badm/sign';
 import Zone from '../badm/zone';

@@ -1,7 +1,7 @@
 /**
  * Created by tedshaffer on 6/3/16.
  */
-import { guid } from '../utilities/utils';
+import { getLastKey } from '../utilities/utils';
 
 import axios from 'axios';
 
@@ -214,23 +214,6 @@ export function updateSign(sign) {
         type: UPDATE_SIGN,
         payload: sign
     }
-}
-
-// to get first property in an object - want first key here though
-// http://stackoverflow.com/questions/983267/access-the-first-property-of-an-object
-function getKey(obj, keyIndex) {
-    return Object.keys(obj)[keyIndex];
-}
-
-export function getFirstKey(obj) {
-    return getKey(obj, 0);
-    // return Object.keys(obj)[0];
-}
-
-export function getLastKey(obj) {
-    const numKeys = Object.keys(obj).length;
-    return getKey(obj, numKeys-1);
-    // return Objects.key(obj)[numKeys-1];
 }
 
 export function createDefaultPresentation(presentationName) {
