@@ -38,26 +38,22 @@ class Playlist extends Component {
 
     playlistDragOverHandler (ev) {
 
-        console.log("playlistDragOverHandler");
+        // console.log("playlistDragOverHandler");
         ev.preventDefault();
         ev.dataTransfer.dropEffect = "move";
     }
 
     playlistDropHandler (ev) {
 
-        // TODO - create function to get this info
-        let currentZonePlaylist = null;
         let currentZonePlaylistId = null;
 
-        let selectedZone = this.props.getCurrentZone();
-        if (selectedZone) {
-            currentZonePlaylist = this.props.zonePlaylists.zonePlaylistsById[selectedZone.zonePlaylistId];
-            if (currentZonePlaylist) {
-                currentZonePlaylistId = currentZonePlaylist.id;
-            }
+        const currentZonePlaylist = this.props.getCurrentZonePlaylist();
+        if (currentZonePlaylist) {
+            currentZonePlaylistId = currentZonePlaylist.id;
         }
-
-        if (!currentZonePlaylist) return;
+        else {
+            return;
+        }
 
         ev.preventDefault();
 
@@ -134,15 +130,13 @@ class Playlist extends Component {
 
         let presentationZones = [];
 
-        if (this.props.sign && this.props.sign.zoneIds) {
+        if (this.props.sign && this.props.sign.zoneIds && this.props.zones && this.props.zones.zonesById) {
             let selectOptions = this.props.sign.zoneIds.map( (zoneId) => {
-                if (self.props.zones && self.props.zones.zonesById) {
-                    const zone = self.props.zones.zonesById[zoneId]
-                    if (zone) {
-                        return (
-                            <option value={zone.id} key={zone.id}>{zone.name}</option>
-                        );
-                    }
+                const zone = self.props.zones.zonesById[zoneId]
+                if (zone) {
+                    return (
+                        <option value={zone.id} key={zone.id}>{zone.name}</option>
+                    );
                 }
             })
 
@@ -154,17 +148,12 @@ class Playlist extends Component {
                 </div>
         }
 
-        let selectedZone = null;
         let currentPlaylistItems = [];
         let currentPlaylistItemIds = [];
 
-        selectedZone = this.props.getCurrentZone();
-        
-        if (selectedZone) {
-            const currentZonePlaylist = this.props.zonePlaylists.zonePlaylistsById[selectedZone.zonePlaylistId];
-            if (currentZonePlaylist) {
-                currentPlaylistItemIds = currentZonePlaylist.playlistItemIds;
-            }
+        const currentZonePlaylist = this.props.getCurrentZonePlaylist();
+        if (currentZonePlaylist) {
+            currentPlaylistItemIds = currentZonePlaylist.playlistItemIds;
         }
 
         let openCloseLabel = "=>";

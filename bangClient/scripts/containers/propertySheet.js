@@ -312,15 +312,12 @@ class PropertySheet extends Component {
 
             let imagePlaylistItem = null;
 
-            let selectedZone = this.props.getCurrentZone();
-            if (selectedZone) {
-                const currentZonePlaylist = this.props.zonePlaylists.zonePlaylistsById[selectedZone.zonePlaylistId];
-                currentZonePlaylist.playlistItemIds.forEach( playlistItemId => {
-                    if (playlistItemId === this.props.selectedPlaylistItemId) {
-                        imagePlaylistItem = this.props.playlistItems.playlistItemsById[playlistItemId];
-                    }
-                });
-            }
+            const currentZonePlaylist = this.props.getCurrentZonePlaylist();
+            currentZonePlaylist.playlistItemIds.forEach( playlistItemId => {
+                if (playlistItemId === this.props.selectedPlaylistItemId) {
+                    imagePlaylistItem = this.props.playlistItems.playlistItemsById[playlistItemId];
+                }
+            });
 
             let selectOptions = this.transitionSpecs.map(function(transitionSpec, index) {
 

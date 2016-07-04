@@ -104,6 +104,17 @@ class BA extends Component {
         return selectedZone;
     }
 
+    getCurrentZonePlaylist() {
+
+        let currentZonePlaylist = null;
+
+        let selectedZone = this.getCurrentZone();
+        if (selectedZone) {
+            currentZonePlaylist = this.props.zonePlaylists.zonePlaylistsById[selectedZone.zonePlaylistId];
+        }
+        return currentZonePlaylist;
+    }
+
     render () {
         
         let signName = <span>No sign yet</span>;
@@ -126,6 +137,7 @@ class BA extends Component {
                     onUpdateImageTransitionDuration = {this.handleUpdateImageTransitionDuration.bind(this)}
                     selectedPlaylistItemId={this.state.selectedPlaylistItemId}
                     getCurrentZone = {this.getCurrentZone.bind(this)}
+                    getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
                 />
         }
 
@@ -151,6 +163,7 @@ class BA extends Component {
                             onSelectPlaylistItem={this.handleSelectPlaylistItem.bind(this)}
                             propertySheetOpen = {this.state.propertySheetOpen}
                             getCurrentZone = {this.getCurrentZone.bind(this)}
+                            getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
                         />
                         {propertySheetTag}
                 </div>
