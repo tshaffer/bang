@@ -223,13 +223,7 @@ class PropertySheet extends Component {
             type = "remote";
         }
 
-        const htmlSite = {
-            name: this.htmlSiteName,
-            siteSpec: siteSpec,
-            type: type
-        };
-
-        this.props.newHtmlSite(htmlSite);
+        this.props.onAddHtmlSite(htmlSiteName, siteSpec, type);
     }
 
     htmlSiteTypeSelected(event) {
@@ -418,18 +412,4 @@ class PropertySheet extends Component {
     }
 }
 
-function mapStateToProps(state) {
-    return {
-        sign: state.sign,
-        zones: state.zones,
-        playlistItems: state.playlistItems,
-        htmlSites: state.htmlSites,
-        zonePlaylists: state.zonePlaylists
-    };
-}
-
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ newHtmlSite }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(PropertySheet);
+export default PropertySheet;

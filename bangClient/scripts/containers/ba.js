@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import MediaLibrary from '../components/mediaLibrary';
-import Playlist from '../containers/playlist';
-import PropertySheet from '../containers/propertySheet';
+import Playlist from '../components/playlist';
+import PropertySheet from '../components/propertySheet';
 
 import BAUI from '../platform/baUI';
 
@@ -17,7 +17,7 @@ import { getAllThumbs, createDefaultSign, selectMediaFolder, updateMediaFolder, 
 import { createDefaultPresentation, saveBSNPresentation } from '../actions/index';
 import { openDB, loadAppData, fetchSign }  from '../actions/index';
 
-import { addPlaylistItemToZonePlaylist, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, updatePlaylistItem } from '../actions/index';
+import { addPlaylistItemToZonePlaylist, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, updatePlaylistItem, newHtmlSite } from '../actions/index';
 
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
@@ -72,6 +72,16 @@ class BA extends Component {
         }
 
         this.props.addPlaylistItemToZonePlaylist(currentZonePlaylistId, playlistItem.id, index);
+    }
+    
+    handleAddHtmlSite(name, siteSpec, type) {
+        const htmlSite = {
+            name: this.htmlSiteName,
+            siteSpec: siteSpec,
+            type: type
+        };
+
+        this.props.newHtmlSite(htmlSite);
     }
     
     handleToggleOpenClosePropertySheet() {
@@ -157,9 +167,15 @@ class BA extends Component {
                     onUpdateImageTimeOnScreen = {this.handleUpdateImageTimeOnScreen.bind(this)}
                     onUpdateImageTransition = {this.handleUpdateImageTransition.bind(this)}
                     onUpdateImageTransitionDuration = {this.handleUpdateImageTransitionDuration.bind(this)}
-                    selectedPlaylistItemId={this.state.selectedPlaylistItemId}
                     getCurrentZone = {this.getCurrentZone.bind(this)}
                     getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
+                    onAddHtmlSite={this.handleAddHtmlSite.bind(this)}
+                    selectedPlaylistItemId={this.state.selectedPlaylistItemId}
+                    sign={this.props.sign}
+                    zones= {this.props.zones}
+                    zonePlaylists= {this.props.zonePlaylists}
+                    playlistItems= {this.props.playlistItems}
+                    htmlSites= {this.props.htmlSites}
                 />
         }
 
@@ -206,6 +222,7 @@ function mapStateToProps(state) {
         zones: state.zones,
         zonePlaylists: state.zonePlaylists,
         playlistItems: state.playlistItems,
+        htmlSites: state.htmlSites,
 
         mediaLibraryPlaylistItems: state.mediaLibraryPlaylistItems,
         mediaFolder: state.mediaFolder,
@@ -214,7 +231,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ addPlaylistItemToZonePlaylist, createDefaultPresentation, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, updatePlaylistItem, loadAppData, fetchSign, saveBSNPresentation, createDefaultSign, selectMediaFolder, updateMediaFolder, saveSign }, dispatch);
+    return bindActionCreators({ addPlaylistItemToZonePlaylist, createDefaultPresentation, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, updatePlaylistItem, loadAppData, fetchSign, saveBSNPresentation, createDefaultSign, selectMediaFolder, updateMediaFolder, saveSign, newHtmlSite }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);
