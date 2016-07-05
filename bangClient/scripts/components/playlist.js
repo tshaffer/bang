@@ -3,38 +3,39 @@
  */
 import React, { Component } from 'react';
 
-import HTML5PlaylistItem from '../badm/html5PlaylistItem';
-
 import { guid } from '../utilities/utils';
 
 import $ from 'jquery';
 
 import { getThumb } from '../platform/actions';
 
+import ImagePlaylistItem from '../badm/imagePlaylistItem';
+import HTML5PlaylistItem from '../badm/html5PlaylistItem';
+
 class Playlist extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            selectedZoneId: null,
+
         };
+
+        // this.state = {
+        //     selectedZoneId: null,
+        // };
     }
 
     componentWillMount() {
-        // console.log("playlist: componentWillMount invoked");
     }
 
     componentDidMount() {
-        // console.log("playlist.js::componentDidMount invoked");
-
-        if (this.props.sign.zoneIds.length > 0) {
-            this.setState( { selectedZoneId: this.props.sign.zoneIds[0] });
-        }
+        // if (this.props.sign.zoneIds.length > 0) {
+        //     this.setState( { selectedZoneId: this.props.sign.zoneIds[0] });
+        // }
     }
 
     playlistDragOverHandler (ev) {
 
-        // console.log("playlistDragOverHandler");
         ev.preventDefault();
         ev.dataTransfer.dropEffect = "move";
     }
@@ -90,22 +91,11 @@ class Playlist extends Component {
             this.props.onCreatePlaylistItem(type, stateName, path, index);
         }
         else if (type == "html5") {
-            playlistItem = new HTML5PlaylistItem(
-                "html5Name", //name,
-                "html5SiteName", //htmlSiteName,
-                true, //enableExternalData,
-                true, //enableMouseEvents,
-                true, //displayCursor,
-                true, //hwzOn,
-                false, //useUserStylesheet,
-                null //userStyleSheet
-            )
+            this.props.onCreatePlaylistItem(type, "html5Name", "html5SiteName", index);
         }
         else if (type == "mediaList") {
             
         }
-
-        // this.props.addPlaylistItemToZonePlaylist(currentZonePlaylistId, playlistItem.id, index);
     }
 
     onSelectZone(event) {
@@ -169,34 +159,59 @@ class Playlist extends Component {
 
             playlistItems = currentPlaylistItems.map(function (playlistItem) {
 
-                if (self.props.mediaThumbs.hasOwnProperty(playlistItem.filePath)) {
+                console.log("pizza1");
+                console.log("pizza2");
+                if (playlistItem instanceof HTML5PlaylistItem) {
+                    console.log("HTML5PlaylistItem");
+                }
+                else if (playlistItem instanceof ImagePlaylistItem) {
+                    console.log("ImagePlaylistItem");
+                }
 
-                    const mediaItem = self.props.mediaThumbs[playlistItem.filePath]
-                    const thumb = getThumb(mediaItem);
+                dataIndex++;
 
-                    dataIndex++;
-                    
+                if (playlistItem instanceof ImagePlaylistItem) {
+                    if (self.props.mediaThumbs.hasOwnProperty(playlistItem.filePath)) {
+
+                        const mediaItem = self.props.mediaThumbs[playlistItem.filePath]
+                        const thumb = getThumb(mediaItem);
+
+
+                        return (
+                            <li className="flex-item mediaLibraryThumbDiv" key={playlistItem.id}>
+                                <img
+                                    id={playlistItem.id}
+                                    src={thumb}
+                                    className="mediaLibraryThumbImg"
+                                    data-index={dataIndex}
+                                    onClick={() => self.onSelectPlaylistItem(playlistItem)}
+                                />
+                                <p className="mediaLibraryThumbLbl">{playlistItem.name}</p>
+                            </li>
+                        );
+                    }
+                    else {
+                        return (
+                            <li key={playlistItem.id} >
+                                <p className="mediaLibraryThumbLbl">{playlistItem.name}</p>
+                            </li>
+                        )
+                    }
+                }
+                if (playlistItem instanceof HTML5PlaylistItem) {
                     return (
                         <li className="flex-item mediaLibraryThumbDiv" key={playlistItem.id}>
                             <img
                                 id={playlistItem.id}
-                                src={thumb}
-                                className="mediaLibraryThumbImg"
+                                src="images/html.png"
+                                className="otherThumbImg"
                                 data-index={dataIndex}
                                 onClick={() => self.onSelectPlaylistItem(playlistItem)}
                             />
-                            <p className="mediaLibraryThumbLbl">{playlistItem.name}</p>
+                            <p className="mediaLibraryThumbLbl">HTML5</p>
                         </li>
                     );
                 }
-                else {
-                    return (
-                        <li key={playlistItem.id} >
-                            <p className="mediaLibraryThumbLbl">{playlistItem.name}</p>
-                        </li>
-                    )
-                }
-
             });
         }
         else {
