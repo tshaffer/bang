@@ -15,7 +15,9 @@ import { newZone, addZone, clearZonePlaylists, newZonePlaylist, setZonePlaylist,
 
 import Sign from '../badm/sign';
 import Zone from '../badm/zone';
+import HtmlSite from '../badm/htmlSite';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
+import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
 const mediaFileSuffixes = ['jpg'];
 
@@ -339,12 +341,24 @@ export function executeSaveSign(filePath) {
 
             const zonePlaylist = state.zonePlaylists.zonePlaylistsById[zone.zonePlaylistId];
             zonePlaylist.playlistItemIds.forEach(playlistItemId => {
+                let badmPlaylistItem = null;
                 const playlistItem = state.playlistItems.playlistItemsById[playlistItemId];
-                // TODO only support imagePlaylistItems now
-                let badmPlaylistItem = new ImagePlaylistItem(playlistItem.fileName, playlistItem.filePath, playlistItem.timeOnScreen, playlistItem.transition, playlistItem.transitionDuration, "false");
+                if (playlistItem instanceof ImagePlaylistItem) {
+                    badmPlaylistItem = new ImagePlaylistItem(playlistItem.fileName, playlistItem.filePath, playlistItem.timeOnScreen, playlistItem.transition, playlistItem.transitionDuration, "false");
+                }
+                else if (playlistItem instanceof HTML5PlaylistItem) {
+                    badmPlaylistItem = new HTML5PlaylistItem(playlistItem.fileName, playlistItem.htmlSiteName, playlistItem.enableExternalData, playlistItem.enableMouseEvents, playlistItem.displayCursor, playlistItem.hwzOn, playlistItem.useUserStylesheet, playlistItem.userStyleSheet);
+                }
                 badmZonePlaylist.playlistItems.push(badmPlaylistItem);
             });
-        })
+        });
+
+        state.sign.htmlSiteIds.forEach( htmlSiteId => {
+
+            const htmlSite = state.htmlSites.htmlSitesById[htmlSiteId];
+            let badmHtmlSite = new HtmlSite(htmlSite.name, htmlSite.type, htmlSite.siteSpec);
+            badmSign.addHtmlSite(htmlSite);
+        });
 
         const presentation = JSON.stringify(badmSign, null, 2);
 

@@ -2,9 +2,6 @@
  * Created by tedshaffer on 6/26/16.
  */
 import { CLEAR_PLAYLIST_ITEMS, NEW_PLAYLIST_ITEM, UPDATE_PLAYLIST_ITEM } from '../actions/index';
-import ImagePlaylistItem from '../badm/imagePlaylistItem';
-
-const emptyPlaylistItem = new ImagePlaylistItem();
 
 const initialState =
     {

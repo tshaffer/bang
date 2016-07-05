@@ -19,19 +19,12 @@ class Playlist extends Component {
         this.state = {
 
         };
-
-        // this.state = {
-        //     selectedZoneId: null,
-        // };
     }
 
     componentWillMount() {
     }
 
     componentDidMount() {
-        // if (this.props.sign.zoneIds.length > 0) {
-        //     this.setState( { selectedZoneId: this.props.sign.zoneIds[0] });
-        // }
     }
 
     playlistDragOverHandler (ev) {
@@ -40,7 +33,7 @@ class Playlist extends Component {
         ev.dataTransfer.dropEffect = "move";
     }
 
-    playlistDropHandler (ev) {
+    getDropIndex(ev) {
 
         let currentZonePlaylistId = null;
 
@@ -52,41 +45,62 @@ class Playlist extends Component {
             return;
         }
 
+        let index = -1;
+        let indexOfDropTarget = -1;
+
+        var offset = $("#" + ev.target.id).offset();
+        const left = ev.pageX - offset.left;
+        let targetWidth = ev.target.width;
+        if (targetWidth == undefined) {
+            targetWidth = $("#" + ev.target.id).outerWidth();
+        }
+
+        indexOfDropTarget = Number(ev.target.dataset.index);
+
+        if (left < (targetWidth / 2)) {
+            index = indexOfDropTarget;
+        }
+        else if (indexOfDropTarget < (currentZonePlaylist.playlistItemIds).length - 1) {
+            index = indexOfDropTarget + 1;
+        }
+
+        return index;
+    }
+
+    playlistDropHandler (ev) {
+
         ev.preventDefault();
 
-        // get playlist item to add to playlist
-        const path = ev.dataTransfer.getData("path");
+        // get dropped playlist item
         const stateName = ev.dataTransfer.getData("name");
+        const path = ev.dataTransfer.getData("path");
         const type = ev.dataTransfer.getData("type");
 
         // determine where the drop occurred relative to the target element
         console.log("event.target.id=", ev.target.id);
         let index = -1;
         let indexOfDropTarget = -1;
+
         if (ev.target.id === "playlistItemsUl") {
-            // console.log("drop event onto ul");
+            // drop item at end of list
         }
-        else if (ev.target.id != "lblDropItemHere" && ev.target.id != "liDropItemHere") {
-            // console.log("drop event not onto dropItemHere");
-            var offset = $("#" + ev.target.id).offset();
-            const left = ev.pageX - offset.left;
-            const targetWidth = ev.target.width;
-
-            indexOfDropTarget = Number(ev.target.dataset.index);
-
-            if (left < (targetWidth / 2)) {
-                index = indexOfDropTarget;
-            }
-            else if (indexOfDropTarget < (currentZonePlaylist.playlistItemIds).length - 1) {
-                index = indexOfDropTarget + 1;
-            }
+        else if (ev.target.id === "lblDropItemHere" && ev.target.id === "liDropItemHere") {
+            // drop item onto 'Drop Item Here'
+        }
+        else if (ev.target.id.startsWith("mediaThumb") || ev.target.id.startsWith("mediaLbl")) {
+            // drop target is in margin of media item
+            index = this.getDropIndex(ev);
+        }
+        else if (ev.target.id !== "") {
+            // drop target is media item
+            index = this.getDropIndex(ev);
         }
         else {
-            // console.log("drop event onto dropItemHere");
+            console.log("don't know where to drop it");
+            return;
         }
 
         // specify playlist item to drop
-        let playlistItem = null;
         if (type === "image") {
             this.props.onCreatePlaylistItem(type, stateName, path, index);
         }
@@ -94,7 +108,7 @@ class Playlist extends Component {
             this.props.onCreatePlaylistItem(type, "html5Name", "html5SiteName", index);
         }
         else if (type == "mediaList") {
-            
+            // TBD
         }
     }
 
@@ -157,7 +171,7 @@ class Playlist extends Component {
                 currentPlaylistItems.push(self.props.playlistItems.playlistItemsById[currentPlaylistItemId]);
             });
 
-            playlistItems = currentPlaylistItems.map(function (playlistItem) {
+            playlistItems = currentPlaylistItems.map(function (playlistItem, index) {
 
                 if (playlistItem instanceof HTML5PlaylistItem) {
                     console.log("HTML5PlaylistItem");
@@ -175,7 +189,7 @@ class Playlist extends Component {
                         const thumb = getThumb(mediaItem);
                         
                         return (
-                            <li className="flex-item mediaLibraryThumbDiv" key={playlistItem.id}>
+                            <li className="flex-item mediaLibraryThumbDiv" key={index} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
                                 <img
                                     id={playlistItem.id}
                                     src={thumb}
@@ -183,13 +197,13 @@ class Playlist extends Component {
                                     data-index={dataIndex}
                                     onClick={() => self.onSelectPlaylistItem(playlistItem)}
                                 />
-                                <p className="mediaLibraryThumbLbl">{playlistItem.fileName}</p>
+                                <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>{playlistItem.fileName}</p>
                             </li>
                         );
                     }
                     else {
                         return (
-                            <li key={playlistItem.id} >
+                            <li key={playlistItem.id} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
                                 <p className="mediaLibraryThumbLbl">{playlistItem.fileName}</p>
                             </li>
                         )
@@ -197,7 +211,7 @@ class Playlist extends Component {
                 }
                 if (playlistItem instanceof HTML5PlaylistItem) {
                     return (
-                        <li className="flex-item mediaLibraryThumbDiv" key={playlistItem.id}>
+                        <li className="flex-item mediaLibraryThumbDiv" key={playlistItem.id} data-index={index} id={"mediaThumb" + dataIndex.toString()}>
                             <img
                                 id={playlistItem.id}
                                 src="images/html.png"
@@ -205,7 +219,7 @@ class Playlist extends Component {
                                 data-index={dataIndex}
                                 onClick={() => self.onSelectPlaylistItem(playlistItem)}
                             />
-                            <p className="mediaLibraryThumbLbl">HTML5</p>
+                            <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>HTML5</p>
                         </li>
                     );
                 }

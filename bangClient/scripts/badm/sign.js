@@ -17,4 +17,8 @@ export default class Sign {
     addZone(zone) {
         this.zones.push(zone);
     }
+    
+    addHtmlSite(htmlSite) {
+        this.htmlSites.push(htmlSite);
+    }
 }

@@ -1,9 +1,7 @@
 /**
  * Created by tedshaffer on 6/10/16.
  */
-// import { CREATE_DEFAULT_SIGN, OPEN_SIGN, UPDATE_SIGN, ADD_HTML_SITE } from '../actions/index';
-import { NEW_SIGN, OPEN_SIGN, ADD_ZONE, UPDATE_SIGN } from '../actions/index';
-import { guid } from '../utilities/utils';
+import { NEW_SIGN, OPEN_SIGN, ADD_ZONE, UPDATE_SIGN, ADD_HTML_SITE } from '../actions/index';
 
 import Norm_Sign from '../normalizedBADM/norm_sign';
 
@@ -38,13 +36,13 @@ export default function(state = initialState, action) {
         case UPDATE_SIGN:
             return action.payload;
 
-        // case ADD_HTML_SITE:
-        //     const htmlSiteId = action.payload;
-        //
-        //     const newHtmlSiteIds = state.htmlSiteIds.concat(htmlSiteId);
-        //     newState = Object.assign({}, state,
-        //         { htmlSiteIds: newHtmlSiteIds } );
-        //     return newState;
+        case ADD_HTML_SITE:
+            const htmlSiteId = action.payload;
+            const newHtmlSiteIds = state.htmlSiteIds.concat(htmlSiteId);
+
+            newState = Object.assign(emptySign, state,
+                { htmlSiteIds: newHtmlSiteIds } );
+            return newState;
     }
 
     return state;

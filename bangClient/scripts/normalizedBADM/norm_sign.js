@@ -8,7 +8,7 @@ export default class Norm_Sign {
         this.id = guid();
         this.name = signName;
         this.videoMode = "1920x1080x60p";
-        this.htmlSitesById = {};
+        this.htmlSiteIds = [];
         this.zoneIds = [];
     }
 

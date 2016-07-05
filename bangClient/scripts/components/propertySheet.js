@@ -4,6 +4,8 @@
 import React, { Component } from 'react';
 
 import { getShortenedFilePath } from '../utilities/utils';
+import ImagePlaylistItem from '../badm/imagePlaylistItem';
+import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
 import ReactTabs from 'react-tabs';
 var Tab = ReactTabs.Tab;
@@ -33,6 +35,10 @@ class PropertySheet extends Component {
         // console.log("PropertySheet::componentDidMount invoked");
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return true;
+    }
+
     onUpdateVideoMode(event) {
 
         console.log("onUpdateVideoMode");
@@ -43,41 +49,35 @@ class PropertySheet extends Component {
         }
     }
 
-    updateHTMLSiteName(event) {
-        this.htmlSiteName = event.target.value;
-    }
-
     browseForHTMLSite(event) {
         var self = this;
         this.props.onBrowseForHTMLSite().then(function(myHtmlSitePath)  {
             self.setState( { htmlSitePath: myHtmlSitePath });
             self.localHtmlSiteSpec = myHtmlSitePath;
+            self.refs.htmlLocalSitePath.value = getShortenedFilePath(myHtmlSitePath, 36);
         });
-    }
-
-    updateLocalHTMLSiteSpec(event) {
-        // this.localHtmlSiteSpec = event.target.value;
-    }
-
-    updateRemoteHTMLSiteSpec(event) {
-        this.remoteHtmlSiteSpec = event.target.value;
     }
 
     onAddHTMLSite(event) {
 
         let type = "";
         let siteSpec = "";
+        let htmlSiteName = this.refs.htmlSiteName.value;
 
         if (this.refs.localRB.checked) {
             siteSpec = this.localHtmlSiteSpec;
             type = "local";
         }
         else {
-            siteSpec = this.remoteHtmlSiteSpec;
+            siteSpec = this.refs.htmlSiteUrl.value;
             type = "remote";
         }
 
         this.props.onAddHtmlSite(htmlSiteName, siteSpec, type);
+
+        this.refs.htmlLocalSitePath.value = "";
+        this.refs.htmlSiteUrl.value = "";
+        this.refs.htmlSiteName.value = "";
     }
 
     htmlSiteTypeSelected(event) {
@@ -115,6 +115,35 @@ class PropertySheet extends Component {
         }
     }
 
+    onSelectHtmlSite(event) {
+        console.log("onSelectHtmlSite invoked");
+    }
+
+    onUpdateHTML5StateName(event) {
+        const html5StateName = event.target.value;
+        this.props.onUpdateHTML5StateName(this.props.selectedPlaylistItemId, html5StateName);
+    }
+
+    onUpdateHTML5EnableExternalData(event) {
+        const enableExternalData = this.refs.cbEnableExternalData.checked;
+        this.props.onUpdateHTML5EnableExternalData(this.props.selectedPlaylistItemId, enableExternalData);
+    }
+
+    onUpdateHTML5EnableMouseEvents(event) {
+        const enableMouseEvents = this.refs.cbEnableMouseEvents.checked;
+        this.props.onUpdateHTML5EnableMouseEvents(this.props.selectedPlaylistItemId, enableMouseEvents);
+    }
+
+    onUpdateHTML5DisplayCursor(event) {
+        const displayCursor = this.refs.cbDisplayCursor.checked;
+        this.props.onUpdateHTML5DisplayCursor(this.props.selectedPlaylistItemId, displayCursor);
+    }
+
+    onUpdateHTML5HWZOn(event) {
+        const hwzOn = this.refs.cbHWZOn.checked;
+        this.props.onUpdateHTML5HWZOn(this.props.selectedPlaylistItemId, hwzOn);
+    }
+
     render () {
         
         var self = this;
@@ -139,7 +168,7 @@ class PropertySheet extends Component {
                             onChange={this.onUpdateVideoMode.bind(this)}>{selectOptions}</select>
                 </div>
 
-            const shortenedHtmlSitePath = getShortenedFilePath(this.state.htmlSitePath, 36);
+            // this.shortenedHtmlSitePath = getShortenedFilePath(this.state.htmlSitePath, 36);
 
             let existingSites = <span></span>
             if (this.props.htmlSites !== undefined && Object.keys(this.props.htmlSites.htmlSitesById).length > 0) {
@@ -172,18 +201,19 @@ class PropertySheet extends Component {
 
             htmlProperties =
                 <div>
-                    <span className="smallishFont">Name: </span><input className="smallishFont htmlSiteSpec" type="text" id="htmlSiteName" value={this.htmlSiteName} onChange={this.updateHTMLSiteName.bind(this)}></input>
+                    <span className="smallishFont">Name: </span>
+                    <input className="smallishFont htmlSiteSpec" type="text" ref="htmlSiteName"></input>
 
                     <br/><br/>
 
                     <form>
                         <input ref="localRB" type="radio" name="html" className="smallishFont" id="rbLocal" value="local" checked={this.state.remoteDisabled} onChange={this.htmlSiteTypeSelected.bind(this)}/><span className="smallishFont">Local</span>
-                        <input className="leftSpacing htmlSiteSpec smallishFont" type="text" id="txtBoxLocal" disabled={this.state.localDisabled}  value={shortenedHtmlSitePath} onChange={this.updateLocalHTMLSiteSpec.bind(this)}></input>
+                        <input className="leftSpacing htmlSiteSpec smallishFont" type="text" ref="htmlLocalSitePath" disabled={this.state.localDisabled}></input>
                         <button className="leftSpacing" type="button" id="btnBrowseForSite" disabled={this.state.localDisabled} onClick={this.browseForHTMLSite.bind(this)}>Browse</button>
 
                         <br/>
                         <input ref="remoteFB" type="radio" name="html" className="smallishFont" id="rbRemote" value="remote" checked={this.state.localDisabled} onChange={this.htmlSiteTypeSelected.bind(this)}/><span className="smallishFont">URL</span>
-                        <input className="leftSpacing htmlSiteSpec smallishFont" type="text" id="txtBoxRemote" disabled={this.state.remoteDisabled} value={this.htmlSiteURL} onChange={this.updateRemoteHTMLSiteSpec.bind(this)}></input>
+                        <input className="leftSpacing htmlSiteSpec smallishFont" type="text" ref="htmlSiteUrl" disabled={this.state.remoteDisabled}></input>
                     </form>
 
                     <button className="smallishFont floatMeRight" type="button" id="btnAddHTMLSite" onClick={this.onAddHTMLSite.bind(this)}>Add Site</button>
@@ -195,39 +225,82 @@ class PropertySheet extends Component {
 
         if (this.props.selectedPlaylistItemId) {
 
-            let imagePlaylistItem = null;
 
+            let playlistItem = null;
             const currentZonePlaylist = this.props.getCurrentZonePlaylist();
             currentZonePlaylist.playlistItemIds.forEach( playlistItemId => {
                 if (playlistItemId === this.props.selectedPlaylistItemId) {
-                    imagePlaylistItem = this.props.playlistItems.playlistItemsById[playlistItemId];
+                    playlistItem = this.props.playlistItems.playlistItemsById[playlistItemId];
                 }
             });
 
-            let selectOptions = this.transitionSpecs.map(function(transitionSpec, index) {
+            if (playlistItem instanceof ImagePlaylistItem) {
 
-                return (
-                    <option value={transitionSpec.value} key={transitionSpec.value}>{transitionSpec.label}</option>
-                );
-            });
+                let imagePlaylistItem = playlistItem;
+                let selectOptions = this.transitionSpecs.map(function(transitionSpec, index) {
 
-            selectedMediaProperties =
-                <div>
-                    <p>{imagePlaylistItem.fileName}</p>
-                    <p>
-                        Time on screen:
-                        <input type="text" value={imagePlaylistItem.timeOnScreen} onChange={this.onUpdateImageTimeOnScreen.bind(this)}></input>                    </p>
+                    return (
+                        <option value={transitionSpec.value} key={transitionSpec.value}>{transitionSpec.label}</option>
+                    );
+                });
+
+                selectedMediaProperties =
                     <div>
-                        Transition:
-                        <select ref="transitionsSelect" value={imagePlaylistItem.transition} onChange={this.onUpdateImageTransition.bind(this)}>{selectOptions}</select>
+                        <p>{imagePlaylistItem.fileName}</p>
+                        <p>
+                            Time on screen:
+                            <input type="text" value={imagePlaylistItem.timeOnScreen} onChange={this.onUpdateImageTimeOnScreen.bind(this)}></input>
+                        </p>
+                        <div>
+                            Transition:
+                            <select ref="transitionsSelect" value={imagePlaylistItem.transition} onChange={this.onUpdateImageTransition.bind(this)}>{selectOptions}</select>
+                        </div>
+                        <p>
+                            Transition duration:
+                            <input type="text" value={imagePlaylistItem.transitionDuration} onChange={this.onUpdateImageTransitionDuration.bind(this)}></input>
+                        </p>
                     </div>
-                    <p>
-                        Transition duration:
-                        <input type="text" value={imagePlaylistItem.transitionDuration} onChange={this.onUpdateImageTransitionDuration.bind(this)}></input>
-                    </p>
-                </div>
-            ;
+                ;
+            }
+            else if (playlistItem instanceof HTML5PlaylistItem) {
+                let html5PlaylistItem = playlistItem;
 
+                let htmlSitesDropDown = <div>No sites defined</div>
+
+                if (this.props.sign) {
+
+                    let selectOptions = this.props.sign.htmlSiteIds.map( (htmlSiteId) => {
+                        const htmlSite = this.props.htmlSites.htmlSitesById[htmlSiteId];
+                        if (htmlSite) {
+                            return (
+                                <option value={htmlSite.id} key={htmlSite.id}>{htmlSite.name}</option>
+                            );
+                        }
+                    })
+
+                    htmlSitesDropDown =
+                        <div>
+                            HTML5 Site:
+                            <select className="leftSpacing" ref="htmlSiteSelect"
+                                    onChange={this.onSelectHtmlSite.bind(this)}>{selectOptions}</select>
+                        </div>
+                }
+
+                selectedMediaProperties =
+                    <div>
+                        <p>
+                            State name:
+                            <input type="text" value={html5PlaylistItem.fileName} onChange={this.onUpdateHTML5StateName.bind(this)}></input>
+                        </p>
+                        {htmlSitesDropDown}
+                        <br/>
+                        <label><input ref="cbEnableExternalData" type="checkbox" checked={html5PlaylistItem.enableExternalData} onChange={this.onUpdateHTML5EnableExternalData.bind(this)}></input>Enable external data</label><br/>
+                        <label><input ref="cbEnableMouseEvents" type="checkbox" checked={html5PlaylistItem.enableMouseEvents} onChange={this.onUpdateHTML5EnableMouseEvents.bind(this)}></input>Enable mouse and touch events</label><br/>
+                        <label><input ref="cbDisplayCursor" type="checkbox" checked={html5PlaylistItem.displayCursor} onChange={this.onUpdateHTML5DisplayCursor.bind(this)}></input>Display cursor</label><br/>
+                        <label><input ref="cbHWZOn" type="checkbox" checked={html5PlaylistItem.hwzOn} onChange={this.onUpdateHTML5HWZOn.bind(this)} ></input> native video plane playback</label><br/>
+                        <br/>
+                    </div>
+            }
         }
         else {
             selectedMediaProperties = <div></div>

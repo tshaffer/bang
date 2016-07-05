@@ -4,7 +4,7 @@
 import MediaPlaylistItem from './mediaPlaylistItem';
 
 export default class HTML5PlaylistItem extends MediaPlaylistItem  {
-    constructor(name, htmlSiteName, enableExternalData, enableMouseEvents, displayCursor, hwzOn, useUserStylesheet, userStyleSheet) {
+    constructor(name, htmlSiteName, enableExternalData, enableMouseEvents, displayCursor, hwzOn, useUserStylesheet, userStyleSheet, timeOnScreen = 6) {
         super(name);
 
         this.htmlSiteName = htmlSiteName;
@@ -14,5 +14,7 @@ export default class HTML5PlaylistItem extends MediaPlaylistItem  {
         this.hwzOn = hwzOn;
         this.useUserStylesheet = useUserStylesheet;
         this.userStyleSheet = userStyleSheet
+        
+        this.timeOnScreen = timeOnScreen;
     }
 }

@@ -114,6 +114,15 @@ export function newHtmlSite(htmlSite) {
     }
 }
 
+export const ADD_HTML_SITE = 'ADD_HTML_SITE';
+export function addHtmlSite(htmlSiteId) {
+
+    return {
+        type: ADD_HTML_SITE,
+        payload: htmlSiteId
+    }
+}
+
 export const NEW_ZONE = 'NEW_ZONE';
 export function newZone(name, type) {
 
@@ -245,6 +254,20 @@ export function createDefaultPresentation(presentationName) {
 
 export function fetchSign(signId) {
     return executeFetchSign(signId);
+}
+
+export function addHtmlSiteToPresentation(htmlSite) {
+
+    return function(dispatch, getState) {
+
+        dispatch(newHtmlSite(htmlSite));
+
+        let nextState = getState();
+        const htmlSiteId = getLastKey(nextState.htmlSites.htmlSitesById);
+        dispatch(addHtmlSite(htmlSiteId));
+
+        nextState = getState();
+    }
 }
 
 export function saveBSNPresentation(name, sign) {
