@@ -38,9 +38,6 @@ export default function(state = initialState, action) {
         case UPDATE_SIGN:
             return action.payload;
 
-        // case CREATE_DEFAULT_SIGN:
-        //     console.log("reducer_sign:CREATE_DEFAULT_SIGN");
-        //     return action.payload.sign;
         // case ADD_HTML_SITE:
         //     const htmlSiteId = action.payload;
         //

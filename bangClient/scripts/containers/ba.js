@@ -41,9 +41,6 @@ class BA extends Component {
 
         this.props.createDefaultPresentation("Project 1");
 
-        // TODO
-        // select a zone here
-
         this.props.loadAppData();
     }
 

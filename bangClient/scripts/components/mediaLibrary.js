@@ -43,8 +43,6 @@ class MediaLibrary extends Component {
 
         console.log("dragStart");
 
-        // Add the target element's id to the data transfer object
-        // ev.dataTransfer.setData("text", ev.target.id);
         ev.dataTransfer.setData("path", ev.target.dataset.path);
         ev.dataTransfer.setData("name", ev.target.dataset.name);
         ev.dataTransfer.setData("type", ev.target.dataset.type);
@@ -68,16 +66,8 @@ class MediaLibrary extends Component {
                 if (self.props.mediaThumbs.hasOwnProperty(mediaLibraryPlaylistItem.filePath)) {
 
                     const mediaItem = self.props.mediaThumbs[mediaLibraryPlaylistItem.filePath];
-                    // const thumb = getThumb(mediaItem.thumbPath);
                     const thumb = getThumb(mediaItem);
-
-                    // let thumbUrl = mediaItem.thumbFileName;
-                    // experiments with trying to load the thumb from the local drive when using electron (no server)
-                    // let thumbUrl = mediaItem.url;
-                    // thumbUrl = "file://localhost/" + mediaItem.url;
-                    // thumbUrl = "http://localhost/" + mediaItem.url;
-                    // let thumbUrl = "file:///" + mediaItem.url;
-
+                    
                     return (
                         <li className="flex-item mediaLibraryThumbDiv" key={mediaLibraryPlaylistItem.id}>
                             <img

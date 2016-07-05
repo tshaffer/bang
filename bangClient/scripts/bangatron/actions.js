@@ -19,7 +19,6 @@ import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
 const mediaFileSuffixes = ['jpg'];
 
-// used by bangatron
 export function executeLoadAppData() {
 
     return function(dispatch) {
@@ -67,7 +66,6 @@ function saveMediaFolder(mediaFolder) {
 }
 
 
-// TODO - rename me
 function findFilesThenSetMediaLibraryFiles(dispatch, mediaFolder) {
 
     let mediaFiles = [];
@@ -288,6 +286,7 @@ export function executeFetchSign(filePath) {
                 })
             });
 
+            // update redux with fetched sign
             dispatch(clearZonePlaylists());
             dispatch(clearPlaylistItems());
 
@@ -314,18 +313,13 @@ export function executeFetchSign(filePath) {
                     dispatch(addPlaylistItem(zonePlaylistId, badmPlaylistItem.id));
                 });
             } );
-
-            // nextState = getState();
         })
     }
 }
 
-
 export function getFileName(filePath) {
     return path.basename(filePath);
-
 }
-
 
 export function executeSaveSign(filePath) {
 

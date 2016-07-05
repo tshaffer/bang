@@ -2,12 +2,7 @@
  * Created by tedshaffer on 6/19/16.
  */
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 
-import HtmlSite from '../badm/htmlSite';
-
-import { newHtmlSite } from '../actions/index';
 import { getShortenedFilePath } from '../utilities/utils';
 
 import ReactTabs from 'react-tabs';
@@ -26,149 +21,8 @@ class PropertySheet extends Component {
             remoteDisabled: true
         };
 
-        this.localHtmlSitePath = "";
-        this.remoteHtmlSitePath = "";
-
-        this.videoModes = [];
-        this.videoModes.push("1920x1080x60p");
-        this.videoModes.push("1920x1080x30p");
-        this.videoModes.push("1920x1080x24p");
-        this.videoModes.push("1920x1080x60i");
-        this.videoModes.push("1920x1080x30i");
-
-        this.transitionSpecs = [];
-
-        this.transitionSpecs.push(
-            {
-                label: "No effect",
-                value: 0
-            }
-        );
-        this.transitionSpecs.push(
-            {
-                label: "Image wipe from top",
-                value: 1
-            }
-        );
-        this.transitionSpecs.push(
-            {
-                label: "Image wipe from bottom",
-                value: 2
-            }
-        );
-        this.transitionSpecs.push(
-            {
-                label: "Image wipe from left",
-                value: 3
-            }
-        );
-        this.transitionSpecs.push(
-            {
-                label: "Image wipe from right",
-                value: 4
-            }
-        );
-        this.transitionSpecs.push(
-            {
-                label: "Explode from center",
-                value: 5
-            }
-        );
-        this.transitionSpecs.push(
-            {
-                label: "Explode top left",
-                value: 6
-            }
-        );
-        this.transitionSpecs.push(
-            {
-                label: "Explode top right",
-                value: 7
-            }
-        );
-        this.transitionSpecs.push(
-            {
-                label: "Explode bottom left",
-                value: 8
-            }
-        );
-
-        this.transitionSpecs.push(
-            {
-                label: "Explode bottom right",
-                value: 9
-            }
-        );
-
-        this.transitionSpecs.push(
-            {
-                label: "Venetian blinds - vertical",
-                value: 10
-            }
-        );
-
-        this.transitionSpecs.push(
-            {
-                label: "Venetian blinds - horizontal",
-                value: 11
-            }
-        );
-
-        this.transitionSpecs.push(
-            {
-                label: "Comb effect - vertical",
-                value: 12
-            }
-        );
-
-        this.transitionSpecs.push(
-            {
-                label: "Comb effect - horizontal",
-                value: 13
-            }
-        );
-
-        this.transitionSpecs.push(
-            {
-                label: "Fade to background color",
-                value: 14
-            }
-        );
-
-        this.transitionSpecs.push(
-            {
-                label: "Fade to new image",
-                value: 15
-            }
-        );
-
-        this.transitionSpecs.push(
-            {
-                label: "Slide from top",
-                value: 16
-            }
-        );
-
-        this.transitionSpecs.push(
-            {
-                label: "Slide from bottom",
-                value: 17
-            }
-        );
-
-        this.transitionSpecs.push(
-            {
-                label: "Slide from left",
-                value: 18
-            }
-        );
-
-        this.transitionSpecs.push(
-            {
-                label: "Slide from right",
-                value: 19
-            }
-        );
+        this.buildVideoModesList();
+        this.buildTransitionSpec();
     }
 
     componentWillMount() {
@@ -239,8 +93,6 @@ class PropertySheet extends Component {
 
     onUpdateImageTimeOnScreen(event) {
 
-        console.log("onUpdateImageTimeOnScreen");
-
         if (event != undefined) {
             const timeOnScreen = Number(event.target.value);
             this.props.onUpdateImageTimeOnScreen(this.props.selectedPlaylistItemId, timeOnScreen);
@@ -249,8 +101,6 @@ class PropertySheet extends Component {
 
     onUpdateImageTransition(event) {
 
-        console.log("onUpdateTransition:");
-
         if (event != undefined) {
             const transition = event.target.value;
             this.props.onUpdateImageTransition(this.props.selectedPlaylistItemId, transition);
@@ -258,8 +108,6 @@ class PropertySheet extends Component {
     }
 
     onUpdateImageTransitionDuration(event) {
-
-        console.log("onUpdateImageTransitionDuration:");
 
         if (event != undefined) {
             const transitionDuration = Number(event.target.value);
@@ -408,6 +256,151 @@ class PropertySheet extends Component {
                     </TabPanel>
                 </Tabs>
             </div>
+        );
+    }
+
+    buildVideoModesList() {
+        this.videoModes = [];
+        this.videoModes.push("1920x1080x60p");
+        this.videoModes.push("1920x1080x30p");
+        this.videoModes.push("1920x1080x24p");
+        this.videoModes.push("1920x1080x60i");
+        this.videoModes.push("1920x1080x30i");
+    }
+
+    buildTransitionSpec() {
+        this.transitionSpecs = [];
+
+        this.transitionSpecs.push(
+            {
+                label: "No effect",
+                value: 0
+            }
+        );
+        this.transitionSpecs.push(
+            {
+                label: "Image wipe from top",
+                value: 1
+            }
+        );
+        this.transitionSpecs.push(
+            {
+                label: "Image wipe from bottom",
+                value: 2
+            }
+        );
+        this.transitionSpecs.push(
+            {
+                label: "Image wipe from left",
+                value: 3
+            }
+        );
+        this.transitionSpecs.push(
+            {
+                label: "Image wipe from right",
+                value: 4
+            }
+        );
+        this.transitionSpecs.push(
+            {
+                label: "Explode from center",
+                value: 5
+            }
+        );
+        this.transitionSpecs.push(
+            {
+                label: "Explode top left",
+                value: 6
+            }
+        );
+        this.transitionSpecs.push(
+            {
+                label: "Explode top right",
+                value: 7
+            }
+        );
+        this.transitionSpecs.push(
+            {
+                label: "Explode bottom left",
+                value: 8
+            }
+        );
+
+        this.transitionSpecs.push(
+            {
+                label: "Explode bottom right",
+                value: 9
+            }
+        );
+
+        this.transitionSpecs.push(
+            {
+                label: "Venetian blinds - vertical",
+                value: 10
+            }
+        );
+
+        this.transitionSpecs.push(
+            {
+                label: "Venetian blinds - horizontal",
+                value: 11
+            }
+        );
+
+        this.transitionSpecs.push(
+            {
+                label: "Comb effect - vertical",
+                value: 12
+            }
+        );
+
+        this.transitionSpecs.push(
+            {
+                label: "Comb effect - horizontal",
+                value: 13
+            }
+        );
+
+        this.transitionSpecs.push(
+            {
+                label: "Fade to background color",
+                value: 14
+            }
+        );
+
+        this.transitionSpecs.push(
+            {
+                label: "Fade to new image",
+                value: 15
+            }
+        );
+
+        this.transitionSpecs.push(
+            {
+                label: "Slide from top",
+                value: 16
+            }
+        );
+
+        this.transitionSpecs.push(
+            {
+                label: "Slide from bottom",
+                value: 17
+            }
+        );
+
+        this.transitionSpecs.push(
+            {
+                label: "Slide from left",
+                value: 18
+            }
+        );
+
+        this.transitionSpecs.push(
+            {
+                label: "Slide from right",
+                value: 19
+            }
         );
     }
 }

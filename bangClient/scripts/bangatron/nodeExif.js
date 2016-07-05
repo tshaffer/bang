@@ -105,8 +105,6 @@ function parseDate(dateIn) {
     return dateOut;
 }
 
-
-
 module.exports = {
     getAllExifData: getAllExifData
 }

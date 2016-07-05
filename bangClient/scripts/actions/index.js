@@ -10,7 +10,6 @@ import ImageMediaItem from '../entities/imageMediaItem';
 import { executeLoadAppData, executeFetchSign, executeSelectMediaFolder, getFileName, executeSaveSign } from '../platform/actions';
 
 export function loadAppData() {
-
     return executeLoadAppData();
 }
 
@@ -18,11 +17,9 @@ export function saveSign(filePath) {
     return executeSaveSign(filePath);
 }
 
-// invoked when the user selects a new media folder through the UI
 export function selectMediaFolder(mediaFolder, mediaThumbs) {
     return executeSelectMediaFolder(mediaFolder, mediaThumbs);
 }
-
 
 export const SET_MEDIA_FOLDER = 'SET_MEDIA_FOLDER'
 export function setMediaFolder(mediaFolder) {
@@ -31,7 +28,6 @@ export function setMediaFolder(mediaFolder) {
         payload: mediaFolder
     }
 }
-
 
 export const SET_MEDIA_LIBRARY_FILES = 'SET_MEDIA_LIBRARY_FILES';
 export function setMediaLibraryFiles(mediaLibraryFiles) {
@@ -49,7 +45,6 @@ export function setMediaLibraryFiles(mediaLibraryFiles) {
         payload: mediaLibraryPlaylistItems
     }
 }
-
 
 export const SET_MEDIA_THUMBS = 'SET_MEDIA_THUMBS';
 export function setMediaThumbs(thumbsByPath) {
@@ -69,6 +64,21 @@ export function mergeMediaThumbs(thumbsByPath) {
     }
 }
 
+export const NEW_SIGN = 'NEW_SIGN';
+export function newSign(name, videoMode) {
+
+    const signData =
+    {
+        name,
+        videoMode
+    };
+
+    return {
+        type: NEW_SIGN,
+        payload: signData
+    }
+}
+
 export const OPEN_SIGN = 'OPEN_SIGN';
 export function openSign(name, videoMode) {
 
@@ -84,18 +94,23 @@ export function openSign(name, videoMode) {
     }
 }
 
-export const NEW_SIGN = 'NEW_SIGN';
-export function newSign(name, videoMode) {
+export const UPDATE_SIGN = 'UPDATE_SIGN';
+export function updateSign(sign) {
 
-    const signData =
-    {
-        name,
-        videoMode
-    };
-    
+    console.log("actions::updateSign");
+
     return {
-        type: NEW_SIGN,
-        payload: signData
+        type: UPDATE_SIGN,
+        payload: sign
+    }
+}
+
+export const NEW_HTML_SITE = 'NEW_HTML_SITE';
+export function newHtmlSite(htmlSite) {
+
+    return {
+        type: NEW_HTML_SITE,
+        payload: htmlSite
     }
 }
 
@@ -176,15 +191,6 @@ export function newPlaylistItem(playlistItem) {
     }
 }
 
-export const UPDATE_PLAYLIST_ITEM = 'UPDATE_PLAYLIST_ITEM';
-export function updatePlaylistItem(playlistItemId, playlistItem) {
-    return {
-        type: UPDATE_PLAYLIST_ITEM,
-        playlistItemId: playlistItemId,
-        playlistItem: playlistItem
-    }
-}
-
 export const ADD_PLAYLIST_ITEM = 'ADD_PLAYLIST_ITEM';
 export function addPlaylistItem(zonePlaylistId, playlistItemId) {
     return {
@@ -205,14 +211,12 @@ export function addPlaylistItemToZonePlaylist(zonePlaylistId, playlistItemId, in
     }
 }
 
-export const UPDATE_SIGN = 'UPDATE_SIGN';
-export function updateSign(sign) {
-
-    console.log("actions::updateSign");
-
+export const UPDATE_PLAYLIST_ITEM = 'UPDATE_PLAYLIST_ITEM';
+export function updatePlaylistItem(playlistItemId, playlistItem) {
     return {
-        type: UPDATE_SIGN,
-        payload: sign
+        type: UPDATE_PLAYLIST_ITEM,
+        playlistItemId: playlistItemId,
+        playlistItem: playlistItem
     }
 }
 
@@ -239,12 +243,10 @@ export function createDefaultPresentation(presentationName) {
     }
 }
 
-
 export function fetchSign(signId) {
     return executeFetchSign(signId);
 }
 
-// TODO - currently doesn't do anything with redux. If it never does, where should it live?
 export function saveBSNPresentation(name, sign) {
     
     return function(dispatch) {
@@ -259,7 +261,7 @@ export function saveBSNPresentation(name, sign) {
     }
 }
 
-
+// currently unused
 export function updateMediaFolder(mediaFolder) {
 
     return function(dispatch) {
@@ -274,14 +276,5 @@ export function updateMediaFolder(mediaFolder) {
     }
 }
 
-
-export const NEW_HTML_SITE = 'NEW_HTML_SITE';
-export function newHtmlSite(htmlSite) {
-    
-    return {
-        type: NEW_HTML_SITE,
-        payload: htmlSite
-    }
-}
 
 

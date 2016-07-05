@@ -168,6 +168,4 @@ export default class BAUI {
             </div>
         )
     }
-
-
 }

@@ -159,8 +159,6 @@ class Playlist extends Component {
 
             playlistItems = currentPlaylistItems.map(function (playlistItem) {
 
-                console.log("pizza1");
-                console.log("pizza2");
                 if (playlistItem instanceof HTML5PlaylistItem) {
                     console.log("HTML5PlaylistItem");
                 }
@@ -175,8 +173,7 @@ class Playlist extends Component {
 
                         const mediaItem = self.props.mediaThumbs[playlistItem.filePath]
                         const thumb = getThumb(mediaItem);
-
-
+                        
                         return (
                             <li className="flex-item mediaLibraryThumbDiv" key={playlistItem.id}>
                                 <img
