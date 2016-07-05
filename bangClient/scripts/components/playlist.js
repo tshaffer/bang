@@ -186,14 +186,14 @@ class Playlist extends Component {
                                     data-index={dataIndex}
                                     onClick={() => self.onSelectPlaylistItem(playlistItem)}
                                 />
-                                <p className="mediaLibraryThumbLbl">{playlistItem.name}</p>
+                                <p className="mediaLibraryThumbLbl">{playlistItem.fileName}</p>
                             </li>
                         );
                     }
                     else {
                         return (
                             <li key={playlistItem.id} >
-                                <p className="mediaLibraryThumbLbl">{playlistItem.name}</p>
+                                <p className="mediaLibraryThumbLbl">{playlistItem.fileName}</p>
                             </li>
                         )
                     }
