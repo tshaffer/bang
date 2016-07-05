@@ -61,32 +61,39 @@ class MediaLibrary extends Component {
         if (this.props.mediaLibraryPlaylistItems && this.props.mediaLibraryPlaylistItems.length > 0) {
 
             let mediaLibraryPlaylistItems = this.props.mediaLibraryPlaylistItems.map(function (mediaLibraryPlaylistItem) {
+                console.log("ph1");
+                console.log("ph2");
 
-                if (self.props.mediaThumbs.hasOwnProperty(mediaLibraryPlaylistItem.filePath)) {
+                const id = mediaLibraryPlaylistItem.getId();
+                const fileName = mediaLibraryPlaylistItem.getFileName();
+                const filePath = mediaLibraryPlaylistItem.getFilePath();
 
-                    const mediaItem = self.props.mediaThumbs[mediaLibraryPlaylistItem.filePath];
+                if (self.props.mediaThumbs.hasOwnProperty(filePath)) {
+
+                    const mediaItem = self.props.mediaThumbs[filePath];
                     const thumb = getThumb(mediaItem);
                     
                     return (
-                        <li className="flex-item mediaLibraryThumbDiv" key={mediaLibraryPlaylistItem.id}>
+                        <li className="flex-item mediaLibraryThumbDiv" key={id}>
                             <img
-                                id={mediaLibraryPlaylistItem.id}
+                                id={id}
                                 src={thumb}
                                 className="mediaLibraryThumbImg"
-                                data-name={mediaLibraryPlaylistItem.fileName}
-                                data-path={mediaLibraryPlaylistItem.filePath}
+                                data-name={fileName}
+                                data-path={filePath}
                                 data-type="image"
                                 draggable={true}
                                 onDragStart={self.mediaLibraryDragStartHandler}
                             />
-                            <p className="mediaLibraryThumbLbl">{mediaLibraryPlaylistItem.fileName}</p>
+                            <p className="mediaLibraryThumbLbl">{fileName}</p>
                         </li>
                     );
                 }
                 else {
+                    // TODO - what is name??
                     return (
-                        <li key={mediaLibraryPlaylistItem.id}>
-                            <p className="mediaLibraryThumbLbl">{mediaLibraryPlaylistItem.name}</p>
+                        <li key={id}>
+                            <p className="mediaLibraryThumbLbl">{name}</p>
                         </li>
                     )
                 }

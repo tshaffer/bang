@@ -104,7 +104,7 @@ class Playlist extends Component {
         if (ev.target.id === "playlistItemsUl") {
             // drop item at end of list
         }
-        else if (ev.target.id === "lblDropItemHere" && ev.target.id === "liDropItemHere") {
+        else if (ev.target.id === "lblDropItemHere" || ev.target.id === "liDropItemHere") {
             // drop item onto 'Drop Item Here'
         }
         else if (ev.target.id.startsWith("mediaThumb") || ev.target.id.startsWith("mediaLbl")) {
@@ -218,18 +218,26 @@ class Playlist extends Component {
             });
 
             playlistItems = currentPlaylistItems.map(function (playlistItem, index) {
+                console.log("pizza1");
+                console.log("pizza2");
 
                 dataIndex++;
 
+
+                const id = playlistItem.getId();
+                const fileName = playlistItem.getFileName();
+                let filePath = "";
+
                 let className = "";
-                if (self.props.selectedPlaylistItemId && self.props.selectedPlaylistItemId === playlistItem.id) {
+                if (self.props.selectedPlaylistItemId && self.props.selectedPlaylistItemId === id) {
                     className = "selectedImage ";
                 }
 
                 if (playlistItem instanceof ImagePlaylistItem) {
-                    if (self.props.mediaThumbs.hasOwnProperty(playlistItem.filePath)) {
+                    filePath = playlistItem.getFilePath();
+                    if (self.props.mediaThumbs.hasOwnProperty(filePath)) {
 
-                        const mediaItem = self.props.mediaThumbs[playlistItem.filePath]
+                        const mediaItem = self.props.mediaThumbs[filePath]
                         const thumb = getThumb(mediaItem);
 
                         className += "mediaLibraryThumbImg";
@@ -237,7 +245,7 @@ class Playlist extends Component {
                         return (
                             <li className="flex-item mediaLibraryThumbDiv" key={index} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
                                 <img
-                                    id={playlistItem.id}
+                                    id={id}
                                     src={thumb}
                                     className={className}
                                     data-index={dataIndex}
@@ -245,28 +253,29 @@ class Playlist extends Component {
 
                                     draggable={true}
                                     onDragStart={self.playlistDragStartHandler}
-                                    data-name={playlistItem.fileName}
-                                    data-path={playlistItem.filePath}
+                                    data-name={fileName}
+                                    data-path={filePath}
                                     data-type="image"
                                 />
-                                <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>{playlistItem.fileName}</p>
+                                <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>{fileName}</p>
                             </li>
                         );
                     }
                     else {
                         return (
-                            <li key={playlistItem.id} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
-                                <p className="mediaLibraryThumbLbl">{playlistItem.fileName}</p>
+                            <li key={id} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
+                                <p className="mediaLibraryThumbLbl">{fileName}</p>
                             </li>
                         )
                     }
                 }
+
                 if (playlistItem instanceof HTML5PlaylistItem) {
                     className += "otherThumbImg";
                     return (
-                        <li className="flex-item mediaLibraryThumbDiv" key={playlistItem.id} data-index={index} id={"mediaThumb" + dataIndex.toString()}>
+                        <li className="flex-item mediaLibraryThumbDiv" key={id} data-index={index} id={"mediaThumb" + dataIndex.toString()}>
                             <img
-                                id={playlistItem.id}
+                                id={id}
                                 src="images/html.png"
                                 className={className}
                                 data-index={dataIndex}
@@ -274,8 +283,8 @@ class Playlist extends Component {
 
                                 draggable={true}
                                 onDragStart={self.playlistDragStartHandler}
-                                data-name={playlistItem.fileName}
-                                data-path={playlistItem.filePath}
+                                data-name={fileName}
+                                data-path={filePath}
                                 data-type="html5"
                             />
                             <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>HTML5</p>

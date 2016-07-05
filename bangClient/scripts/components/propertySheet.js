@@ -235,6 +235,8 @@ class PropertySheet extends Component {
                 }
             });
 
+            const fileName = playlistItem.getFileName();
+
             if (playlistItem instanceof ImagePlaylistItem) {
 
                 let imagePlaylistItem = playlistItem;
@@ -247,7 +249,7 @@ class PropertySheet extends Component {
 
                 selectedMediaProperties =
                     <div>
-                        <p>{imagePlaylistItem.fileName}</p>
+                        <p>{fileName}</p>
                         <p>
                             Time on screen:
                             <input type="text" value={imagePlaylistItem.timeOnScreen} onChange={this.onUpdateImageTimeOnScreen.bind(this)}></input>
@@ -294,7 +296,7 @@ class PropertySheet extends Component {
                     <div>
                         <p>
                             State name:
-                            <input type="text" value={html5PlaylistItem.fileName} onChange={this.onUpdateHTML5StateName.bind(this)}></input>
+                            <input type="text" value={fileName} onChange={this.onUpdateHTML5StateName.bind(this)}></input>
                         </p>
                         {htmlSitesDropDown}
                         <br/>

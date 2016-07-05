@@ -87,7 +87,7 @@ class BA extends Component {
 
 
             this.props.newPlaylistItem(playlistItem);
-            this.props.addPlaylistItemToZonePlaylist(currentZonePlaylistId, playlistItem.id, destinationIndex);
+            this.props.addPlaylistItemToZonePlaylist(currentZonePlaylistId, playlistItem.getId(), destinationIndex);
         }
         else {
             this.props.movePlaylistItemWithinZonePlaylist(currentZonePlaylistId, sourceIndex, destinationIndex);
@@ -126,7 +126,7 @@ class BA extends Component {
 
     
     handleSelectPlaylistItem(playlistItem) {
-        this.setState({ selectedPlaylistItemId: playlistItem.id });
+        this.setState({ selectedPlaylistItemId: playlistItem.getId() });
     }
 
     // instead of using action creators, just dispatch the action directly?
@@ -187,7 +187,7 @@ class BA extends Component {
     handleUpdateHTML5StateName(selectedPlaylistItemId, html5StateName) {
 
         let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
-        updatedPlaylistItem.fileName = html5StateName;
+        updatedPlaylistItem.setFileName(html5StateName);
         this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
     }
 

@@ -8,5 +8,10 @@ export default class PlaylistItem {
         this.id = guid();
         this.itemLabel = "";
     }
+    
+    getId() {
+        return this.id;
+    }
 }
 
+export default PlaylistItem;

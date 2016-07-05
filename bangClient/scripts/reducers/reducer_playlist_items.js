@@ -25,7 +25,7 @@ export default function(state = initialState, action) {
         case NEW_PLAYLIST_ITEM:
             playlistItem = action.payload;
             newPlaylistItemsById = Object.assign({}, state.playlistItemsById);
-            newPlaylistItemsById[playlistItem.id] = playlistItem;
+            newPlaylistItemsById[playlistItem.getId()] = playlistItem;
 
             newState = {
                 playlistItemsById: newPlaylistItemsById
