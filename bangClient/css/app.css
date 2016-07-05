@@ -1,5 +1,5 @@
 #mediaLibraryFolder {
-    width: 285px;
+    width: 250px;
 }
 
 .tabPadding {
@@ -35,7 +35,7 @@ body {
     flex: 3;
     overflow-y: scroll;
     float: left;
-    width: 300px;
+    width: 280px;
 }
 
 .playlistDiv {
