@@ -105,7 +105,17 @@ class Playlist extends Component {
             this.props.onCreatePlaylistItem(type, stateName, path, index);
         }
         else if (type == "html5") {
-            this.props.onCreatePlaylistItem(type, "html5Name", "html5SiteName", index);
+            // TODO - for now, set the state name and site name to the first site in the sign (if it exists)
+            let defaultName = "";
+            if (this.props.sign.htmlSiteIds.length > 0) {
+                const htmlSiteId = this.props.sign.htmlSiteIds[0];
+                const htmlSite = this.props.htmlSites.htmlSitesById[htmlSiteId];
+                defaultName = htmlSite.name;
+            }
+            else {
+                defaultName = "html5";
+            }
+            this.props.onCreatePlaylistItem(type, defaultName, defaultName, index);
         }
         else if (type == "mediaList") {
             // TBD
@@ -172,14 +182,7 @@ class Playlist extends Component {
             });
 
             playlistItems = currentPlaylistItems.map(function (playlistItem, index) {
-
-                if (playlistItem instanceof HTML5PlaylistItem) {
-                    console.log("HTML5PlaylistItem");
-                }
-                else if (playlistItem instanceof ImagePlaylistItem) {
-                    console.log("ImagePlaylistItem");
-                }
-
+                
                 dataIndex++;
 
                 if (playlistItem instanceof ImagePlaylistItem) {

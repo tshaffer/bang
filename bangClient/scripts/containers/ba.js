@@ -166,6 +166,13 @@ class BA extends Component {
         this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
     }
 
+    handleUpdateHTML5SiteName(selectedPlaylistItemId, html5SiteName) {
+
+        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
+        updatedPlaylistItem.htmlSiteName = html5SiteName;
+        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+    }
+
     handleUpdateHTML5EnableExternalData(selectedPlaylistItemId, enableExternalData) {
 
         let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
@@ -254,6 +261,7 @@ class BA extends Component {
                     playlistItems= {this.props.playlistItems}
                     htmlSites= {this.props.htmlSites}
                     onUpdateHTML5StateName = {this.handleUpdateHTML5StateName.bind(this)}
+                    onUpdateHTML5SiteName = {this.handleUpdateHTML5SiteName.bind(this)}
                     onUpdateHTML5EnableExternalData = {this.handleUpdateHTML5EnableExternalData.bind(this) }
                     onUpdateHTML5EnableMouseEvents = {this.handleUpdateHTML5EnableMouseEvents.bind(this) }
                     onUpdateHTML5DisplayCursor = {this.handleUpdateHTML5DisplayCursor.bind(this) }
@@ -290,6 +298,7 @@ class BA extends Component {
                             zonePlaylists= {this.props.zonePlaylists}
                             playlistItems= {this.props.playlistItems}
                             mediaThumbs= {this.props.mediaThumbs}
+                            htmlSites= {this.props.htmlSites}
                         />
                         {propertySheetTag}
                 </div>

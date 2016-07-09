@@ -115,13 +115,14 @@ class PropertySheet extends Component {
         }
     }
 
-    onSelectHtmlSite(event) {
-        console.log("onSelectHtmlSite invoked");
-    }
-
     onUpdateHTML5StateName(event) {
         const html5StateName = event.target.value;
         this.props.onUpdateHTML5StateName(this.props.selectedPlaylistItemId, html5StateName);
+    }
+
+    onUpdateHtmlSiteName(event) {
+        const selectedHTMLSiteName = event.target.value;
+        this.props.onUpdateHTML5SiteName(this.props.selectedPlaylistItemId, selectedHTMLSiteName);
     }
 
     onUpdateHTML5EnableExternalData(event) {
@@ -271,9 +272,10 @@ class PropertySheet extends Component {
 
                     let selectOptions = this.props.sign.htmlSiteIds.map( (htmlSiteId) => {
                         const htmlSite = this.props.htmlSites.htmlSitesById[htmlSiteId];
+                        // <option value={htmlSite.id} key={htmlSite.id}>{htmlSite.name}</option>
                         if (htmlSite) {
                             return (
-                                <option value={htmlSite.id} key={htmlSite.id}>{htmlSite.name}</option>
+                                <option value={htmlSite.name} key={htmlSite.id}>{htmlSite.name}</option>
                             );
                         }
                     })
@@ -281,10 +283,12 @@ class PropertySheet extends Component {
                     htmlSitesDropDown =
                         <div>
                             HTML5 Site:
-                            <select className="leftSpacing" ref="htmlSiteSelect"
-                                    onChange={this.onSelectHtmlSite.bind(this)}>{selectOptions}</select>
+                            <select value={html5PlaylistItem.htmlSiteName} onChange={this.onUpdateHtmlSiteName.bind(this)}>{selectOptions}</select>
                         </div>
                 }
+
+                // <select className="leftSpacing" ref="htmlSiteSelect"
+                //         onChange={this.onSelectHtmlSite.bind(this)}>{selectOptions}</select>
 
                 selectedMediaProperties =
                     <div>
