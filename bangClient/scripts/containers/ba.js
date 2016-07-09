@@ -82,6 +82,8 @@ class BA extends Component {
         this.props.newPlaylistItem(playlistItem);
 
         this.props.addPlaylistItemToZonePlaylist(currentZonePlaylistId, playlistItem.id, index);
+        
+        return playlistItem;
     }
     
     handleAddHtmlSite(name, siteSpec, type) {
@@ -299,6 +301,7 @@ class BA extends Component {
                             playlistItems= {this.props.playlistItems}
                             mediaThumbs= {this.props.mediaThumbs}
                             htmlSites= {this.props.htmlSites}
+                            selectedPlaylistItemId={this.state.selectedPlaylistItemId}
                         />
                         {propertySheetTag}
                 </div>

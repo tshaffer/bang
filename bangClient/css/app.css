@@ -112,13 +112,13 @@ body {
     width: 100px;
     margin-bottom: 0px;
     margin-top: 0px;
-    padding: 2px;
+    padding: 0px;
 }
 
 .mediaLibraryThumbImg {
     width: 108px;
     height: 108px;
-    padding: 4px;
+    padding: 2px;
 }
 
 .otherThumbImg {
@@ -161,4 +161,10 @@ body {
 
 .noVertSpacing {
     margin: 0px;
+}
+
+.selectedImage {
+    border-style: solid;
+    border-width: 2px;
+    border-color: red;
 }
