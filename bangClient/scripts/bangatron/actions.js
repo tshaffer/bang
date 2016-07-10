@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const exifReader = require('./nodeExif');
-const easyImage = require("easyimage");
+// const easyImage = require("easyimage");
 
 var util = require("util");
 var mime = require("mime");
