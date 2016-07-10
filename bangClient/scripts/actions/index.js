@@ -220,6 +220,15 @@ export function addPlaylistItemToZonePlaylist(zonePlaylistId, playlistItemId, in
     }
 }
 
+export const DELETE_PLAYLIST_ITEM = 'DELETE_PLAYLIST_ITEM';
+export function deletePlaylistItem(zonePlaylistId, playlistItemId) {
+    return {
+        type: DELETE_PLAYLIST_ITEM,
+        zonePlaylistId: zonePlaylistId,
+        playlistItemId: playlistItemId
+    }
+}
+
 export const UPDATE_PLAYLIST_ITEM = 'UPDATE_PLAYLIST_ITEM';
 export function updatePlaylistItem(playlistItemId, playlistItem) {
     return {

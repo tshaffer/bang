@@ -4,7 +4,7 @@
 /**
  * Created by tedshaffer on 6/24/16.
  */
-import { NEW_ZONE_PLAYLIST, CLEAR_ZONE_PLAYLISTS, ADD_PLAYLIST_ITEM, ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST } from '../actions/index';
+import { NEW_ZONE_PLAYLIST, CLEAR_ZONE_PLAYLISTS, ADD_PLAYLIST_ITEM, ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST, DELETE_PLAYLIST_ITEM } from '../actions/index';
 import { guid } from '../utilities/utils';
 
 import Norm_ZonePlaylist from '../normalizedBADM/norm_zonePlaylist';
@@ -29,6 +29,8 @@ export default function(state = initialState, action) {
 
     let zonePlaylistId;
     let playlistItemId;
+
+    let index = -1;
 
     switch (action.type) {
         case CLEAR_ZONE_PLAYLISTS:
@@ -70,11 +72,38 @@ export default function(state = initialState, action) {
 
             return newState;
 
+        case DELETE_PLAYLIST_ITEM:
+
+            zonePlaylistId = action.zonePlaylistId;
+            playlistItemId = action.playlistItemId;
+
+            // is all this necessary?
+            existingZonePlaylist = state.zonePlaylistsById[zonePlaylistId];
+
+            newZonePlaylistsById = Object.assign(initialState, state.zonePlaylistsById);
+            newPlaylistItemIds = Object.assign([], existingZonePlaylist.playlistItemIds);
+
+            index = newPlaylistItemIds.indexOf(playlistItemId);
+            if (index > -1) {
+                newPlaylistItemIds.splice(index, 1);
+            }
+
+            newZonePlaylist = Object.assign({}, existingZonePlaylist);
+            newZonePlaylist.playlistItemIds = newPlaylistItemIds;
+
+            newZonePlaylistsById[zonePlaylistId] = newZonePlaylist;
+
+            newState = {
+                zonePlaylistsById: newZonePlaylistsById
+            };
+
+            return newState;
+
         case ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST:
             
             zonePlaylistId = action.zonePlaylistId;
             playlistItemId = action.playlistItemId;
-            const index = action.index;
+            index = action.index;
 
             existingZonePlaylist = state.zonePlaylistsById[zonePlaylistId];
 

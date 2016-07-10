@@ -17,7 +17,8 @@ import { getAllThumbs, selectMediaFolder, updateMediaFolder, saveSign } from '..
 import { createDefaultPresentation, saveBSNPresentation } from '../actions/index';
 import { openDB, loadAppData, fetchSign }  from '../actions/index';
 
-import { addPlaylistItemToZonePlaylist, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, updatePlaylistItem, newHtmlSite, addHtmlSiteToPresentation } from '../actions/index';
+import { addPlaylistItemToZonePlaylist, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist,
+    newPlaylistItem, addPlaylistItem, updatePlaylistItem, deletePlaylistItem, newHtmlSite, addHtmlSiteToPresentation } from '../actions/index';
 
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
@@ -46,9 +47,32 @@ class BA extends Component {
 
     componentDidMount() {
 
+        var self = this;
+
         // console.log("ba.js::componentDidMount invoked");
         
         this.baUI.init();
+
+        document.addEventListener('keydown', (event) => {
+            console.log("keydown invoked")
+            const which = event.which;
+            const keyCode = event.keyCode;
+            const code = event.code;
+            console.log("which", which);
+            console.log("keyCode", keyCode);
+            console.log("code", code);
+
+            if (keyCode == 8) {
+                const currentZonePlaylist = self.getCurrentZonePlaylist();
+                if (currentZonePlaylist) {
+                    const currentZonePlaylistId = currentZonePlaylist.id;
+                    this.props.deletePlaylistItem(currentZonePlaylistId, self.state.selectedPlaylistItemId);
+                }
+                else {
+                    return;
+                }
+            }
+        });
     }
 
     handleCreatePlaylistItem(type, stateName, path, index) {
@@ -325,7 +349,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ addPlaylistItemToZonePlaylist, createDefaultPresentation, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, updatePlaylistItem, loadAppData, fetchSign, saveBSNPresentation, selectMediaFolder, updateMediaFolder, saveSign, newHtmlSite, addHtmlSiteToPresentation }, dispatch);
+    return bindActionCreators({ addPlaylistItemToZonePlaylist, deletePlaylistItem, createDefaultPresentation, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, updatePlaylistItem, loadAppData, fetchSign, saveBSNPresentation, selectMediaFolder, updateMediaFolder, saveSign, newHtmlSite, addHtmlSiteToPresentation }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);

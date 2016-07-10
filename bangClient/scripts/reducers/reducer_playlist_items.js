@@ -1,7 +1,7 @@
 /**
  * Created by tedshaffer on 6/26/16.
  */
-import { CLEAR_PLAYLIST_ITEMS, NEW_PLAYLIST_ITEM, UPDATE_PLAYLIST_ITEM } from '../actions/index';
+import { CLEAR_PLAYLIST_ITEMS, NEW_PLAYLIST_ITEM, UPDATE_PLAYLIST_ITEM, DELETE_PLAYLIST_ITEM } from '../actions/index';
 
 const initialState =
     {
@@ -16,7 +16,7 @@ export default function(state = initialState, action) {
     let playlistItem;
 
     let newPlaylistItemsById;
-
+    let playlistItemId = "";
 
     switch (action.type) {
         case CLEAR_PLAYLIST_ITEMS:
@@ -34,11 +34,23 @@ export default function(state = initialState, action) {
         
         case UPDATE_PLAYLIST_ITEM:
 
-            const playlistItemId = action.playlistItemId;
+            playlistItemId = action.playlistItemId;
             playlistItem = action.playlistItem;
 
             newPlaylistItemsById = Object.assign({}, state.playlistItemsById);
             newPlaylistItemsById[playlistItemId] = playlistItem;
+
+            newState = {
+                playlistItemsById: newPlaylistItemsById
+            }
+            return newState;
+
+        case DELETE_PLAYLIST_ITEM:
+
+            playlistItemId = action.playlistItemId;
+
+            newPlaylistItemsById = Object.assign({}, state.playlistItemsById);
+            delete newPlaylistItemsById[playlistItemId];
 
             newState = {
                 playlistItemsById: newPlaylistItemsById
