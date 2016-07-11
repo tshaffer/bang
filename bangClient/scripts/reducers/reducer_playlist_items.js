@@ -29,7 +29,7 @@ export default function(state = initialState, action) {
 
             newState = {
                 playlistItemsById: newPlaylistItemsById
-            }
+            };
             return newState;
         
         case UPDATE_PLAYLIST_ITEM:
@@ -42,7 +42,7 @@ export default function(state = initialState, action) {
 
             newState = {
                 playlistItemsById: newPlaylistItemsById
-            }
+            };
             return newState;
 
         case DELETE_PLAYLIST_ITEM:
@@ -54,7 +54,7 @@ export default function(state = initialState, action) {
 
             newState = {
                 playlistItemsById: newPlaylistItemsById
-            }
+            };
             return newState;
     }
 
