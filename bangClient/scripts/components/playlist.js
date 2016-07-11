@@ -114,7 +114,7 @@ class Playlist extends Component {
         // specify playlist item to drop
         let playlistItem = null;
         if (type === "image") {
-            playlistItem = this.props.onCreatePlaylistItem(type, stateName, path, index);
+            playlistItem = this.props.onDropPlaylistItem(type, stateName, path, index);
         }
         else if (type == "html5") {
             // TODO - for now, set the state name and site name to the first site in the sign (if it exists)
@@ -127,7 +127,7 @@ class Playlist extends Component {
             else {
                 defaultName = "html5";
             }
-            playlistItem = this.props.onCreatePlaylistItem(type, defaultName, defaultName, index);
+            playlistItem = this.props.onDropPlaylistItem(type, defaultName, defaultName, index);
         }
         else if (type == "mediaList") {
             // TBD

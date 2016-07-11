@@ -55,7 +55,7 @@ class BA extends Component {
 
     }
 
-    handleCreatePlaylistItem(type, stateName, path, index) {
+    handleDropPlaylistItem(type, stateName, path, index) {
 
         let playlistItem = null;
         let currentZonePlaylistId = null;
@@ -312,7 +312,7 @@ class BA extends Component {
                             propertySheetOpen = {this.state.propertySheetOpen}
                             getCurrentZone = {this.getCurrentZone.bind(this)}
                             getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
-                            onCreatePlaylistItem={this.handleCreatePlaylistItem.bind(this)}
+                            onDropPlaylistItem={this.handleDropPlaylistItem.bind(this)}
                             onDeletePlaylistItem={this.handleDeletePlaylistItem.bind(this)}
                             sign={this.props.sign}
                             zones= {this.props.zones}
