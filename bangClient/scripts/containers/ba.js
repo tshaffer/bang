@@ -53,26 +53,6 @@ class BA extends Component {
         
         this.baUI.init();
 
-        document.addEventListener('keydown', (event) => {
-            console.log("keydown invoked")
-            const which = event.which;
-            const keyCode = event.keyCode;
-            const code = event.code;
-            console.log("which", which);
-            console.log("keyCode", keyCode);
-            console.log("code", code);
-
-            if (keyCode == 8) {
-                const currentZonePlaylist = self.getCurrentZonePlaylist();
-                if (currentZonePlaylist) {
-                    const currentZonePlaylistId = currentZonePlaylist.id;
-                    this.props.deletePlaylistItem(currentZonePlaylistId, self.state.selectedPlaylistItemId);
-                }
-                else {
-                    return;
-                }
-            }
-        });
     }
 
     handleCreatePlaylistItem(type, stateName, path, index) {
@@ -109,7 +89,19 @@ class BA extends Component {
         
         return playlistItem;
     }
-    
+
+    handleDeletePlaylistItem() {
+
+        const currentZonePlaylist = this.getCurrentZonePlaylist();
+        if (currentZonePlaylist) {
+            const currentZonePlaylistId = currentZonePlaylist.id;
+            this.props.deletePlaylistItem(currentZonePlaylistId, this.state.selectedPlaylistItemId);
+        }
+        else {
+            return;
+        }
+    }
+
     handleAddHtmlSite(name, siteSpec, type) {
         const htmlSite = {
             name,
@@ -132,7 +124,9 @@ class BA extends Component {
         this.setState({ selectedPlaylistItemId: playlistItem.id });
     }
 
+    // instead of using action creators, just dispatch the action directly?
     handleUpdateVideoMode(videoMode) {
+        // in reducer?
         const sign = Object.assign({}, this.props.sign, {videoMode: videoMode });
         console.log("updateVideoMode:", videoMode);
         this.props.updateSign(sign);
@@ -319,6 +313,7 @@ class BA extends Component {
                             getCurrentZone = {this.getCurrentZone.bind(this)}
                             getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
                             onCreatePlaylistItem={this.handleCreatePlaylistItem.bind(this)}
+                            onDeletePlaylistItem={this.handleDeletePlaylistItem.bind(this)}
                             sign={this.props.sign}
                             zones= {this.props.zones}
                             zonePlaylists= {this.props.zonePlaylists}

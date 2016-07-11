@@ -25,6 +25,17 @@ class Playlist extends Component {
     }
 
     componentDidMount() {
+        
+        var self = this;
+        
+        document.addEventListener('keydown', (event) => {
+            console.log("keydown event listener invoked");
+            console.log("poo");
+            if (event.keyCode == 8 || event.keyCode == 46) {       // delete key or backspace key
+                // check to see if playlistItem has focus
+                self.props.onDeletePlaylistItem();        
+            }
+        });
     }
 
     playlistDragOverHandler (ev) {
