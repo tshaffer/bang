@@ -154,6 +154,7 @@ export default function(state = initialState, action) {
                 destinationIndex--;
             }
 
+            // http://stackoverflow.com/questions/5306680/move-an-array-element-from-one-array-position-to-another
             if (destinationIndex >= newPlaylistItemIds.length) {
                 var k = destinationIndex - newPlaylistItemIds.length;
                 while ((k--) + 1) {
