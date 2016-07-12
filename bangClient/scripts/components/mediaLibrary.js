@@ -40,13 +40,12 @@ class MediaLibrary extends Component {
     }
 
     mediaLibraryDragStartHandler(ev) {
-
-        console.log("dragStart");
-
+        
         ev.dataTransfer.setData("path", ev.target.dataset.path);
         ev.dataTransfer.setData("name", ev.target.dataset.name);
         ev.dataTransfer.setData("type", ev.target.dataset.type);
         ev.dataTransfer.dropEffect = "copy";
+        // ev.dataTransfer.effectAllowed = 'copy';
     }
 
     // prevents build warning - related to readonly text box

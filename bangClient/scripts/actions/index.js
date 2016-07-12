@@ -229,6 +229,17 @@ export function deletePlaylistItem(zonePlaylistId, playlistItemId) {
     }
 }
 
+export const MOVE_PLAYLIST_ITEM_WITHIN_ZONE_PLAYLIST = 'MOVE_PLAYLIST_ITEM_WITHIN_ZONE_PLAYLIST';
+export function movePlaylistItemWithinZonePlaylist(zonePlaylistId, sourceIndex, destinationIndex) {
+
+    return {
+        type: MOVE_PLAYLIST_ITEM_WITHIN_ZONE_PLAYLIST,
+        zonePlaylistId: zonePlaylistId,
+        sourceIndex: sourceIndex,
+        destinationIndex: destinationIndex
+    }
+}
+
 export const UPDATE_PLAYLIST_ITEM = 'UPDATE_PLAYLIST_ITEM';
 export function updatePlaylistItem(playlistItemId, playlistItem) {
     return {

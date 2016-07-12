@@ -18,7 +18,7 @@ import { createDefaultPresentation, saveBSNPresentation } from '../actions/index
 import { openDB, loadAppData, fetchSign }  from '../actions/index';
 
 import { addPlaylistItemToZonePlaylist, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist,
-    newPlaylistItem, addPlaylistItem, updatePlaylistItem, deletePlaylistItem, newHtmlSite, addHtmlSiteToPresentation } from '../actions/index';
+    newPlaylistItem, addPlaylistItem, updatePlaylistItem, deletePlaylistItem, movePlaylistItemWithinZonePlaylist, newHtmlSite, addHtmlSiteToPresentation } from '../actions/index';
 
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
@@ -55,7 +55,7 @@ class BA extends Component {
 
     }
 
-    handleDropPlaylistItem(type, stateName, path, index) {
+    handleDropPlaylistItem(operation, type, stateName, path, sourceIndex, destinationIndex) {
 
         let playlistItem = null;
         let currentZonePlaylistId = null;
@@ -68,25 +68,31 @@ class BA extends Component {
             return;
         }
 
-        if (type === "image") {
-            playlistItem = new ImagePlaylistItem (stateName, path, 6, 0, 2, false);
-        }
-        else if (type === "html5") {
-            playlistItem = new HTML5PlaylistItem(
-                stateName, //name,
-                path, //htmlSiteName,
-                true, //enableExternalData,
-                true, //enableMouseEvents,
-                true, //displayCursor,
-                true, //hwzOn,
-                false, //useUserStylesheet,
-                null //userStyleSheet
-            )
-        }
-        this.props.newPlaylistItem(playlistItem);
+        if (operation === "copy" ) {
+            if (type === "image") {
+                playlistItem = new ImagePlaylistItem (stateName, path, 6, 0, 2, false);
+            }
+            else if (type === "html5") {
+                playlistItem = new HTML5PlaylistItem(
+                    stateName, //name,
+                    path, //htmlSiteName,
+                    true, //enableExternalData,
+                    true, //enableMouseEvents,
+                    true, //displayCursor,
+                    true, //hwzOn,
+                    false, //useUserStylesheet,
+                    null //userStyleSheet
+                )
+            }
 
-        this.props.addPlaylistItemToZonePlaylist(currentZonePlaylistId, playlistItem.id, index);
-        
+
+            this.props.newPlaylistItem(playlistItem);
+            this.props.addPlaylistItemToZonePlaylist(currentZonePlaylistId, playlistItem.id, destinationIndex);
+        }
+        else {
+            this.props.movePlaylistItemWithinZonePlaylist(currentZonePlaylistId, sourceIndex, destinationIndex);
+        }
+
         return playlistItem;
     }
 
@@ -120,7 +126,6 @@ class BA extends Component {
 
     
     handleSelectPlaylistItem(playlistItem) {
-        console.log("handleSelectPlaylistItem:", playlistItem.fileName);
         this.setState({ selectedPlaylistItemId: playlistItem.id });
     }
 
@@ -344,7 +349,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ addPlaylistItemToZonePlaylist, deletePlaylistItem, createDefaultPresentation, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, updatePlaylistItem, loadAppData, fetchSign, saveBSNPresentation, selectMediaFolder, updateMediaFolder, saveSign, newHtmlSite, addHtmlSiteToPresentation }, dispatch);
+    return bindActionCreators({ addPlaylistItemToZonePlaylist, deletePlaylistItem, movePlaylistItemWithinZonePlaylist, createDefaultPresentation, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist, newPlaylistItem, addPlaylistItem, updatePlaylistItem, loadAppData, fetchSign, saveBSNPresentation, selectMediaFolder, updateMediaFolder, saveSign, newHtmlSite, addHtmlSiteToPresentation }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);

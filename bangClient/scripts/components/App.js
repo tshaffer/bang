@@ -10,9 +10,7 @@ export default class App extends Component {
     }
     
     render() {
-
-        // console.log("app.js render invoked");
-
+        
         return (
             <div className = "container bangContainer">
                 <BA />

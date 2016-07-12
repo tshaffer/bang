@@ -4,7 +4,7 @@
 /**
  * Created by tedshaffer on 6/24/16.
  */
-import { NEW_ZONE_PLAYLIST, CLEAR_ZONE_PLAYLISTS, ADD_PLAYLIST_ITEM, ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST, DELETE_PLAYLIST_ITEM } from '../actions/index';
+import { NEW_ZONE_PLAYLIST, CLEAR_ZONE_PLAYLISTS, ADD_PLAYLIST_ITEM, ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST, DELETE_PLAYLIST_ITEM, MOVE_PLAYLIST_ITEM_WITHIN_ZONE_PLAYLIST } from '../actions/index';
 import { guid } from '../utilities/utils';
 
 import Norm_ZonePlaylist from '../normalizedBADM/norm_zonePlaylist';
@@ -120,6 +120,47 @@ export default function(state = initialState, action) {
                 // append to list
                 newPlaylistItemIds.push(playlistItemId);
             }
+
+            newZonePlaylist = Object.assign({}, existingZonePlaylist);
+            newZonePlaylist.playlistItemIds = newPlaylistItemIds;
+
+            newZonePlaylistsById[zonePlaylistId] = newZonePlaylist;
+
+            newState = {
+                zonePlaylistsById: newZonePlaylistsById
+            };
+
+            return newState;
+
+        case MOVE_PLAYLIST_ITEM_WITHIN_ZONE_PLAYLIST:
+
+            zonePlaylistId = action.zonePlaylistId;
+            let sourceIndex = action.sourceIndex;
+            let destinationIndex = action.destinationIndex;
+
+            existingZonePlaylist = state.zonePlaylistsById[zonePlaylistId];
+
+            // make copy of existing fields
+            newZonePlaylistsById = Object.assign({}, state.zonePlaylistsById);
+            newPlaylistItemIds = Object.assign([], existingZonePlaylist.playlistItemIds);
+
+            if (sourceIndex < 0) {
+                sourceIndex = newPlaylistItemIds.length;
+            }
+            if (destinationIndex < 0) {
+                destinationIndex = newPlaylistItemIds.length;
+            }
+            if (destinationIndex > sourceIndex) {
+                destinationIndex--;
+            }
+
+            if (destinationIndex >= newPlaylistItemIds.length) {
+                var k = destinationIndex - newPlaylistItemIds.length;
+                while ((k--) + 1) {
+                    newPlaylistItemIds.push(undefined);
+                }
+            }
+            newPlaylistItemIds.splice(destinationIndex, 0, newPlaylistItemIds.splice(sourceIndex, 1)[0]);
 
             newZonePlaylist = Object.assign({}, existingZonePlaylist);
             newZonePlaylist.playlistItemIds = newPlaylistItemIds;

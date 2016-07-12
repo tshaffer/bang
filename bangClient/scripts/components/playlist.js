@@ -29,8 +29,6 @@ class Playlist extends Component {
         var self = this;
         
         document.addEventListener('keydown', (event) => {
-            console.log("keydown event listener invoked");
-            console.log("poo");
             if (event.keyCode == 8 || event.keyCode == 46) {       // delete key or backspace key
                 // check to see if playlistItem has focus
                 self.props.onDeletePlaylistItem();        
@@ -82,6 +80,17 @@ class Playlist extends Component {
 
         ev.preventDefault();
 
+        // copy or move?
+        let operation = "";
+        let startIndex = -1;
+        if (ev.dataTransfer.effectAllowed === "move") {
+            operation = "move";
+            startIndex = Number(ev.dataTransfer.getData("index"));
+        }
+        else {
+            operation = "copy";
+        }
+        
         // get dropped playlist item
         const stateName = ev.dataTransfer.getData("name");
         const path = ev.dataTransfer.getData("path");
@@ -114,7 +123,7 @@ class Playlist extends Component {
         // specify playlist item to drop
         let playlistItem = null;
         if (type === "image") {
-            playlistItem = this.props.onDropPlaylistItem(type, stateName, path, index);
+            playlistItem = this.props.onDropPlaylistItem(operation, type, stateName, path, startIndex, index);
         }
         else if (type == "html5") {
             // TODO - for now, set the state name and site name to the first site in the sign (if it exists)
@@ -127,7 +136,7 @@ class Playlist extends Component {
             else {
                 defaultName = "html5";
             }
-            playlistItem = this.props.onDropPlaylistItem(type, defaultName, defaultName, index);
+            playlistItem = this.props.onDropPlaylistItem(operation, type, defaultName, defaultName, startIndex, index);
         }
         else if (type == "mediaList") {
             // TBD
@@ -143,8 +152,19 @@ class Playlist extends Component {
     }
 
     onSelectPlaylistItem(playlistItem) {
-        console.log("onSelectPlaylistItem");
         this.props.onSelectPlaylistItem(playlistItem);
+    }
+
+    playlistDragStartHandler(ev) {
+
+        ev.dataTransfer.setData("path", ev.target.dataset.path);
+        ev.dataTransfer.setData("name", ev.target.dataset.name);
+        ev.dataTransfer.setData("type", ev.target.dataset.type);
+        ev.dataTransfer.setData("index", ev.target.dataset.index);
+
+        // I don't think the following statement is necessarily correct
+        ev.dataTransfer.dropEffect = "move";
+        ev.dataTransfer.effectAllowed = 'move';
     }
 
     render () {
@@ -222,6 +242,12 @@ class Playlist extends Component {
                                     className={className}
                                     data-index={dataIndex}
                                     onClick={() => self.onSelectPlaylistItem(playlistItem)}
+
+                                    draggable={true}
+                                    onDragStart={self.playlistDragStartHandler}
+                                    data-name={playlistItem.fileName}
+                                    data-path={playlistItem.filePath}
+                                    data-type="image"
                                 />
                                 <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>{playlistItem.fileName}</p>
                             </li>
@@ -245,6 +271,12 @@ class Playlist extends Component {
                                 className={className}
                                 data-index={dataIndex}
                                 onClick={() => self.onSelectPlaylistItem(playlistItem)}
+
+                                draggable={true}
+                                onDragStart={self.playlistDragStartHandler}
+                                data-name={playlistItem.fileName}
+                                data-path={playlistItem.filePath}
+                                data-type="html5"
                             />
                             <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>HTML5</p>
                         </li>
