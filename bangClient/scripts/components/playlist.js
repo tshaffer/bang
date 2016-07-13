@@ -25,7 +25,10 @@ class Playlist extends Component {
     }
 
     componentDidMount() {
-        
+
+        const context = this.refs.playlistCanvas.getContext('2d');
+        this.paint(context);
+
         var self = this;
         
         document.addEventListener('keydown', (event) => {
@@ -34,6 +37,25 @@ class Playlist extends Component {
                 self.props.onDeletePlaylistItem();        
             }
         });
+    }
+
+    componentDidUpdate() {
+        var context = this.refs.playlistCanvas.getContext('2d');
+        context.clearRect(0, 0, 200, 200);
+        this.paint(context);
+    }
+
+    paint (context) {
+        context.save();
+        context.translate(100, 100);
+        context.rotate(this.props.rotation, 100, 100);
+        context.fillStyle = '#F00';
+        context.fillRect(-50, -50, 100, 100);
+        context.restore();
+    }
+
+    render() {
+        return <canvas ref="playlistCanvas" width={200} height={200}/>;
     }
 
     playlistDragOverHandler (ev) {
@@ -167,140 +189,140 @@ class Playlist extends Component {
         ev.dataTransfer.effectAllowed = 'move';
     }
 
-    render () {
-
-        let self = this;
-
-        let zoneId = "";
-
-        let zoneDropDown = <div></div>;
-
-        let presentationZones = [];
-
-        if (this.props.sign && this.props.sign.zoneIds && this.props.zones && this.props.zones.zonesById) {
-            let selectOptions = this.props.sign.zoneIds.map( (zoneId) => {
-                const zone = self.props.zones.zonesById[zoneId]
-                if (zone) {
-                    return (
-                        <option value={zone.id} key={zone.id}>{zone.name}</option>
-                    );
-                }
-            })
-
-            zoneDropDown =
-                <div>
-                    Current zone:
-                    <select className="leftSpacing" ref="zoneSelect"
-                            onChange={this.onSelectZone.bind(this)}>{selectOptions}</select>
-                </div>
-        }
-
-        let currentPlaylistItems = [];
-        let currentPlaylistItemIds = [];
-
-        const currentZonePlaylist = this.props.getCurrentZonePlaylist();
-        if (currentZonePlaylist) {
-            currentPlaylistItemIds = currentZonePlaylist.playlistItemIds;
-        }
-
-        let openCloseLabel = "=>";
-        if (!this.props.propertySheetOpen) {
-            openCloseLabel = "<=";
-        }
-
-        let dataIndex = -1;
-        let playlistItems = null;
-
-        if (currentPlaylistItemIds.length > 0) {
-
-            currentPlaylistItemIds.forEach( currentPlaylistItemId => {
-                currentPlaylistItems.push(self.props.playlistItems.playlistItemsById[currentPlaylistItemId]);
-            });
-
-            playlistItems = currentPlaylistItems.map(function (playlistItem, index) {
-
-                dataIndex++;
-
-                let className = "";
-                if (self.props.selectedPlaylistItemId && self.props.selectedPlaylistItemId === playlistItem.id) {
-                    className = "selectedImage ";
-                }
-
-                if (playlistItem instanceof ImagePlaylistItem) {
-                    if (self.props.mediaThumbs.hasOwnProperty(playlistItem.filePath)) {
-
-                        const mediaItem = self.props.mediaThumbs[playlistItem.filePath]
-                        const thumb = getThumb(mediaItem);
-
-                        className += "mediaLibraryThumbImg";
-
-                        return (
-                            <li className="flex-item mediaLibraryThumbDiv" key={index} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
-                                <img
-                                    id={playlistItem.id}
-                                    src={thumb}
-                                    className={className}
-                                    data-index={dataIndex}
-                                    onClick={() => self.onSelectPlaylistItem(playlistItem)}
-
-                                    draggable={true}
-                                    onDragStart={self.playlistDragStartHandler}
-                                    data-name={playlistItem.fileName}
-                                    data-path={playlistItem.filePath}
-                                    data-type="image"
-                                />
-                                <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>{playlistItem.fileName}</p>
-                            </li>
-                        );
-                    }
-                    else {
-                        return (
-                            <li key={playlistItem.id} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
-                                <p className="mediaLibraryThumbLbl">{playlistItem.fileName}</p>
-                            </li>
-                        )
-                    }
-                }
-                if (playlistItem instanceof HTML5PlaylistItem) {
-                    className += "otherThumbImg";
-                    return (
-                        <li className="flex-item mediaLibraryThumbDiv" key={playlistItem.id} data-index={index} id={"mediaThumb" + dataIndex.toString()}>
-                            <img
-                                id={playlistItem.id}
-                                src="images/html.png"
-                                className={className}
-                                data-index={dataIndex}
-                                onClick={() => self.onSelectPlaylistItem(playlistItem)}
-
-                                draggable={true}
-                                onDragStart={self.playlistDragStartHandler}
-                                data-name={playlistItem.fileName}
-                                data-path={playlistItem.filePath}
-                                data-type="html5"
-                            />
-                            <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>HTML5</p>
-                        </li>
-                    );
-                }
-            });
-        }
-        else {
-            playlistItems =
-                <li id="liDropItemHere" className="mediaLibraryThumbDiv" key={guid()}>
-                    <p id="lblDropItemHere" className="mediaLibraryThumbLbl">Drop Item Here</p>
-                </li>
-        }
-
-        return (
-            <div className="playlistDiv" >
-                {zoneDropDown}
-                <button id="openCloseIcon" className="plainButton" type="button" onClick={this.props.onToggleOpenClosePropertySheet.bind(this)}>{openCloseLabel}</button>
-                <ul id="playlistItemsUl" className="playlist-flex-container wrap" onDrop={self.playlistDropHandler.bind(self)} onDragOver={self.playlistDragOverHandler}>
-                    {playlistItems}
-                </ul>
-            </div>
-        );
-    }
+    // render () {
+    //
+    //     let self = this;
+    //
+    //     let zoneId = "";
+    //
+    //     let zoneDropDown = <div></div>;
+    //
+    //     let presentationZones = [];
+    //
+    //     if (this.props.sign && this.props.sign.zoneIds && this.props.zones && this.props.zones.zonesById) {
+    //         let selectOptions = this.props.sign.zoneIds.map( (zoneId) => {
+    //             const zone = self.props.zones.zonesById[zoneId]
+    //             if (zone) {
+    //                 return (
+    //                     <option value={zone.id} key={zone.id}>{zone.name}</option>
+    //                 );
+    //             }
+    //         })
+    //
+    //         zoneDropDown =
+    //             <div>
+    //                 Current zone:
+    //                 <select className="leftSpacing" ref="zoneSelect"
+    //                         onChange={this.onSelectZone.bind(this)}>{selectOptions}</select>
+    //             </div>
+    //     }
+    //
+    //     let currentPlaylistItems = [];
+    //     let currentPlaylistItemIds = [];
+    //
+    //     const currentZonePlaylist = this.props.getCurrentZonePlaylist();
+    //     if (currentZonePlaylist) {
+    //         currentPlaylistItemIds = currentZonePlaylist.playlistItemIds;
+    //     }
+    //
+    //     let openCloseLabel = "=>";
+    //     if (!this.props.propertySheetOpen) {
+    //         openCloseLabel = "<=";
+    //     }
+    //
+    //     let dataIndex = -1;
+    //     let playlistItems = null;
+    //
+    //     if (currentPlaylistItemIds.length > 0) {
+    //
+    //         currentPlaylistItemIds.forEach( currentPlaylistItemId => {
+    //             currentPlaylistItems.push(self.props.playlistItems.playlistItemsById[currentPlaylistItemId]);
+    //         });
+    //
+    //         playlistItems = currentPlaylistItems.map(function (playlistItem, index) {
+    //
+    //             dataIndex++;
+    //
+    //             let className = "";
+    //             if (self.props.selectedPlaylistItemId && self.props.selectedPlaylistItemId === playlistItem.id) {
+    //                 className = "selectedImage ";
+    //             }
+    //
+    //             if (playlistItem instanceof ImagePlaylistItem) {
+    //                 if (self.props.mediaThumbs.hasOwnProperty(playlistItem.filePath)) {
+    //
+    //                     const mediaItem = self.props.mediaThumbs[playlistItem.filePath]
+    //                     const thumb = getThumb(mediaItem);
+    //
+    //                     className += "mediaLibraryThumbImg";
+    //
+    //                     return (
+    //                         <li className="flex-item mediaLibraryThumbDiv" key={index} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
+    //                             <img
+    //                                 id={playlistItem.id}
+    //                                 src={thumb}
+    //                                 className={className}
+    //                                 data-index={dataIndex}
+    //                                 onClick={() => self.onSelectPlaylistItem(playlistItem)}
+    //
+    //                                 draggable={true}
+    //                                 onDragStart={self.playlistDragStartHandler}
+    //                                 data-name={playlistItem.fileName}
+    //                                 data-path={playlistItem.filePath}
+    //                                 data-type="image"
+    //                             />
+    //                             <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>{playlistItem.fileName}</p>
+    //                         </li>
+    //                     );
+    //                 }
+    //                 else {
+    //                     return (
+    //                         <li key={playlistItem.id} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
+    //                             <p className="mediaLibraryThumbLbl">{playlistItem.fileName}</p>
+    //                         </li>
+    //                     )
+    //                 }
+    //             }
+    //             if (playlistItem instanceof HTML5PlaylistItem) {
+    //                 className += "otherThumbImg";
+    //                 return (
+    //                     <li className="flex-item mediaLibraryThumbDiv" key={playlistItem.id} data-index={index} id={"mediaThumb" + dataIndex.toString()}>
+    //                         <img
+    //                             id={playlistItem.id}
+    //                             src="images/html.png"
+    //                             className={className}
+    //                             data-index={dataIndex}
+    //                             onClick={() => self.onSelectPlaylistItem(playlistItem)}
+    //
+    //                             draggable={true}
+    //                             onDragStart={self.playlistDragStartHandler}
+    //                             data-name={playlistItem.fileName}
+    //                             data-path={playlistItem.filePath}
+    //                             data-type="html5"
+    //                         />
+    //                         <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>HTML5</p>
+    //                     </li>
+    //                 );
+    //             }
+    //         });
+    //     }
+    //     else {
+    //         playlistItems =
+    //             <li id="liDropItemHere" className="mediaLibraryThumbDiv" key={guid()}>
+    //                 <p id="lblDropItemHere" className="mediaLibraryThumbLbl">Drop Item Here</p>
+    //             </li>
+    //     }
+    //
+    //     return (
+    //         <div className="playlistDiv" >
+    //             {zoneDropDown}
+    //             <button id="openCloseIcon" className="plainButton" type="button" onClick={this.props.onToggleOpenClosePropertySheet.bind(this)}>{openCloseLabel}</button>
+    //             <ul id="playlistItemsUl" className="playlist-flex-container wrap" onDrop={self.playlistDropHandler.bind(self)} onDragOver={self.playlistDragOverHandler}>
+    //                 {playlistItems}
+    //             </ul>
+    //         </div>
+    //     );
+    // }
 }
 
 export default Playlist;
