@@ -121,19 +121,53 @@ body {
     padding: 2px;
 }
 
-.otherThumbImg {
-    margin-left: 22px;
-    margin-top: 22px;
-    width: 64px;
-    height: 64px;
-    padding: 4px;
+.selectedImage {
+    border-color: red;
 }
 
-#openCloseIcon {
-    top: 3px;
+.unSelectedImage {
+    border-color: white;
+}
+
+.playlistItemBtn {
+    border-style: solid;
+    border-width: 2px;
     position: absolute;
-    right: 5px;
-    /*position: fixed;*/
+    width: 124px;
+    height: 132px;
+}
+
+.playlistItemDiv {
+    position: absolute;
+}
+
+.playlistThumbImg {
+    position: absolute;
+    width: 108px;
+    height: 108px;
+    padding: 2px;
+}
+
+.playlistLbl {
+    position: relative;
+    padding: 2px;
+    display:table;
+    margin:0 auto;
+}
+
+.otherThumbImg {
+        margin-left: 22px;
+        margin-top: 22px;
+        width: 64px;
+        height: 64px;
+        padding: 4px;
+    }
+
+    #openCloseIcon {
+        top: 3px;
+        position: absolute;
+        right: 5px;
+        /*position: fixed;*/
     /*right: 375px;*/
 }
 
@@ -163,8 +197,3 @@ body {
     margin: 0px;
 }
 
-.selectedImage {
-    border-style: solid;
-    border-width: 2px;
-    border-color: red;
-}

@@ -1,9 +1,4 @@
-/**
- * Created by tedshaffer on 6/8/16.
- */
 import React, { Component } from 'react';
-
-import { guid } from '../utilities/utils';
 
 import $ from 'jquery';
 
@@ -17,8 +12,13 @@ class Playlist extends Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            x1: -1,
+            y1: -1,
+            x2: -1,
+            y2: -1
         };
+        this.xImage = null;
+        this.yImage = null;
     }
 
     componentWillMount() {
@@ -42,40 +42,6 @@ class Playlist extends Component {
         ev.dataTransfer.dropEffect = "move";
     }
 
-    getDropIndex(ev) {
-
-        let currentZonePlaylistId = null;
-
-        const currentZonePlaylist = this.props.getCurrentZonePlaylist();
-        if (currentZonePlaylist) {
-            currentZonePlaylistId = currentZonePlaylist.id;
-        }
-        else {
-            return;
-        }
-
-        let index = -1;
-        let indexOfDropTarget = -1;
-
-        var offset = $("#" + ev.target.id).offset();
-        const left = ev.pageX - offset.left;
-        let targetWidth = ev.target.width;
-        if (targetWidth == undefined) {
-            targetWidth = $("#" + ev.target.id).outerWidth();
-        }
-
-        indexOfDropTarget = Number(ev.target.dataset.index);
-
-        if (left < (targetWidth / 2)) {
-            index = indexOfDropTarget;
-        }
-        else if (indexOfDropTarget < (currentZonePlaylist.playlistItemIds).length - 1) {
-            index = indexOfDropTarget + 1;
-        }
-
-        return index;
-    }
-
     playlistDropHandler (ev) {
 
         ev.preventDefault();
@@ -96,50 +62,19 @@ class Playlist extends Component {
         const path = ev.dataTransfer.getData("path");
         const type = ev.dataTransfer.getData("type");
 
-        // determine where the drop occurred relative to the target element
-        console.log("event.target.id=", ev.target.id);
-        let index = -1;
-        let indexOfDropTarget = -1;
-
-        if (ev.target.id === "playlistItemsUl") {
-            // drop item at end of list
-        }
-        else if (ev.target.id === "lblDropItemHere" || ev.target.id === "liDropItemHere") {
-            // drop item onto 'Drop Item Here'
-        }
-        else if (ev.target.id.startsWith("mediaThumb") || ev.target.id.startsWith("mediaLbl")) {
-            // drop target is in margin of media item
-            index = this.getDropIndex(ev);
-        }
-        else if (ev.target.id !== "") {
-            // drop target is media item
-            index = this.getDropIndex(ev);
-        }
-        else {
-            console.log("don't know where to drop it");
-            return;
-        }
+        // determine where the drop occurred on the playlist 'canvas' component
+        var playlistOffset = $("#playlistDiv").offset();
+        this.xImage = ev.pageX - playlistOffset.left;
+        this.yImage = ev.pageY - playlistOffset.top;
 
         // specify playlist item to drop
         let playlistItem = null;
         if (type === "image") {
-            playlistItem = this.props.onDropPlaylistItem(operation, type, stateName, path, startIndex, index);
-        }
-        else if (type == "html5") {
-            // TODO - for now, set the state name and site name to the first site in the sign (if it exists)
-            let defaultName = "";
-            if (this.props.sign.htmlSiteIds.length > 0) {
-                const htmlSiteId = this.props.sign.htmlSiteIds[0];
-                const htmlSite = this.props.htmlSites.htmlSitesById[htmlSiteId];
-                defaultName = htmlSite.name;
-            }
-            else {
-                defaultName = "html5";
-            }
-            playlistItem = this.props.onDropPlaylistItem(operation, type, defaultName, defaultName, startIndex, index);
-        }
-        else if (type == "mediaList") {
-            // TBD
+            playlistItem = this.props.onDropPlaylistItem(operation, type, stateName, path, -1, -1);
+
+            // offset image to center it around the drop point
+            playlistItem.xImage = this.xImage - 54;
+            playlistItem.yImage = this.yImage - 54;
         }
 
         if (playlistItem) {
@@ -167,33 +102,41 @@ class Playlist extends Component {
         ev.dataTransfer.effectAllowed = 'move';
     }
 
+    onMouseDown(event) {
+        var playlistOffset = $("#playlistDiv").offset();
+
+        console.log("onMouseDown");
+        console.log("x=" + (event.clientX - playlistOffset.left));
+        console.log("y=" + (event.clientY - playlistOffset.top));
+
+        this.setState ({ x1: event.clientX - playlistOffset.left});
+        this.setState ({ y1: event.clientY - playlistOffset.top});
+    }
+
+    onMouseUp(event) {
+
+        this.setState ({ x1: -1});
+        this.setState ({ y1: -1});
+        this.setState ({ x2: -1});
+        this.setState ({ y2: -1});
+    }
+
+    onMouseMove(event) {
+        var playlistOffset = $("#playlistDiv").offset();
+
+        console.log("onMouseMove");
+        console.log("x=" + (event.clientX - playlistOffset.left));
+        console.log("y=" + (event.clientY - playlistOffset.top));
+
+        this.setState ({ x2: event.clientX - playlistOffset.left});
+        this.setState ({ y2: event.clientY - playlistOffset.top});
+    }
+
     render () {
 
         let self = this;
 
         let zoneId = "";
-
-        let zoneDropDown = <div></div>;
-
-        let presentationZones = [];
-
-        if (this.props.sign && this.props.sign.zoneIds && this.props.zones && this.props.zones.zonesById) {
-            let selectOptions = this.props.sign.zoneIds.map( (zoneId) => {
-                const zone = self.props.zones.zonesById[zoneId]
-                if (zone) {
-                    return (
-                        <option value={zone.id} key={zone.id}>{zone.name}</option>
-                    );
-                }
-            })
-
-            zoneDropDown =
-                <div>
-                    Current zone:
-                    <select className="leftSpacing" ref="zoneSelect"
-                            onChange={this.onSelectZone.bind(this)}>{selectOptions}</select>
-                </div>
-        }
 
         let currentPlaylistItems = [];
         let currentPlaylistItemIds = [];
@@ -208,7 +151,7 @@ class Playlist extends Component {
             openCloseLabel = "<=";
         }
 
-        let dataIndex = -1;
+        let dataIndex = -4;
         let playlistItems = null;
 
         if (currentPlaylistItemIds.length > 0) {
@@ -218,12 +161,6 @@ class Playlist extends Component {
             });
 
             playlistItems = currentPlaylistItems.map(function (playlistItem, index) {
-                console.log("pizza1");
-                console.log("pizza2");
-
-                dataIndex++;
-
-
                 const id = playlistItem.getId();
                 const fileName = playlistItem.getFileName();
                 let filePath = "";
@@ -232,81 +169,106 @@ class Playlist extends Component {
                 if (self.props.selectedPlaylistItemId && self.props.selectedPlaylistItemId === id) {
                     className = "selectedImage ";
                 }
+                else {
+                    className = "unSelectedImage ";
+                }
 
                 if (playlistItem instanceof ImagePlaylistItem) {
                     filePath = playlistItem.getFilePath();
                     if (self.props.mediaThumbs.hasOwnProperty(filePath)) {
 
-                        const mediaItem = self.props.mediaThumbs[filePath]
+                        console.log("pizzadoodle4");
+
+                        const mediaItem = self.props.mediaThumbs[playlistItem.getFilePath()];
                         const thumb = getThumb(mediaItem);
 
-                        className += "mediaLibraryThumbImg";
+                        className += "playlistItemBtn";
+
+                        let playlistItemBtnStyle = {};
+                        let playlistItemDivStyle = {};
+                        let imgStyle = {};
+                        let lblStyle = {};
+                        if (playlistItem.xImage) {
+
+                            const leftOffset = playlistItem.xImage.toString();
+                            const topOffset = playlistItem.yImage.toString();
+
+                            playlistItemBtnStyle.left = leftOffset+"px";
+                            playlistItemBtnStyle.top = topOffset + "px";
+
+
+                            imgStyle.left = "6px";
+                            imgStyle.top = "0px";
+
+                            lblStyle.left = "0px";
+                            lblStyle.top = "116px";
+                        }
+
+                        dataIndex+= 4;
 
                         return (
-                            <li className="flex-item mediaLibraryThumbDiv" key={index} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
-                                <img
-                                    id={id}
-                                    src={thumb}
-                                    className={className}
-                                    data-index={dataIndex}
-                                    onClick={() => self.onSelectPlaylistItem(playlistItem)}
-
-                                    draggable={true}
-                                    onDragStart={self.playlistDragStartHandler}
-                                    data-name={fileName}
-                                    data-path={filePath}
-                                    data-type="image"
-                                />
-                                <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>{fileName}</p>
-                            </li>
+                            <btn
+                                className={className}
+                                onClick={() => console.log("btn onClick " + playlistItem.fileName)}
+                                onMouseDown={() => console.log("btn onMouseDown " + playlistItem.fileName)}
+                                onMouseMove={() => console.log("btn onMouseMove " + playlistItem.fileName)}
+                                onMouseUp={() => console.log("btn onMouseUp " + playlistItem.fileName)}
+                                onMouseEnter={() => console.log("btn onMouseEnter " + playlistItem.fileName)}
+                                onMouseLeave={() => console.log("btn onMouseLeave " + playlistItem.fileName)}
+                                style={playlistItemBtnStyle}
+                                key={dataIndex}>
+                                    <img
+                                        id={playlistItem.id}
+                                        src={thumb}
+                                        className="playlistThumbImg"
+                                        data-index={dataIndex}
+                                        onClick={() => self.onSelectPlaylistItem(playlistItem)}
+                                        key={dataIndex+2}
+                                        style={imgStyle}
+                                        draggable={true}
+                                        onDragStart={self.playlistDragStartHandler}
+                                        data-name={playlistItem.fileName}
+                                        data-path={playlistItem.filePath}
+                                        data-type="image"
+                                    />
+                                    <span
+                                        className="playlistLbl smallFont"
+                                        style={lblStyle}
+                                        key={(dataIndex+3)}
+                                    >
+                                        {playlistItem.getFileName()}
+                                    </span>
+                            </btn>
                         );
                     }
-                    else {
-                        return (
-                            <li key={id} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
-                                <p className="mediaLibraryThumbLbl">{fileName}</p>
-                            </li>
-                        )
-                    }
-                }
-
-                if (playlistItem instanceof HTML5PlaylistItem) {
-                    className += "otherThumbImg";
-                    return (
-                        <li className="flex-item mediaLibraryThumbDiv" key={id} data-index={index} id={"mediaThumb" + dataIndex.toString()}>
-                            <img
-                                id={id}
-                                src="images/html.png"
-                                className={className}
-                                data-index={dataIndex}
-                                onClick={() => self.onSelectPlaylistItem(playlistItem)}
-
-                                draggable={true}
-                                onDragStart={self.playlistDragStartHandler}
-                                data-name={fileName}
-                                data-path={filePath}
-                                data-type="html5"
-                            />
-                            <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>HTML5</p>
-                        </li>
-                    );
                 }
             });
         }
         else {
-            playlistItems =
-                <li id="liDropItemHere" className="mediaLibraryThumbDiv" key={guid()}>
-                    <p id="lblDropItemHere" className="mediaLibraryThumbLbl">Drop Item Here</p>
-                </li>
+            playlistItems = <div></div>
+        }
+
+        let svgLine = '';
+        if (this.state.x1 >= 0 && this.state.y1 >= 0 && this.state.x2 >= 0 && this.state.y2 >= 0) {
+            svgLine =   <svg width="400" height="400">
+                            <line x1={this.state.x1} x2={this.state.x2} y1={this.state.y1} y2={this.state.y2} stroke="black" fill="transparent" stroke-width="10"/>
+                        </svg>;
         }
 
         return (
-            <div className="playlistDiv" >
-                {zoneDropDown}
-                <button id="openCloseIcon" className="plainButton" type="button" onClick={this.props.onToggleOpenClosePropertySheet.bind(this)}>{openCloseLabel}</button>
-                <ul id="playlistItemsUl" className="playlist-flex-container wrap" onDrop={self.playlistDropHandler.bind(self)} onDragOver={self.playlistDragOverHandler}>
-                    {playlistItems}
-                </ul>
+            <div 
+                className="playlistDiv" 
+                id="playlistDiv"
+                onClick={() => console.log("btn onClick playlistDiv")}
+                onMouseDown={(event) => self.onMouseDown(event)}
+                onMouseMove={(event) => self.onMouseMove(event)}
+                onMouseUp={() => console.log("btn onMouseUp playlistDiv")}
+                onMouseEnter={() => console.log("btn onMouseEnter playlistDiv")}
+                onMouseLeave={() => console.log("btn onMouseLeave playlistDiv")}
+                onDrop={self.playlistDropHandler.bind(self)} 
+                onDragOver={self.playlistDragOverHandler} >
+                {playlistItems}
+                {svgLine}
             </div>
         );
     }

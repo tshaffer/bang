@@ -1,6 +1,3 @@
-/**
- * Created by tedshaffer on 6/4/16.
- */
 const path = require('path');
 
 import React, { Component } from 'react';
