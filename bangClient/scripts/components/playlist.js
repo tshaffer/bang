@@ -19,6 +19,8 @@ class Playlist extends Component {
         this.state = {
 
         };
+
+        this.photoImage = new Image();
     }
 
     componentWillMount() {
@@ -47,15 +49,56 @@ class Playlist extends Component {
 
     paint (context) {
         context.save();
-        context.translate(100, 100);
-        context.rotate(this.props.rotation, 100, 100);
-        context.fillStyle = '#F00';
-        context.fillRect(-50, -50, 100, 100);
+
+        if (this.photoImage.src) {
+            context.drawImage(this.photoImage, 0, 0);
+        }
+        else {
+            context.translate(100, 100);
+            context.rotate(this.props.rotation, 100, 100);
+            context.fillStyle = '#F00';
+            context.fillRect(-50, -50, 100, 100);
+        }
         context.restore();
     }
 
     render() {
-        return <canvas ref="playlistCanvas" width={200} height={200}/>;
+
+        let self = this;
+
+        let currentPlaylistItems = [];
+        let currentPlaylistItemIds = [];
+
+        const currentZonePlaylist = this.props.getCurrentZonePlaylist();
+        if (currentZonePlaylist) {
+            currentPlaylistItemIds = currentZonePlaylist.playlistItemIds;
+        }
+
+        let img = null;
+
+        let playlistItems = null;
+
+        if (currentPlaylistItemIds.length > 0) {
+
+            currentPlaylistItemIds.forEach( currentPlaylistItemId => {
+                currentPlaylistItems.push(self.props.playlistItems.playlistItemsById[currentPlaylistItemId]);
+            });
+
+            playlistItems = currentPlaylistItems.map(function (playlistItem, index) {
+
+                if (playlistItem instanceof ImagePlaylistItem) {
+                    if (self.props.mediaThumbs.hasOwnProperty(playlistItem.filePath)) {
+
+                        const mediaItem = self.props.mediaThumbs[playlistItem.filePath];
+                        const thumb = getThumb(mediaItem);
+
+                        self.photoImage.src = thumb;
+                    }
+                }
+            });
+        }
+
+        return <canvas ref="playlistCanvas" width={600} height={300} onDrop={self.playlistDropHandler.bind(self)} onDragOver={self.playlistDragOverHandler}/>;
     }
 
     playlistDragOverHandler (ev) {
@@ -138,8 +181,8 @@ class Playlist extends Component {
             index = this.getDropIndex(ev);
         }
         else {
-            console.log("don't know where to drop it");
-            return;
+            // console.log("don't know where to drop it");
+            // return;
         }
 
         // specify playlist item to drop
