@@ -51,7 +51,8 @@ class Playlist extends Component {
         context.save();
 
         if (this.photoImage.src) {
-            context.drawImage(this.photoImage, 0, 0);
+            // context.drawImage(this.photoImage, 0, 0);
+            context.drawImage(this.photoImage, 0, 0, 108, 108);
         }
         else {
             context.translate(100, 100);
@@ -98,7 +99,7 @@ class Playlist extends Component {
             });
         }
 
-        return <canvas ref="playlistCanvas" width={600} height={300} onDrop={self.playlistDropHandler.bind(self)} onDragOver={self.playlistDragOverHandler}/>;
+        return <canvas ref="playlistCanvas" width={600} height={411} onDrop={self.playlistDropHandler.bind(self)} onDragOver={self.playlistDragOverHandler}/>;
     }
 
     playlistDragOverHandler (ev) {
