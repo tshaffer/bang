@@ -50,7 +50,6 @@ class Playlist extends Component {
         let startIndex = -1;
         if (ev.dataTransfer.effectAllowed === "move") {
             operation = "move";
-            startIndex = Number(ev.dataTransfer.getData("index"));
         }
         else {
             operation = "copy";

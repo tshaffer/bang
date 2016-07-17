@@ -200,6 +200,15 @@ export function newMediaState(mediaState) {
     }
 }
 
+export const UPDATE_MEDIA_STATE = 'UPDATE_MEDIA_STATE';
+export function updateMediaState(mediaStateId, mediaState) {
+    return {
+        type: UPDATE_MEDIA_STATE,
+        mediaStateId: mediaStateId,
+        mediaState: mediaState
+    }
+}
+
 export const NEW_PLAYLIST_ITEM = 'NEW_PLAYLIST_ITEM';
 export function newPlaylistItem(playlistItem) {
     return {

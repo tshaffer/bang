@@ -1,7 +1,7 @@
 /**
  * Created by tedshaffer on 7/17/16.
  */
-import { CLEAR_MEDIA_STATES, NEW_MEDIA_STATE, UPDATE_MEDIA_STATE, DELETE_MEDIA_STATE } from '../actions/index';
+import { CLEAR_MEDIA_STATES, NEW_MEDIA_STATE, MOVE_MEDIA_STATE, UPDATE_MEDIA_STATE, DELETE_MEDIA_STATE } from '../actions/index';
 
 const initialState =
 {
@@ -31,7 +31,20 @@ export default function(state = initialState, action) {
                 mediaStatesById: newMediaStatesById
             };
             return newState;
-        
+
+        case UPDATE_MEDIA_STATE:
+
+            mediaStateId = action.mediaStateId;
+            mediaState = action.mediaState;
+
+            newMediaStatesById = Object.assign({}, state.mediaStatesById);
+            newMediaStatesById[mediaStateId] = mediaState;
+
+            newState = {
+                mediaStatesById: newMediaStatesById
+            };
+            return newState;
+
         case UPDATE_MEDIA_STATE:
         case DELETE_MEDIA_STATE:
             break;
