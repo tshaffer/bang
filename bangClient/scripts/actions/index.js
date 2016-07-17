@@ -192,6 +192,14 @@ export function clearPlaylistItems() {
     }
 }
 
+export const NEW_MEDIA_STATE = 'NEW_MEDIA_STATE';
+export function newMediaState(mediaState) {
+    return {
+        type: NEW_MEDIA_STATE,
+        payload: mediaState
+    }
+}
+
 export const NEW_PLAYLIST_ITEM = 'NEW_PLAYLIST_ITEM';
 export function newPlaylistItem(playlistItem) {
     return {
@@ -217,6 +225,16 @@ export function addPlaylistItemToZonePlaylist(zonePlaylistId, playlistItemId, in
         zonePlaylistId: zonePlaylistId,
         playlistItemId: playlistItemId,
         index: index
+    }
+}
+
+export const ADD_MEDIA_STATE_TO_ZONE_PLAYLIST = 'ADD_MEDIA_STATE_TO_ZONE_PLAYLIST';
+export function addMediaStateToZonePlaylist(zonePlaylistId, mediaStateId) {
+
+    return {
+        type: ADD_MEDIA_STATE_TO_ZONE_PLAYLIST,
+        zonePlaylistId: zonePlaylistId,
+        mediaStateId: mediaStateId
     }
 }
 

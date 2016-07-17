@@ -129,7 +129,7 @@ body {
     border-color: white;
 }
 
-.playlistItemBtn {
+.mediaStateBtn {
     border-style: solid;
     border-width: 2px;
     position: absolute;

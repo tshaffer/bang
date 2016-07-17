@@ -4,6 +4,7 @@ import $ from 'jquery';
 
 import { getThumb } from '../platform/actions';
 
+import MediaState from '../badm/mediaState';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
@@ -17,8 +18,6 @@ class Playlist extends Component {
             x2: -1,
             y2: -1
         };
-        this.xImage = null;
-        this.yImage = null;
     }
 
     componentWillMount() {
@@ -31,7 +30,7 @@ class Playlist extends Component {
         document.addEventListener('keydown', (event) => {
             if (event.keyCode == 8 || event.keyCode == 46) {       // delete key or backspace key
                 // check to see if playlistItem has focus
-                self.props.onDeletePlaylistItem();        
+                self.props.onDeleteMediaState();        
             }
         });
     }
@@ -64,21 +63,20 @@ class Playlist extends Component {
 
         // determine where the drop occurred on the playlist 'canvas' component
         var playlistOffset = $("#playlistDiv").offset();
-        this.xImage = ev.pageX - playlistOffset.left;
-        this.yImage = ev.pageY - playlistOffset.top;
+        const x = ev.pageX - playlistOffset.left;
+        const y = ev.pageY - playlistOffset.top;
 
         // specify playlist item to drop
-        let playlistItem = null;
+        let mediaState = null;
         if (type === "image") {
-            playlistItem = this.props.onDropPlaylistItem(operation, type, stateName, path, -1, -1);
-
             // offset image to center it around the drop point
-            playlistItem.xImage = this.xImage - 54;
-            playlistItem.yImage = this.yImage - 54;
+            const mediaStateX = x - 54;
+            const mediaStateY = y - 54;
+            mediaState = this.props.onDropMediaState(mediaStateX, mediaStateY, operation, type, stateName, path);
         }
 
-        if (playlistItem) {
-            this.onSelectPlaylistItem(playlistItem);
+        if (mediaState) {
+            this.onSelectMediaState(mediaState);
         }
     }
 
@@ -86,8 +84,8 @@ class Playlist extends Component {
         console.log("onSelectZone invoked");
     }
 
-    onSelectPlaylistItem(playlistItem) {
-        this.props.onSelectPlaylistItem(playlistItem);
+    onSelectMediaState(mediaState) {
+        this.props.onSelectMediaState(mediaState);
     }
 
     playlistDragStartHandler(ev) {
@@ -105,9 +103,9 @@ class Playlist extends Component {
     onMouseDown(event) {
         var playlistOffset = $("#playlistDiv").offset();
 
-        console.log("onMouseDown");
-        console.log("x=" + (event.clientX - playlistOffset.left));
-        console.log("y=" + (event.clientY - playlistOffset.top));
+        // console.log("onMouseDown");
+        // console.log("x=" + (event.clientX - playlistOffset.left));
+        // console.log("y=" + (event.clientY - playlistOffset.top));
 
         this.setState ({ x1: event.clientX - playlistOffset.left});
         this.setState ({ y1: event.clientY - playlistOffset.top});
@@ -124,9 +122,9 @@ class Playlist extends Component {
     onMouseMove(event) {
         var playlistOffset = $("#playlistDiv").offset();
 
-        console.log("onMouseMove");
-        console.log("x=" + (event.clientX - playlistOffset.left));
-        console.log("y=" + (event.clientY - playlistOffset.top));
+        // console.log("onMouseMove");
+        // console.log("x=" + (event.clientX - playlistOffset.left));
+        // console.log("y=" + (event.clientY - playlistOffset.top));
 
         this.setState ({ x2: event.clientX - playlistOffset.left});
         this.setState ({ y2: event.clientY - playlistOffset.top});
@@ -138,12 +136,12 @@ class Playlist extends Component {
 
         let zoneId = "";
 
-        let currentPlaylistItems = [];
-        let currentPlaylistItemIds = [];
+        let currentMediaStates = [];
+        let currentMediaStateIds = [];
 
         const currentZonePlaylist = this.props.getCurrentZonePlaylist();
         if (currentZonePlaylist) {
-            currentPlaylistItemIds = currentZonePlaylist.playlistItemIds;
+            currentMediaStateIds = currentZonePlaylist.mediaStateIds;
         }
 
         let openCloseLabel = "=>";
@@ -152,83 +150,84 @@ class Playlist extends Component {
         }
 
         let dataIndex = -4;
-        let playlistItems = null;
+        let mediaStates = null;
 
-        if (currentPlaylistItemIds.length > 0) {
+        if (currentMediaStateIds.length > 0) {
 
-            currentPlaylistItemIds.forEach( currentPlaylistItemId => {
-                currentPlaylistItems.push(self.props.playlistItems.playlistItemsById[currentPlaylistItemId]);
+            currentMediaStateIds.forEach( currentMediaStateId => {
+                currentMediaStates.push(self.props.mediaStates.mediaStatesById[currentMediaStateId]);
             });
 
-            playlistItems = currentPlaylistItems.map(function (playlistItem, index) {
-                const id = playlistItem.getId();
-                const fileName = playlistItem.getFileName();
+            mediaStates = currentMediaStates.map(function (mediaState, index) {
+                const id = mediaState.getId();
+                const fileName = mediaState.getFileName();
                 let filePath = "";
 
                 let className = "";
-                if (self.props.selectedPlaylistItemId && self.props.selectedPlaylistItemId === id) {
+                if (self.props.selectedMediaStateId && self.props.selectedMediaStateId === id) {
                     className = "selectedImage ";
                 }
                 else {
                     className = "unSelectedImage ";
                 }
 
-                if (playlistItem instanceof ImagePlaylistItem) {
-                    filePath = playlistItem.getFilePath();
+                const mediaPlaylistItem = mediaState.getMediaPlaylistItem();
+
+                if (mediaPlaylistItem instanceof ImagePlaylistItem) {
+                    // filePath = mediaState.getFilePath();
+                    filePath = mediaPlaylistItem.getFilePath();
                     if (self.props.mediaThumbs.hasOwnProperty(filePath)) {
 
                         console.log("pizzadoodle4");
 
-                        const mediaItem = self.props.mediaThumbs[playlistItem.getFilePath()];
+                        const mediaItem = self.props.mediaThumbs[filePath];
                         const thumb = getThumb(mediaItem);
 
-                        className += "playlistItemBtn";
+                        className += "mediaStateBtn";
 
-                        let playlistItemBtnStyle = {};
-                        let playlistItemDivStyle = {};
+                        let mediaStateBtnStyle = {};
                         let imgStyle = {};
                         let lblStyle = {};
-                        if (playlistItem.xImage) {
 
-                            const leftOffset = playlistItem.xImage.toString();
-                            const topOffset = playlistItem.yImage.toString();
+                        const leftOffset = mediaState.x.toString();
+                        const topOffset = mediaState.y.toString();
 
-                            playlistItemBtnStyle.left = leftOffset+"px";
-                            playlistItemBtnStyle.top = topOffset + "px";
+                        mediaStateBtnStyle.left = leftOffset+"px";
+                        mediaStateBtnStyle.top = topOffset + "px";
 
+                        imgStyle.left = "6px";
+                        imgStyle.top = "0px";
 
-                            imgStyle.left = "6px";
-                            imgStyle.top = "0px";
+                        lblStyle.left = "0px";
+                        lblStyle.top = "116px";
 
-                            lblStyle.left = "0px";
-                            lblStyle.top = "116px";
-                        }
+                        const fileName = mediaPlaylistItem.getFileName();
 
                         dataIndex+= 4;
 
                         return (
                             <btn
                                 className={className}
-                                onClick={() => console.log("btn onClick " + playlistItem.fileName)}
-                                onMouseDown={() => console.log("btn onMouseDown " + playlistItem.fileName)}
-                                onMouseMove={() => console.log("btn onMouseMove " + playlistItem.fileName)}
-                                onMouseUp={() => console.log("btn onMouseUp " + playlistItem.fileName)}
-                                onMouseEnter={() => console.log("btn onMouseEnter " + playlistItem.fileName)}
-                                onMouseLeave={() => console.log("btn onMouseLeave " + playlistItem.fileName)}
-                                style={playlistItemBtnStyle}
+                                onClick={() => console.log("btn onClick " + fileName)}
+                                onMouseDown={() => console.log("btn onMouseDown " + fileName)}
+                                onMouseMove={() => console.log("btn onMouseMove " + fileName)}
+                                onMouseUp={() => console.log("btn onMouseUp " + fileName)}
+                                onMouseEnter={() => console.log("btn onMouseEnter " + fileName)}
+                                onMouseLeave={() => console.log("btn onMouseLeave " + fileName)}
+                                style={mediaStateBtnStyle}
                                 key={dataIndex}>
                                     <img
-                                        id={playlistItem.id}
+                                        id={mediaStateBtnStyle.id}
                                         src={thumb}
                                         className="playlistThumbImg"
                                         data-index={dataIndex}
-                                        onClick={() => self.onSelectPlaylistItem(playlistItem)}
+                                        onClick={() => self.onSelectMediaState(mediaState)}
                                         key={dataIndex+2}
                                         style={imgStyle}
                                         draggable={true}
                                         onDragStart={self.playlistDragStartHandler}
-                                        data-name={playlistItem.fileName}
-                                        data-path={playlistItem.filePath}
+                                        data-name={fileName}
+                                        data-path={filePath}
                                         data-type="image"
                                     />
                                     <span
@@ -236,7 +235,7 @@ class Playlist extends Component {
                                         style={lblStyle}
                                         key={(dataIndex+3)}
                                     >
-                                        {playlistItem.getFileName()}
+                                        {fileName}
                                     </span>
                             </btn>
                         );
@@ -245,7 +244,7 @@ class Playlist extends Component {
             });
         }
         else {
-            playlistItems = <div></div>
+            mediaStates = <div></div>
         }
 
         let svgLine = '';
@@ -267,7 +266,7 @@ class Playlist extends Component {
                 onMouseLeave={() => console.log("btn onMouseLeave playlistDiv")}
                 onDrop={self.playlistDropHandler.bind(self)} 
                 onDragOver={self.playlistDragOverHandler} >
-                {playlistItems}
+                {mediaStates}
                 {svgLine}
             </div>
         );
