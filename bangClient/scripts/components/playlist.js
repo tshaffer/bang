@@ -8,6 +8,10 @@ import MediaState from '../badm/mediaState';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
+const mouseStateNone = "none";
+const mouseStateMoveMediaState = "moveMediaState";
+const mouseStateCreateTransition = "createTransition";
+
 class Playlist extends Component {
 
     constructor(props) {
@@ -18,6 +22,8 @@ class Playlist extends Component {
             x2: -1,
             y2: -1
         };
+
+        this.mouseState = mouseStateNone;
     }
 
     componentWillMount() {
@@ -99,35 +105,82 @@ class Playlist extends Component {
         ev.dataTransfer.effectAllowed = 'move';
     }
 
-    onMouseDown(event) {
-        var playlistOffset = $("#playlistDiv").offset();
+    onPlaylistMouseDown(event) {
 
-        // console.log("onMouseDown");
-        // console.log("x=" + (event.clientX - playlistOffset.left));
-        // console.log("y=" + (event.clientY - playlistOffset.top));
-
-        this.setState ({ x1: event.clientX - playlistOffset.left});
-        this.setState ({ y1: event.clientY - playlistOffset.top});
+        console.log("onPlaylistMouseDown");
+        this.mouseState = mouseStateNone;
+        event.stopPropagation();
     }
 
-    onMouseUp(event) {
+    onPlaylistMouseMove(event) {
+
+        console.log("onPlaylistMouseMove");
+        this.processMouseMove(event);
+    }
+
+    onPlaylistMouseUp(event) {
+        console.log("onPlaylistMouseUp");
+        this.processMouseUp(event);
+    }
+
+    onMediaStateMouseDown(event) {
+
+        console.log("onMediaStateMouseDown");
+
+        this.mouseState = mouseStateCreateTransition;
+
+        var playlistOffset = $("#playlistDiv").offset();
+        this.setState ({ x1: event.clientX - playlistOffset.left});
+        this.setState ({ y1: event.clientY - playlistOffset.top});
+
+        event.stopPropagation();
+    }
+
+    onMediaStateMouseMove(event) {
+        console.log("onMediaStateMouseMove");
+        this.processMouseMove(event);
+    }
+
+    onMediaStateMouseUp(event) {
+        console.log("onMediaStateMouseUp");
+        this.processMouseUp(event);
+    }
+
+    onMediaStateImgMouseDown(event) {
+        console.log("onMediaStateImgMouseDown");
+        event.stopPropagation();
+    }
+
+    onMediaStateImgMouseMove(event) {
+        console.log("onMediaStateImgMouseMove");
+        this.processMouseMove(event);
+    }
+
+    onMediaStateImgMouseUp(event) {
+        console.log("onMediaStateImgMouseUp");
+        this.processMouseUp(event);
+    }
+
+    processMouseMove(event) {
+
+        var playlistOffset = $("#playlistDiv").offset();
+        this.setState ({ x2: event.clientX - playlistOffset.left});
+        this.setState ({ y2: event.clientY - playlistOffset.top});
+        event.stopPropagation();
+    }
+
+    processMouseUp(event) {
+
+        this.mouseState = mouseStateNone;
 
         this.setState ({ x1: -1});
         this.setState ({ y1: -1});
         this.setState ({ x2: -1});
         this.setState ({ y2: -1});
+
+        event.stopPropagation();
     }
 
-    onMouseMove(event) {
-        var playlistOffset = $("#playlistDiv").offset();
-
-        // console.log("onMouseMove");
-        // console.log("x=" + (event.clientX - playlistOffset.left));
-        // console.log("y=" + (event.clientY - playlistOffset.top));
-
-        this.setState ({ x2: event.clientX - playlistOffset.left});
-        this.setState ({ y2: event.clientY - playlistOffset.top});
-    }
 
     render () {
 
@@ -208,9 +261,9 @@ class Playlist extends Component {
                             <btn
                                 className={className}
                                 onClick={() => console.log("btn onClick " + fileName)}
-                                onMouseDown={() => console.log("btn onMouseDown " + fileName)}
-                                onMouseMove={() => console.log("btn onMouseMove " + fileName)}
-                                onMouseUp={() => console.log("btn onMouseUp " + fileName)}
+                                onMouseDown={(event) => self.onMediaStateMouseDown(event)}
+                                onMouseMove={(event) => self.onMediaStateMouseMove(event)}
+                                onMouseUp={() => self.onMediaStateMouseUp(event)}
                                 onMouseEnter={() => console.log("btn onMouseEnter " + fileName)}
                                 onMouseLeave={() => console.log("btn onMouseLeave " + fileName)}
                                 style={mediaStateBtnStyle}
@@ -221,6 +274,9 @@ class Playlist extends Component {
                                         className="playlistThumbImg"
                                         data-index={dataIndex}
                                         onClick={() => self.onSelectMediaState(mediaState)}
+                                        onMouseDown={(event) => self.onMediaStateImgMouseDown(event)}
+                                        onMouseMove={(event) => self.onMediaStateImgMouseMove(event)}
+                                        onMouseUp={() => self.onMediaStateImgMouseUp(event)}
                                         key={dataIndex+2}
                                         style={imgStyle}
                                         draggable={true}
@@ -248,9 +304,18 @@ class Playlist extends Component {
 
         let svgLine = '';
         if (this.state.x1 >= 0 && this.state.y1 >= 0 && this.state.x2 >= 0 && this.state.y2 >= 0) {
-            svgLine =   <svg width="400" height="400">
-                            <line x1={this.state.x1} x2={this.state.x2} y1={this.state.y1} y2={this.state.y2} stroke="black" fill="transparent" stroke-width="10"/>
-                        </svg>;
+
+            switch (this.mouseState) {
+                case mouseStateNone:
+                    break;
+                case mouseStateMoveMediaState:
+                    break;
+                case mouseStateCreateTransition:
+                    svgLine = <svg width="400" height="400">
+                                <line x1={this.state.x1} x2={this.state.x2} y1={this.state.y1} y2={this.state.y2} stroke="black" fill="transparent" stroke-width="10"/>
+                              </svg>;
+                    break;
+            }
         }
 
         return (
@@ -258,9 +323,9 @@ class Playlist extends Component {
                 className="playlistDiv" 
                 id="playlistDiv"
                 onClick={() => console.log("btn onClick playlistDiv")}
-                onMouseDown={(event) => self.onMouseDown(event)}
-                onMouseMove={(event) => self.onMouseMove(event)}
-                onMouseUp={() => console.log("btn onMouseUp playlistDiv")}
+                onMouseDown={(event) => self.onPlaylistMouseDown(event)}
+                onMouseMove={(event) => self.onPlaylistMouseMove(event)}
+                onMouseUp={() => self.onPlaylistMouseUp(event)}
                 onMouseEnter={() => console.log("btn onMouseEnter playlistDiv")}
                 onMouseLeave={() => console.log("btn onMouseLeave playlistDiv")}
                 onDrop={self.playlistDropHandler.bind(self)} 
