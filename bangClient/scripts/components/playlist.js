@@ -123,7 +123,9 @@ class Playlist extends Component {
         this.processMouseUp(event);
     }
 
-    onMediaStateMouseDown(event) {
+    onMediaStateMouseDown(event, mediaState) {
+
+        this.onSelectMediaState(mediaState);
 
         // console.log("onMediaStateMouseDown");
 
@@ -132,6 +134,8 @@ class Playlist extends Component {
         var playlistOffset = $("#playlistDiv").offset();
         this.setState ({ x1: event.clientX - playlistOffset.left});
         this.setState ({ y1: event.clientY - playlistOffset.top});
+        this.setState ({ x2: -1});
+        this.setState ({ y2: -1});
 
         event.stopPropagation();
     }
@@ -149,8 +153,11 @@ class Playlist extends Component {
             case mouseStateMoveMediaState:
                 break;
             case mouseStateCreateTransition:
-                console.log("create transition to " + event.target.id);
-                this.props.onAddTransition(event.target.id);
+                // don't add transition if the target media state is same as the current media state
+                if (event.target.id !== this.props.selectedMediaStateId) {
+                    console.log("create transition to " + event.target.id);
+                    this.props.onAddTransition(event.target.id);
+                }
                 break;
         }
         this.processMouseUp(event);
@@ -296,12 +303,15 @@ class Playlist extends Component {
                         // {/*onMouseEnter={() => console.log("btn onMouseEnter " + fileName)}*/}
                         // {/*onMouseLeave={() => console.log("btn onMouseLeave " + fileName)}*/}
 
+                        // onClick={() => self.onSelectMediaState(mediaState)}
+
+                        // onClick={() => console.log("btn onClick " + fileName)}
+
                         return (
                             <btn
                                 id={id}
                                 className={className}
-                                onClick={() => console.log("btn onClick " + fileName)}
-                                onMouseDown={(event) => self.onMediaStateMouseDown(event)}
+                                onMouseDown={(event) => self.onMediaStateMouseDown(event, mediaState)}
                                 onMouseMove={(event) => self.onMediaStateMouseMove(event)}
                                 onMouseUp={(event) => self.onMediaStateMouseUp(event)}
                                 style={mediaStateBtnStyle}
@@ -311,7 +321,6 @@ class Playlist extends Component {
                                         src={thumb}
                                         className="playlistThumbImg"
                                         data-index={dataIndex}
-                                        onClick={() => self.onSelectMediaState(mediaState)}
                                         onMouseDown={(event) => self.onMediaStateImgMouseDown(event, mediaState)}
                                         onMouseMove={(event) => self.onMediaStateImgMouseMove(event)}
                                         onMouseUp={(event) => self.onMediaStateImgMouseUp(event)}
@@ -324,6 +333,7 @@ class Playlist extends Component {
                                         data-type="image"
                                     />
                                     <span
+                                        id={id}
                                         className="playlistLbl smallFont"
                                         style={lblStyle}
                                         key={(dataIndex+3)}
@@ -366,11 +376,12 @@ class Playlist extends Component {
         // </svg>
 
 
+        // onClick={() => console.log("btn onClick playlistDiv")}
+
         return (
             <div 
                 className="playlistDiv" 
                 id="playlistDiv"
-                onClick={() => console.log("btn onClick playlistDiv")}
                 onMouseDown={(event) => self.onPlaylistMouseDown(event)}
                 onMouseMove={(event) => self.onPlaylistMouseMove(event)}
                 onMouseUp={() => self.onPlaylistMouseUp(event)}
