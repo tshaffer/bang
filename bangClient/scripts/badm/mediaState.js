@@ -3,6 +3,7 @@ export default class MediaState  {
         this._mediaPlaylistItem = mediaPlaylistItem;
         this.x = x;
         this.y = y;
+        this.transitionOutIds = [];
     }
 
     // getX() {
@@ -31,6 +32,10 @@ export default class MediaState  {
 
     getFilePath() {
         return this.filePath;
+    }
+
+    getTransitionOutIds() {
+        return this.transitionOutIds;
     }
 }
 

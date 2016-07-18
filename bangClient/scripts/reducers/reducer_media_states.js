@@ -1,7 +1,7 @@
 /**
  * Created by tedshaffer on 7/17/16.
  */
-import { CLEAR_MEDIA_STATES, NEW_MEDIA_STATE, MOVE_MEDIA_STATE, UPDATE_MEDIA_STATE, DELETE_MEDIA_STATE } from '../actions/index';
+import { CLEAR_MEDIA_STATES, NEW_MEDIA_STATE, MOVE_MEDIA_STATE, UPDATE_MEDIA_STATE, ADD_TRANSITION, DELETE_MEDIA_STATE } from '../actions/index';
 
 const initialState =
 {
@@ -45,7 +45,14 @@ export default function(state = initialState, action) {
             };
             return newState;
 
-        case UPDATE_MEDIA_STATE:
+        case ADD_TRANSITION:
+
+            let sourceMediaStateId = action.sourceMediaStateId;
+            let destinationMediaStateId = action.destinationMediaStateId;
+
+            let updatedMediaState = Object.assign()
+            break;
+
         case DELETE_MEDIA_STATE:
             break;
     }

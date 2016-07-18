@@ -67,7 +67,7 @@ class Playlist extends Component {
         const type = ev.dataTransfer.getData("type");
 
         // determine where the drop occurred on the playlist 'canvas' component
-        var playlistOffset = $("#playlistDiv").offset();
+        let playlistOffset = $("#playlistDiv").offset();
         const x = ev.pageX - playlistOffset.left;
         const y = ev.pageY - playlistOffset.top;
 
@@ -107,25 +107,25 @@ class Playlist extends Component {
 
     onPlaylistMouseDown(event) {
 
-        console.log("onPlaylistMouseDown");
+        // console.log("onPlaylistMouseDown");
         this.mouseState = mouseStateNone;
         event.stopPropagation();
     }
 
     onPlaylistMouseMove(event) {
 
-        console.log("onPlaylistMouseMove");
+        // console.log("onPlaylistMouseMove");
         this.processMouseMove(event);
     }
 
     onPlaylistMouseUp(event) {
-        console.log("onPlaylistMouseUp");
+        // console.log("onPlaylistMouseUp");
         this.processMouseUp(event);
     }
 
     onMediaStateMouseDown(event) {
 
-        console.log("onMediaStateMouseDown");
+        // console.log("onMediaStateMouseDown");
 
         this.mouseState = mouseStateCreateTransition;
 
@@ -137,28 +137,41 @@ class Playlist extends Component {
     }
 
     onMediaStateMouseMove(event) {
-        console.log("onMediaStateMouseMove");
+        // console.log("onMediaStateMouseMove");
         this.processMouseMove(event);
     }
 
     onMediaStateMouseUp(event) {
-        console.log("onMediaStateMouseUp");
+        // console.log("onMediaStateMouseUp");
+        switch (this.mouseState) {
+            case mouseStateNone:
+                break;
+            case mouseStateMoveMediaState:
+                break;
+            case mouseStateCreateTransition:
+                console.log("create transition to " + event.target.id);
+                this.props.onAddTransition(event.target.id);
+                break;
+        }
         this.processMouseUp(event);
     }
 
-    onMediaStateImgMouseDown(event) {
-        console.log("onMediaStateImgMouseDown");
+    onMediaStateImgMouseDown(event, mediaState) {
+
+        this.onSelectMediaState(mediaState);
+
+        // console.log("onMediaStateImgMouseDown");
         event.stopPropagation();
     }
 
     onMediaStateImgMouseMove(event) {
-        console.log("onMediaStateImgMouseMove");
+        // console.log("onMediaStateImgMouseMove");
         this.processMouseMove(event);
     }
 
     onMediaStateImgMouseUp(event) {
-        console.log("onMediaStateImgMouseUp");
-        this.processMouseUp(event);
+        // console.log("onMediaStateImgMouseUp");
+        // this.processMouseUp(event);
     }
 
     processMouseMove(event) {
@@ -203,6 +216,7 @@ class Playlist extends Component {
 
         let dataIndex = -4;
         let mediaStates = null;
+        let transitionLines = '';
 
         if (currentMediaStateIds.length > 0) {
 
@@ -223,8 +237,29 @@ class Playlist extends Component {
                     className = "unSelectedImage ";
                 }
 
-                const mediaPlaylistItem = mediaState.getMediaPlaylistItem();
+                let transitionLineSpecs = '';
+                transitionLineSpecs = mediaState.transitionOutIds.map(function (transitionOutId, index) {
+                    const tms = self.props.mediaStates.mediaStatesById[transitionOutId];
+                    return (
+                        <line x1={mediaState.x} y1={mediaState.y} x2={tms.x} y2={tms.y} stroke="black" fill="transparent" stroke-width="10"/>
+                    );
+                });
 
+                // <svg width="400" height="400">
+                //     <line x1="0" y1="0" x2="50" y2="50" stroke="black" fill="transparent" stroke-width="10"/>
+                //     <line x1="0" y1="50" x2="50" y2="0" stroke="black" fill="transparent" stroke-width="10"/>
+                // </svg>
+
+                if (transitionLineSpecs != '') {
+                    transitionLines =
+                        <svg width="900" height="800"> +
+                            {transitionLineSpecs} +
+                        </svg>;
+                }
+
+                console.log("pizza rocks");
+
+                const mediaPlaylistItem = mediaState.getMediaPlaylistItem();
                 if (mediaPlaylistItem instanceof ImagePlaylistItem) {
                     // filePath = mediaState.getFilePath();
                     filePath = mediaPlaylistItem.getFilePath();
@@ -253,30 +288,33 @@ class Playlist extends Component {
                         lblStyle.left = "0px";
                         lblStyle.top = "116px";
 
+                        const id = mediaPlaylistItem.getId();
                         const fileName = mediaPlaylistItem.getFileName();
 
                         dataIndex+= 4;
 
+                        // {/*onMouseEnter={() => console.log("btn onMouseEnter " + fileName)}*/}
+                        // {/*onMouseLeave={() => console.log("btn onMouseLeave " + fileName)}*/}
+
                         return (
                             <btn
+                                id={id}
                                 className={className}
                                 onClick={() => console.log("btn onClick " + fileName)}
                                 onMouseDown={(event) => self.onMediaStateMouseDown(event)}
                                 onMouseMove={(event) => self.onMediaStateMouseMove(event)}
-                                onMouseUp={() => self.onMediaStateMouseUp(event)}
-                                onMouseEnter={() => console.log("btn onMouseEnter " + fileName)}
-                                onMouseLeave={() => console.log("btn onMouseLeave " + fileName)}
+                                onMouseUp={(event) => self.onMediaStateMouseUp(event)}
                                 style={mediaStateBtnStyle}
                                 key={dataIndex}>
                                     <img
-                                        id={mediaStateBtnStyle.id}
+                                        id={id}
                                         src={thumb}
                                         className="playlistThumbImg"
                                         data-index={dataIndex}
                                         onClick={() => self.onSelectMediaState(mediaState)}
-                                        onMouseDown={(event) => self.onMediaStateImgMouseDown(event)}
+                                        onMouseDown={(event) => self.onMediaStateImgMouseDown(event, mediaState)}
                                         onMouseMove={(event) => self.onMediaStateImgMouseMove(event)}
-                                        onMouseUp={() => self.onMediaStateImgMouseUp(event)}
+                                        onMouseUp={(event) => self.onMediaStateImgMouseUp(event)}
                                         key={dataIndex+2}
                                         style={imgStyle}
                                         draggable={true}
@@ -296,6 +334,7 @@ class Playlist extends Component {
                         );
                     }
                 }
+
             });
         }
         else {
@@ -318,6 +357,15 @@ class Playlist extends Component {
             }
         }
 
+        // {/*onMouseEnter={() => console.log("btn onMouseEnter playlistDiv")}*/}
+        // {/*onMouseLeave={() => console.log("btn onMouseLeave playlistDiv")}*/}
+
+        // <svg width="400" height="400">
+        //     <line x1="0" y1="0" x2="50" y2="50" stroke="black" fill="transparent" stroke-width="10"/>
+        //     <line x1="0" y1="50" x2="50" y2="0" stroke="black" fill="transparent" stroke-width="10"/>
+        // </svg>
+
+
         return (
             <div 
                 className="playlistDiv" 
@@ -326,12 +374,11 @@ class Playlist extends Component {
                 onMouseDown={(event) => self.onPlaylistMouseDown(event)}
                 onMouseMove={(event) => self.onPlaylistMouseMove(event)}
                 onMouseUp={() => self.onPlaylistMouseUp(event)}
-                onMouseEnter={() => console.log("btn onMouseEnter playlistDiv")}
-                onMouseLeave={() => console.log("btn onMouseLeave playlistDiv")}
-                onDrop={self.playlistDropHandler.bind(self)} 
+                onDrop={self.playlistDropHandler.bind(self)}
                 onDragOver={self.playlistDragOverHandler} >
                 {mediaStates}
                 {svgLine}
+                {transitionLines}
             </div>
         );
     }

@@ -82,11 +82,29 @@ class BA extends Component {
         else {
 
             const currentMediaState = this.props.mediaStates.mediaStatesById[this.state.selectedMediaStateId];
+
+            // TODO - the following loses transitionOutIds
             const updatedMediaState = new MediaState(currentMediaState.getMediaPlaylistItem(), x, y);
+            currentMediaState.transitionOutIds.forEach( transitionOutId => {
+                updatedMediaState.getTransitionOutIds().push(transitionOutId);
+            });
             this.props.updateMediaState(this.state.selectedMediaStateId, updatedMediaState);
         }
 
         return mediaState;
+    }
+
+    handleAddTransition(targetMediaStateId) {
+        const currentMediaState = this.props.mediaStates.mediaStatesById[this.state.selectedMediaStateId];
+
+        // is this really immutable? id doesn't change, but contents do. I think it's okay but I'm not sure
+        // requires deeper thinking
+        let updatedMediaState = new MediaState(currentMediaState.getMediaPlaylistItem(), currentMediaState.x, currentMediaState.y);
+        currentMediaState.transitionOutIds.forEach( transitionOutId => {
+            updatedMediaState.getTransitionOutIds().push(transitionOutId);
+        });
+        updatedMediaState.getTransitionOutIds().push(targetMediaStateId);
+        this.props.updateMediaState(this.state.selectedMediaStateId, updatedMediaState);
     }
 
     handleDeleteMediaState() {
@@ -211,6 +229,7 @@ class BA extends Component {
                             getCurrentZone = {this.getCurrentZone.bind(this)}
                             getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
                             onDropMediaState={this.handleDropMediaState.bind(this)}
+                            onAddTransition={this.handleAddTransition.bind(this)}
                             onDeleteMediaState={this.handleDeleteMediaState.bind(this)}
                             sign={this.props.sign}
                             zones= {this.props.zones}

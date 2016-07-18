@@ -200,6 +200,15 @@ export function newMediaState(mediaState) {
     }
 }
 
+export const ADD_TRANSITION = 'ADD_TRANSITION';
+export function addTransition(sourceMediaStateId, destinationMediaStateId) {
+    return {
+        type: ADD_TRANSITION,
+        sourceMediaStateId: sourceMediaStateId,
+        destinationMediaStateId: destinationMediaStateId
+    }
+}
+
 export const UPDATE_MEDIA_STATE = 'UPDATE_MEDIA_STATE';
 export function updateMediaState(mediaStateId, mediaState) {
     return {
