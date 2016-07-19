@@ -225,6 +225,23 @@ class Playlist extends Component {
         let mediaStates = null;
         let transitionLines = '';
 
+        let svgData = '';
+        let svgLines = '';
+        let svgLineData = [];
+
+        if (this.state.x1 >= 0 && this.state.y1 >= 0 && this.state.x2 >= 0 && this.state.y2 >= 0) {
+
+            switch (this.mouseState) {
+                case mouseStateNone:
+                    break;
+                case mouseStateMoveMediaState:
+                    break;
+                case mouseStateCreateTransition:
+                    svgLineData.push({x1: this.state.x1, y1: this.state.y1, x2: this.state.x2, y2: this.state.y2});
+                    break;
+            }
+        }
+
         if (currentMediaStateIds.length > 0) {
 
             currentMediaStateIds.forEach( currentMediaStateId => {
@@ -246,24 +263,9 @@ class Playlist extends Component {
 
                 let transitionLineSpecs = '';
                 transitionLineSpecs = mediaState.transitionOutIds.map(function (transitionOutId, index) {
-                    const tms = self.props.mediaStates.mediaStatesById[transitionOutId];
-                    console.log("draw transitionLine:", mediaState.x, " ", mediaState.y, " ", tms.x, " ", tms.y);
-                    return (
-                        <line x1={mediaState.x} y1={mediaState.y} x2={tms.x} y2={tms.y} key={index + 1000} stroke="black" fill="transparent" stroke-width="10"/>
-                    );
+                    const targetMediaState = self.props.mediaStates.mediaStatesById[transitionOutId];
+                    svgLineData.push({x1: mediaState.x, y1: mediaState.y, x2: targetMediaState.x, y2: targetMediaState.y});
                 });
-
-                // <svg width="400" height="400">
-                //     <line x1="0" y1="0" x2="50" y2="50" stroke="black" fill="transparent" stroke-width="10"/>
-                //     <line x1="0" y1="50" x2="50" y2="0" stroke="black" fill="transparent" stroke-width="10"/>
-                // </svg>
-
-                if (transitionLineSpecs != '') {
-                    transitionLines =
-                        <svg width="900" height="800"> +
-                            {transitionLineSpecs} +
-                        </svg>;
-                }
 
                 const mediaPlaylistItem = mediaState.getMediaPlaylistItem();
                 if (mediaPlaylistItem instanceof ImagePlaylistItem) {
@@ -296,13 +298,6 @@ class Playlist extends Component {
                         const fileName = mediaPlaylistItem.getFileName();
 
                         dataIndex+= 4;
-
-                        // {/*onMouseEnter={() => console.log("btn onMouseEnter " + fileName)}*/}
-                        // {/*onMouseLeave={() => console.log("btn onMouseLeave " + fileName)}*/}
-
-                        // onClick={() => self.onSelectMediaState(mediaState)}
-
-                        // onClick={() => console.log("btn onClick " + fileName)}
 
                         return (
                             <btn
@@ -348,34 +343,25 @@ class Playlist extends Component {
             mediaStates = <div></div>
         }
 
-        let svgLine = '';
-        if (this.state.x1 >= 0 && this.state.y1 >= 0 && this.state.x2 >= 0 && this.state.y2 >= 0) {
+        if (svgLineData.length > 0) {
 
-            // console.log("draw svgLine:", this.state.x1, " ", this.state.y1, " ", this.state.x2, " ", this.state.y2);
+            svgLines = svgLineData.map(function (svgLine, index) {
 
-            switch (this.mouseState) {
-                case mouseStateNone:
-                    break;
-                case mouseStateMoveMediaState:
-                    break;
-                case mouseStateCreateTransition:
-                    svgLine = <svg width="400" height="400">
-                                <line x1={this.state.x1} x2={this.state.x2} y1={this.state.y1} y2={this.state.y2} stroke="black" fill="transparent" stroke-width="10"/>
-                              </svg>;
-                    break;
-            }
+                const x1 = svgLine.x1;
+                const y1 = svgLine.y1;
+                const x2 = svgLine.x2;
+                const y2 = svgLine.y2;
+
+                return (
+                    <line x1={x1} y1={y1} x2={x2} y2={y2} key={index + 1000} stroke="black" fill="transparent" stroke-width="10"/>
+                );
+            });
+
+            svgData =
+                <svg width="900" height="800"> +
+                    {svgLines} +
+                </svg>;
         }
-
-        // {/*onMouseEnter={() => console.log("btn onMouseEnter playlistDiv")}*/}
-        // {/*onMouseLeave={() => console.log("btn onMouseLeave playlistDiv")}*/}
-
-        // <svg width="400" height="400">
-        //     <line x1="0" y1="0" x2="50" y2="50" stroke="black" fill="transparent" stroke-width="10"/>
-        //     <line x1="0" y1="50" x2="50" y2="0" stroke="black" fill="transparent" stroke-width="10"/>
-        // </svg>
-
-
-        // onClick={() => console.log("btn onClick playlistDiv")}
 
         return (
             <div 
@@ -387,8 +373,7 @@ class Playlist extends Component {
                 onDrop={self.playlistDropHandler.bind(self)}
                 onDragOver={self.playlistDragOverHandler} >
                 {mediaStates}
-                {svgLine}
-                {transitionLines}
+                {svgData}
             </div>
         );
     }
