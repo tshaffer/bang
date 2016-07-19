@@ -247,8 +247,9 @@ class Playlist extends Component {
                 let transitionLineSpecs = '';
                 transitionLineSpecs = mediaState.transitionOutIds.map(function (transitionOutId, index) {
                     const tms = self.props.mediaStates.mediaStatesById[transitionOutId];
+                    console.log("draw transitionLine:", mediaState.x, " ", mediaState.y, " ", tms.x, " ", tms.y);
                     return (
-                        <line x1={mediaState.x} y1={mediaState.y} x2={tms.x} y2={tms.y} stroke="black" fill="transparent" stroke-width="10"/>
+                        <line x1={mediaState.x} y1={mediaState.y} x2={tms.x} y2={tms.y} key={index + 1000} stroke="black" fill="transparent" stroke-width="10"/>
                     );
                 });
 
@@ -264,15 +265,11 @@ class Playlist extends Component {
                         </svg>;
                 }
 
-                console.log("pizza rocks");
-
                 const mediaPlaylistItem = mediaState.getMediaPlaylistItem();
                 if (mediaPlaylistItem instanceof ImagePlaylistItem) {
                     // filePath = mediaState.getFilePath();
                     filePath = mediaPlaylistItem.getFilePath();
                     if (self.props.mediaThumbs.hasOwnProperty(filePath)) {
-
-                        console.log("pizzadoodle4");
 
                         const mediaItem = self.props.mediaThumbs[filePath];
                         const thumb = getThumb(mediaItem);
@@ -320,7 +317,7 @@ class Playlist extends Component {
                                         id={id}
                                         src={thumb}
                                         className="playlistThumbImg"
-                                        data-index={dataIndex}
+                                        data-index={dataIndex+1}
                                         onMouseDown={(event) => self.onMediaStateImgMouseDown(event, mediaState)}
                                         onMouseMove={(event) => self.onMediaStateImgMouseMove(event)}
                                         onMouseUp={(event) => self.onMediaStateImgMouseUp(event)}
@@ -353,6 +350,8 @@ class Playlist extends Component {
 
         let svgLine = '';
         if (this.state.x1 >= 0 && this.state.y1 >= 0 && this.state.x2 >= 0 && this.state.y2 >= 0) {
+
+            // console.log("draw svgLine:", this.state.x1, " ", this.state.y1, " ", this.state.x2, " ", this.state.y2);
 
             switch (this.mouseState) {
                 case mouseStateNone:
