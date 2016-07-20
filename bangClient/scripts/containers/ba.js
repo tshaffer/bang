@@ -81,11 +81,11 @@ class BA extends Component {
         }
         else {
 
-            const currentMediaState = this.props.mediaStates.mediaStatesById[this.state.selectedMediaStateId];
+            mediaState = this.props.mediaStates.mediaStatesById[this.state.selectedMediaStateId];
 
             // TODO - the following loses transitionOutIds
-            const updatedMediaState = new MediaState(currentMediaState.getMediaPlaylistItem(), x, y);
-            currentMediaState.transitionOutIds.forEach( transitionOutId => {
+            const updatedMediaState = new MediaState(mediaState.getMediaPlaylistItem(), x, y);
+            mediaState.transitionOutIds.forEach( transitionOutId => {
                 updatedMediaState.getTransitionOutIds().push(transitionOutId);
             });
             this.props.updateMediaState(this.state.selectedMediaStateId, updatedMediaState);
