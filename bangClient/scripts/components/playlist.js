@@ -373,15 +373,40 @@ class Playlist extends Component {
                 const y2 = svgLine.y2;
 
                 return (
-                    <line x1={x1} y1={y1} x2={x2} y2={y2} key={index + 1000} stroke="black" fill="transparent" stroke-width="10"/>
+                    <line x1={x1} y1={y1} x2={x2} y2={y2} key={index + 1000} stroke="black" fill="transparent" stroke-width="20" marker-end="url(#arrow)"/>
                 );
             });
 
+            // svgData =
+            //     <svg width="900" height="800">
+            //         <defs>
+            //             <marker id="arrow" markerWidth="10" markerHeight="10" refx="0" refy="3" orient="auto" markerUnits="strokeWidth">
+            //                 <path d="M0,0 L0,6 L9,3 z" fill="#f00" />
+            //             </marker>
+            //         </defs> +
+            //         {svgLines} +
+            //     </svg>;
             svgData =
-                <svg width="900" height="800"> +
-                    {svgLines} +
+                <svg width="900" height="800">
+                    <defs>
+                        <marker id="Triangle"
+                                viewBox="0 0 10 10"
+                                refX="1" refY="5"
+                                markerWidth="6"
+                                markerHeight="6"
+                                orient="auto">
+                            <path d="M 0 0 L 10 5 L 0 10 z" />
+                        </marker>
+                    </defs>
+
+                    <polyline points="10,90 50,80 90,20"
+                              fill="none" stroke="black"
+                              stroke-width="2"
+                              marker-end="url(#Triangle)" />
                 </svg>;
-        }
+
+
+                }
 
         return (
             <div 
