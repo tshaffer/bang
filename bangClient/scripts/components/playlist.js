@@ -24,6 +24,9 @@ class Playlist extends Component {
         };
 
         this.mouseState = mouseStateNone;
+
+        this.mediaStateBtnWidth = 110;
+        this.mediaStateBtnHeight = 90;
     }
 
     componentWillMount() {
@@ -75,9 +78,10 @@ class Playlist extends Component {
         let mediaState = null;
         if (type === "image") {
             // offset image to center it around the drop point
-            const mediaStateX = x - 54;
-            const mediaStateY = y - 54;
+            const mediaStateX = x - (this.mediaStateBtnWidth/2);
+            const mediaStateY = y - (this.mediaStateBtnHeight/2);
             mediaState = this.props.onDropMediaState(mediaStateX, mediaStateY, operation, type, stateName, path);
+            console.log("mediaState: x="+mediaState.x+",mediaState.y="+mediaState.y)
         }
 
         if (mediaState) {
@@ -237,7 +241,15 @@ class Playlist extends Component {
                 case mouseStateMoveMediaState:
                     break;
                 case mouseStateCreateTransition:
-                    svgLineData.push({x1: this.state.x1, y1: this.state.y1, x2: this.state.x2, y2: this.state.y2});
+                    const selectedMediaState = self.props.mediaStates.mediaStatesById[self.props.selectedMediaStateId];
+
+                    const xStart = selectedMediaState.x + this.mediaStateBtnWidth/2;
+                    const yStart = selectedMediaState.y + this.mediaStateBtnHeight;
+
+                    const xEnd = this.state.x2;
+                    const yEnd = this.state.y2;
+
+                    svgLineData.push({x1: xStart, y1: yStart, x2: xEnd, y2: yEnd});
                     break;
             }
         }
@@ -263,8 +275,15 @@ class Playlist extends Component {
 
                 let transitionLineSpecs = '';
                 transitionLineSpecs = mediaState.transitionOutIds.map(function (transitionOutId, index) {
+
+                    const xStart = mediaState.x + self.mediaStateBtnWidth/2;
+                    const yStart = mediaState.y + self.mediaStateBtnHeight;
+
                     const targetMediaState = self.props.mediaStates.mediaStatesById[transitionOutId];
-                    svgLineData.push({x1: mediaState.x, y1: mediaState.y, x2: targetMediaState.x, y2: targetMediaState.y});
+                    const xEnd = targetMediaState.x + self.mediaStateBtnWidth/2;
+                    const yEnd = targetMediaState.y;
+
+                    svgLineData.push({x1: xStart, y1: yStart, x2: xEnd, y2: yEnd});
                 });
 
                 const mediaPlaylistItem = mediaState.getMediaPlaylistItem();
@@ -288,11 +307,12 @@ class Playlist extends Component {
                         mediaStateBtnStyle.left = leftOffset+"px";
                         mediaStateBtnStyle.top = topOffset + "px";
 
-                        imgStyle.left = "6px";
+                        imgStyle.left = "0px";
                         imgStyle.top = "0px";
 
                         lblStyle.left = "0px";
-                        lblStyle.top = "116px";
+                        // lblStyle.top = "70px";
+                        lblStyle.top = "0px";
 
                         const id = mediaPlaylistItem.getId();
                         const fileName = mediaPlaylistItem.getFileName();
@@ -308,30 +328,30 @@ class Playlist extends Component {
                                 onMouseUp={(event) => self.onMediaStateMouseUp(event)}
                                 style={mediaStateBtnStyle}
                                 key={dataIndex}>
-                                    <img
-                                        id={id}
-                                        src={thumb}
-                                        className="playlistThumbImg"
-                                        data-index={dataIndex+1}
-                                        onMouseDown={(event) => self.onMediaStateImgMouseDown(event, mediaState)}
-                                        onMouseMove={(event) => self.onMediaStateImgMouseMove(event)}
-                                        onMouseUp={(event) => self.onMediaStateImgMouseUp(event)}
-                                        key={dataIndex+2}
-                                        style={imgStyle}
-                                        draggable={true}
-                                        onDragStart={self.playlistDragStartHandler}
-                                        data-name={fileName}
-                                        data-path={filePath}
-                                        data-type="image"
-                                    />
-                                    <span
-                                        id={id}
-                                        className="playlistLbl smallFont"
-                                        style={lblStyle}
-                                        key={(dataIndex+3)}
-                                    >
-                                        {fileName}
-                                    </span>
+                                <img
+                                    id={id}
+                                    src={thumb}
+                                    className="playlistThumbImg"
+                                    data-index={dataIndex+1}
+                                    onMouseDown={(event) => self.onMediaStateImgMouseDown(event, mediaState)}
+                                    onMouseMove={(event) => self.onMediaStateImgMouseMove(event)}
+                                    onMouseUp={(event) => self.onMediaStateImgMouseUp(event)}
+                                    key={dataIndex+2}
+                                    style={imgStyle}
+                                    draggable={true}
+                                    onDragStart={self.playlistDragStartHandler}
+                                    data-name={fileName}
+                                    data-path={filePath}
+                                    data-type="image"
+                                />
+                                <span
+                                    id={id}
+                                    className="playlistLbl smallFont"
+                                    style={lblStyle}
+                                    key={(dataIndex+3)}
+                                >
+                                    {fileName}
+                                </span>
                             </btn>
                         );
                     }
