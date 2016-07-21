@@ -233,6 +233,9 @@ class Playlist extends Component {
         let svgLines = '';
         let svgLineData = [];
 
+        let eventIcons = '';
+        let eventIconData = [];
+
         if (this.state.x1 >= 0 && this.state.y1 >= 0 && this.state.x2 >= 0 && this.state.y2 >= 0) {
 
             switch (this.mouseState) {
@@ -284,6 +287,9 @@ class Playlist extends Component {
                     const yEnd = targetMediaState.y;
 
                     svgLineData.push({x1: xStart, y1: yStart, x2: xEnd, y2: yEnd});
+
+                    eventIconData.push({ xCenter: (xStart + xEnd)/2, yCenter: (yStart + yEnd)/2 });
+
                 });
 
                 const mediaPlaylistItem = mediaState.getMediaPlaylistItem();
@@ -383,6 +389,36 @@ class Playlist extends Component {
                 </svg>;
         }
 
+        // <input type="image" src="images/24x24_sync.png" onClick={this.onRefreshMediaLibrary.bind(this)}/>
+
+        let eventIconStyle = {};
+        eventIconStyle.position = "absolute";
+        eventIconStyle.left = "0px";
+        eventIconStyle.top = "0px";
+
+        eventIcons = eventIconData.map(function (eventIconCoordinates, index) {
+
+            const eventIconXCenter = eventIconCoordinates.xCenter - 18; // center it around icon (width=36)
+            const eventIconYCenter = eventIconCoordinates.yCenter - 18; // center it around icon (height=36)
+
+            let eventIconStyle = {};
+            eventIconStyle.position = "absolute";
+            // eventIconStyle.left = "0px";
+            // eventIconStyle.top = "0px";
+
+            eventIconStyle.left = eventIconXCenter.toString() + "px";
+            eventIconStyle.top = eventIconYCenter.toString() + "px";
+
+            return (
+                <img
+                    src="images/36x36_timeout.png"
+                    key={500 + index}
+                    style={eventIconStyle}
+                />
+
+            );
+        })
+
         return (
             <div 
                 className="playlistDiv" 
@@ -394,6 +430,7 @@ class Playlist extends Component {
                 onDragOver={self.playlistDragOverHandler} >
                 {mediaStates}
                 {svgData}
+                {eventIcons}
             </div>
         );
     }
