@@ -205,6 +205,12 @@ class Playlist extends Component {
         event.stopPropagation();
     }
 
+    onZoomChange(event) {
+        const zoomSlider = document.getElementById("zoomSlider");
+        if (zoomSlider != undefined) {
+            console.log("onZoomChange: value=", zoomSlider.value);
+        }
+    }
 
     render () {
 
@@ -419,6 +425,8 @@ class Playlist extends Component {
             );
         })
 
+            // <input step="1" onInput={this.showVal("onInput")} onChange={this.showVal("onChange")} id="zoomSlider" type="range" name="points" min="0" max="100" defaultValue="100" onChange={self.onZoomChange(event)}></input>
+
         return (
             <div 
                 className="playlistDiv" 
@@ -431,6 +439,8 @@ class Playlist extends Component {
                 {mediaStates}
                 {svgData}
                 {eventIcons}
+                <input step="1" onChange={this.onZoomChange()} id="zoomSlider" type="range" name="points" min="0" max="100" defaultValue="100"></input>
+                <button id="openCloseIcon" className="plainButton" type="button" onClick={this.props.onToggleOpenClosePropertySheet.bind(this)}>{openCloseLabel}</button>
             </div>
         );
     }

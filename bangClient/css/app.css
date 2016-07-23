@@ -186,6 +186,12 @@ body {
     padding: 4px;
 }
 
+#zoomSlider {
+    top: 16px;
+    position: absolute;
+    right: 5px;
+}
+
 #openCloseIcon {
     top: 3px;
     position: absolute;
