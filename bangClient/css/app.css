@@ -190,6 +190,7 @@ body {
     top: 16px;
     position: absolute;
     right: 5px;
+    height: 16px;
 }
 
 #openCloseIcon {
