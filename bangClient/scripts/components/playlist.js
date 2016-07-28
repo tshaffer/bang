@@ -17,14 +17,12 @@ class Playlist extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            zoomValue: 1.0,
+            zoomValue: 100,
             x1: -1,
             y1: -1,
             x2: -1,
             y2: -1
         };
-
-        this.zoomValue = 100;
 
         this.mouseState = mouseStateNone;
 
@@ -50,9 +48,8 @@ class Playlist extends Component {
         if (z != undefined) {
             z.addEventListener("input", function () {
                 console.log("zValue=" + z.value);
-                if (self.zoomValue != z.value) {
-                    console.log("old zoomValue=", self.zoomValue, " new zoomValue=", z.value);
-                    self.zoomValue = z.value;
+                if (self.state.zoomValue != z.value) {
+                    console.log("old zoomValue=", self.state.zoomValue, " new zoomValue=", z.value);
                     self.setState ({ zoomValue: z.value });
                 }
             }, false);
@@ -218,20 +215,6 @@ class Playlist extends Component {
         this.setState ({ y2: -1});
 
         event.stopPropagation();
-    }
-
-    onZoomChange(event) {
-        const zoomSlider = document.getElementById("zoomSlider");
-        if (zoomSlider != undefined) {
-            console.log("onZoomChange: value=", zoomSlider.value);
-            // this.setState ({ zoomValue: zoomSlider.value });
-
-            if (this.zoomValue != zoomSlider.value) {
-                console.log("old zoomValue=", this.zoomValue, " new zoomValue=", zoomSlider.value);
-                this.zoomValue = zoomSlider.value;
-
-            }
-        }
     }
 
     render () {
@@ -451,36 +434,26 @@ class Playlist extends Component {
 
 
         let zoomStyle = {};
-        // zoomStyle.zoom = "0.5";
-        // zoomStyle["MozTransform"] = "scale(0.5)";
-        // const zoomValueStr = this.state.zoomValue.toString();
-        const zoomValueStr = (this.zoomValue/100).toString();
+        const zoomValueStr = (this.state.zoomValue/100).toString();
         zoomStyle.zoom = zoomValueStr;
         zoomStyle["MozTransform"] = "scale(" + zoomValueStr + ")";
 
-        // onMouseDown={(event) => self.onPlaylistMouseDown(event)}
-        // onMouseMove={(event) => self.onPlaylistMouseMove(event)}
-        // onMouseUp={() => self.onPlaylistMouseUp(event)}
-        // onDrop={self.playlistDropHandler.bind(self)}
-        // onDragOver={self.playlistDragOverHandler} >
-        // className="playlistDiv"
-        // id="playlistDiv"
-        // style={zoomStyle}
-        // {mediaStates}
-        // {svgData}
-        // {eventIcons}
-        // <input step="1" onInput={this.onZoomChange()} id="zoomSlider" type="range" min="0" max="100" defaultValue="100"></input>
-        // <button id="openCloseIcon" className="plainButton" type="button" onClick={this.props.onToggleOpenClosePropertySheet.bind(this)}>{openCloseLabel}</button>
-
         return (
             <div
-                id="playlistDiv"
                 className="playlistDiv"
+                id="playlistDiv"
+                onMouseDown={(event) => self.onPlaylistMouseDown(event)}
+                onMouseMove={(event) => self.onPlaylistMouseMove(event)}
+                onMouseUp={() => self.onPlaylistMouseUp(event)}
+                onDrop={self.playlistDropHandler.bind(self)}
+                onDragOver={self.playlistDragOverHandler}
                 style={zoomStyle}
             >
+                {mediaStates}
+                {svgData}
+                {eventIcons}
                 <input step="1" id="zoomSlider" type="range" min="0" max="100" defaultValue="100"></input>
                 <button id="openCloseIcon" className="plainButton" type="button" onClick={this.props.onToggleOpenClosePropertySheet.bind(this)}>{openCloseLabel}</button>
-
             </div>
         );
     }
