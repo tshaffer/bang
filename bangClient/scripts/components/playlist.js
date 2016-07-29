@@ -83,8 +83,25 @@ class Playlist extends Component {
 
         // determine where the drop occurred on the playlist 'canvas' component
         let playlistOffset = $("#playlistDiv").offset();
-        const x = ev.pageX - playlistOffset.left;
-        const y = ev.pageY - playlistOffset.top;
+
+        const zoomScaleFactor = 100 / this.state.zoomValue;
+        // x *= zoomScaleFactor;
+        // y *= zoomScaleFactor;
+
+        // adjust playlistOffset by zoomValue
+        const playlistOffsetX = playlistOffset.left;
+        const adjustedPlaylistOffsetX = playlistOffsetX / zoomScaleFactor;
+
+        let playlistOffsetY = playlistOffset.top;
+        const adjustedPlaylistOffsetY = playlistOffsetY / zoomScaleFactor;
+
+        let x = ev.pageX - adjustedPlaylistOffsetX;
+        let y = ev.pageY - adjustedPlaylistOffsetY;
+
+        x *= zoomScaleFactor;
+        y *= zoomScaleFactor;
+
+        console.log("adjusted, x, y=", x, y);
 
         // specify playlist item to drop
         let mediaState = null;
@@ -143,7 +160,7 @@ class Playlist extends Component {
 
         this.onSelectMediaState(mediaState);
 
-        // console.log("onMediaStateMouseDown");
+        console.log("onMediaStateMouseDown");
 
         this.mouseState = mouseStateCreateTransition;
 
@@ -152,6 +169,8 @@ class Playlist extends Component {
         this.setState ({ y1: event.clientY - playlistOffset.top});
         this.setState ({ x2: -1});
         this.setState ({ y2: -1});
+
+        console.log(event.clientX, playlistOffset.left, event.clientY, playlistOffset.top);
 
         event.stopPropagation();
     }
