@@ -25,6 +25,11 @@ import MediaState from '../badm/mediaState';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
+import EditPreferencesDlg from '../components/Dialogs/editPreferencesDlg';
+// import Dialog from 'material-ui/Dialog';
+// import FlatButton from 'material-ui/FlatButton';
+// import RaisedButton from 'material-ui/RaisedButton';
+
 class BA extends Component {
 
     constructor(props) {
@@ -33,7 +38,8 @@ class BA extends Component {
             bsnPresentations: [],
             propertySheetOpen: true,
             selectedZone: null,
-            selectedMediaStateId: null
+            selectedMediaStateId: null,
+            open: false,
         };
 
         this.baUI = new BAUI(this);
@@ -56,6 +62,17 @@ class BA extends Component {
         this.baUI.init();
 
     }
+
+    handleEditPreferences() {
+        console.log("handleEditPreferences in ba");
+        this.refs.editPreferencesDlg.handleOpen();
+    }
+
+    handleEditPreferencesOK(preferences) {
+        console.log("handleEditPreferencesOK invoked");
+        console.log(preferences);
+    }
+
 
     handleDropMediaState(x, y, operation, type, stateName, path) {
 
@@ -178,6 +195,14 @@ class BA extends Component {
         return currentZonePlaylist;
     }
 
+    handleOpen() {
+        this.setState({open: true});
+    };
+
+    handleClose() {
+        this.setState({open: false});
+    };
+
     render () {
         
         let signName = <span>No sign yet</span>;
@@ -241,6 +266,10 @@ class BA extends Component {
                         selectedMediaStateId={this.state.selectedMediaStateId}
                     />
                     {propertySheetTag}
+                    <EditPreferencesDlg
+                        ref="editPreferencesDlg"
+                        onEditPreferencesOK={this.handleEditPreferencesOK.bind(this)}
+                    />
                 </div>
             </div>
         )

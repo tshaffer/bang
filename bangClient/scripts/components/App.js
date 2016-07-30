@@ -3,6 +3,9 @@ import {Component} from 'react';
 
 import BA from '../containers/ba';
 
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+
 export default class App extends Component {
 
     componentDidMount() {
@@ -12,9 +15,11 @@ export default class App extends Component {
     render() {
         
         return (
-            <div className = "container bangContainer">
-                <BA />
-            </div>
+            <MuiThemeProvider>
+                <div className = "container bangContainer">
+                    <BA />
+                </div>
+            </MuiThemeProvider>
         );
     }
 }

@@ -42,6 +42,17 @@ export default class BAUI {
                         }
                     }
                 ]
+            },
+            {
+                label: 'Edit',
+                submenu: [
+                    {
+                        label: 'Preferences',
+                        click: function() {
+                            self.handleEditPreferences();
+                        }
+                    }
+                ]
             }
         ];
         
@@ -159,6 +170,10 @@ export default class BAUI {
                 }
             })
         })
+    }
+
+    handleEditPreferences() {
+        this.ba.handleEditPreferences();
     }
 
     getOpenSavePresentationJSX(bsnPresentations) {

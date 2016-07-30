@@ -38,8 +38,8 @@ class Playlist extends Component {
         var self = this;
 
         this.playlistOffset = $("#interactiveCanvasDiv").offset();
-        console.log("playlistOffset in componentDidMount");
-        console.log(this.playlistOffset);
+        // console.log("playlistOffset in componentDidMount");
+        // console.log(this.playlistOffset);
 
         document.addEventListener('keydown', (event) => {
             if (event.keyCode == 8 || event.keyCode == 46) {       // delete key or backspace key
@@ -51,9 +51,9 @@ class Playlist extends Component {
         const zoomValue = document.getElementById("zoomSlider");
         if (zoomValue != undefined) {
             zoomValue.addEventListener("input", function () {
-                console.log("zValue=" + zoomValue.value);
+                // console.log("zValue=" + zoomValue.value);
                 if (self.state.zoomValue != zoomValue.value) {
-                    console.log("old zoomValue=", self.state.zoomValue, " new zoomValue=", zoomValue.value);
+                    // console.log("old zoomValue=", self.state.zoomValue, " new zoomValue=", zoomValue.value);
                     self.setState ({ zoomValue: zoomValue.value });
                 }
             }, false);
@@ -102,8 +102,8 @@ class Playlist extends Component {
         const x = pt.x;
         const y = pt.y;
 
-        console.log("drop occurred at:");
-        console.log(pt);
+        // console.log("drop occurred at:");
+        // console.log(pt);
 
         // get x, y locations relative to the origin of the playlist div
         // let x = ev.pageX - this.playlistOffset.left;
@@ -120,7 +120,7 @@ class Playlist extends Component {
             const mediaStateX = x - (this.mediaStateBtnWidth/2);
             const mediaStateY = y - (this.mediaStateBtnHeight/2);
             mediaState = this.props.onDropMediaState(mediaStateX, mediaStateY, operation, type, stateName, path);
-            console.log("mediaState: x="+mediaState.x+",mediaState.y="+mediaState.y)
+            // console.log("mediaState: x="+mediaState.x+",mediaState.y="+mediaState.y)
         }
 
         if (mediaState) {
@@ -187,7 +187,7 @@ class Playlist extends Component {
 
         this.onSelectMediaState(mediaState);
 
-        console.log("onMediaStateMouseDown");
+        // console.log("onMediaStateMouseDown");
 
         this.mouseState = mouseStateCreateTransition;
 
@@ -226,7 +226,7 @@ class Playlist extends Component {
             case mouseStateCreateTransition:
                 // don't add transition if the target media state is same as the current media state
                 if (event.target.id !== this.props.selectedMediaStateId) {
-                    console.log("create transition to " + event.target.id);
+                    // console.log("create transition to " + event.target.id);
                     this.props.onAddTransition(event.target.id);
                 }
                 break;

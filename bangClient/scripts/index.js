@@ -16,6 +16,7 @@ import { Router, browserHistory, hashHistory } from 'react-router';
 import reducers from './reducers';
 // import routes from './routes';
 import { Route } from 'react-router';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 
 // const createStoreWithMiddleware = applyMiddleware(ReduxPromise)(createStore);
 
@@ -43,8 +44,11 @@ const store = createStore(
     )
 )
 
+// Needed for onTouchTap
+// http://stackoverflow.com/a/34015469/988941
+injectTapEventPlugin();
 
-    // <Provider store={createStoreWithMiddleware(reducers)}>
+// <Provider store={createStoreWithMiddleware(reducers)}>
 
 ReactDOM.render(
     <Provider store={store}>

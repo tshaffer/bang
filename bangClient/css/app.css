@@ -1,3 +1,10 @@
+.sorting-header {
+    font-family: Roboto, sans-serif;
+    /*line-height: 68px;*/
+    /*box-shadow: 0px -5px 5px -5px rgba(0, 0, 0, .2), 5px 0 5px -5px rgba(0, 0, 0, .2), -5px 0px 5px -5px rgba(0, 0, 0, .2);*/
+    /*background-color: hsla(0, 0%, 100%, .8);*/
+    /*cursor: grabbing;*/
+}
 #mediaLibraryFolder {
     width: 250px;
 }
@@ -237,5 +244,9 @@ body {
 
 .noVertSpacing {
     margin: 0px;
+}
+
+.formTextBoxStandardWidth {
+    width: 128px;
 }
 
