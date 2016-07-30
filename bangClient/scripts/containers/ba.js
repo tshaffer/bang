@@ -215,31 +215,31 @@ class BA extends Component {
 
                 {openSavePresentationJSX}
 
-            <div className="bangPageContainer">
-                        <MediaLibrary
-                            onBrowseForMediaLibrary={this.baUI.handleBrowseForMediaLibrary.bind(this.baUI)}
-                            mediaLibraryPlaylistItems={this.props.mediaLibraryPlaylistItems}
-                            mediaFolder={this.props.mediaFolder}
-                            mediaThumbs={this.props.mediaThumbs}
-                        />
-                        <Playlist
-                            onToggleOpenClosePropertySheet={this.handleToggleOpenClosePropertySheet.bind(this)}
-                            onSelectMediaState={this.handleSelectMediaState.bind(this)}
-                            propertySheetOpen = {this.state.propertySheetOpen}
-                            getCurrentZone = {this.getCurrentZone.bind(this)}
-                            getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
-                            onDropMediaState={this.handleDropMediaState.bind(this)}
-                            onAddTransition={this.handleAddTransition.bind(this)}
-                            onDeleteMediaState={this.handleDeleteMediaState.bind(this)}
-                            sign={this.props.sign}
-                            zones= {this.props.zones}
-                            zonePlaylists= {this.props.zonePlaylists}
-                            mediaStates= {this.props.mediaStates}
-                            mediaThumbs= {this.props.mediaThumbs}
-                            htmlSites= {this.props.htmlSites}
-                            selectedMediaStateId={this.state.selectedMediaStateId}
-                        />
-                        {propertySheetTag}
+                <div className="bangPageContainer">
+                    <MediaLibrary
+                        onBrowseForMediaLibrary={this.baUI.handleBrowseForMediaLibrary.bind(this.baUI)}
+                        mediaLibraryPlaylistItems={this.props.mediaLibraryPlaylistItems}
+                        mediaFolder={this.props.mediaFolder}
+                        mediaThumbs={this.props.mediaThumbs}
+                    />
+                    <Playlist
+                        onToggleOpenClosePropertySheet={this.handleToggleOpenClosePropertySheet.bind(this)}
+                        onSelectMediaState={this.handleSelectMediaState.bind(this)}
+                        propertySheetOpen = {this.state.propertySheetOpen}
+                        getCurrentZone = {this.getCurrentZone.bind(this)}
+                        getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
+                        onDropMediaState={this.handleDropMediaState.bind(this)}
+                        onAddTransition={this.handleAddTransition.bind(this)}
+                        onDeleteMediaState={this.handleDeleteMediaState.bind(this)}
+                        sign={this.props.sign}
+                        zones= {this.props.zones}
+                        zonePlaylists= {this.props.zonePlaylists}
+                        mediaStates= {this.props.mediaStates}
+                        mediaThumbs= {this.props.mediaThumbs}
+                        htmlSites= {this.props.htmlSites}
+                        selectedMediaStateId={this.state.selectedMediaStateId}
+                    />
+                    {propertySheetTag}
                 </div>
             </div>
         )
