@@ -36,7 +36,11 @@ class Playlist extends Component {
     componentDidMount() {
         
         var self = this;
-        
+
+        this.playlistOffset = $("#playlistDiv").offset();
+        console.log("playlistOffset in componentDidMount");
+        console.log(this.playlistOffset);
+
         document.addEventListener('keydown', (event) => {
             if (event.keyCode == 8 || event.keyCode == 46) {       // delete key or backspace key
                 // check to see if playlistItem has focus
@@ -44,13 +48,13 @@ class Playlist extends Component {
             }
         });
 
-        const z = document.getElementById("zoomSlider");
-        if (z != undefined) {
-            z.addEventListener("input", function () {
-                console.log("zValue=" + z.value);
-                if (self.state.zoomValue != z.value) {
-                    console.log("old zoomValue=", self.state.zoomValue, " new zoomValue=", z.value);
-                    self.setState ({ zoomValue: z.value });
+        const zoomValue = document.getElementById("zoomSlider");
+        if (zoomValue != undefined) {
+            zoomValue.addEventListener("input", function () {
+                console.log("zValue=" + zoomValue.value);
+                if (self.state.zoomValue != zoomValue.value) {
+                    console.log("old zoomValue=", self.state.zoomValue, " new zoomValue=", zoomValue.value);
+                    self.setState ({ zoomValue: zoomValue.value });
                 }
             }, false);
         }
@@ -81,27 +85,30 @@ class Playlist extends Component {
         const path = ev.dataTransfer.getData("path");
         const type = ev.dataTransfer.getData("type");
 
-        // determine where the drop occurred on the playlist 'canvas' component
-        let playlistOffset = $("#playlistDiv").offset();
-
         const zoomScaleFactor = 100 / this.state.zoomValue;
-        // x *= zoomScaleFactor;
-        // y *= zoomScaleFactor;
 
         // adjust playlistOffset by zoomValue
-        const playlistOffsetX = playlistOffset.left;
-        const adjustedPlaylistOffsetX = playlistOffsetX / zoomScaleFactor;
+        // let playlistOffset = $("#playlistDiv").offset();
+        // const playlistOffsetX = playlistOffset.left;
+        // const adjustedPlaylistOffsetX = playlistOffsetX / zoomScaleFactor;
+        // let playlistOffsetY = playlistOffset.top;
+        // const adjustedPlaylistOffsetY = playlistOffsetY / zoomScaleFactor;
+        // let x = ev.pageX - adjustedPlaylistOffsetX;
+        // let y = ev.pageY - adjustedPlaylistOffsetY;
 
-        let playlistOffsetY = playlistOffset.top;
-        const adjustedPlaylistOffsetY = playlistOffsetY / zoomScaleFactor;
+        const pt = this.getCorrectedPoint(
+            { x: ev.pageX, y: ev.pageY}
+        );
+        const x = pt.x;
+        const y = pt.y;
 
-        let x = ev.pageX - adjustedPlaylistOffsetX;
-        let y = ev.pageY - adjustedPlaylistOffsetY;
-
-        x *= zoomScaleFactor;
-        y *= zoomScaleFactor;
-
-        console.log("adjusted, x, y=", x, y);
+        // get x, y locations relative to the origin of the playlist div
+        // let x = ev.pageX - this.playlistOffset.left;
+        // let y = ev.pageY - this.playlistOffset.top;
+        //
+        // // adjust x, y locations based on zoom value
+        // x *= zoomScaleFactor;
+        // y *= zoomScaleFactor;
 
         // specify playlist item to drop
         let mediaState = null;
@@ -116,6 +123,25 @@ class Playlist extends Component {
         if (mediaState) {
             this.onSelectMediaState(mediaState);
         }
+    }
+
+    getCorrectedPoint(inputPoint) {
+
+        const zoomScaleFactor = 100 / this.state.zoomValue;
+
+        let x = inputPoint.x - this.playlistOffset.left;
+        let y = inputPoint.y - this.playlistOffset.top;
+
+        // adjust x, y locations based on zoom value
+        x *= zoomScaleFactor;
+        y *= zoomScaleFactor;
+
+        const outputPoint =
+        {
+            x,
+            y
+        };
+        return outputPoint;
     }
 
     onSelectZone(event) {
@@ -139,14 +165,12 @@ class Playlist extends Component {
     }
 
     onPlaylistMouseDown(event) {
-
         // console.log("onPlaylistMouseDown");
         this.mouseState = mouseStateNone;
         event.stopPropagation();
     }
 
     onPlaylistMouseMove(event) {
-
         // console.log("onPlaylistMouseMove");
         this.processMouseMove(event);
     }
@@ -164,13 +188,22 @@ class Playlist extends Component {
 
         this.mouseState = mouseStateCreateTransition;
 
-        var playlistOffset = $("#playlistDiv").offset();
-        this.setState ({ x1: event.clientX - playlistOffset.left});
-        this.setState ({ y1: event.clientY - playlistOffset.top});
+        const pt = this.getCorrectedPoint(
+            { x: event.clientX, y: event.clientY }
+        );
+
+        this.setState ({ x1: pt.x });
+        this.setState ({ y1: pt.y });
         this.setState ({ x2: -1});
         this.setState ({ y2: -1});
 
-        console.log(event.clientX, playlistOffset.left, event.clientY, playlistOffset.top);
+        // var playlistOffset = $("#playlistDiv").offset();
+        // this.setState ({ x1: event.clientX - playlistOffset.left});
+        // this.setState ({ y1: event.clientY - playlistOffset.top});
+        // this.setState ({ x2: -1});
+        // this.setState ({ y2: -1});
+
+        // console.log(event.clientX, playlistOffset.left, event.clientY, playlistOffset.top);
 
         event.stopPropagation();
     }
@@ -218,9 +251,16 @@ class Playlist extends Component {
 
     processMouseMove(event) {
 
-        var playlistOffset = $("#playlistDiv").offset();
-        this.setState ({ x2: event.clientX - playlistOffset.left});
-        this.setState ({ y2: event.clientY - playlistOffset.top});
+        // var playlistOffset = $("#playlistDiv").offset();
+        // this.setState ({ x2: event.clientX - playlistOffset.left});
+        // this.setState ({ y2: event.clientY - playlistOffset.top});
+
+        const pt = this.getCorrectedPoint(
+            { x: event.clientX, y: event.clientY }
+        );
+        this.setState ({ x2: pt.x });
+        this.setState ({ y2: pt.y });
+
         event.stopPropagation();
     }
 
@@ -413,8 +453,15 @@ class Playlist extends Component {
                 );
             });
 
+            // const svgWidth = 900;
+            // const svgHeight = 800;
+            // HACKEY
+            const pt = this.getCorrectedPoint(
+                { x: 900, y: 800 }
+            );
+
             svgData =
-                <svg width="900" height="800"> +
+                <svg width={pt.x} height={pt.y}> +
                     {svgLines} +
                 </svg>;
         }
