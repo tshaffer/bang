@@ -210,6 +210,7 @@ class BA extends Component {
             <div>
                 <div>
                     <span>{signName}</span>
+                    :
                     <span>{signVideoMode}</span>
                 </div>
 

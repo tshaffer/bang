@@ -37,7 +37,7 @@ class Playlist extends Component {
         
         var self = this;
 
-        this.playlistOffset = $("#playlistDiv").offset();
+        this.playlistOffset = $("#interactiveCanvasDiv").offset();
         console.log("playlistOffset in componentDidMount");
         console.log(this.playlistOffset);
 
@@ -101,6 +101,9 @@ class Playlist extends Component {
         );
         const x = pt.x;
         const y = pt.y;
+
+        console.log("drop occurred at:");
+        console.log(pt);
 
         // get x, y locations relative to the origin of the playlist div
         // let x = ev.pageX - this.playlistOffset.left;
@@ -508,18 +511,24 @@ class Playlist extends Component {
             <div
                 className="playlistDiv"
                 id="playlistDiv"
-                onMouseDown={(event) => self.onPlaylistMouseDown(event)}
-                onMouseMove={(event) => self.onPlaylistMouseMove(event)}
-                onMouseUp={() => self.onPlaylistMouseUp(event)}
-                onDrop={self.playlistDropHandler.bind(self)}
-                onDragOver={self.playlistDragOverHandler}
-                style={zoomStyle}
             >
-                {mediaStates}
-                {svgData}
-                {eventIcons}
-                <input step="1" id="zoomSlider" type="range" min="0" max="100" defaultValue="100"></input>
-                <button id="openCloseIcon" className="plainButton" type="button" onClick={this.props.onToggleOpenClosePropertySheet.bind(this)}>{openCloseLabel}</button>
+                <div className="playlistHeaderDiv">
+                    <button id="openCloseIcon" className="plainButton" type="button" onClick={this.props.onToggleOpenClosePropertySheet.bind(this)}>{openCloseLabel}</button>
+                    <input step="1" id="zoomSlider" type="range" min="0" max="100" defaultValue="100"></input>
+                </div>
+                <div className="interactiveCanvasDiv"
+                     id="interactiveCanvasDiv"
+                    onMouseDown={(event) => self.onPlaylistMouseDown(event)}
+                    onMouseMove={(event) => self.onPlaylistMouseMove(event)}
+                    onMouseUp={() => self.onPlaylistMouseUp(event)}
+                    onDrop={self.playlistDropHandler.bind(self)}
+                    onDragOver={self.playlistDragOverHandler}
+                    style={zoomStyle}
+                >
+                    {mediaStates}
+                    {svgData}
+                    {eventIcons}
+                </div>
             </div>
         );
     }

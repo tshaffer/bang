@@ -42,7 +42,19 @@ body {
     flex: 8;
     overflow-y: scroll;
     position: relative;
+    background-color: lightblue;
 }
+
+.playlistHeaderDiv {
+    background-color: orange;
+    height: 42px;
+]}
+
+.interactiveCanvasDiv {
+    background-color: lightgoldenrodyellow;
+    position: relative;
+    height: 800px;
+]}
 
 .propertySheetDiv {
     flex: 4;
