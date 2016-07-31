@@ -18,8 +18,9 @@ import { createDefaultPresentation, saveBSNPresentation } from '../actions/index
 import { openDB, loadAppData, fetchSign }  from '../actions/index';
 
 import { addPlaylistItemToZonePlaylist, addMediaStateToZonePlaylist, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist,
-    newMediaState, updateMediaState,
-    newPlaylistItem, addPlaylistItem, updatePlaylistItem, deletePlaylistItem, movePlaylistItemWithinZonePlaylist, newHtmlSite, addHtmlSiteToPresentation } from '../actions/index';
+    newMediaState, updateMediaState, deleteMediaState,
+    newPlaylistItem, addPlaylistItem, updatePlaylistItem, deletePlaylistItem, movePlaylistItemWithinZonePlaylist, newHtmlSite, addHtmlSiteToPresentation }
+    from '../actions/index';
 
 import MediaState from '../badm/mediaState';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
@@ -134,6 +135,8 @@ class BA extends Component {
         else {
             return;
         }
+
+        // this.props.deleteMediaState(this.state.selectedMediaStateId);
     }
 
     handleAddHtmlSite(name, siteSpec, type) {
@@ -294,7 +297,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({ addMediaStateToZonePlaylist, addPlaylistItemToZonePlaylist, deletePlaylistItem, movePlaylistItemWithinZonePlaylist,
         createDefaultPresentation, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist,
-        newMediaState, updateMediaState,
+        newMediaState, updateMediaState, deleteMediaState,
         newPlaylistItem, addPlaylistItem, updatePlaylistItem, loadAppData, fetchSign, saveBSNPresentation, selectMediaFolder, updateMediaFolder, saveSign, newHtmlSite, addHtmlSiteToPresentation }, dispatch);
 }
 

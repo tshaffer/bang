@@ -218,6 +218,15 @@ export function updateMediaState(mediaStateId, mediaState) {
     }
 }
 
+export const DELETE_MEDIA_STATE = 'DELETE_MEDIA_STATE';
+export function deleteMediaState(zonePlaylistId, mediaStateId) {
+    return {
+        type: DELETE_MEDIA_STATE,
+        zonePlaylistId: zonePlaylistId,
+        mediaStateId: mediaStateId
+    }
+}
+
 export const NEW_PLAYLIST_ITEM = 'NEW_PLAYLIST_ITEM';
 export function newPlaylistItem(playlistItem) {
     return {
