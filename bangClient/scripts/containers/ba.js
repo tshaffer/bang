@@ -19,10 +19,12 @@ import { openDB, loadAppData, fetchSign }  from '../actions/index';
 
 import { addPlaylistItemToZonePlaylist, addMediaStateToZonePlaylist, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist,
     newMediaState, updateMediaState, deleteMediaState,
-    newPlaylistItem, addPlaylistItem, updatePlaylistItem, deletePlaylistItem, movePlaylistItemWithinZonePlaylist, newHtmlSite, addHtmlSiteToPresentation }
+    newPlaylistItem, addPlaylistItem, updatePlaylistItem, deletePlaylistItem, movePlaylistItemWithinZonePlaylist, newHtmlSite, addHtmlSiteToPresentation,
+    addTransition }
     from '../actions/index';
 
 import MediaState from '../badm/mediaState';
+import Transition from '../badm/transition';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
@@ -113,6 +115,28 @@ class BA extends Component {
     }
 
     handleAddTransition(targetMediaStateId) {
+
+        // updated code needs to
+        //      get source media state
+        //      get target media state
+        //      create transition - get transition id
+        //      add transition to source media state's transitionsOut
+        //      add transition to target media state's transitionsIn
+
+        // reducer mods
+        // create reducer_transitions: transitionsById object. see reducer_playlist_items
+        // media state reducer
+        //      action to add transition out
+        //      action to add transition in
+
+        const sourceMediaState = this.props.mediaStates.mediaStatesById[this.state.selectedMediaStateId];
+        const targetMediaState = this.props.mediaStates.mediaStatesById[targetMediaStateId];
+        const transition = new Transition(sourceMediaState, targetMediaState); // do this here?
+
+        this.props.addTransition(sourceMediaState, transition, targetMediaState);
+        return;
+
+        // old code below
         const currentMediaState = this.props.mediaStates.mediaStatesById[this.state.selectedMediaStateId];
 
         // is this really immutable? id doesn't change, but contents do. I think it's okay but I'm not sure
@@ -264,6 +288,7 @@ class BA extends Component {
                         zones= {this.props.zones}
                         zonePlaylists= {this.props.zonePlaylists}
                         mediaStates= {this.props.mediaStates}
+                        transitions={this.props.transitions}
                         mediaThumbs= {this.props.mediaThumbs}
                         htmlSites= {this.props.htmlSites}
                         selectedMediaStateId={this.state.selectedMediaStateId}
@@ -285,6 +310,7 @@ function mapStateToProps(state) {
         zones: state.zones,
         zonePlaylists: state.zonePlaylists,
         mediaStates: state.mediaStates,
+        transitions: state.transitions,
         playlistItems: state.playlistItems,
         htmlSites: state.htmlSites,
 
@@ -298,7 +324,10 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({ addMediaStateToZonePlaylist, addPlaylistItemToZonePlaylist, deletePlaylistItem, movePlaylistItemWithinZonePlaylist,
         createDefaultPresentation, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist,
         newMediaState, updateMediaState, deleteMediaState,
-        newPlaylistItem, addPlaylistItem, updatePlaylistItem, loadAppData, fetchSign, saveBSNPresentation, selectMediaFolder, updateMediaFolder, saveSign, newHtmlSite, addHtmlSiteToPresentation }, dispatch);
+        newPlaylistItem, addPlaylistItem, updatePlaylistItem, loadAppData, fetchSign, saveBSNPresentation, selectMediaFolder,
+        updateMediaFolder, saveSign, newHtmlSite, addHtmlSiteToPresentation,
+        addTransition},
+        dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);

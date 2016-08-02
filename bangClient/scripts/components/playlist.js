@@ -355,7 +355,10 @@ class Playlist extends Component {
                     const xStart = mediaState.x + self.mediaStateBtnWidth/2;
                     const yStart = mediaState.y + self.mediaStateBtnHeight;
 
-                    const targetMediaState = self.props.mediaStates.mediaStatesById[transitionOutId];
+                    const transition = self.props.transitions.transitionsById[transitionOutId];
+                    const targetMediaState = transition.destinationMediaState;
+
+                    // const targetMediaState = self.props.mediaStates.mediaStatesById[transitionOutId];
                     const xEnd = targetMediaState.x + self.mediaStateBtnWidth/2;
                     const yEnd = targetMediaState.y;
 

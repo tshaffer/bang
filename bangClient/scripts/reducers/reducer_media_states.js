@@ -2,7 +2,11 @@
  * Created by tedshaffer on 7/17/16.
  */
 import { CLEAR_MEDIA_STATES, NEW_MEDIA_STATE, MOVE_MEDIA_STATE, UPDATE_MEDIA_STATE,
-    ADD_TRANSITION, DELETE_MEDIA_STATE } from '../actions/index';
+    DELETE_MEDIA_STATE,
+    ADD_TRANSITION_OUT, ADD_TRANSITION_IN
+    } from '../actions/index';
+
+import MediaState from '../badm/mediaState';
 
 const initialState =
 {
@@ -50,8 +54,6 @@ export default function(state = initialState, action) {
 
             mediaStateId = action.mediaStateId;
 
-            // this works for an array, not an object
-            // newMediaStatesById = state.mediaStatesById.filter(function(ele) { return ele != mediaStateId; });
             newMediaStatesById = Object.assign({}, state.mediaStatesById);
             delete newMediaStatesById[mediaStateId];
 
@@ -60,12 +62,32 @@ export default function(state = initialState, action) {
             };
             return newState;
 
-        case ADD_TRANSITION:
+        // case ADD_TRANSITION:
+        //
+        //     let sourceMediaStateId = action.sourceMediaStateId;
+        //     let destinationMediaStateId = action.destinationMediaStateId;
+        //
+        //     let updatedMediaState = Object.assign()
+        //     break;
 
-            let sourceMediaStateId = action.sourceMediaStateId;
-            let destinationMediaStateId = action.destinationMediaStateId;
+        case ADD_TRANSITION_OUT:
 
-            let updatedMediaState = Object.assign()
+            const sourceMediaState = action.sourceMediaState;
+            const transitionId = action.transitionId;
+
+            const emptyMediaState = new MediaState(null, -1, -1);
+            let newMediaState = Object.assign(emptyMediaState, sourceMediaState);
+            newMediaState.transitionOutIds.push(transitionId);
+
+            newMediaStatesById = Object.assign({}, state.mediaStatesById);
+            newMediaStatesById[newMediaState.getId()] = newMediaState;
+
+            newState = {
+                mediaStatesById: newMediaStatesById
+            };
+            return newState;
+
+        case ADD_TRANSITION_IN:
             break;
 
         case DELETE_MEDIA_STATE:

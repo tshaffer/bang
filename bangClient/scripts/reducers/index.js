@@ -13,6 +13,8 @@ import MediaStatesReducer from './reducer_media_states';
 import PlaylistItemsReducer from './reducer_playlist_items';
 import HtmlSitesReducer from './reducer_html_sites';
 
+import TransitionsReducer from './reducer_transitions';
+
 const rootReducer = combineReducers({
     mediaThumbs: MediaThumbsReducer,
     mediaFolder: MediaFolderReducer,
@@ -23,7 +25,9 @@ const rootReducer = combineReducers({
     zonePlaylists: ZonePlaylistsReducer,
     mediaStates: MediaStatesReducer,
     playlistItems: PlaylistItemsReducer,
-    htmlSites: HtmlSitesReducer
+    htmlSites: HtmlSitesReducer,
+
+    transitions: TransitionsReducer
 });
 
 export default rootReducer;

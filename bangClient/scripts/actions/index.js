@@ -200,14 +200,14 @@ export function newMediaState(mediaState) {
     }
 }
 
-export const ADD_TRANSITION = 'ADD_TRANSITION';
-export function addTransition(sourceMediaStateId, destinationMediaStateId) {
-    return {
-        type: ADD_TRANSITION,
-        sourceMediaStateId: sourceMediaStateId,
-        destinationMediaStateId: destinationMediaStateId
-    }
-}
+// export const ADD_TRANSITION = 'ADD_TRANSITION';
+// export function addTransition(sourceMediaStateId, destinationMediaStateId) {
+//     return {
+//         type: ADD_TRANSITION,
+//         sourceMediaStateId: sourceMediaStateId,
+//         destinationMediaStateId: destinationMediaStateId
+//     }
+// }
 
 export const UPDATE_MEDIA_STATE = 'UPDATE_MEDIA_STATE';
 export function updateMediaState(mediaStateId, mediaState) {
@@ -291,6 +291,67 @@ export function updatePlaylistItem(playlistItemId, playlistItem) {
         type: UPDATE_PLAYLIST_ITEM,
         playlistItemId: playlistItemId,
         playlistItem: playlistItem
+    }
+}
+
+// export const ADD_TRANSITION = 'ADD_TRANSITION';
+// export function addTransition(sourceMediaStateId, destinationMediaStateId) {
+//     return {
+//         type: ADD_TRANSITION,
+//         sourceMediaStateId: sourceMediaStateId,
+//         destinationMediaStateId: destinationMediaStateId
+//     }
+// }
+// inputs
+//      sourceMediaState (exists in store)
+//      targeMediaState (exists in store)
+//      transition (doesn't exist in store)
+//  actions
+//      add transition to store
+//      add transition id to sourceMediaState's transitionOutIds
+//      add transition id to destinationMediaState's transitionInIds
+
+export const NEW_TRANSITION = 'NEW_TRANSITION';
+export function newTransition(transition) {
+
+    return {
+        type: NEW_TRANSITION,
+        transition
+    }
+}
+
+export const ADD_TRANSITION_OUT = 'ADD_TRANSITION_OUT';
+export function addTransitionOut(sourceMediaState, transitionId) {
+
+    return {
+        type: ADD_TRANSITION_OUT,
+        sourceMediaState,
+        transitionId
+    }
+}
+
+export const ADD_TRANSITION_IN = 'ADD_TRANSITION_IN';
+export function addTransitionIn(targetMediaState, transitionIn) {
+
+    return {
+        type: ADD_TRANSITION_IN,
+        targetMediaState,
+        transitionIn
+    }
+}
+
+export function addTransition(sourceMediaState, transition, targetMediaState) {
+
+    return function (dispatch, getState) {
+
+        dispatch(newTransition(transition));
+
+        let nextState = getState();
+        // getLastKey was not built for an array, but still might work.
+        const transitionId = getLastKey(nextState.transitions.transitionsById);
+
+        dispatch(addTransitionOut(sourceMediaState, transitionId));
+        // dispatch(addTransitionIn(targetMediaState, transitionId));
     }
 }
 
