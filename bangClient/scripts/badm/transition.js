@@ -4,7 +4,7 @@
 import { guid } from '../utilities/utils';
 
 export default class Transition   {
-    constructor(sourceMediaState, destinationMediaState) {
+    constructor(sourceMediaState, targetMediaState) {
         this.id = guid();
 
         // MediaState
@@ -14,7 +14,7 @@ export default class Transition   {
         this.bsEvent = null;
 
         // MediaState
-        this.destinationMediaState = destinationMediaState;
+        this.targetMediaState = targetMediaState;
 
         // [BrightSignCmd]
         this.brightSignCmds = [];

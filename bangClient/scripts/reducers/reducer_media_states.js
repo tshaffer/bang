@@ -3,7 +3,7 @@
  */
 import { CLEAR_MEDIA_STATES, NEW_MEDIA_STATE, MOVE_MEDIA_STATE, UPDATE_MEDIA_STATE,
     DELETE_MEDIA_STATE,
-    ADD_TRANSITION_OUT, ADD_TRANSITION_IN
+    ADD_TRANSITION_OUT, ADD_TRANSITION_IN, DELETE_TRANSITION_OUT
     } from '../actions/index';
 
 import MediaState from '../badm/mediaState';
@@ -18,10 +18,14 @@ export default function(state = initialState, action) {
     // console.log("reducer_playlist_items:: action.type=" + action.type);
 
     let newState;
+    let newMediaState = null;
     let mediaState;
+    let emptyMediaState = null;
 
     let newMediaStatesById;
     let mediaStateId = "";
+
+    let transitionId = "";
 
     switch (action.type) {
         case CLEAR_MEDIA_STATES:
@@ -73,10 +77,10 @@ export default function(state = initialState, action) {
         case ADD_TRANSITION_OUT:
 
             const sourceMediaState = action.sourceMediaState;
-            const transitionId = action.transitionId;
+            transitionId = action.transitionId;
 
-            const emptyMediaState = new MediaState(null, -1, -1);
-            let newMediaState = Object.assign(emptyMediaState, sourceMediaState);
+            emptyMediaState = new MediaState(null, -1, -1);
+            newMediaState = Object.assign(emptyMediaState, sourceMediaState);
             newMediaState.transitionOutIds.push(transitionId);
 
             newMediaStatesById = Object.assign({}, state.mediaStatesById);
@@ -88,9 +92,42 @@ export default function(state = initialState, action) {
             return newState;
 
         case ADD_TRANSITION_IN:
-            break;
+            
+            const targetMediaState = action.targetMediaState;
+            transitionId = action.transitionId;
+
+            emptyMediaState = new MediaState(null, -1, -1);
+            newMediaState = Object.assign(emptyMediaState, targetMediaState);
+            newMediaState.transitionInIds.push(transitionId);
+
+            newMediaStatesById = Object.assign({}, state.mediaStatesById);
+            newMediaStatesById[newMediaState.getId()] = newMediaState;
+
+            newState = {
+                mediaStatesById: newMediaStatesById
+            };
+            return newState;
+
+        case DELETE_TRANSITION_OUT:
+
+            mediaState = action.mediaState;
+            transitionId = action.transitionId;
+
+            emptyMediaState = new MediaState(null, -1, -1);
+            newMediaState = Object.assign(emptyMediaState, mediaState);
+            newMediaState.transitionOutIds = newMediaState.transitionOutIds.filter(function(ele) { return ele != transitionId; });
+
+            newMediaStatesById = Object.assign({}, state.mediaStatesById);
+            newMediaStatesById[newMediaState.getId()] = newMediaState;
+
+            newState = {
+                mediaStatesById: newMediaStatesById
+            };
+            return newState;
 
         case DELETE_MEDIA_STATE:
+
+
             break;
     }
 

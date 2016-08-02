@@ -218,15 +218,6 @@ export function updateMediaState(mediaStateId, mediaState) {
     }
 }
 
-export const DELETE_MEDIA_STATE = 'DELETE_MEDIA_STATE';
-export function deleteMediaState(zonePlaylistId, mediaStateId) {
-    return {
-        type: DELETE_MEDIA_STATE,
-        zonePlaylistId: zonePlaylistId,
-        mediaStateId: mediaStateId
-    }
-}
-
 export const NEW_PLAYLIST_ITEM = 'NEW_PLAYLIST_ITEM';
 export function newPlaylistItem(playlistItem) {
     return {
@@ -331,12 +322,72 @@ export function addTransitionOut(sourceMediaState, transitionId) {
 }
 
 export const ADD_TRANSITION_IN = 'ADD_TRANSITION_IN';
-export function addTransitionIn(targetMediaState, transitionIn) {
+export function addTransitionIn(targetMediaState, transitionId) {
 
     return {
         type: ADD_TRANSITION_IN,
         targetMediaState,
-        transitionIn
+        transitionId
+    }
+}
+
+export const DELETE_TRANSITION_OUT = 'DELETE_TRANSITION_OUT';
+export function deleteTransitionOut(mediaState, transitionId) {
+
+    return {
+        type: DELETE_TRANSITION_OUT,
+        mediaState,
+        transitionId
+    }
+}
+
+export const DELETE_TRANSITION = 'DELETE_TRANSITION';
+export function deleteTransition(transitionId) {
+
+    return {
+        type: DELETE_TRANSITION,
+        transitionId
+    }
+}
+
+export const DELETE_MEDIA_STATE = 'DELETE_MEDIA_STATE';
+function deleteAMediaState(zonePlaylistId, mediaStateId) {
+
+    return {
+        type: DELETE_MEDIA_STATE,
+        zonePlaylistId: zonePlaylistId,
+        mediaStateId: mediaStateId
+    }
+
+}
+export function deleteMediaState(zonePlaylistId, mediaState) {
+
+    // for each transition in
+    //      find all references to the transition from other media states' transition out's
+    //          delete those transition out references
+    //      delete the transition
+    // delete the media state
+    return function (dispatch, getState) {
+
+        const state = getState();
+
+        mediaState.transitionInIds.forEach(function(transitionInId) {
+
+            for (let mediaStateId in state.mediaStates.mediaStatesById) {
+                if (state.mediaStates.mediaStatesById.hasOwnProperty(mediaStateId)) {
+                    const otherMediaState = state.mediaStates.mediaStatesById[mediaStateId];
+                    otherMediaState.transitionOutIds.forEach(function(transitionOutId) {
+                        if (transitionOutId === transitionInId) {
+                            // delete this transition out reference from otherMediaState
+                            dispatch(deleteTransitionOut(otherMediaState, transitionOutId));
+                        }
+                    });
+                }
+            }
+            dispatch(deleteTransition(transitionInId));
+        });
+
+        dispatch(deleteAMediaState(zonePlaylistId, mediaState.getId()));
     }
 }
 
@@ -351,7 +402,7 @@ export function addTransition(sourceMediaState, transition, targetMediaState) {
         const transitionId = getLastKey(nextState.transitions.transitionsById);
 
         dispatch(addTransitionOut(sourceMediaState, transitionId));
-        // dispatch(addTransitionIn(targetMediaState, transitionId));
+        dispatch(addTransitionIn(targetMediaState, transitionId));
     }
 }
 

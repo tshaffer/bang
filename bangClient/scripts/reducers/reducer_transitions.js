@@ -1,7 +1,7 @@
 /**
  * Created by tedshaffer on 8/1/16.
  */
-import { NEW_TRANSITION } from '../actions/index';
+import { NEW_TRANSITION, DELETE_TRANSITION } from '../actions/index';
 
 const initialState =
 {
@@ -9,6 +9,7 @@ const initialState =
 };
 
 let newState;
+let newTransitionsById = null;
 
 export default function(state = initialState, action) {
 
@@ -18,13 +19,26 @@ export default function(state = initialState, action) {
 
             const transition = action.transition;
 
-            let newTransitionsById = Object.assign({}, state.transitionsById);
+            newTransitionsById = Object.assign({}, state.transitionsById);
             newTransitionsById[transition.getId()] = transition;
 
             newState = {
                 transitionsById: newTransitionsById
             };
             return newState;
+
+        case DELETE_TRANSITION:
+
+            const transitionId = action.transitionId;
+
+            newTransitionsById = Object.assign({}, state.transitionsById);
+            delete newTransitionsById[transitionId];
+
+            newState = {
+                transitionsById: newTransitionsById
+            };
+            return newState;
+
     }
     
     return state;

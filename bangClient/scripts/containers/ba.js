@@ -154,7 +154,9 @@ class BA extends Component {
         const currentZonePlaylist = this.getCurrentZonePlaylist();
         if (currentZonePlaylist) {
             const currentZonePlaylistId = currentZonePlaylist.id;
-            this.props.deleteMediaState(currentZonePlaylistId, this.state.selectedMediaStateId);
+            const mediaState = this.props.mediaStates.mediaStatesById[this.state.selectedMediaStateId];
+
+            this.props.deleteMediaState(currentZonePlaylistId, mediaState);
         }
         else {
             return;
