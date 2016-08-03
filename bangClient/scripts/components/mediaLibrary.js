@@ -71,16 +71,20 @@ class MediaLibrary extends Component {
                     const thumb = getThumb(mediaItem);
                     
                     return (
-                        <li className="flex-item mediaLibraryThumbDiv" key={id}>
+                        <li
+                            className="flex-item mediaLibraryThumbDiv"
+                            draggable={true}
+                            onDragStart={self.mediaLibraryDragStartHandler}
+                            data-name={fileName}
+                            data-path={filePath}
+                            data-type="image"
+                            key={id}
+                        >
                             <img
                                 id={id}
                                 src={thumb}
                                 className="mediaLibraryThumbImg"
-                                data-name={fileName}
-                                data-path={filePath}
-                                data-type="image"
-                                draggable={true}
-                                onDragStart={self.mediaLibraryDragStartHandler}
+                                draggable={false}
                             />
                             <p className="mediaLibraryThumbLbl">{fileName}</p>
                         </li>
