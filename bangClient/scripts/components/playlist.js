@@ -356,7 +356,8 @@ class Playlist extends Component {
                     const yStart = mediaState.y + self.mediaStateBtnHeight;
 
                     const transition = self.props.transitions.transitionsById[transitionOutId];
-                    const targetMediaState = transition.targetMediaState;
+                    const targetMediaStateId = transition.targetMediaStateId;
+                    const targetMediaState = self.props.mediaStates.mediaStatesById[targetMediaStateId];
 
                     // const targetMediaState = self.props.mediaStates.mediaStatesById[transitionOutId];
                     const xEnd = targetMediaState.x + self.mediaStateBtnWidth/2;
@@ -497,6 +498,7 @@ class Playlist extends Component {
                     src="images/36x36_timeout.png"
                     key={500 + index}
                     style={eventIconStyle}
+                    draggable={true}
                 />
 
             );

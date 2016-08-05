@@ -8,13 +8,13 @@ export default class Transition   {
         this.id = guid();
 
         // MediaState
-        this.sourceMediaState = sourceMediaState;
+        this.sourceMediaStateId = sourceMediaState.getId();
 
         // BSEvent
         this.bsEvent = null;
 
         // MediaState
-        this.targetMediaState = targetMediaState;
+        this.targetMediaStateId = targetMediaState.getId();
 
         // [BrightSignCmd]
         this.brightSignCmds = [];
