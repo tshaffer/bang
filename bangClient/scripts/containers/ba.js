@@ -27,6 +27,7 @@ import MediaState from '../badm/mediaState';
 import Transition from '../badm/transition';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
+import UserEvent from '../badm/userEvent';
 
 import EditPreferencesDlg from '../components/Dialogs/editPreferencesDlg';
 // import Dialog from 'material-ui/Dialog';
@@ -121,38 +122,18 @@ class BA extends Component {
     }
 
     handleAddTransition(targetMediaStateId) {
-
-        // updated code needs to
-        //      get source media state
-        //      get target media state
-        //      create transition - get transition id
-        //      add transition to source media state's transitionsOut
-        //      add transition to target media state's transitionsIn
-
-        // reducer mods
-        // create reducer_transitions: transitionsById object. see reducer_playlist_items
-        // media state reducer
-        //      action to add transition out
-        //      action to add transition in
-
+        
         const sourceMediaState = this.props.mediaStates.mediaStatesById[this.state.selectedMediaStateId];
         const targetMediaState = this.props.mediaStates.mediaStatesById[targetMediaStateId];
-        const transition = new Transition(sourceMediaState, targetMediaState); // do this here?
+
+        // create userEvent based on current selected event
+        // do this here or in playlist??
+        const userEvent = new UserEvent("timeout");
+        userEvent.setValue("5");
+        
+        const transition = new Transition(sourceMediaState, userEvent, targetMediaState); // do this here?
 
         this.props.addTransition(sourceMediaState, transition, targetMediaState);
-        return;
-
-        // old code below
-        const currentMediaState = this.props.mediaStates.mediaStatesById[this.state.selectedMediaStateId];
-
-        // is this really immutable? id doesn't change, but contents do. I think it's okay but I'm not sure
-        // requires deeper thinking
-        let updatedMediaState = new MediaState(currentMediaState.getMediaPlaylistItem(), currentMediaState.x, currentMediaState.y);
-        currentMediaState.transitionOutIds.forEach( transitionOutId => {
-            updatedMediaState.getTransitionOutIds().push(transitionOutId);
-        });
-        updatedMediaState.getTransitionOutIds().push(targetMediaStateId);
-        this.props.updateMediaState(this.state.selectedMediaStateId, updatedMediaState);
     }
 
     handleDeleteMediaState() {

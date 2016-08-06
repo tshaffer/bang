@@ -183,6 +183,18 @@ class Playlist extends Component {
         this.processMouseUp(event);
     }
 
+    onEventMouseDown(event, eventIconCoordinates) {
+        console.log("onEventMouseDown");
+    }
+
+    onEventMouseMove(event) {
+        console.log("onEventMouseMove");
+    }
+
+    onEventMouseUp(event) {
+        console.log("onEventMouseUp");
+    }
+
     onMediaStateMouseDown(event, mediaState) {
 
         this.onSelectMediaState(mediaState);
@@ -227,6 +239,8 @@ class Playlist extends Component {
                 // don't add transition if the target media state is same as the current media state
                 if (event.target.id !== this.props.selectedMediaStateId) {
                     // console.log("create transition to " + event.target.id);
+                    // create event here or in ba?
+                    // send current event type to ba?
                     this.props.onAddTransition(event.target.id);
                 }
                 break;
@@ -279,6 +293,27 @@ class Playlist extends Component {
         event.stopPropagation();
     }
 
+    getTransitionCoordinates(sourceMediaState, targetMediaState) {
+
+        let transitionCoordinates = {};
+
+        const xStart = sourceMediaState.x + this.mediaStateBtnWidth/2;
+        const yStart = sourceMediaState.y + this.mediaStateBtnHeight;
+
+        const xEnd = targetMediaState.x + this.mediaStateBtnWidth/2;
+        const yEnd = targetMediaState.y;
+
+        transitionCoordinates.xStart = xStart;
+        transitionCoordinates.yStart = yStart;
+        transitionCoordinates.xEnd = xEnd;
+        transitionCoordinates.yEnd = yEnd;
+
+        transitionCoordinates.xCenter = (xStart + xEnd) / 2;
+        transitionCoordinates.yCenter = (yStart + yEnd) / 2;
+
+        return transitionCoordinates;
+    }
+
     render () {
 
         let self = this;
@@ -307,7 +342,9 @@ class Playlist extends Component {
         let svgLineData = [];
 
         let eventIcons = '';
-        let eventIconData = [];
+        let bsEventCoordinates = [];
+
+        let transitionCoordinates = [];
 
         if (this.state.x1 >= 0 && this.state.y1 >= 0 && this.state.x2 >= 0 && this.state.y2 >= 0) {
 
@@ -349,24 +386,11 @@ class Playlist extends Component {
                     className = "unSelectedImage ";
                 }
 
-                let transitionLineSpecs = '';
-                transitionLineSpecs = mediaState.transitionOutIds.map(function (transitionOutId, index) {
-
-                    const xStart = mediaState.x + self.mediaStateBtnWidth/2;
-                    const yStart = mediaState.y + self.mediaStateBtnHeight;
-
+                mediaState.transitionOutIds.forEach(transitionOutId => {
                     const transition = self.props.transitions.transitionsById[transitionOutId];
                     const targetMediaStateId = transition.targetMediaStateId;
                     const targetMediaState = self.props.mediaStates.mediaStatesById[targetMediaStateId];
-
-                    // const targetMediaState = self.props.mediaStates.mediaStatesById[transitionOutId];
-                    const xEnd = targetMediaState.x + self.mediaStateBtnWidth/2;
-                    const yEnd = targetMediaState.y;
-
-                    svgLineData.push({x1: xStart, y1: yStart, x2: xEnd, y2: yEnd});
-
-                    eventIconData.push({ xCenter: (xStart + xEnd)/2, yCenter: (yStart + yEnd)/2 });
-
+                    transitionCoordinates.push(self.getTransitionCoordinates(mediaState, targetMediaState));
                 });
 
                 const mediaPlaylistItem = mediaState.getMediaPlaylistItem();
@@ -446,6 +470,14 @@ class Playlist extends Component {
             mediaStates = <div></div>
         }
 
+        transitionCoordinates.forEach(transitionCoordinate => {
+            svgLineData.push({x1: transitionCoordinate.xStart, y1: transitionCoordinate.yStart,
+                x2: transitionCoordinate.xEnd, y2: transitionCoordinate.yEnd});
+
+            const bsEventCoordinate = { xCenter: transitionCoordinate.xCenter, yCenter: transitionCoordinate.yCenter };
+            bsEventCoordinates.push(bsEventCoordinate);
+        });
+
         if (svgLineData.length > 0) {
 
             svgLines = svgLineData.map(function (svgLine, index) {
@@ -473,14 +505,12 @@ class Playlist extends Component {
                 </svg>;
         }
 
-        // <input type="image" src="images/24x24_sync.png" onClick={this.onRefreshMediaLibrary.bind(this)}/>
-
         let eventIconStyle = {};
         eventIconStyle.position = "absolute";
         eventIconStyle.left = "0px";
         eventIconStyle.top = "0px";
 
-        eventIcons = eventIconData.map(function (eventIconCoordinates, index) {
+        eventIcons = bsEventCoordinates.map(function (eventIconCoordinates, index) {
 
             const eventIconXCenter = eventIconCoordinates.xCenter - 18; // center it around icon (width=36)
             const eventIconYCenter = eventIconCoordinates.yCenter - 18; // center it around icon (height=36)
@@ -499,13 +529,13 @@ class Playlist extends Component {
                     key={500 + index}
                     style={eventIconStyle}
                     draggable={true}
+                    onMouseDown={(event) => self.onEventMouseDown(event, eventIconCoordinates)}
+                    onMouseMove={(event) => self.onEventMouseMove(event)}
+                    onMouseUp={(event) => self.onEventMouseUp(event)}
                 />
 
             );
         })
-
-            // <input step="1" onInput={this.showVal("onInput")} onChange={this.showVal("onChange")} id="zoomSlider" type="range" name="points" min="0" max="100" defaultValue="100" onChange={self.onZoomChange(event)}></input>
-
 
         let zoomStyle = {};
         const zoomValueStr = (this.state.zoomValue/100).toString();

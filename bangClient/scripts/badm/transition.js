@@ -4,14 +4,14 @@
 import { guid } from '../utilities/utils';
 
 export default class Transition   {
-    constructor(sourceMediaState, targetMediaState) {
+    constructor(sourceMediaState, userEvent, targetMediaState) {
         this.id = guid();
 
         // MediaState
         this.sourceMediaStateId = sourceMediaState.getId();
 
-        // BSEvent
-        this.bsEvent = null;
+        // UserEvent
+        this.userEvent = userEvent;
 
         // MediaState
         this.targetMediaStateId = targetMediaState.getId();
