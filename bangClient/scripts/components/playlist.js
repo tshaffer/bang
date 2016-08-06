@@ -183,16 +183,16 @@ class Playlist extends Component {
         this.processMouseUp(event);
     }
 
-    onEventMouseDown(event, eventIconCoordinates) {
-        console.log("onEventMouseDown");
+    onBSEventMouseDown(event, eventIconCoordinates) {
+        console.log("onBSEventMouseDown");
     }
 
-    onEventMouseMove(event) {
-        console.log("onEventMouseMove");
+    onBSEventMouseMove(event) {
+        console.log("onBSEventMouseMove");
     }
 
-    onEventMouseUp(event) {
-        console.log("onEventMouseUp");
+    onBSEventMouseUp(event) {
+        console.log("onBSEventMouseUp");
     }
 
     onMediaStateMouseDown(event, mediaState) {
@@ -314,6 +314,15 @@ class Playlist extends Component {
         return transitionCoordinates;
     }
 
+    getTransitionToRender(transition, sourceMediaState, targetMediaState) {
+
+        let transitionToRender = {};
+        transitionToRender.coordinates = this.getTransitionCoordinates(sourceMediaState, targetMediaState);
+        transitionToRender.transition = transition;
+
+        return transitionToRender;
+    }
+
     render () {
 
         let self = this;
@@ -341,10 +350,10 @@ class Playlist extends Component {
         let svgLines = '';
         let svgLineData = [];
 
-        let eventIcons = '';
         let bsEventCoordinates = [];
-
         let transitionCoordinates = [];
+
+        let transitionsToRender = [];
 
         if (this.state.x1 >= 0 && this.state.y1 >= 0 && this.state.x2 >= 0 && this.state.y2 >= 0) {
 
@@ -387,15 +396,16 @@ class Playlist extends Component {
                 }
 
                 mediaState.transitionOutIds.forEach(transitionOutId => {
+
                     const transition = self.props.transitions.transitionsById[transitionOutId];
                     const targetMediaStateId = transition.targetMediaStateId;
                     const targetMediaState = self.props.mediaStates.mediaStatesById[targetMediaStateId];
-                    transitionCoordinates.push(self.getTransitionCoordinates(mediaState, targetMediaState));
+
+                    transitionsToRender.push(self.getTransitionToRender(transition, mediaState, targetMediaState));
                 });
 
                 const mediaPlaylistItem = mediaState.getMediaPlaylistItem();
                 if (mediaPlaylistItem instanceof ImagePlaylistItem) {
-                    // filePath = mediaState.getFilePath();
                     filePath = mediaPlaylistItem.getFilePath();
                     if (self.props.mediaThumbs.hasOwnProperty(filePath)) {
 
@@ -470,14 +480,14 @@ class Playlist extends Component {
             mediaStates = <div></div>
         }
 
-        transitionCoordinates.forEach(transitionCoordinate => {
+        // retrieve transition lines
+        transitionsToRender.forEach(transitionToRender => {
+            const transitionCoordinate = transitionToRender.coordinates;
             svgLineData.push({x1: transitionCoordinate.xStart, y1: transitionCoordinate.yStart,
                 x2: transitionCoordinate.xEnd, y2: transitionCoordinate.yEnd});
-
-            const bsEventCoordinate = { xCenter: transitionCoordinate.xCenter, yCenter: transitionCoordinate.yCenter };
-            bsEventCoordinates.push(bsEventCoordinate);
         });
 
+        // render all line segments - transitions and rubber band
         if (svgLineData.length > 0) {
 
             svgLines = svgLineData.map(function (svgLine, index) {
@@ -505,37 +515,45 @@ class Playlist extends Component {
                 </svg>;
         }
 
-        let eventIconStyle = {};
-        eventIconStyle.position = "absolute";
-        eventIconStyle.left = "0px";
-        eventIconStyle.top = "0px";
+        // render transition event images
+        let bsEventIconStyle = {};
+        bsEventIconStyle.position = "absolute";
 
-        eventIcons = bsEventCoordinates.map(function (eventIconCoordinates, index) {
+        let bsEventIcons = transitionsToRender.map( (transitionToRender, index) => {
 
-            const eventIconXCenter = eventIconCoordinates.xCenter - 18; // center it around icon (width=36)
-            const eventIconYCenter = eventIconCoordinates.yCenter - 18; // center it around icon (height=36)
+            const transitionCoordinate = transitionToRender.coordinates;
+            const eventIconXCenter = transitionCoordinate.xCenter - 18; // center it around icon (width=36)
+            const eventIconYCenter = transitionCoordinate.yCenter - 18; // center it around icon (height=36)
 
-            let eventIconStyle = {};
-            eventIconStyle.position = "absolute";
-            // eventIconStyle.left = "0px";
-            // eventIconStyle.top = "0px";
+            let bsEventIconStyle = {};
+            bsEventIconStyle.position = "absolute";
+            bsEventIconStyle.left = eventIconXCenter.toString() + "px";
+            bsEventIconStyle.top = eventIconYCenter.toString() + "px";
 
-            eventIconStyle.left = eventIconXCenter.toString() + "px";
-            eventIconStyle.top = eventIconYCenter.toString() + "px";
+            let bsEventName = transitionToRender.transition.getUserEvent().getUserEventName();
+
+            // bsEventName = "mediaEnd";
+            
+            let srcPath = "";
+            if (bsEventName == "timeout") {
+                srcPath="images/36x36_timeout.png"
+            }
+            else if (bsEventName == "mediaEnd") {
+                srcPath="images/36x36_videoend.png"
+            }
 
             return (
                 <img
-                    src="images/36x36_timeout.png"
+                    src={srcPath}
                     key={500 + index}
-                    style={eventIconStyle}
+                    style={bsEventIconStyle}
                     draggable={true}
-                    onMouseDown={(event) => self.onEventMouseDown(event, eventIconCoordinates)}
-                    onMouseMove={(event) => self.onEventMouseMove(event)}
-                    onMouseUp={(event) => self.onEventMouseUp(event)}
+                    onMouseDown={(event) => self.onBSEventMouseDown(event, eventIconCoordinates)}
+                    onMouseMove={(event) => self.onBSEventMouseMove(event)}
+                    onMouseUp={(event) => self.onBSEventMouseUp(event)}
                 />
-
             );
-        })
+        });
 
         let zoomStyle = {};
         const zoomValueStr = (this.state.zoomValue/100).toString();
@@ -562,7 +580,7 @@ class Playlist extends Component {
                 >
                     {mediaStates}
                     {svgData}
-                    {eventIcons}
+                    {bsEventIcons}
                 </div>
             </div>
         );

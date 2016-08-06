@@ -20,6 +20,10 @@ export default class Transition   {
         this.brightSignCmds = [];
     }
 
+    getUserEvent() {
+        return this.userEvent;
+    }
+    
     getId() {
         return this.id;
     }
