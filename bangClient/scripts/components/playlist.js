@@ -155,6 +155,16 @@ class Playlist extends Component {
         this.props.onSelectMediaState(mediaState);
     }
 
+    onSelectTimeoutEvent() {
+        console.log("select timeoutEvent ");
+        this.props.onSelectBSEventType("timeout");
+    }
+
+    onSelectMediaEndEvent() {
+        console.log("select mediaEndEvent ");
+        this.props.onSelectBSEventType("mediaEnd");
+    }
+
     playlistDragStartHandler(ev) {
 
         ev.dataTransfer.setData("path", ev.target.dataset.path);
@@ -323,7 +333,7 @@ class Playlist extends Component {
         return transitionToRender;
     }
 
-    render () {
+    render() {
 
         let self = this;
 
@@ -533,7 +543,7 @@ class Playlist extends Component {
             let bsEventName = transitionToRender.transition.getUserEvent().getUserEventName();
 
             // bsEventName = "mediaEnd";
-            
+
             let srcPath = "";
             if (bsEventName == "timeout") {
                 srcPath="images/36x36_timeout.png"
@@ -560,12 +570,27 @@ class Playlist extends Component {
         zoomStyle.zoom = zoomValueStr;
         zoomStyle["MozTransform"] = "scale(" + zoomValueStr + ")";
 
+        let timeoutClassName = "unSelectedImage";
+        let mediaEndClassName = "unSelectedImage";
+        switch (this.props.selectedBSEventType) {
+            case "timeout":
+                timeoutClassName = "selectedImage";
+                break;
+            case "mediaEnd":
+                mediaEndClassName = "selectedImage";
+                break;
+        }
+
         return (
             <div
                 className="playlistDiv"
                 id="playlistDiv"
             >
                 <div className="playlistHeaderDiv">
+                    <div>
+                        <input type="image" src="images/36x36_timeout.png" className={timeoutClassName} onClick={this.onSelectTimeoutEvent.bind(this)}/>
+                        <input type="image" src="images/36x36_videoend.png" className={mediaEndClassName} onClick={this.onSelectMediaEndEvent.bind(this)}/>
+                    </div>
                     <button id="openCloseIcon" className="plainButton" type="button" onClick={this.props.onToggleOpenClosePropertySheet.bind(this)}>{openCloseLabel}</button>
                     <input step="1" id="zoomSlider" type="range" min="0" max="100" defaultValue="100"></input>
                 </div>

@@ -43,6 +43,7 @@ class BA extends Component {
             propertySheetOpen: true,
             selectedZone: null,
             selectedMediaStateId: null,
+            selectedBSEventType: "timeout",
             open: false,
         };
 
@@ -173,6 +174,10 @@ class BA extends Component {
         this.setState({ selectedMediaStateId: mediaState.getId() });
     }
 
+    handleSelectBSEventType(bsEventType) {
+        this.setState({ selectedBSEventType: bsEventType });
+    }
+
     // instead of using action creators, just dispatch the action directly?
     handleUpdateVideoMode(videoMode) {
         // in reducer?
@@ -239,6 +244,7 @@ class BA extends Component {
                     getCurrentZone = {this.getCurrentZone.bind(this)}
                     getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
                     selectedMediaStateId={this.state.selectedMediaStateId}
+                    selectedBSEventType={this.state.selectedBSEventType}
                     sign={this.props.sign}
                     zones= {this.props.zones}
                     zonePlaylists= {this.props.zonePlaylists}
@@ -267,6 +273,7 @@ class BA extends Component {
                     <Playlist
                         onToggleOpenClosePropertySheet={this.handleToggleOpenClosePropertySheet.bind(this)}
                         onSelectMediaState={this.handleSelectMediaState.bind(this)}
+                        onSelectBSEventType={this.handleSelectBSEventType.bind(this)}
                         propertySheetOpen = {this.state.propertySheetOpen}
                         getCurrentZone = {this.getCurrentZone.bind(this)}
                         getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
