@@ -155,14 +155,18 @@ class Playlist extends Component {
         this.props.onSelectMediaState(mediaState);
     }
 
+    onSelectBSEvent(bsEvent) {
+        this.props.onSelectBSEvent(bsEvent);
+    }
+
     onSelectTimeoutEvent() {
         console.log("select timeoutEvent ");
-        this.props.onSelectBSEventType("timeout");
+        this.props.onSetActiveBSEventType("timeout");
     }
 
     onSelectMediaEndEvent() {
         console.log("select mediaEndEvent ");
-        this.props.onSelectBSEventType("mediaEnd");
+        this.props.onSetActiveBSEventType("mediaEnd");
     }
 
     playlistDragStartHandler(ev) {
@@ -193,16 +197,11 @@ class Playlist extends Component {
         this.processMouseUp(event);
     }
 
-    onBSEventMouseDown(event, eventIconCoordinates) {
-        console.log("onBSEventMouseDown");
-    }
-
-    onBSEventMouseMove(event) {
-        console.log("onBSEventMouseMove");
-    }
-
-    onBSEventMouseUp(event) {
-        console.log("onBSEventMouseUp");
+    onBSEventMouseDown(event, bsEvent) {
+        // console.log("onBSEventMouseDown");
+        // console.log(event);
+        // console.log(bsEvent);
+        this.onSelectBSEvent(bsEvent);
     }
 
     onMediaStateMouseDown(event, mediaState) {
@@ -552,15 +551,21 @@ class Playlist extends Component {
                 srcPath="images/36x36_videoend.png"
             }
 
+            let className = "";
+            if (self.props.selectedBSEventId && self.props.selectedBSEventId === transitionToRender.transition.getUserEvent().getId()) {
+                className = "selectedBSEvent ";
+            }
+            else {
+                className = "unSelectedBSEvent ";
+            }
+
             return (
                 <img
                     src={srcPath}
                     key={500 + index}
+                    className={className}
                     style={bsEventIconStyle}
-                    draggable={true}
-                    onMouseDown={(event) => self.onBSEventMouseDown(event, eventIconCoordinates)}
-                    onMouseMove={(event) => self.onBSEventMouseMove(event)}
-                    onMouseUp={(event) => self.onBSEventMouseUp(event)}
+                    onMouseDown={(event) => self.onBSEventMouseDown(event, transitionToRender.transition.getUserEvent())}
                 />
             );
         });
@@ -570,14 +575,14 @@ class Playlist extends Component {
         zoomStyle.zoom = zoomValueStr;
         zoomStyle["MozTransform"] = "scale(" + zoomValueStr + ")";
 
-        let timeoutClassName = "unSelectedImage";
-        let mediaEndClassName = "unSelectedImage";
-        switch (this.props.selectedBSEventType) {
+        let timeoutClassName = "unSelectedBSEvent";
+        let mediaEndClassName = "unSelectedBSEvent";
+        switch (this.props.activeBSEventType) {
             case "timeout":
-                timeoutClassName = "selectedImage";
+                timeoutClassName = "selectedBSEvent";
                 break;
             case "mediaEnd":
-                mediaEndClassName = "selectedImage";
+                mediaEndClassName = "selectedBSEvent";
                 break;
         }
 
@@ -588,8 +593,8 @@ class Playlist extends Component {
             >
                 <div className="playlistHeaderDiv">
                     <div>
-                        <input type="image" src="images/36x36_timeout.png" className={timeoutClassName} onClick={this.onSelectTimeoutEvent.bind(this)}/>
-                        <input type="image" src="images/36x36_videoend.png" className={mediaEndClassName} onClick={this.onSelectMediaEndEvent.bind(this)}/>
+                        <img src="images/36x36_timeout.png" className={timeoutClassName} onClick={this.onSelectTimeoutEvent.bind(this)}></img>
+                        <img src="images/36x36_videoend.png" className={mediaEndClassName} onClick={this.onSelectMediaEndEvent.bind(this)}></img>
                     </div>
                     <button id="openCloseIcon" className="plainButton" type="button" onClick={this.props.onToggleOpenClosePropertySheet.bind(this)}>{openCloseLabel}</button>
                     <input step="1" id="zoomSlider" type="range" min="0" max="100" defaultValue="100"></input>

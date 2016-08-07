@@ -151,6 +151,13 @@ body {
     cursor: move;
 }
 
+.selectedBSEvent {
+    background-color: lightblue;
+}
+
+.unSelectedBSEvent {
+}
+
 .selectedImage {
     background-color: lightblue;
     /*border-color: red;*/

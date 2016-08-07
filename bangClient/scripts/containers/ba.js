@@ -43,7 +43,8 @@ class BA extends Component {
             propertySheetOpen: true,
             selectedZone: null,
             selectedMediaStateId: null,
-            selectedBSEventType: "timeout",
+            selectedBSEventId: null,
+            activeBSEventType: "timeout",
             open: false,
         };
 
@@ -129,7 +130,8 @@ class BA extends Component {
 
         // create userEvent based on current selected event
         // do this here or in playlist??
-        const userEvent = new UserEvent("timeout");
+        // const userEvent = new UserEvent("timeout");
+        const userEvent = new UserEvent(this.state.activeBSEventType);
         userEvent.setValue("5");
         
         const transition = new Transition(sourceMediaState, userEvent, targetMediaState); // do this here?
@@ -171,11 +173,17 @@ class BA extends Component {
 
     
     handleSelectMediaState(mediaState) {
+        this.setState({ selectedBSEventId: null });
         this.setState({ selectedMediaStateId: mediaState.getId() });
     }
 
-    handleSelectBSEventType(bsEventType) {
-        this.setState({ selectedBSEventType: bsEventType });
+    handleSelectBSEvent(bsEvent) {
+        this.setState({ selectedMediaStateId: null });
+        this.setState({ selectedBSEventId: bsEvent.getId() });
+    }
+
+    handleSetActiveBSEventType(bsEventType) {
+        this.setState({ activeBSEventType: bsEventType });
     }
 
     // instead of using action creators, just dispatch the action directly?
@@ -244,7 +252,6 @@ class BA extends Component {
                     getCurrentZone = {this.getCurrentZone.bind(this)}
                     getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
                     selectedMediaStateId={this.state.selectedMediaStateId}
-                    selectedBSEventType={this.state.selectedBSEventType}
                     sign={this.props.sign}
                     zones= {this.props.zones}
                     zonePlaylists= {this.props.zonePlaylists}
@@ -273,7 +280,8 @@ class BA extends Component {
                     <Playlist
                         onToggleOpenClosePropertySheet={this.handleToggleOpenClosePropertySheet.bind(this)}
                         onSelectMediaState={this.handleSelectMediaState.bind(this)}
-                        onSelectBSEventType={this.handleSelectBSEventType.bind(this)}
+                        onSelectBSEvent={this.handleSelectBSEvent.bind(this)}
+                        onSetActiveBSEventType={this.handleSetActiveBSEventType.bind(this)}
                         propertySheetOpen = {this.state.propertySheetOpen}
                         getCurrentZone = {this.getCurrentZone.bind(this)}
                         getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
@@ -288,6 +296,8 @@ class BA extends Component {
                         mediaThumbs= {this.props.mediaThumbs}
                         htmlSites= {this.props.htmlSites}
                         selectedMediaStateId={this.state.selectedMediaStateId}
+                        selectedBSEventId={this.state.selectedBSEventId}
+                        activeBSEventType={this.state.activeBSEventType}
                     />
                     {propertySheetTag}
                     <EditPreferencesDlg
