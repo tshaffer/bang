@@ -529,42 +529,9 @@ class Playlist extends Component {
 
         let bsEventIcons = transitionsToRender.map( (transitionToRender, index) => {
 
-            const transitionCoordinate = transitionToRender.coordinates;
-            const eventIconXCenter = transitionCoordinate.xCenter - 18; // center it around icon (width=36)
-            const eventIconYCenter = transitionCoordinate.yCenter - 18; // center it around icon (height=36)
-
-            let bsEventIconStyle = {};
-            bsEventIconStyle.position = "absolute";
-            bsEventIconStyle.left = eventIconXCenter.toString() + "px";
-            bsEventIconStyle.top = eventIconYCenter.toString() + "px";
-
-            let bsEventName = transitionToRender.transition.getUserEvent().getUserEventName();
-
-            // bsEventName = "mediaEnd";
-
-            let srcPath = "";
-            if (bsEventName == "timeout") {
-                srcPath="images/36x36_timeout.png"
-            }
-            else if (bsEventName == "mediaEnd") {
-                srcPath="images/36x36_videoend.png"
-            }
-
-            let className = "";
-            if (self.props.selectedBSEventId && self.props.selectedBSEventId === transitionToRender.transition.getUserEvent().getId()) {
-                className = "selectedBSEvent ";
-            }
-            else {
-                className = "unSelectedBSEvent ";
-            }
-
-            // onMouseDown={(event) => self.onBSEventMouseDown(event, transitionToRender.transition.getUserEvent())}
-            // key={500 + index}
             return (
                 <TransitionEventIcon
-                    srcPath={srcPath}
-                    className={className}
-                    style={bsEventIconStyle}
+                    selectedBSEventId={this.props.selectedBSEventId}
                     transitionToRender={transitionToRender}
                     onMouseDown={this.onBSEventMouseDown.bind(this)}
                     key={500 + index}
