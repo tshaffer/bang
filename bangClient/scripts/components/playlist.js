@@ -8,6 +8,8 @@ import MediaState from '../badm/mediaState';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
+import TransitionEventIcon from './TransitionEventIcon';
+
 const mouseStateNone = "none";
 const mouseStateMoveMediaState = "moveMediaState";
 const mouseStateCreateTransition = "createTransition";
@@ -197,10 +199,7 @@ class Playlist extends Component {
         this.processMouseUp(event);
     }
 
-    onBSEventMouseDown(event, bsEvent) {
-        // console.log("onBSEventMouseDown");
-        // console.log(event);
-        // console.log(bsEvent);
+    onBSEventMouseDown(bsEvent) {
         this.onSelectBSEvent(bsEvent);
     }
 
@@ -559,15 +558,18 @@ class Playlist extends Component {
                 className = "unSelectedBSEvent ";
             }
 
+            // onMouseDown={(event) => self.onBSEventMouseDown(event, transitionToRender.transition.getUserEvent())}
+            // key={500 + index}
             return (
-                <img
-                    src={srcPath}
-                    key={500 + index}
+                <TransitionEventIcon
+                    srcPath={srcPath}
                     className={className}
                     style={bsEventIconStyle}
-                    onMouseDown={(event) => self.onBSEventMouseDown(event, transitionToRender.transition.getUserEvent())}
+                    transitionToRender={transitionToRender}
+                    onMouseDown={this.onBSEventMouseDown.bind(this)}
+                    key={500 + index}
                 />
-            );
+            )
         });
 
         let zoomStyle = {};
