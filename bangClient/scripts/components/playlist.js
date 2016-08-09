@@ -40,8 +40,6 @@ class Playlist extends Component {
         var self = this;
 
         this.playlistOffset = $("#interactiveCanvasDiv").offset();
-        // console.log("playlistOffset in componentDidMount");
-        // console.log(this.playlistOffset);
 
         document.addEventListener('keydown', (event) => {
             if (event.keyCode == 8 || event.keyCode == 46) {       // delete key or backspace key
@@ -53,9 +51,7 @@ class Playlist extends Component {
         const zoomValue = document.getElementById("zoomSlider");
         if (zoomValue != undefined) {
             zoomValue.addEventListener("input", function () {
-                // console.log("zValue=" + zoomValue.value);
                 if (self.state.zoomValue != zoomValue.value) {
-                    // console.log("old zoomValue=", self.state.zoomValue, " new zoomValue=", zoomValue.value);
                     self.setState ({ zoomValue: zoomValue.value });
                 }
             }, false);
@@ -89,31 +85,11 @@ class Playlist extends Component {
 
         const zoomScaleFactor = 100 / this.state.zoomValue;
 
-        // adjust playlistOffset by zoomValue
-        // let playlistOffset = $("#playlistDiv").offset();
-        // const playlistOffsetX = playlistOffset.left;
-        // const adjustedPlaylistOffsetX = playlistOffsetX / zoomScaleFactor;
-        // let playlistOffsetY = playlistOffset.top;
-        // const adjustedPlaylistOffsetY = playlistOffsetY / zoomScaleFactor;
-        // let x = ev.pageX - adjustedPlaylistOffsetX;
-        // let y = ev.pageY - adjustedPlaylistOffsetY;
-
         const pt = this.getCorrectedPoint(
             { x: ev.pageX, y: ev.pageY}
         );
         const x = pt.x;
         const y = pt.y;
-
-        // console.log("drop occurred at:");
-        // console.log(pt);
-
-        // get x, y locations relative to the origin of the playlist div
-        // let x = ev.pageX - this.playlistOffset.left;
-        // let y = ev.pageY - this.playlistOffset.top;
-        //
-        // // adjust x, y locations based on zoom value
-        // x *= zoomScaleFactor;
-        // y *= zoomScaleFactor;
 
         // specify playlist item to drop
         let mediaState = null;
@@ -122,7 +98,6 @@ class Playlist extends Component {
             const mediaStateX = x - (this.mediaStateBtnWidth/2);
             const mediaStateY = y - (this.mediaStateBtnHeight/2);
             mediaState = this.props.onDropMediaState(mediaStateX, mediaStateY, operation, type, stateName, path);
-            // console.log("mediaState: x="+mediaState.x+",mediaState.y="+mediaState.y)
         }
 
         if (mediaState) {
@@ -190,7 +165,7 @@ class Playlist extends Component {
     }
 
     onPlaylistMouseMove(event) {
-        // console.log("onPlaylistMouseMove");
+        console.log("onPlaylistMouseMove");
         this.processMouseMove(event);
     }
 
@@ -220,19 +195,11 @@ class Playlist extends Component {
         this.setState ({ x2: -1});
         this.setState ({ y2: -1});
 
-        // var playlistOffset = $("#playlistDiv").offset();
-        // this.setState ({ x1: event.clientX - playlistOffset.left});
-        // this.setState ({ y1: event.clientY - playlistOffset.top});
-        // this.setState ({ x2: -1});
-        // this.setState ({ y2: -1});
-
-        // console.log(event.clientX, playlistOffset.left, event.clientY, playlistOffset.top);
-
         event.stopPropagation();
     }
 
     onMediaStateMouseMove(event) {
-        // console.log("onMediaStateMouseMove");
+        console.log("onMediaStateMouseMove");
         this.processMouseMove(event);
     }
 
@@ -265,7 +232,7 @@ class Playlist extends Component {
     }
 
     onMediaStateImgMouseMove(event) {
-        // console.log("onMediaStateImgMouseMove");
+        console.log("onMediaStateImgMouseMove");
         this.processMouseMove(event);
     }
 
@@ -276,15 +243,13 @@ class Playlist extends Component {
 
     processMouseMove(event) {
 
-        // var playlistOffset = $("#playlistDiv").offset();
-        // this.setState ({ x2: event.clientX - playlistOffset.left});
-        // this.setState ({ y2: event.clientY - playlistOffset.top});
-
-        const pt = this.getCorrectedPoint(
-            { x: event.clientX, y: event.clientY }
-        );
-        this.setState ({ x2: pt.x });
-        this.setState ({ y2: pt.y });
+        if (this.mouseState != mouseStateNone) {
+            const pt = this.getCorrectedPoint(
+                { x: event.clientX, y: event.clientY }
+            );
+            this.setState ({ x2: pt.x });
+            this.setState ({ y2: pt.y });
+        }
 
         event.stopPropagation();
     }
