@@ -36,7 +36,7 @@ class MediaImage extends Component {
     render() {
 
         var self = this;
-
+        
         return (
 
             <img
@@ -47,7 +47,7 @@ class MediaImage extends Component {
                 onMouseDown={(event) => self.onMediaStateImgMouseDown(event, this.props.mediaState)}
                 onMouseMove={(event) => self.onMediaStateImgMouseMove(event)}
                 onMouseUp={(event) => self.onMediaStateImgMouseUp(event)}
-                style={this.props.imgStyle}
+                style={ {left: "0px", top: "0px"} }
                 draggable={true}
                 onDragStart={(event) => self.mediaImageDragStartHandler(event)}
                 onDragOver={(event) => self.mediaImageDragOverHandler(event)}

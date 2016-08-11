@@ -371,7 +371,6 @@ class Playlist extends Component {
                         className += "mediaStateBtn";
 
                         let mediaStateBtnStyle = {};
-                        let imgStyle = {};
                         let lblStyle = {};
 
                         const leftOffset = mediaState.x.toString();
@@ -379,10 +378,7 @@ class Playlist extends Component {
 
                         mediaStateBtnStyle.left = leftOffset+"px";
                         mediaStateBtnStyle.top = topOffset + "px";
-
-                        imgStyle.left = "0px";
-                        imgStyle.top = "0px";
-
+                        
                         lblStyle.left = "0px";
                         // lblStyle.top = "70px";
                         lblStyle.top = "0px";
@@ -405,7 +401,6 @@ class Playlist extends Component {
                                     id={id}
                                     thumb={thumb}
                                     dataIndex={dataIndex}
-                                    imgStyle={imgStyle}
                                     fileName={fileName}
                                     filePath={filePath}
                                     mediaState={mediaState}
