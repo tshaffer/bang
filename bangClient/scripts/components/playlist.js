@@ -365,9 +365,6 @@ class Playlist extends Component {
                     filePath = mediaPlaylistItem.getFilePath();
                     if (self.props.mediaThumbs.hasOwnProperty(filePath)) {
 
-                        const mediaItem = self.props.mediaThumbs[filePath];
-                        const thumb = getThumb(mediaItem);
-
                         className += "mediaStateBtn";
 
                         let mediaStateBtnStyle = {};
@@ -380,7 +377,6 @@ class Playlist extends Component {
                         mediaStateBtnStyle.top = topOffset + "px";
                         
                         lblStyle.left = "0px";
-                        // lblStyle.top = "70px";
                         lblStyle.top = "0px";
 
                         const id = mediaPlaylistItem.getId();
@@ -398,12 +394,9 @@ class Playlist extends Component {
                                 style={mediaStateBtnStyle}
                                 key={dataIndex}>
                                 <MediaImage
-                                    id={id}
-                                    thumb={thumb}
-                                    dataIndex={dataIndex}
-                                    fileName={fileName}
-                                    filePath={filePath}
                                     mediaState={mediaState}
+                                    mediaThumbs={self.props.mediaThumbs}
+                                    dataIndex={dataIndex}
                                     key={dataIndex+2}
                                     onSelectMediaState={self.onSelectMediaState.bind(self)}
                                     processMouseMove={self.processMouseMove.bind(self)}

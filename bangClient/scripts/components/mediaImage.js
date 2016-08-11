@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import { getThumb } from '../platform/actions';
+
 class MediaImage extends Component {
 
     constructor(props) {
@@ -36,12 +38,21 @@ class MediaImage extends Component {
     render() {
 
         var self = this;
-        
+
+        const mediaPlaylistItem = this.props.mediaState.getMediaPlaylistItem();
+
+        const id = mediaPlaylistItem.getId();
+        const filePath = mediaPlaylistItem.getFilePath();
+        const fileName = mediaPlaylistItem.getFileName();
+
+        const mediaItem = self.props.mediaThumbs[filePath];
+        const thumb = getThumb(mediaItem);
+
         return (
 
             <img
-                id={this.props.id}
-                src={this.props.thumb}
+                id={id}
+                src={thumb}
                 className="playlistThumbImg"
                 data-index={this.props.dataIndex+1}
                 onMouseDown={(event) => self.onMediaStateImgMouseDown(event, this.props.mediaState)}
@@ -52,8 +63,8 @@ class MediaImage extends Component {
                 onDragStart={(event) => self.mediaImageDragStartHandler(event)}
                 onDragOver={(event) => self.mediaImageDragOverHandler(event)}
 
-                data-name={this.props.fileName}
-                data-path={this.props.filePath}
+                data-name={fileName}
+                data-path={filePath}
                 data-type="image"
             />
         );
