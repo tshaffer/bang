@@ -8,6 +8,7 @@ import MediaState from '../badm/mediaState';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
+import MediaImage from './mediaImage';
 import TransitionEventIcon from './TransitionEventIcon';
 
 const mouseStateNone = "none";
@@ -159,7 +160,7 @@ class Playlist extends Component {
     }
 
     onPlaylistMouseDown(event) {
-        // console.log("onPlaylistMouseDown");
+        console.log("onPlaylistMouseDown");
         this.mouseState = mouseStateNone;
         event.stopPropagation();
     }
@@ -170,7 +171,7 @@ class Playlist extends Component {
     }
 
     onPlaylistMouseUp(event) {
-        // console.log("onPlaylistMouseUp");
+        console.log("onPlaylistMouseUp");
         this.processMouseUp(event);
     }
 
@@ -182,7 +183,7 @@ class Playlist extends Component {
 
         this.onSelectMediaState(mediaState);
 
-        // console.log("onMediaStateMouseDown");
+        console.log("onMediaStateMouseDown");
 
         this.mouseState = mouseStateCreateTransition;
 
@@ -204,7 +205,7 @@ class Playlist extends Component {
     }
 
     onMediaStateMouseUp(event) {
-        // console.log("onMediaStateMouseUp");
+        console.log("onMediaStateMouseUp");
         switch (this.mouseState) {
             case mouseStateNone:
                 break;
@@ -221,24 +222,6 @@ class Playlist extends Component {
                 break;
         }
         this.processMouseUp(event);
-    }
-
-    onMediaStateImgMouseDown(event, mediaState) {
-
-        this.onSelectMediaState(mediaState);
-
-        // console.log("onMediaStateImgMouseDown");
-        event.stopPropagation();
-    }
-
-    onMediaStateImgMouseMove(event) {
-        console.log("onMediaStateImgMouseMove");
-        this.processMouseMove(event);
-    }
-
-    onMediaStateImgMouseUp(event) {
-        // console.log("onMediaStateImgMouseUp");
-        // this.processMouseUp(event);
     }
 
     processMouseMove(event) {
@@ -418,21 +401,20 @@ class Playlist extends Component {
                                 onMouseUp={(event) => self.onMediaStateMouseUp(event)}
                                 style={mediaStateBtnStyle}
                                 key={dataIndex}>
-                                <img
+                                <MediaImage
                                     id={id}
-                                    src={thumb}
-                                    className="playlistThumbImg"
-                                    data-index={dataIndex+1}
-                                    onMouseDown={(event) => self.onMediaStateImgMouseDown(event, mediaState)}
-                                    onMouseMove={(event) => self.onMediaStateImgMouseMove(event)}
-                                    onMouseUp={(event) => self.onMediaStateImgMouseUp(event)}
+                                    thumb={thumb}
+                                    dataIndex={dataIndex}
+                                    imgStyle={imgStyle}
+                                    fileName={fileName}
+                                    filePath={filePath}
+                                    mediaState={mediaState}
                                     key={dataIndex+2}
-                                    style={imgStyle}
-                                    draggable={true}
-                                    onDragStart={self.playlistDragStartHandler}
-                                    data-name={fileName}
-                                    data-path={filePath}
-                                    data-type="image"
+                                    onSelectMediaState={self.onSelectMediaState.bind(self)}
+                                    processMouseMove={self.processMouseMove.bind(self)}
+                                    processMouseUp={self.onMediaStateMouseUp.bind(self)}
+                                    playlistDragStartHandler={self.playlistDragStartHandler.bind(self)}
+                                    playlistDragOverHandler={self.playlistDragOverHandler.bind(self)}
                                 />
                                 <span
                                     id={id}
