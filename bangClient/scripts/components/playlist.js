@@ -8,8 +8,9 @@ import MediaState from '../badm/mediaState';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
-import MediaImage from './mediaImage';
-import MediaImageLabel from './mediaImageLabel';
+import MediaStateThumb from './mediaStateThumb';
+// import MediaImage from './mediaImage';
+// import MediaImageLabel from './mediaImageLabel';
 import TransitionEventIcon from './TransitionEventIcon';
 
 const mouseStateNone = "none";
@@ -381,30 +382,21 @@ class Playlist extends Component {
                         dataIndex+= 4;
 
                         return (
-                            <btn
-                                id={id}
+                            <MediaStateThumb
+                                mediaState={mediaState}
                                 className={className}
-                                onMouseDown={(event) => self.onMediaStateMouseDown(event, mediaState)}
-                                onMouseMove={(event) => self.onMediaStateMouseMove(event)}
-                                onMouseUp={(event) => self.onMediaStateMouseUp(event)}
-                                style={mediaStateBtnStyle}
-                                key={dataIndex}>
-                                <MediaImage
-                                    mediaState={mediaState}
-                                    mediaThumbs={self.props.mediaThumbs}
-                                    dataIndex={dataIndex}
-                                    key={dataIndex+2}
-                                    onSelectMediaState={self.onSelectMediaState.bind(self)}
-                                    processMouseMove={self.processMouseMove.bind(self)}
-                                    processMouseUp={self.onMediaStateMouseUp.bind(self)}
-                                    playlistDragStartHandler={self.playlistDragStartHandler.bind(self)}
-                                    playlistDragOverHandler={self.playlistDragOverHandler.bind(self)}
-                                />
-                                <MediaImageLabel
-                                    mediaState={mediaState}
-                                    key={(dataIndex+3)}
-                                />
-                            </btn>
+                                onMediaStateMouseDown={self.onMediaStateMouseDown.bind(this)}
+                                onMediaStateMouseMove={self.onMediaStateMouseMove.bind(this)}
+                                onMediaStateMouseUp={self.onMediaStateMouseUp.bind(this)}
+                                key={dataIndex}
+                                mediaThumbs={self.props.mediaThumbs}
+                                dataIndex={dataIndex}
+                                onSelectMediaState={self.onSelectMediaState.bind(self)}
+                                processMouseMove={self.processMouseMove.bind(self)}
+                                processMouseUp={self.onMediaStateMouseUp.bind(self)}
+                                playlistDragStartHandler={self.playlistDragStartHandler.bind(self)}
+                                playlistDragOverHandler={self.playlistDragOverHandler.bind(self)}
+                            />
                         );
                     }
                 }
