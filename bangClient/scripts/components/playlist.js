@@ -9,6 +9,7 @@ import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
 import MediaImage from './mediaImage';
+import MediaImageLabel from './mediaImageLabel';
 import TransitionEventIcon from './TransitionEventIcon';
 
 const mouseStateNone = "none";
@@ -368,7 +369,6 @@ class Playlist extends Component {
                         className += "mediaStateBtn";
 
                         let mediaStateBtnStyle = {};
-                        let lblStyle = {};
 
                         const leftOffset = mediaState.x.toString();
                         const topOffset = mediaState.y.toString();
@@ -376,11 +376,7 @@ class Playlist extends Component {
                         mediaStateBtnStyle.left = leftOffset+"px";
                         mediaStateBtnStyle.top = topOffset + "px";
                         
-                        lblStyle.left = "0px";
-                        lblStyle.top = "0px";
-
                         const id = mediaPlaylistItem.getId();
-                        const fileName = mediaPlaylistItem.getFileName();
 
                         dataIndex+= 4;
 
@@ -404,14 +400,10 @@ class Playlist extends Component {
                                     playlistDragStartHandler={self.playlistDragStartHandler.bind(self)}
                                     playlistDragOverHandler={self.playlistDragOverHandler.bind(self)}
                                 />
-                                <span
-                                    id={id}
-                                    className="playlistLbl smallFont"
-                                    style={lblStyle}
+                                <MediaImageLabel
+                                    mediaState={mediaState}
                                     key={(dataIndex+3)}
-                                >
-                                    {fileName}
-                                </span>
+                                />
                             </btn>
                         );
                     }
