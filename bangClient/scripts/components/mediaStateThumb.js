@@ -19,10 +19,10 @@ class MediaStateThumb extends Component {
     //     this.props.onMediaStateMouseMove(event);
     // }
 
-    onMediaStateMouseUp(event) {
-        console.log("onMediaStateMouseUp");
-        this.props.onMediaStateMouseUp(event);
-    }
+    // onMediaStateMouseUp(event) {
+    //     console.log("onMediaStateMouseUp");
+    //     this.props.onMediaStateMouseUp(event);
+    // }
 
     render() {
 

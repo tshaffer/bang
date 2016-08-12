@@ -4,6 +4,7 @@ class MediaImage extends Component {
 
     // onMouseDown={this.props.onMouseDown}
     // onMouseMove={(event) => self.onMediaStateImgMouseMove(event)}
+    // onMouseUp={(event) => self.onMediaStateImgMouseUp(event)}
 
     render() {
 
@@ -15,7 +16,6 @@ class MediaImage extends Component {
                 className="playlistThumbImg"
                 data-index={this.props.dataIndex+1}
 
-                onMouseUp={(event) => self.onMediaStateImgMouseUp(event)}
                 style={ { left: "0px", top: "0px" } }
                 draggable={true}
                 onDragStart={(event) => self.mediaImageDragStartHandler(event)}

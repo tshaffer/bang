@@ -392,15 +392,16 @@ class Playlist extends Component {
                         // old, now obsolete
                         // onMediaStateMouseMove={self.onMediaStateMouseMove.bind(this)}
 
+                        // onMediaStateMouseUp={self.onMediaStateMouseUp.bind(this)}
+
                         return (
                             <MediaStateThumb
                                 mediaState={mediaState}
                                 className={className}
                                 onSelectMediaState={self.onMediaStateMouseDown.bind(this)}
                                 onMoveSelectedMediaState={(event) => self.processMouseMove(event)}
+                                onMediaStateMouseUp={(event) => self.onMediaStateMouseUp(event)}
 
-
-                                onMediaStateMouseUp={self.onMediaStateMouseUp.bind(this)}
                                 key={dataIndex}
                                 mediaThumbs={self.props.mediaThumbs}
                                 dataIndex={dataIndex}
