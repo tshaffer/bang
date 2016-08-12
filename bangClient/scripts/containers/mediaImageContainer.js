@@ -51,13 +51,13 @@ class MediaImageContainer extends Component {
         const thumb = getThumb(mediaItem);
 
         // onMouseMove={(event) => self.onMediaStateImgMouseMove(event)}
+        // className="playlistThumbImg"
 
         return (
 
             <MediaImage
                 id={id}
                 src={thumb}
-                className="playlistThumbImg"
                 data-index={this.props.dataIndex+1}
                 onMouseDown={this.handleMediaStateImgMouseDown.bind(this)}
                 onMouseMove={this.handleMediaStateImgMouseMove.bind(this)}

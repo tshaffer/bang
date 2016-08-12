@@ -386,6 +386,12 @@ class Playlist extends Component {
                         // onMoveSelectedMediaState={self.processMouseMove.bind(this)}
                         // onMoveSelectedMediaState={(event) => self.onPlaylistMouseMove(event)}
 
+                        // works
+                        // onMoveSelectedMediaState={(event) => self.processMouseMove(event)}
+
+                        // old, now obsolete
+                        // onMediaStateMouseMove={self.onMediaStateMouseMove.bind(this)}
+
                         return (
                             <MediaStateThumb
                                 mediaState={mediaState}
@@ -394,7 +400,6 @@ class Playlist extends Component {
                                 onMoveSelectedMediaState={(event) => self.processMouseMove(event)}
 
 
-                                onMediaStateMouseMove={self.onMediaStateMouseMove.bind(this)}
                                 onMediaStateMouseUp={self.onMediaStateMouseUp.bind(this)}
                                 key={dataIndex}
                                 mediaThumbs={self.props.mediaThumbs}

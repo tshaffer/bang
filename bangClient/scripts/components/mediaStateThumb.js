@@ -53,7 +53,8 @@ class MediaStateThumb extends Component {
         //      at each level, use the on...={handle...} pattern (for now)
         //      if there are lots of props named xxx={this.props.xxx], use {...this.props}
         //      container has logic; presentational components only perform render().
-        
+        // Ask Joel:
+        //      When using {...this.props}, do you document anywhere what props are actually being used?
         return (
 
             <btn
