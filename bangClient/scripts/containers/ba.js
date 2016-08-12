@@ -278,8 +278,9 @@ class BA extends Component {
                         mediaThumbs={this.props.mediaThumbs}
                     />
                     <Playlist
-                        onToggleOpenClosePropertySheet={this.handleToggleOpenClosePropertySheet.bind(this)}
                         onSelectMediaState={this.handleSelectMediaState.bind(this)}
+
+                        onToggleOpenClosePropertySheet={this.handleToggleOpenClosePropertySheet.bind(this)}
                         onSelectBSEvent={this.handleSelectBSEvent.bind(this)}
                         onSetActiveBSEventType={this.handleSetActiveBSEventType.bind(this)}
                         propertySheetOpen = {this.state.propertySheetOpen}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import MediaImage from './mediaImage';
+import MediaImageContainer from '../containers/mediaImageContainer';
 import MediaImageLabel from './mediaImageLabel';
 
 class MediaStateThumb extends Component {
@@ -50,6 +50,11 @@ class MediaStateThumb extends Component {
         //      if you don't need to use a variable, don't pull it out of props
         //      only pass down information to the child components that they really need (i.e., don't pass down the entire
         //      mediaState to the MediaImage
+        //      create mediaStateThumbContainer that interfaces with redux
+        //      at each level, use the on...={handle...} pattern (for now)
+        //      if there are lots of props named xxx={this.props.xxx], use {...this.props}
+        //      container has logic; presentational components only perform render().
+        
         return (
 
             <btn
@@ -60,12 +65,16 @@ class MediaStateThumb extends Component {
                 onMouseMove={(event) => self.onMediaStateMouseMove(event)}
                 onMouseUp={(event) => self.onMediaStateMouseUp(event)}>
 
-                <MediaImage
+                style={mediaStateBtnStyle}
+
+                <MediaImageContainer
                     mediaState={mediaState}
                     mediaThumbs={self.props.mediaThumbs}
                     dataIndex={dataIndex}
                     key={dataIndex+2}
-                    onSelectMediaState={self.props.onSelectMediaState}
+                    onSelectMediaState={this.props.onSelectMediaState}
+
+
                     processMouseMove={self.props.processMouseMove}
                     processMouseUp={self.props.onMediaStateMouseUp}
                     playlistDragStartHandler={self.props.playlistDragStartHandler}

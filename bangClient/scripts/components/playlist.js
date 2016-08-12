@@ -381,11 +381,15 @@ class Playlist extends Component {
 
                         dataIndex+= 4;
 
+                        // onMediaStateMouseDown={self.onMediaStateMouseDown.bind(this)}
+
                         return (
                             <MediaStateThumb
                                 mediaState={mediaState}
                                 className={className}
-                                onMediaStateMouseDown={self.onMediaStateMouseDown.bind(this)}
+                                onSelectMediaState={self.onMediaStateMouseDown.bind(this)}
+                                
+                                
                                 onMediaStateMouseMove={self.onMediaStateMouseMove.bind(this)}
                                 onMediaStateMouseUp={self.onMediaStateMouseUp.bind(this)}
                                 key={dataIndex}
