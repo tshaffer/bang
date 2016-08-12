@@ -45,17 +45,22 @@ class MediaStateThumb extends Component {
 
         // style={mediaStateBtnStyle}
         // https://facebook.github.io/react/tips/children-props-type.html
-        
+
+        // Joel says:
+        //      if you don't need to use a variable, don't pull it out of props
+        //      only pass down information to the child components that they really need (i.e., don't pass down the entire
+        //      mediaState to the MediaImage
         return (
 
-            <btn>
+            <btn
+
                 id={id}
                 className={self.props.className}
                 onMouseDown={(event) => self.onMediaStateMouseDown(event, this.props.mediaState)}
                 onMouseMove={(event) => self.onMediaStateMouseMove(event)}
-                onMouseUp={(event) => self.onMediaStateMouseUp(event)}
+                onMouseUp={(event) => self.onMediaStateMouseUp(event)}>
 
-                <MediaImage>
+                <MediaImage
                     mediaState={mediaState}
                     mediaThumbs={self.props.mediaThumbs}
                     dataIndex={dataIndex}
@@ -64,13 +69,12 @@ class MediaStateThumb extends Component {
                     processMouseMove={self.props.processMouseMove}
                     processMouseUp={self.props.onMediaStateMouseUp}
                     playlistDragStartHandler={self.props.playlistDragStartHandler}
-                    playlistDragOverHandler={self.props.playlistDragOverHandler}
-                </MediaImage>
+                    playlistDragOverHandler={self.props.playlistDragOverHandler} />
                 
-                <MediaImageLabel>
+                <MediaImageLabel
                     mediaState={mediaState}
-                    key={(dataIndex+3)}
-                </MediaImageLabel>
+                    key={(dataIndex+3)} />
+
             </btn>
         );
     }
