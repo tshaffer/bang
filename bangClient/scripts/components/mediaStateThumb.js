@@ -33,13 +33,20 @@ class MediaStateThumb extends Component {
 
         const id = mediaPlaylistItem.getId();
 
-
         const leftOffset = mediaState.x.toString();
         const topOffset = mediaState.y.toString();
 
         let mediaStateBtnStyle = {};
         mediaStateBtnStyle.left = leftOffset+"px";
         mediaStateBtnStyle.top = topOffset + "px";
+
+        // let mediaStateBtnStyle = {};
+        //
+        // const leftOffset = mediaState.x.toString();
+        // const topOffset = mediaState.y.toString();
+        //
+        // mediaStateBtnStyle.left = leftOffset+"px";
+        // mediaStateBtnStyle.top = topOffset + "px";
 
         const dataIndex = self.props.dataIndex;
 
@@ -63,9 +70,10 @@ class MediaStateThumb extends Component {
                 className={self.props.className}
                 onMouseDown={(event) => self.onMediaStateMouseDown(event, this.props.mediaState)}
                 onMouseMove={(event) => self.onMediaStateMouseMove(event)}
-                onMouseUp={(event) => self.onMediaStateMouseUp(event)}>
+                onMouseUp={(event) => self.onMediaStateMouseUp(event)}
 
                 style={mediaStateBtnStyle}
+                key={dataIndex}>
 
                 <MediaImageContainer
                     mediaState={mediaState}
