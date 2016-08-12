@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 
 class MediaImage extends Component {
 
+    // onMouseDown={this.props.onMouseDown}
+    // onMouseMove={(event) => self.onMediaStateImgMouseMove(event)}
+
     render() {
 
         return (
@@ -11,9 +14,7 @@ class MediaImage extends Component {
                 {...this.props}
                 className="playlistThumbImg"
                 data-index={this.props.dataIndex+1}
-                onMouseDown={this.props.onMouseDown}
 
-                onMouseMove={(event) => self.onMediaStateImgMouseMove(event)}
                 onMouseUp={(event) => self.onMediaStateImgMouseUp(event)}
                 style={ { left: "0px", top: "0px" } }
                 draggable={true}

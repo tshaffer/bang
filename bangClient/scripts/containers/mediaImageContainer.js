@@ -17,9 +17,9 @@ class MediaImageContainer extends Component {
         event.stopPropagation();
     }
 
-    onMediaStateImgMouseMove(event) {
+    handleMediaStateImgMouseMove(event) {
         console.log("onMediaStateImgMouseMove");
-        this.props.processMouseMove(event);
+        this.props.onMoveSelectedMediaState(event);
     }
 
     onMediaStateImgMouseUp(event) {
@@ -50,6 +50,8 @@ class MediaImageContainer extends Component {
         const mediaItem = self.props.mediaThumbs[filePath];
         const thumb = getThumb(mediaItem);
 
+        // onMouseMove={(event) => self.onMediaStateImgMouseMove(event)}
+
         return (
 
             <MediaImage
@@ -58,12 +60,12 @@ class MediaImageContainer extends Component {
                 className="playlistThumbImg"
                 data-index={this.props.dataIndex+1}
                 onMouseDown={this.handleMediaStateImgMouseDown.bind(this)}
-
+                onMouseMove={this.handleMediaStateImgMouseMove.bind(this)}
+                
                 fileName={fileName}
                 filePath={filePath}
 
 
-                onMouseMove={(event) => self.onMediaStateImgMouseMove(event)}
                 onMouseUp={(event) => self.onMediaStateImgMouseUp(event)}
                 style={ {left: "0px", top: "0px"} }
                 draggable={true}

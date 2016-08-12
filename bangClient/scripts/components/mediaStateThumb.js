@@ -9,15 +9,15 @@ class MediaStateThumb extends Component {
         super(props);
     }
 
-    onMediaStateMouseDown(event, mediaState) {
-        console.log("onMediaStateMouseDown");
-        this.props.onMediaStateMouseDown(event, mediaState);
-    }
+    // onMediaStateMouseDown(event, mediaState) {
+    //     console.log("onMediaStateMouseDown");
+    //     this.props.onMediaStateMouseDown(event, mediaState);
+    // }
 
-    onMediaStateMouseMove(event) {
-        console.log("onMediaStateMouseMove");
-        this.props.onMediaStateMouseMove(event);
-    }
+    // onMediaStateMouseMove(event) {
+    //     console.log("onMediaStateMouseMove");
+    //     this.props.onMediaStateMouseMove(event);
+    // }
 
     onMediaStateMouseUp(event) {
         console.log("onMediaStateMouseUp");
@@ -39,14 +39,6 @@ class MediaStateThumb extends Component {
         let mediaStateBtnStyle = {};
         mediaStateBtnStyle.left = leftOffset+"px";
         mediaStateBtnStyle.top = topOffset + "px";
-
-        // let mediaStateBtnStyle = {};
-        //
-        // const leftOffset = mediaState.x.toString();
-        // const topOffset = mediaState.y.toString();
-        //
-        // mediaStateBtnStyle.left = leftOffset+"px";
-        // mediaStateBtnStyle.top = topOffset + "px";
 
         const dataIndex = self.props.dataIndex;
 
@@ -81,9 +73,8 @@ class MediaStateThumb extends Component {
                     dataIndex={dataIndex}
                     key={dataIndex+2}
                     onSelectMediaState={this.props.onSelectMediaState}
+                    onMoveSelectedMediaState={this.props.onMoveSelectedMediaState}
 
-
-                    processMouseMove={self.props.processMouseMove}
                     processMouseUp={self.props.onMediaStateMouseUp}
                     playlistDragStartHandler={self.props.playlistDragStartHandler}
                     playlistDragOverHandler={self.props.playlistDragOverHandler} />
