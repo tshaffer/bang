@@ -132,6 +132,11 @@ class Playlist extends Component {
     }
 
     onSelectMediaState(mediaState) {
+
+        console.log("playlist.js::onSelectMediaState");
+        console.log("mediaState.FileName is: ", mediaState.getFileName());
+        console.log("mediaState.Id is: ", mediaState.getId());
+
         this.props.onSelectMediaState(mediaState);
     }
 
@@ -394,18 +399,26 @@ class Playlist extends Component {
 
                         // onMediaStateMouseUp={self.onMediaStateMouseUp.bind(this)}
 
+                        // onSelectMediaState={self.onSelectMediaState.bind(self)}
+                        // onSelectMediaState={self.onMediaStateMouseDown.bind(this)}
+
                         return (
                             <MediaStateThumb
+
+                                onMouseDown={(event) => self.onMediaStateMouseDown(event, mediaState)}
+                                onMouseMove={(event) => self.onMediaStateMouseMove(event)}
+                                onMouseUp={(event) => self.onMediaStateMouseUp(event)}
+
                                 mediaState={mediaState}
                                 className={className}
-                                onSelectMediaState={self.onMediaStateMouseDown.bind(this)}
                                 onMoveSelectedMediaState={(event) => self.processMouseMove(event)}
                                 onMediaStateMouseUp={(event) => self.onMediaStateMouseUp(event)}
+
+                                onSelectMediaState={self.onSelectMediaState.bind(self)}
 
                                 key={dataIndex}
                                 mediaThumbs={self.props.mediaThumbs}
                                 dataIndex={dataIndex}
-                                onSelectMediaState={self.onSelectMediaState.bind(self)}
                                 processMouseUp={self.onMediaStateMouseUp.bind(self)}
                                 playlistDragStartHandler={self.playlistDragStartHandler.bind(self)}
                                 playlistDragOverHandler={self.playlistDragOverHandler.bind(self)}

@@ -42,8 +42,8 @@ class MediaStateThumb extends Component {
 
         const dataIndex = self.props.dataIndex;
 
-        // style={mediaStateBtnStyle}
-        // https://facebook.github.io/react/tips/children-props-type.html
+        // onMouseDown={(event) => self.onMediaStateMouseDown(event, this.props.mediaState)}
+        // onMouseDown={this.props.onSelectMediaState}
 
         // Joel says:
         //      if you don't need to use a variable, don't pull it out of props
@@ -61,9 +61,10 @@ class MediaStateThumb extends Component {
 
                 id={id}
                 className={self.props.className}
-                onMouseDown={(event) => self.onMediaStateMouseDown(event, this.props.mediaState)}
-                onMouseMove={(event) => self.onMediaStateMouseMove(event)}
-                onMouseUp={(event) => self.onMediaStateMouseUp(event)}
+
+                onMouseDown={this.props.onMouseDown}
+                onMouseMove={this.props.onMouseMove}
+                onMouseUp={this.props.onMouseUp}
 
                 style={mediaStateBtnStyle}
                 key={dataIndex}>
