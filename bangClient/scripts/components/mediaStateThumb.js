@@ -5,25 +5,6 @@ import MediaImageLabel from './mediaImageLabel';
 
 class MediaStateThumb extends Component {
 
-    constructor(props) {
-        super(props);
-    }
-
-    // onMediaStateMouseDown(event, mediaState) {
-    //     console.log("onMediaStateMouseDown");
-    //     this.props.onMediaStateMouseDown(event, mediaState);
-    // }
-
-    // onMediaStateMouseMove(event) {
-    //     console.log("onMediaStateMouseMove");
-    //     this.props.onMediaStateMouseMove(event);
-    // }
-
-    // onMediaStateMouseUp(event) {
-    //     console.log("onMediaStateMouseUp");
-    //     this.props.onMediaStateMouseUp(event);
-    // }
-
     render() {
 
         const self = this;
@@ -36,14 +17,7 @@ class MediaStateThumb extends Component {
         const leftOffset = mediaState.x.toString();
         const topOffset = mediaState.y.toString();
 
-        let mediaStateBtnStyle = {};
-        mediaStateBtnStyle.left = leftOffset+"px";
-        mediaStateBtnStyle.top = topOffset + "px";
-
         const dataIndex = self.props.dataIndex;
-
-        // onMouseDown={(event) => self.onMediaStateMouseDown(event, this.props.mediaState)}
-        // onMouseDown={this.props.onSelectMediaState}
 
         // Joel says:
         //      if you don't need to use a variable, don't pull it out of props
@@ -59,10 +33,6 @@ class MediaStateThumb extends Component {
         //      in playlist.js, needed to use syntax like:
         //          onMoveSelectedMediaState={(event) => self.processMouseMove(event)}
 
-        // onMouseDown={this.props.onMouseDown}
-        // onMouseMove={this.props.onMouseMove}
-        // onMouseUp={this.props.onMouseUp}
-
         return (
 
             <btn
@@ -72,7 +42,7 @@ class MediaStateThumb extends Component {
 
                 {...this.props}
 
-                style={mediaStateBtnStyle}
+                style={ { left: leftOffset+"px", top: topOffset+"px" } }
                 key={dataIndex}>
 
                 <MediaImageContainer
