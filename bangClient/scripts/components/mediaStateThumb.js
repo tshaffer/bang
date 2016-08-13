@@ -55,6 +55,14 @@ class MediaStateThumb extends Component {
         //      container has logic; presentational components only perform render().
         // Ask Joel:
         //      When using {...this.props}, do you document anywhere what props are actually being used?
+        //      in playlist.js, changing all the self's to this didn't work.
+        //      in playlist.js, needed to use syntax like:
+        //          onMoveSelectedMediaState={(event) => self.processMouseMove(event)}
+
+        // onMouseDown={this.props.onMouseDown}
+        // onMouseMove={this.props.onMouseMove}
+        // onMouseUp={this.props.onMouseUp}
+
         return (
 
             <btn
@@ -62,9 +70,7 @@ class MediaStateThumb extends Component {
                 id={id}
                 className={self.props.className}
 
-                onMouseDown={this.props.onMouseDown}
-                onMouseMove={this.props.onMouseMove}
-                onMouseUp={this.props.onMouseUp}
+                {...this.props}
 
                 style={mediaStateBtnStyle}
                 key={dataIndex}>
