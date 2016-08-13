@@ -73,10 +73,11 @@ class MediaStateThumb extends Component {
                     mediaThumbs={self.props.mediaThumbs}
                     dataIndex={dataIndex}
                     key={dataIndex+2}
+
                     onSelectMediaState={this.props.onSelectMediaState}
                     onMoveSelectedMediaState={this.props.onMoveSelectedMediaState}
+                    onMouseUp={this.props.onMediaStateMouseUp}
 
-                    processMouseUp={self.props.onMediaStateMouseUp}
                     playlistDragStartHandler={self.props.playlistDragStartHandler}
                     playlistDragOverHandler={self.props.playlistDragOverHandler} />
                 

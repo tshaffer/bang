@@ -24,17 +24,17 @@ class MediaImageContainer extends Component {
 
     handleMediaStateImgMouseUp(event) {
         console.log("handleMediaStateImgMouseUp");
-        this.props.processMouseUp(event);
+        this.props.onMouseUp(event);
     }
 
-    mediaImageDragStartHandler(ev) {
-        console.log("mediaImageDragStartHandler");
-        this.props.playlistDragStartHandler(ev);
+    handleMediaImageDragStartHandler(event) {
+        console.log("handleMediaImageDragStartHandler");
+        this.props.playlistDragStartHandler(event);
     }
 
-    mediaImageDragOverHandler (ev) {
-        console.log("mediaImageDragOverHandler");
-        this.props.playlistDragOverHandler(ev);
+    handleMediaImageDragOverHandler (event) {
+        console.log("handleMediaImageDragOverHandler");
+        this.props.playlistDragOverHandler(event);
     }
 
     render() {
@@ -50,11 +50,6 @@ class MediaImageContainer extends Component {
         const mediaItem = self.props.mediaThumbs[filePath];
         const thumb = getThumb(mediaItem);
 
-        // onMouseMove={(event) => self.onMediaStateImgMouseMove(event)}
-        // className="playlistThumbImg"
-
-        // onMouseUp={(event) => self.onMediaStateImgMouseUp(event)}
-
         return (
 
             <MediaImage
@@ -68,15 +63,11 @@ class MediaImageContainer extends Component {
                 fileName={fileName}
                 filePath={filePath}
 
-
-                style={ {left: "0px", top: "0px"} }
                 draggable={true}
-                onDragStart={(event) => self.mediaImageDragStartHandler(event)}
-                onDragOver={(event) => self.mediaImageDragOverHandler(event)}
+                
+                onDragStart={this.handleMediaImageDragStartHandler.bind(this)}
+                onDragOver={this.handleMediaImageDragOverHandler.bind(this)}
 
-                data-name={fileName}
-                data-path={filePath}
-                data-type="image"
             />
         );
     }

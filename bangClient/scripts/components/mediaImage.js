@@ -2,11 +2,7 @@ import React, { Component } from 'react';
 
 class MediaImage extends Component {
 
-    // onMouseDown={this.props.onMouseDown}
-    // onMouseMove={(event) => self.onMediaStateImgMouseMove(event)}
-    // onMouseUp={(event) => self.onMediaStateImgMouseUp(event)}
-
-    render() {
+render() {
 
         return (
 
@@ -18,8 +14,6 @@ class MediaImage extends Component {
 
                 style={ { left: "0px", top: "0px" } }
                 draggable={true}
-                onDragStart={(event) => self.mediaImageDragStartHandler(event)}
-                onDragOver={(event) => self.mediaImageDragOverHandler(event)}
 
                 data-name={this.props.fileName}
                 data-path={this.props.filePath}
