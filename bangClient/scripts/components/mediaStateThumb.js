@@ -48,7 +48,7 @@ class MediaStateThumb extends Component {
         // Joel says:
         //      if you don't need to use a variable, don't pull it out of props
         //      only pass down information to the child components that they really need (i.e., don't pass down the entire
-        //      mediaState to the MediaImage
+        //      mediaState to the MediaImage)
         //      create mediaStateThumbContainer that interfaces with redux
         //      at each level, use the on...={handle...} pattern (for now)
         //      if there are lots of props named xxx={this.props.xxx], use {...this.props}
@@ -82,7 +82,8 @@ class MediaStateThumb extends Component {
                     playlistDragOverHandler={self.props.playlistDragOverHandler} />
                 
                 <MediaImageLabel
-                    mediaState={mediaState}
+                    fileName={mediaPlaylistItem.getFileName()}
+                    id={mediaPlaylistItem.getId()}
                     key={(dataIndex+3)} />
 
             </btn>

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 class MediaImage extends Component {
 
-render() {
+    render() {
 
         return (
 
