@@ -37,7 +37,7 @@ class MediaStateThumb extends Component {
 
         return (
 
-            <btn
+            <div
 
                 id={id}
                 className={self.props.className}
@@ -67,7 +67,7 @@ class MediaStateThumb extends Component {
                     id={mediaPlaylistItem.getId()}
                     key={(dataIndex+3)} />
 
-            </btn>
+            </div>
         );
     }
 }
