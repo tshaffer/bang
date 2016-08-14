@@ -6,10 +6,6 @@ import MediaImage from '../components/mediaImage';
 
 class MediaImageContainer extends Component {
 
-    constructor(props) {
-        super(props);
-    }
-
     handleMediaStateImgMouseDown(event) {
         console.log("handleMediaStateImgMouseDown");
         this.props.onSelectMediaState(this.props.mediaState);

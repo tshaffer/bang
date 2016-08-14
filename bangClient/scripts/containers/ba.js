@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import MediaLibrary from '../components/mediaLibrary';
-import Playlist from '../components/playlist';
 import PropertySheet from '../components/propertySheet';
 
 import BAUI from '../platform/baUI';
@@ -22,6 +21,9 @@ import { addPlaylistItemToZonePlaylist, addMediaStateToZonePlaylist, newSign, up
     newPlaylistItem, addPlaylistItem, updatePlaylistItem, deletePlaylistItem, movePlaylistItemWithinZonePlaylist, newHtmlSite, addHtmlSiteToPresentation,
     addTransition }
     from '../actions/index';
+
+import Playlist from '../components/playlist';
+import InteractivePlaylistContainer from './interactivePlaylistContainer';
 
 import MediaState from '../badm/mediaState';
 import Transition from '../badm/transition';
@@ -259,6 +261,30 @@ class BA extends Component {
                 />
         }
 
+        // <Playlist
+        //     onSelectMediaState={this.handleSelectMediaState.bind(this)}
+        //
+        //     onToggleOpenClosePropertySheet={this.handleToggleOpenClosePropertySheet.bind(this)}
+        //     onSelectBSEvent={this.handleSelectBSEvent.bind(this)}
+        //     onSetActiveBSEventType={this.handleSetActiveBSEventType.bind(this)}
+        //     propertySheetOpen = {this.state.propertySheetOpen}
+        //     getCurrentZone = {this.getCurrentZone.bind(this)}
+        //     getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
+        //     onDropMediaState={this.handleDropMediaState.bind(this)}
+        //     onAddTransition={this.handleAddTransition.bind(this)}
+        //     onDeleteMediaState={this.handleDeleteMediaState.bind(this)}
+        //     sign={this.props.sign}
+        //     zones= {this.props.zones}
+        //     zonePlaylists= {this.props.zonePlaylists}
+        //     mediaStates= {this.props.mediaStates}
+        //     transitions={this.props.transitions}
+        //     mediaThumbs= {this.props.mediaThumbs}
+        //     htmlSites= {this.props.htmlSites}
+        //     selectedMediaStateId={this.state.selectedMediaStateId}
+        //     selectedBSEventId={this.state.selectedBSEventId}
+        //     activeBSEventType={this.state.activeBSEventType}
+        // />
+
         return (
 
             <div>
@@ -277,29 +303,7 @@ class BA extends Component {
                         mediaFolder={this.props.mediaFolder}
                         mediaThumbs={this.props.mediaThumbs}
                     />
-                    <Playlist
-                        onSelectMediaState={this.handleSelectMediaState.bind(this)}
-
-                        onToggleOpenClosePropertySheet={this.handleToggleOpenClosePropertySheet.bind(this)}
-                        onSelectBSEvent={this.handleSelectBSEvent.bind(this)}
-                        onSetActiveBSEventType={this.handleSetActiveBSEventType.bind(this)}
-                        propertySheetOpen = {this.state.propertySheetOpen}
-                        getCurrentZone = {this.getCurrentZone.bind(this)}
-                        getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
-                        onDropMediaState={this.handleDropMediaState.bind(this)}
-                        onAddTransition={this.handleAddTransition.bind(this)}
-                        onDeleteMediaState={this.handleDeleteMediaState.bind(this)}
-                        sign={this.props.sign}
-                        zones= {this.props.zones}
-                        zonePlaylists= {this.props.zonePlaylists}
-                        mediaStates= {this.props.mediaStates}
-                        transitions={this.props.transitions}
-                        mediaThumbs= {this.props.mediaThumbs}
-                        htmlSites= {this.props.htmlSites}
-                        selectedMediaStateId={this.state.selectedMediaStateId}
-                        selectedBSEventId={this.state.selectedBSEventId}
-                        activeBSEventType={this.state.activeBSEventType}
-                    />
+                    <InteractivePlaylistContainer/>
                     {propertySheetTag}
                     <EditPreferencesDlg
                         ref="editPreferencesDlg"
