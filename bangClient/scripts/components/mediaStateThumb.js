@@ -32,6 +32,7 @@ class MediaStateThumb extends Component {
         //      in playlist.js, changing all the self's to this didn't work.
         //      in playlist.js, needed to use syntax like:
         //          onMoveSelectedMediaState={(event) => self.processMouseMove(event)}
+        //      clicking on <img> vs. rest of thumb - difference syntax - resolve that with reusable component
 
         return (
 
@@ -42,6 +43,8 @@ class MediaStateThumb extends Component {
 
                 {...this.props}
 
+                onMouseDown={this.props.onMediaStateMouseDown}
+                
                 style={ { left: leftOffset+"px", top: topOffset+"px" } }
                 key={dataIndex}>
 

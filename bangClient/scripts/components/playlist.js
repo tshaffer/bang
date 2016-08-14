@@ -186,11 +186,11 @@ class Playlist extends Component {
         this.onSelectBSEvent(bsEvent);
     }
 
-    onMediaStateMouseDown(event, mediaState) {
+    handleMediaStateMouseDown(event, mediaState) {
 
         this.onSelectMediaState(mediaState);
 
-        console.log("onMediaStateMouseDown");
+        console.log("handleMediaStateMouseDown");
 
         this.mouseState = mouseStateCreateTransition;
 
@@ -405,7 +405,7 @@ class Playlist extends Component {
                         return (
                             <MediaStateThumb
 
-                                onMouseDown={(event) => self.onMediaStateMouseDown(event, mediaState)}
+                                onMediaStateMouseDown={(event) => self.handleMediaStateMouseDown(event, mediaState)}
                                 onMouseMove={(event) => self.onMediaStateMouseMove(event)}
                                 onMouseUp={(event) => self.onMediaStateMouseUp(event)}
 
