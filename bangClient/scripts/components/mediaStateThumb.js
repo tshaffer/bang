@@ -28,11 +28,12 @@ class MediaStateThumb extends Component {
         //      if there are lots of props named xxx={this.props.xxx], use {...this.props}
         //      container has logic; presentational components only perform render().
         // Ask Joel:
-        //      When using {...this.props}, do you document anywhere what props are actually being used?
+        //      When using {...this.props}, do you document and/or indicate anywhere what props are actually being used?
         //      in playlist.js, changing all the self's to this didn't work.
         //      in playlist.js, needed to use syntax like:
         //          onMoveSelectedMediaState={(event) => self.processMouseMove(event)}
-        //      clicking on <img> vs. rest of thumb - difference syntax - resolve that with reusable component
+        //      clicking on <img> vs. rest of thumb - different syntax - resolve that with reusable component?
+        //      container vs. component - naming convention?
 
         return (
 

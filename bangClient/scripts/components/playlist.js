@@ -402,19 +402,29 @@ class Playlist extends Component {
                         // onSelectMediaState={self.onSelectMediaState.bind(self)}
                         // onSelectMediaState={self.onMediaStateMouseDown.bind(this)}
 
+                        // works (what has been checked in earlier - safe versions)
+                        // onMoveSelectedMediaState={(event) => self.processMouseMove(event)}
+                        // onMediaStateMouseUp={(event) => self.onMediaStateMouseUp(event)}
+                        // !!!! onMediaStateMouseDown={(event) => self.handleMediaStateMouseDown(event, mediaState)}
+                        // onMouseMove={(event) => self.onMediaStateMouseMove(event)}
+                        // onMouseUp={(event) => self.onMediaStateMouseUp(event)}
+
+                        // WORKS! - maybe I hadn't noticed the 'this' vs. 'self'?
+                        // onMoveSelectedMediaState={self.processMouseMove.bind(self)}
+
                         return (
                             <MediaStateThumb
 
                                 onMediaStateMouseDown={(event) => self.handleMediaStateMouseDown(event, mediaState)}
-                                onMouseMove={(event) => self.onMediaStateMouseMove(event)}
-                                onMouseUp={(event) => self.onMediaStateMouseUp(event)}
+                                onMouseMove={self.onMediaStateMouseMove.bind(self)}
+                                onMouseUp={self.onMediaStateMouseUp.bind(self)}
 
                                 mediaState={mediaState}
                                 className={className}
 
                                 onSelectMediaState={self.onSelectMediaState.bind(self)}
-                                onMoveSelectedMediaState={(event) => self.processMouseMove(event)}
-                                onMediaStateMouseUp={(event) => self.onMediaStateMouseUp(event)}
+                                onMoveSelectedMediaState={self.processMouseMove.bind(self)}
+                                onMediaStateMouseUp={self.onMediaStateMouseUp.bind(self)}
 
 
                                 key={dataIndex}
