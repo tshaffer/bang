@@ -26,6 +26,10 @@ class InteractivePlaylistContainer extends Component {
         };
 
         this.mouseState = mouseStateNone;
+
+        this.mediaStateBtnWidth = 110;
+        this.mediaStateBtnHeight = 90;
+
     }
 
     componentDidMount() {
@@ -49,6 +53,12 @@ class InteractivePlaylistContainer extends Component {
         //         }
         //     }, false);
         // }
+    }
+
+    playlistDragOverHandler (ev) {
+
+        ev.preventDefault();
+        ev.dataTransfer.dropEffect = "move";
     }
 
     playlistDropHandler (ev) {
@@ -272,13 +282,6 @@ class InteractivePlaylistContainer extends Component {
 
 
 
-    playlistDragOverHandler (ev) {
-
-        ev.preventDefault();
-        ev.dataTransfer.dropEffect = "move";
-    }
-
-
     render() {
 
         let self = this;
@@ -398,9 +401,12 @@ class InteractivePlaylistContainer extends Component {
                                 mediaThumbs={self.props.mediaThumbs}
                                 dataIndex={dataIndex}
                                 processMouseUp={self.onMediaStateMouseUp.bind(self)}
+                                mediaStates= {self.props.mediaStates}
+
+
                                 playlistDragStartHandler={self.playlistDragStartHandler.bind(self)}
                                 playlistDragOverHandler={self.playlistDragOverHandler.bind(self)}
-                                mediaStates= {self.props.mediaStates}
+
                             />
                         );
                     }
@@ -469,6 +475,7 @@ class InteractivePlaylistContainer extends Component {
         zoomStyle["MozTransform"] = "scale(" + zoomValueStr + ")";
 
         // let timeoutClassName = "unSelectedBSEvent";
+        // let timeoutClassName = "unSelectedBSEvent";
         // let mediaEndClassName = "unSelectedBSEvent";
         // switch (this.props.activeBSEventType) {
         //     case "timeout":
@@ -489,7 +496,9 @@ class InteractivePlaylistContainer extends Component {
               onSelectTimeoutEvent={this.onSelectTimeoutEvent.bind(this)}
               onSelectMediaEndEvent={this.onSelectMediaEndEvent.bind(this)}
               playlistDropHandler={this.playlistDropHandler.bind(this)}
-
+              playlistDragOverHandler={this.playlistDragOverHandler.bind(this)}
+              playlistDragStartHandler={this.playlistDragStartHandler.bind(this)}
+              
               onSetActiveBSEventType={this.props.onSetActiveBSEventType}
               onSelectMediaState={this.props.onSelectMediaState}
               onToggleOpenClosePropertySheet={this.props.onToggleOpenClosePropertySheet}

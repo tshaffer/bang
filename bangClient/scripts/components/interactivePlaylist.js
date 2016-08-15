@@ -61,53 +61,53 @@ class InteractivePlaylist extends Component {
         }
     }
 
-    playlistDragOverHandler (ev) {
-
-        ev.preventDefault();
-        ev.dataTransfer.dropEffect = "move";
-    }
-
-    playlistDropHandler (ev) {
-
-        ev.preventDefault();
-
-        // copy or move?
-        let operation = "";
-        let startIndex = -1;
-        if (ev.dataTransfer.effectAllowed === "move") {
-            operation = "move";
-        }
-        else {
-            operation = "copy";
-        }
-
-        // get dropped playlist item
-        const stateName = ev.dataTransfer.getData("name");
-        const path = ev.dataTransfer.getData("path");
-        const type = ev.dataTransfer.getData("type");
-
-        const zoomScaleFactor = 100 / this.state.zoomValue;
-
-        const pt = this.getCorrectedPoint(
-            { x: ev.pageX, y: ev.pageY}
-        );
-        const x = pt.x;
-        const y = pt.y;
-
-        // specify playlist item to drop
-        let mediaState = null;
-        if (type === "image") {
-            // offset image to center it around the drop point
-            const mediaStateX = x - (this.mediaStateBtnWidth/2);
-            const mediaStateY = y - (this.mediaStateBtnHeight/2);
-            mediaState = this.props.onDropMediaState(mediaStateX, mediaStateY, operation, type, stateName, path);
-        }
-
-        if (mediaState) {
-            this.onSelectMediaState(mediaState);
-        }
-    }
-
+    // playlistDragOverHandler (ev) {
+    //
+    //     ev.preventDefault();
+    //     ev.dataTransfer.dropEffect = "move";
+    // }
+    //
+    // playlistDropHandler (ev) {
+    //
+    //     ev.preventDefault();
+    //
+    //     // copy or move?
+    //     let operation = "";
+    //     let startIndex = -1;
+    //     if (ev.dataTransfer.effectAllowed === "move") {
+    //         operation = "move";
+    //     }
+    //     else {
+    //         operation = "copy";
+    //     }
+    //
+    //     // get dropped playlist item
+    //     const stateName = ev.dataTransfer.getData("name");
+    //     const path = ev.dataTransfer.getData("path");
+    //     const type = ev.dataTransfer.getData("type");
+    //
+    //     const zoomScaleFactor = 100 / this.state.zoomValue;
+    //
+    //     const pt = this.getCorrectedPoint(
+    //         { x: ev.pageX, y: ev.pageY}
+    //     );
+    //     const x = pt.x;
+    //     const y = pt.y;
+    //
+    //     // specify playlist item to drop
+    //     let mediaState = null;
+    //     if (type === "image") {
+    //         // offset image to center it around the drop point
+    //         const mediaStateX = x - (this.mediaStateBtnWidth/2);
+    //         const mediaStateY = y - (this.mediaStateBtnHeight/2);
+    //         mediaState = this.props.onDropMediaState(mediaStateX, mediaStateY, operation, type, stateName, path);
+    //     }
+    //
+    //     if (mediaState) {
+    //         this.onSelectMediaState(mediaState);
+    //     }
+    // }
+    //
     getCorrectedPoint(inputPoint) {
 
         const zoomScaleFactor = 100 / this.state.zoomValue;
@@ -154,18 +154,18 @@ class InteractivePlaylist extends Component {
         this.props.onSetActiveBSEventType("mediaEnd");
     }
 
-    playlistDragStartHandler(ev) {
-
-        console.log("onPlaylistMouseDown");
-        ev.dataTransfer.setData("path", ev.target.dataset.path);
-        ev.dataTransfer.setData("name", ev.target.dataset.name);
-        ev.dataTransfer.setData("type", ev.target.dataset.type);
-        ev.dataTransfer.setData("index", ev.target.dataset.index);
-
-        // I don't think the following statement is necessarily correct
-        ev.dataTransfer.dropEffect = "move";
-        ev.dataTransfer.effectAllowed = 'move';
-    }
+    // playlistDragStartHandler(ev) {
+    //
+    //     console.log("onPlaylistMouseDown");
+    //     ev.dataTransfer.setData("path", ev.target.dataset.path);
+    //     ev.dataTransfer.setData("name", ev.target.dataset.name);
+    //     ev.dataTransfer.setData("type", ev.target.dataset.type);
+    //     ev.dataTransfer.setData("index", ev.target.dataset.index);
+    //
+    //     // I don't think the following statement is necessarily correct
+    //     ev.dataTransfer.dropEffect = "move";
+    //     ev.dataTransfer.effectAllowed = 'move';
+    // }
 
     onPlaylistMouseDown(event) {
         console.log("onPlaylistMouseDown");
@@ -406,8 +406,8 @@ class InteractivePlaylist extends Component {
                                 mediaThumbs={self.props.mediaThumbs}
                                 dataIndex={dataIndex}
                                 processMouseUp={self.onMediaStateMouseUp.bind(self)}
-                                playlistDragStartHandler={self.playlistDragStartHandler.bind(self)}
-                                playlistDragOverHandler={self.playlistDragOverHandler.bind(self)}
+                                playlistDragStartHandler={self.props.playlistDragStartHandler}
+                                playlistDragOverHandler={self.props.playlistDragOverHandler}
                             />
                         );
                     }
@@ -418,6 +418,9 @@ class InteractivePlaylist extends Component {
         else {
             mediaStates = <div></div>
         }
+
+        // playlistDragStartHandler={self.playlistDragStartHandler.bind(self)}
+        // playlistDragOverHandler={self.playlistDragOverHandler.bind(self)}
 
         // retrieve transition lines
         transitionsToRender.forEach(transitionToRender => {
@@ -505,8 +508,8 @@ class InteractivePlaylist extends Component {
                      onMouseDown={(event) => self.onPlaylistMouseDown(event)}
                      onMouseMove={(event) => self.onPlaylistMouseMove(event)}
                      onMouseUp={() => self.onPlaylistMouseUp(event)}
-                     onDrop={self.playlistDropHandler.bind(self)}
-                     onDragOver={self.playlistDragOverHandler}
+                     onDrop={self.props.playlistDropHandler}
+                     onDragOver={self.props.playlistDragOverHandler}
                      style={zoomStyle}
                 >
                     {mediaStates}
@@ -517,5 +520,8 @@ class InteractivePlaylist extends Component {
         );
     }
 }
+
+// onDrop={self.playlistDropHandler.bind(self)}
+// onDragOver={self.playlistDragOverHandler}
 
 export default InteractivePlaylist;
