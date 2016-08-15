@@ -156,6 +156,7 @@ class Playlist extends Component {
 
     playlistDragStartHandler(ev) {
 
+        console.log("onPlaylistMouseDown");
         ev.dataTransfer.setData("path", ev.target.dataset.path);
         ev.dataTransfer.setData("name", ev.target.dataset.name);
         ev.dataTransfer.setData("type", ev.target.dataset.type);
@@ -524,6 +525,7 @@ class Playlist extends Component {
                     <button id="openCloseIcon" className="plainButton" type="button" onClick={this.props.onToggleOpenClosePropertySheet.bind(this)}>{openCloseLabel}</button>
                     <input step="1" id="zoomSlider" type="range" min="0" max="100" defaultValue="100"></input>
                 </div>
+        
                 <div className="interactiveCanvasDiv"
                      id="interactiveCanvasDiv"
                     onMouseDown={(event) => self.onPlaylistMouseDown(event)}

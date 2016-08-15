@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 
 import InteractivePlaylist from '../components/interactivePlaylist';
 
+import ImagePlaylistItem from '../badm/imagePlaylistItem';
+
 const mouseStateNone = "none";
 const mouseStateMoveMediaState = "moveMediaState";
 const mouseStateCreateTransition = "createTransition";
@@ -241,8 +243,244 @@ class InteractivePlaylistContainer extends Component {
     }
 
     render() {
+
+        let self = this;
+
+        let zoneId = "";
+
+        let currentMediaStates = [];
+        let currentMediaStateIds = [];
+
+        const currentZonePlaylist = this.props.getCurrentZonePlaylist();
+        if (currentZonePlaylist) {
+            currentMediaStateIds = currentZonePlaylist.mediaStateIds;
+        }
+
+        let openCloseLabel = "=>";
+        if (!this.props.propertySheetOpen) {
+            openCloseLabel = "<=";
+        }
+
+        let dataIndex = -4;
+        let mediaStates = null;
+        let transitionLines = '';
+
+        let svgData = '';
+        let svgLines = '';
+        let svgLineData = [];
+
+        let bsEventCoordinates = [];
+        let transitionCoordinates = [];
+
+        let transitionsToRender = [];
+
+        if (this.state.x1 >= 0 && this.state.y1 >= 0 && this.state.x2 >= 0 && this.state.y2 >= 0) {
+
+            switch (this.mouseState) {
+                case mouseStateNone:
+                    break;
+                case mouseStateMoveMediaState:
+                    break;
+                case mouseStateCreateTransition:
+                    const selectedMediaState = self.props.mediaStates.mediaStatesById[self.props.selectedMediaStateId];
+
+                    const xStart = selectedMediaState.x + this.mediaStateBtnWidth/2;
+                    const yStart = selectedMediaState.y + this.mediaStateBtnHeight;
+
+                    const xEnd = this.state.x2;
+                    const yEnd = this.state.y2;
+
+                    svgLineData.push({x1: xStart, y1: yStart, x2: xEnd, y2: yEnd});
+                    break;
+            }
+        }
+
+        if (currentMediaStateIds.length > 0) {
+
+            currentMediaStateIds.forEach( currentMediaStateId => {
+                currentMediaStates.push(self.props.mediaStates.mediaStatesById[currentMediaStateId]);
+            });
+
+            mediaStates = currentMediaStates.map(function (mediaState, index) {
+                const id = mediaState.getId();
+                const fileName = mediaState.getFileName();
+                let filePath = "";
+
+                let className = "";
+                if (self.props.selectedMediaStateId && self.props.selectedMediaStateId === id) {
+                    className = "selectedImage ";
+                }
+                else {
+                    className = "unSelectedImage ";
+                }
+
+                mediaState.transitionOutIds.forEach(transitionOutId => {
+
+                    const transition = self.props.transitions.transitionsById[transitionOutId];
+                    const targetMediaStateId = transition.targetMediaStateId;
+                    const targetMediaState = self.props.mediaStates.mediaStatesById[targetMediaStateId];
+
+                    transitionsToRender.push(self.getTransitionToRender(transition, mediaState, targetMediaState));
+                });
+
+                const mediaPlaylistItem = mediaState.getMediaPlaylistItem();
+                if (mediaPlaylistItem instanceof ImagePlaylistItem) {
+                    filePath = mediaPlaylistItem.getFilePath();
+                    if (self.props.mediaThumbs.hasOwnProperty(filePath)) {
+
+                        className += "mediaStateBtn";
+
+                        let mediaStateBtnStyle = {};
+
+                        const leftOffset = mediaState.x.toString();
+                        const topOffset = mediaState.y.toString();
+
+                        mediaStateBtnStyle.left = leftOffset+"px";
+                        mediaStateBtnStyle.top = topOffset + "px";
+
+                        const id = mediaPlaylistItem.getId();
+
+                        dataIndex+= 4;
+
+                        // onMediaStateMouseDown={self.onMediaStateMouseDown.bind(this)}
+
+                        // onMoveSelectedMediaState={self.processMouseMove.bind(this)}
+                        // onMoveSelectedMediaState={(event) => self.onPlaylistMouseMove(event)}
+
+                        // works
+                        // onMoveSelectedMediaState={(event) => self.processMouseMove(event)}
+
+                        // old, now obsolete
+                        // onMediaStateMouseMove={self.onMediaStateMouseMove.bind(this)}
+
+                        // onMediaStateMouseUp={self.onMediaStateMouseUp.bind(this)}
+
+                        // onSelectMediaState={self.onSelectMediaState.bind(self)}
+                        // onSelectMediaState={self.onMediaStateMouseDown.bind(this)}
+
+                        // works (what has been checked in earlier - safe versions)
+                        // onMoveSelectedMediaState={(event) => self.processMouseMove(event)}
+                        // onMediaStateMouseUp={(event) => self.onMediaStateMouseUp(event)}
+                        // !!!! onMediaStateMouseDown={(event) => self.handleMediaStateMouseDown(event, mediaState)}
+                        // onMouseMove={(event) => self.onMediaStateMouseMove(event)}
+                        // onMouseUp={(event) => self.onMediaStateMouseUp(event)}
+
+                        // WORKS! - maybe I hadn't noticed the 'this' vs. 'self'?
+                        // onMoveSelectedMediaState={self.processMouseMove.bind(self)}
+
+                        return (
+                            <MediaStateThumb
+
+                                onMediaStateMouseDown={(event) => self.handleMediaStateMouseDown(event, mediaState)}
+                                onMouseMove={self.onMediaStateMouseMove.bind(self)}
+                                onMouseUp={self.onMediaStateMouseUp.bind(self)}
+
+                                mediaState={mediaState}
+                                className={className}
+
+                                onSelectMediaState={self.onSelectMediaState.bind(self)}
+                                onMoveSelectedMediaState={self.processMouseMove.bind(self)}
+                                onMediaStateMouseUp={self.onMediaStateMouseUp.bind(self)}
+
+
+                                key={dataIndex}
+                                mediaThumbs={self.props.mediaThumbs}
+                                dataIndex={dataIndex}
+                                processMouseUp={self.onMediaStateMouseUp.bind(self)}
+                                playlistDragStartHandler={self.playlistDragStartHandler.bind(self)}
+                                playlistDragOverHandler={self.playlistDragOverHandler.bind(self)}
+                            />
+                        );
+                    }
+                }
+
+            });
+        }
+        else {
+            mediaStates = <div></div>
+        }
+
+        // retrieve transition lines
+        transitionsToRender.forEach(transitionToRender => {
+            const transitionCoordinate = transitionToRender.coordinates;
+            svgLineData.push({x1: transitionCoordinate.xStart, y1: transitionCoordinate.yStart,
+                x2: transitionCoordinate.xEnd, y2: transitionCoordinate.yEnd});
+        });
+
+        // render all line segments - transitions and rubber band
+        if (svgLineData.length > 0) {
+
+            svgLines = svgLineData.map(function (svgLine, index) {
+
+                const x1 = svgLine.x1;
+                const y1 = svgLine.y1;
+                const x2 = svgLine.x2;
+                const y2 = svgLine.y2;
+
+                return (
+                    <line x1={x1} y1={y1} x2={x2} y2={y2} key={index + 1000} stroke="black" fill="transparent" stroke-width="10"/>
+                );
+            });
+
+            // const svgWidth = 900;
+            // const svgHeight = 800;
+            // HACKEY
+            const pt = this.getCorrectedPoint(
+                { x: 900, y: 800 }
+            );
+
+            svgData =
+                <svg width={pt.x} height={pt.y}> +
+                    {svgLines} +
+                </svg>;
+        }
+
+        // render transition event images
+        let bsEventIconStyle = {};
+        bsEventIconStyle.position = "absolute";
+
+        let bsEventIcons = transitionsToRender.map( (transitionToRender, index) => {
+
+            return (
+                <TransitionEventIcon
+                    selectedBSEventId={this.props.selectedBSEventId}
+                    transitionToRender={transitionToRender}
+                    onMouseDown={this.onBSEventMouseDown.bind(this)}
+                    key={500 + index}
+                />
+            )
+        });
+
+        let zoomStyle = {};
+        const zoomValueStr = (this.state.zoomValue/100).toString();
+        zoomStyle.zoom = zoomValueStr;
+        zoomStyle["MozTransform"] = "scale(" + zoomValueStr + ")";
+
+        // let timeoutClassName = "unSelectedBSEvent";
+        // let mediaEndClassName = "unSelectedBSEvent";
+        // switch (this.props.activeBSEventType) {
+        //     case "timeout":
+        //         timeoutClassName = "selectedBSEvent";
+        //         break;
+        //     case "mediaEnd":
+        //         mediaEndClassName = "selectedBSEvent";
+        //         break;
+        // }
+
+
+        // playlistDragOverHandler={this.playlistDragOverHandler.bind(this)}
+
         return (
-          <InteractivePlaylist />
+          <InteractivePlaylist
+              activeBSEventType={this.props.activeBSEventType}
+              openCloseLabel={openCloseLabel}
+
+              onSelectTimeoutEvent={this.onSelectTimeoutEvent.bind(this)}
+              onSelectMediaEndEvent={this.onSelectMediaEndEvent.bind(this)}
+
+              playlistDropHandler={this.playlistDropHandler.bind(this)}
+
+          />
         );
     }
 }

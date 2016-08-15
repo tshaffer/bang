@@ -22,7 +22,7 @@ import { addPlaylistItemToZonePlaylist, addMediaStateToZonePlaylist, newSign, up
     addTransition }
     from '../actions/index';
 
-import Playlist from '../components/playlist';
+// import Playlist from '../components/playlist';
 import InteractivePlaylistContainer from './interactivePlaylistContainer';
 
 import MediaState from '../badm/mediaState';
@@ -303,7 +303,29 @@ class BA extends Component {
                         mediaFolder={this.props.mediaFolder}
                         mediaThumbs={this.props.mediaThumbs}
                     />
-                    <InteractivePlaylistContainer/>
+                    <InteractivePlaylistContainer
+                        onSetActiveBSEventType={this.handleSetActiveBSEventType.bind(this)}
+
+                        onSelectMediaState={this.handleSelectMediaState.bind(this)}
+                        onToggleOpenClosePropertySheet={this.handleToggleOpenClosePropertySheet.bind(this)}
+                        onSelectBSEvent={this.handleSelectBSEvent.bind(this)}
+                        propertySheetOpen = {this.state.propertySheetOpen}
+                        getCurrentZone = {this.getCurrentZone.bind(this)}
+                        getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
+                        onDropMediaState={this.handleDropMediaState.bind(this)}
+                        onAddTransition={this.handleAddTransition.bind(this)}
+                        onDeleteMediaState={this.handleDeleteMediaState.bind(this)}
+                        sign={this.props.sign}
+                        zones= {this.props.zones}
+                        zonePlaylists= {this.props.zonePlaylists}
+                        mediaStates= {this.props.mediaStates}
+                        transitions={this.props.transitions}
+                        mediaThumbs= {this.props.mediaThumbs}
+                        htmlSites= {this.props.htmlSites}
+                        selectedMediaStateId={this.state.selectedMediaStateId}
+                        selectedBSEventId={this.state.selectedBSEventId}
+                        activeBSEventType={this.state.activeBSEventType}
+                    />
                     {propertySheetTag}
                     <EditPreferencesDlg
                         ref="editPreferencesDlg"
