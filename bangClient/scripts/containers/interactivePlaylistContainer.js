@@ -127,7 +127,7 @@ class InteractivePlaylistContainer extends Component {
 
     onSelectMediaState(mediaState) {
 
-        console.log("playlist.js::onSelectMediaState");
+        console.log("interactivePlaylistContainer.js::onSelectMediaState");
         console.log("mediaState.FileName is: ", mediaState.getFileName());
         console.log("mediaState.Id is: ", mediaState.getId());
 
@@ -192,6 +192,8 @@ class InteractivePlaylistContainer extends Component {
             { x: event.clientX, y: event.clientY }
         );
 
+        console.log("setState ipc::handleMediaStateMouseDown");
+
         this.setState ({ x1: pt.x });
         this.setState ({ y1: pt.y });
         this.setState ({ x2: -1});
@@ -231,6 +233,7 @@ class InteractivePlaylistContainer extends Component {
             const pt = this.getCorrectedPoint(
                 { x: event.clientX, y: event.clientY }
             );
+            console.log("setState ipc::processMouseMove");
             this.setState ({ x2: pt.x });
             this.setState ({ y2: pt.y });
         }
@@ -242,6 +245,7 @@ class InteractivePlaylistContainer extends Component {
 
         this.mouseState = mouseStateNone;
 
+        console.log("setState ipc::processMouseUp");
         this.setState ({ x1: -1});
         this.setState ({ y1: -1});
         this.setState ({ x2: -1});
@@ -516,7 +520,15 @@ class InteractivePlaylistContainer extends Component {
               selectedBSEventId={this.props.selectedBSEventId}
               activeBSEventType={this.props.activeBSEventType}
 
+              onPlaylistMouseDown={self.onPlaylistMouseDown.bind(this)}
+              onPlaylistMouseMove={self.onPlaylistMouseMove.bind(this)}
+              onPlaylistMouseUp={self.onPlaylistMouseUp.bind(this)}
+              onMediaStateMouseDown={self.handleMediaStateMouseDown.bind(this)}
 
+              onMediaStateMouseMove={self.onMediaStateMouseMove.bind(this)}
+              onMediaStateMouseUp={self.onMediaStateMouseUp.bind(this)}
+              processMouseMove={self.processMouseMove.bind(this)}
+              processMouseUp={self.processMouseUp.bind(this)}
           />
         );
     }

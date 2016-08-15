@@ -175,6 +175,7 @@ class BA extends Component {
 
     
     handleSelectMediaState(mediaState) {
+        console.log("setState ba.js::handleSelectMediaState");
         this.setState({ selectedBSEventId: null });
         this.setState({ selectedMediaStateId: mediaState.getId() });
     }

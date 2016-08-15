@@ -13,10 +13,6 @@ import MediaStateThumb from './mediaStateThumb';
 // import MediaImageLabel from './mediaImageLabel';
 import TransitionEventIcon from './TransitionEventIcon';
 
-const mouseStateNone = "none";
-const mouseStateMoveMediaState = "moveMediaState";
-const mouseStateCreateTransition = "createTransition";
-
 class InteractivePlaylist extends Component {
 
     constructor(props) {
@@ -29,7 +25,7 @@ class InteractivePlaylist extends Component {
             y2: -1
         };
 
-        this.mouseState = mouseStateNone;
+        // this.mouseState = mouseStateNone;
 
         this.mediaStateBtnWidth = 110;
         this.mediaStateBtnHeight = 90;
@@ -55,59 +51,13 @@ class InteractivePlaylist extends Component {
         if (zoomValue != undefined) {
             zoomValue.addEventListener("input", function () {
                 if (self.state.zoomValue != zoomValue.value) {
+                    console.log("setState on zoomValue from interactivePlaylist");
                     self.setState ({ zoomValue: zoomValue.value });
                 }
             }, false);
         }
     }
 
-    // playlistDragOverHandler (ev) {
-    //
-    //     ev.preventDefault();
-    //     ev.dataTransfer.dropEffect = "move";
-    // }
-    //
-    // playlistDropHandler (ev) {
-    //
-    //     ev.preventDefault();
-    //
-    //     // copy or move?
-    //     let operation = "";
-    //     let startIndex = -1;
-    //     if (ev.dataTransfer.effectAllowed === "move") {
-    //         operation = "move";
-    //     }
-    //     else {
-    //         operation = "copy";
-    //     }
-    //
-    //     // get dropped playlist item
-    //     const stateName = ev.dataTransfer.getData("name");
-    //     const path = ev.dataTransfer.getData("path");
-    //     const type = ev.dataTransfer.getData("type");
-    //
-    //     const zoomScaleFactor = 100 / this.state.zoomValue;
-    //
-    //     const pt = this.getCorrectedPoint(
-    //         { x: ev.pageX, y: ev.pageY}
-    //     );
-    //     const x = pt.x;
-    //     const y = pt.y;
-    //
-    //     // specify playlist item to drop
-    //     let mediaState = null;
-    //     if (type === "image") {
-    //         // offset image to center it around the drop point
-    //         const mediaStateX = x - (this.mediaStateBtnWidth/2);
-    //         const mediaStateY = y - (this.mediaStateBtnHeight/2);
-    //         mediaState = this.props.onDropMediaState(mediaStateX, mediaStateY, operation, type, stateName, path);
-    //     }
-    //
-    //     if (mediaState) {
-    //         this.onSelectMediaState(mediaState);
-    //     }
-    // }
-    //
     getCorrectedPoint(inputPoint) {
 
         const zoomScaleFactor = 100 / this.state.zoomValue;
@@ -154,107 +104,12 @@ class InteractivePlaylist extends Component {
         this.props.onSetActiveBSEventType("mediaEnd");
     }
 
-    // playlistDragStartHandler(ev) {
-    //
-    //     console.log("onPlaylistMouseDown");
-    //     ev.dataTransfer.setData("path", ev.target.dataset.path);
-    //     ev.dataTransfer.setData("name", ev.target.dataset.name);
-    //     ev.dataTransfer.setData("type", ev.target.dataset.type);
-    //     ev.dataTransfer.setData("index", ev.target.dataset.index);
-    //
-    //     // I don't think the following statement is necessarily correct
-    //     ev.dataTransfer.dropEffect = "move";
-    //     ev.dataTransfer.effectAllowed = 'move';
-    // }
-
-    onPlaylistMouseDown(event) {
-        console.log("onPlaylistMouseDown");
-        this.mouseState = mouseStateNone;
-        event.stopPropagation();
-    }
-
-    onPlaylistMouseMove(event) {
-        console.log("onPlaylistMouseMove");
-        this.processMouseMove(event);
-    }
-
-    onPlaylistMouseUp(event) {
-        console.log("onPlaylistMouseUp");
-        this.processMouseUp(event);
-    }
-
     onBSEventMouseDown(bsEvent) {
         this.onSelectBSEvent(bsEvent);
     }
 
     handleMediaStateMouseDown(event, mediaState) {
-
-        this.onSelectMediaState(mediaState);
-
-        console.log("handleMediaStateMouseDown");
-
-        this.mouseState = mouseStateCreateTransition;
-
-        const pt = this.getCorrectedPoint(
-            { x: event.clientX, y: event.clientY }
-        );
-
-        this.setState ({ x1: pt.x });
-        this.setState ({ y1: pt.y });
-        this.setState ({ x2: -1});
-        this.setState ({ y2: -1});
-
-        event.stopPropagation();
-    }
-
-    onMediaStateMouseMove(event) {
-        console.log("onMediaStateMouseMove");
-        this.processMouseMove(event);
-    }
-
-    onMediaStateMouseUp(event) {
-        console.log("onMediaStateMouseUp");
-        switch (this.mouseState) {
-            case mouseStateNone:
-                break;
-            case mouseStateMoveMediaState:
-                break;
-            case mouseStateCreateTransition:
-                // don't add transition if the target media state is same as the current media state
-                if (event.target.id !== this.props.selectedMediaStateId) {
-                    // console.log("create transition to " + event.target.id);
-                    // create event here or in ba?
-                    // send current event type to ba?
-                    this.props.onAddTransition(event.target.id);
-                }
-                break;
-        }
-        this.processMouseUp(event);
-    }
-
-    processMouseMove(event) {
-
-        if (this.mouseState != mouseStateNone) {
-            const pt = this.getCorrectedPoint(
-                { x: event.clientX, y: event.clientY }
-            );
-            this.setState ({ x2: pt.x });
-            this.setState ({ y2: pt.y });
-        }
-
-        event.stopPropagation();
-    }
-
-    processMouseUp(event) {
-
-        this.mouseState = mouseStateNone;
-
-        this.setState ({ x1: -1});
-        this.setState ({ y1: -1});
-        this.setState ({ x2: -1});
-        this.setState ({ y2: -1});
-
-        event.stopPropagation();
+        // this.props.onMediaStateMouseDown(event, mediaState);
     }
 
     getTransitionCoordinates(sourceMediaState, targetMediaState) {
@@ -319,26 +174,26 @@ class InteractivePlaylist extends Component {
 
         let transitionsToRender = [];
 
-        if (this.state.x1 >= 0 && this.state.y1 >= 0 && this.state.x2 >= 0 && this.state.y2 >= 0) {
-
-            switch (this.mouseState) {
-                case mouseStateNone:
-                    break;
-                case mouseStateMoveMediaState:
-                    break;
-                case mouseStateCreateTransition:
-                    const selectedMediaState = self.props.mediaStates.mediaStatesById[self.props.selectedMediaStateId];
-
-                    const xStart = selectedMediaState.x + this.mediaStateBtnWidth/2;
-                    const yStart = selectedMediaState.y + this.mediaStateBtnHeight;
-
-                    const xEnd = this.state.x2;
-                    const yEnd = this.state.y2;
-
-                    svgLineData.push({x1: xStart, y1: yStart, x2: xEnd, y2: yEnd});
-                    break;
-            }
-        }
+        // if (this.state.x1 >= 0 && this.state.y1 >= 0 && this.state.x2 >= 0 && this.state.y2 >= 0) {
+        //
+        //     switch (this.mouseState) {
+        //         case mouseStateNone:
+        //             break;
+        //         case mouseStateMoveMediaState:
+        //             break;
+        //         case mouseStateCreateTransition:
+        //             const selectedMediaState = self.props.mediaStates.mediaStatesById[self.props.selectedMediaStateId];
+        //
+        //             const xStart = selectedMediaState.x + this.mediaStateBtnWidth/2;
+        //             const yStart = selectedMediaState.y + this.mediaStateBtnHeight;
+        //
+        //             const xEnd = this.state.x2;
+        //             const yEnd = this.state.y2;
+        //
+        //             svgLineData.push({x1: xStart, y1: yStart, x2: xEnd, y2: yEnd});
+        //             break;
+        //     }
+        // }
 
         if (currentMediaStateIds.length > 0) {
 
@@ -390,24 +245,26 @@ class InteractivePlaylist extends Component {
                         return (
                             <MediaStateThumb
 
-                                onMediaStateMouseDown={(event) => self.handleMediaStateMouseDown(event, mediaState)}
-                                onMouseMove={self.onMediaStateMouseMove.bind(self)}
-                                onMouseUp={self.onMediaStateMouseUp.bind(self)}
 
                                 mediaState={mediaState}
                                 className={className}
 
                                 onSelectMediaState={self.onSelectMediaState.bind(self)}
-                                onMoveSelectedMediaState={self.processMouseMove.bind(self)}
-                                onMediaStateMouseUp={self.onMediaStateMouseUp.bind(self)}
+                                onMediaStateMouseUp={self.props.onMediaStateMouseUp}
 
 
                                 key={dataIndex}
                                 mediaThumbs={self.props.mediaThumbs}
                                 dataIndex={dataIndex}
-                                processMouseUp={self.onMediaStateMouseUp.bind(self)}
                                 playlistDragStartHandler={self.props.playlistDragStartHandler}
                                 playlistDragOverHandler={self.props.playlistDragOverHandler}
+                                onMouseDown={self.handleMediaStateMouseDown(event, mediaState)}
+                                onMouseMove={self.props.onMediaStateMouseMove}
+                                onMouseUp={self.props.onMediaStateMouseUp}
+
+                                onMoveSelectedMediaState={self.props.processMouseMove}
+                                processMouseUp={self.props.processMouseUp}
+
                             />
                         );
                     }
@@ -418,9 +275,6 @@ class InteractivePlaylist extends Component {
         else {
             mediaStates = <div></div>
         }
-
-        // playlistDragStartHandler={self.playlistDragStartHandler.bind(self)}
-        // playlistDragOverHandler={self.playlistDragOverHandler.bind(self)}
 
         // retrieve transition lines
         transitionsToRender.forEach(transitionToRender => {
@@ -505,12 +359,13 @@ class InteractivePlaylist extends Component {
 
                 <div className="interactiveCanvasDiv"
                      id="interactiveCanvasDiv"
-                     onMouseDown={(event) => self.onPlaylistMouseDown(event)}
-                     onMouseMove={(event) => self.onPlaylistMouseMove(event)}
-                     onMouseUp={() => self.onPlaylistMouseUp(event)}
                      onDrop={self.props.playlistDropHandler}
                      onDragOver={self.props.playlistDragOverHandler}
                      style={zoomStyle}
+                     
+                     onMouseDown={self.props.onPlaylistMouseDown}
+                     onMouseMove={self.props.onPlaylistMouseMove}
+                     onMouseUp={self.props.onPlaylistMouseUp}
                 >
                     {mediaStates}
                     {svgData}
@@ -520,8 +375,5 @@ class InteractivePlaylist extends Component {
         );
     }
 }
-
-// onDrop={self.playlistDropHandler.bind(self)}
-// onDragOver={self.playlistDragOverHandler}
 
 export default InteractivePlaylist;
