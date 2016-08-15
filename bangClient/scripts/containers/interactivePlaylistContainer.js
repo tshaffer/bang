@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 
+import $ from 'jquery';
+
 import InteractivePlaylist from '../components/interactivePlaylist';
 
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
+import TransitionEventIcon from '../components/TransitionEventIcon';
 
 const mouseStateNone = "none";
 const mouseStateMoveMediaState = "moveMediaState";
 const mouseStateCreateTransition = "createTransition";
+
+import MediaStateThumb from '../components/mediaStateThumb';
 
 class InteractivePlaylistContainer extends Component {
 
@@ -21,6 +26,29 @@ class InteractivePlaylistContainer extends Component {
         };
 
         this.mouseState = mouseStateNone;
+    }
+
+    componentDidMount() {
+
+        var self = this;
+
+        this.playlistOffset = $("#interactiveCanvasDiv").offset();
+
+        // document.addEventListener('keydown', (event) => {
+        //     if (event.keyCode == 8 || event.keyCode == 46) {       // delete key or backspace key
+        //         // check to see if playlistItem has focus
+        //         self.props.onDeleteMediaState();
+        //     }
+        // });
+
+        // const zoomValue = document.getElementById("zoomSlider");
+        // if (zoomValue != undefined) {
+        //     zoomValue.addEventListener("input", function () {
+        //         if (self.state.zoomValue != zoomValue.value) {
+        //             self.setState ({ zoomValue: zoomValue.value });
+        //         }
+        //     }, false);
+        // }
     }
 
     playlistDropHandler (ev) {
@@ -242,6 +270,15 @@ class InteractivePlaylistContainer extends Component {
         return transitionToRender;
     }
 
+
+
+    playlistDragOverHandler (ev) {
+
+        ev.preventDefault();
+        ev.dataTransfer.dropEffect = "move";
+    }
+
+
     render() {
 
         let self = this;
@@ -342,32 +379,6 @@ class InteractivePlaylistContainer extends Component {
 
                         dataIndex+= 4;
 
-                        // onMediaStateMouseDown={self.onMediaStateMouseDown.bind(this)}
-
-                        // onMoveSelectedMediaState={self.processMouseMove.bind(this)}
-                        // onMoveSelectedMediaState={(event) => self.onPlaylistMouseMove(event)}
-
-                        // works
-                        // onMoveSelectedMediaState={(event) => self.processMouseMove(event)}
-
-                        // old, now obsolete
-                        // onMediaStateMouseMove={self.onMediaStateMouseMove.bind(this)}
-
-                        // onMediaStateMouseUp={self.onMediaStateMouseUp.bind(this)}
-
-                        // onSelectMediaState={self.onSelectMediaState.bind(self)}
-                        // onSelectMediaState={self.onMediaStateMouseDown.bind(this)}
-
-                        // works (what has been checked in earlier - safe versions)
-                        // onMoveSelectedMediaState={(event) => self.processMouseMove(event)}
-                        // onMediaStateMouseUp={(event) => self.onMediaStateMouseUp(event)}
-                        // !!!! onMediaStateMouseDown={(event) => self.handleMediaStateMouseDown(event, mediaState)}
-                        // onMouseMove={(event) => self.onMediaStateMouseMove(event)}
-                        // onMouseUp={(event) => self.onMediaStateMouseUp(event)}
-
-                        // WORKS! - maybe I hadn't noticed the 'this' vs. 'self'?
-                        // onMoveSelectedMediaState={self.processMouseMove.bind(self)}
-
                         return (
                             <MediaStateThumb
 
@@ -389,6 +400,7 @@ class InteractivePlaylistContainer extends Component {
                                 processMouseUp={self.onMediaStateMouseUp.bind(self)}
                                 playlistDragStartHandler={self.playlistDragStartHandler.bind(self)}
                                 playlistDragOverHandler={self.playlistDragOverHandler.bind(self)}
+                                mediaStates= {self.props.mediaStates}
                             />
                         );
                     }
@@ -479,6 +491,19 @@ class InteractivePlaylistContainer extends Component {
               onSelectMediaEndEvent={this.onSelectMediaEndEvent.bind(this)}
 
               playlistDropHandler={this.playlistDropHandler.bind(this)}
+
+
+              getCurrentZonePlaylist = {this.props.getCurrentZonePlaylist}
+              onToggleOpenClosePropertySheet={this.props.onToggleOpenClosePropertySheet}
+              onSetActiveBSEventType={this.props.onSetActiveBSEventType}
+              onDropMediaState={this.props.onDropMediaState}
+              onSelectMediaState={this.props.onSelectMediaState}
+              mediaStates= {this.props.mediaStates}
+              mediaThumbs={self.props.mediaThumbs}
+              selectedMediaStateId={self.props.selectedMediaStateId}
+              onAddTransition={this.props.onAddTransition}
+              transitions={this.props.transitions}
+
 
           />
         );
