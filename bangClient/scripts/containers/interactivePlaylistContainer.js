@@ -484,25 +484,28 @@ class InteractivePlaylistContainer extends Component {
 
         return (
           <InteractivePlaylist
-              activeBSEventType={this.props.activeBSEventType}
               openCloseLabel={openCloseLabel}
 
               onSelectTimeoutEvent={this.onSelectTimeoutEvent.bind(this)}
               onSelectMediaEndEvent={this.onSelectMediaEndEvent.bind(this)}
-
               playlistDropHandler={this.playlistDropHandler.bind(this)}
 
-
-              getCurrentZonePlaylist = {this.props.getCurrentZonePlaylist}
-              onToggleOpenClosePropertySheet={this.props.onToggleOpenClosePropertySheet}
               onSetActiveBSEventType={this.props.onSetActiveBSEventType}
-              onDropMediaState={this.props.onDropMediaState}
               onSelectMediaState={this.props.onSelectMediaState}
+              onToggleOpenClosePropertySheet={this.props.onToggleOpenClosePropertySheet}
+              onSelectBSEvent={this.props.onSelectBSEvent}
+              propertySheetOpen = {this.props.propertySheetOpen}
+              getCurrentZone = {this.props.getCurrentZone}
+              getCurrentZonePlaylist = {this.props.getCurrentZonePlaylist}
+              onDropMediaState={this.props.onDropMediaState}
+              onAddTransition={this.props.onAddTransition}
+              onDeleteMediaState={this.props.onDeleteMediaState}
               mediaStates= {this.props.mediaStates}
+              transitions={this.props.transitions}
               mediaThumbs={self.props.mediaThumbs}
               selectedMediaStateId={self.props.selectedMediaStateId}
-              onAddTransition={this.props.onAddTransition}
-              transitions={this.props.transitions}
+              selectedBSEventId={this.props.selectedBSEventId}
+              activeBSEventType={this.props.activeBSEventType}
 
 
           />
