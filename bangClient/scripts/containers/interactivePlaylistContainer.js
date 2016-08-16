@@ -443,6 +443,12 @@ class InteractivePlaylistContainer extends Component {
               onMediaStateMouseUp={self.onMediaStateMouseUp.bind(this)}
               processMouseMove={self.processMouseMove.bind(this)}
               processMouseUp={self.processMouseUp.bind(this)}
+              
+              x1={this.state.x1}
+              y1={this.state.y1}
+              x2={this.state.x2}
+              y2={this.state.y2}
+              mouseState={this.mouseState}
           />
         );
     }

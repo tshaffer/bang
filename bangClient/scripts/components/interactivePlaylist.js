@@ -13,19 +13,17 @@ import MediaStateThumb from './mediaStateThumb';
 // import MediaImageLabel from './mediaImageLabel';
 import TransitionEventIcon from './TransitionEventIcon';
 
+const mouseStateNone = "none";
+const mouseStateMoveMediaState = "moveMediaState";
+const mouseStateCreateTransition = "createTransition";
+
 class InteractivePlaylist extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             zoomValue: 100,
-            x1: -1,
-            y1: -1,
-            x2: -1,
-            y2: -1
         };
-
-        // this.mouseState = mouseStateNone;
 
         this.mediaStateBtnWidth = 110;
         this.mediaStateBtnHeight = 90;
@@ -174,26 +172,26 @@ class InteractivePlaylist extends Component {
 
         let transitionsToRender = [];
 
-        // if (this.state.x1 >= 0 && this.state.y1 >= 0 && this.state.x2 >= 0 && this.state.y2 >= 0) {
-        //
-        //     switch (this.mouseState) {
-        //         case mouseStateNone:
-        //             break;
-        //         case mouseStateMoveMediaState:
-        //             break;
-        //         case mouseStateCreateTransition:
-        //             const selectedMediaState = self.props.mediaStates.mediaStatesById[self.props.selectedMediaStateId];
-        //
-        //             const xStart = selectedMediaState.x + this.mediaStateBtnWidth/2;
-        //             const yStart = selectedMediaState.y + this.mediaStateBtnHeight;
-        //
-        //             const xEnd = this.state.x2;
-        //             const yEnd = this.state.y2;
-        //
-        //             svgLineData.push({x1: xStart, y1: yStart, x2: xEnd, y2: yEnd});
-        //             break;
-        //     }
-        // }
+        if (this.props.x1 >= 0 && this.props.y1 >= 0 && this.props.x2 >= 0 && this.props.y2 >= 0) {
+
+            switch (this.props.mouseState) {
+                case mouseStateNone:
+                    break;
+                case mouseStateMoveMediaState:
+                    break;
+                case mouseStateCreateTransition:
+                    const selectedMediaState = self.props.mediaStates.mediaStatesById[self.props.selectedMediaStateId];
+
+                    const xStart = selectedMediaState.x + this.mediaStateBtnWidth/2;
+                    const yStart = selectedMediaState.y + this.mediaStateBtnHeight;
+
+                    const xEnd = this.props.x2;
+                    const yEnd = this.props.y2;
+
+                    svgLineData.push({x1: xStart, y1: yStart, x2: xEnd, y2: yEnd});
+                    break;
+            }
+        }
 
         if (currentMediaStateIds.length > 0) {
 
@@ -278,8 +276,8 @@ class InteractivePlaylist extends Component {
                         // interactivePlaylistContainer
                         //      onPlaylistMouseMove={self.onPlaylistMouseMove.bind(this)}
                         //      this.processMouseMove(event);
-                        //      
-                return (
+                        //          updates the react state for x2, y2
+                    return (
                             <MediaStateThumb
 
                                 mediaState={mediaState}
