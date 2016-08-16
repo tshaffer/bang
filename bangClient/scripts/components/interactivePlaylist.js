@@ -231,44 +231,6 @@ class InteractivePlaylist extends Component {
 
                         dataIndex+= 4;
 
-                        // mouse down on thumb file and on img
-                        // mediaImageContainer
-                        //      onMouseDown={this.handleMediaStateImgMouseDown.bind(this)}
-                        //      this.props.onSelectMediaState(this.props.mediaState);
-                        // mediaStateThumb
-                        //      onSelectMediaState={this.props.onSelectMediaState}
-                        // interactivePlaylist
-                        //      onSelectMediaState={self.onSelectMediaState.bind(self)}
-
-                        // mouse down on thumb tile but not on img
-                        // mediaStateThumb
-                        //      onMouseDown={this.props.onMediaStateMouseDown}
-                        // interactivePlaylist
-                        //      onMediaStateMouseDown={event => {
-                        //          self.props.onMediaStateMouseDown(event, mediaState);
-                        //      }}
-                        // interactivePlaylistContainer
-                        //      onMediaStateMouseDown={self.handleMediaStateMouseDown.bind(this)}
-                        //      handleMediaStateMouseDown(event, mediaState)
-                        //      sets x1, y1, mouseState = mouseStateCreateTransition
-
-                        // mouseMove on thumb img
-                        //      mediaImageLabel: none
-                        //      mediaImage
-                        //          {...this.props}
-                        //      mediaImageContainer
-                        //          onMouseMove={this.handleMediaStateImgMouseMove.bind(this)}
-                        //          this.props.onMoveSelectedMediaState(event);
-                        //      etc.....
-
-                        // mouseMove on playlist / interactive canvas
-                        // interactivePlaylist
-                        //      onMouseMove={self.props.onPlaylistMouseMove}
-                        // interactivePlaylistContainer
-                        //      onPlaylistMouseMove={self.onPlaylistMouseMove.bind(this)}
-                        //      this.processMouseMove(event);
-                        //          updates the react state for x2, y2
-
                         return (
                             <MediaStateThumb
 

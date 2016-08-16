@@ -238,147 +238,15 @@ class InteractivePlaylistContainer extends Component {
 
         event.stopPropagation();
     }
-
-    getTransitionCoordinates(sourceMediaState, targetMediaState) {
-
-        let transitionCoordinates = {};
-
-        const xStart = sourceMediaState.x + this.mediaStateBtnWidth/2;
-        const yStart = sourceMediaState.y + this.mediaStateBtnHeight;
-
-        const xEnd = targetMediaState.x + this.mediaStateBtnWidth/2;
-        const yEnd = targetMediaState.y;
-
-        transitionCoordinates.xStart = xStart;
-        transitionCoordinates.yStart = yStart;
-        transitionCoordinates.xEnd = xEnd;
-        transitionCoordinates.yEnd = yEnd;
-
-        transitionCoordinates.xCenter = (xStart + xEnd) / 2;
-        transitionCoordinates.yCenter = (yStart + yEnd) / 2;
-
-        return transitionCoordinates;
-    }
-
-    getTransitionToRender(transition, sourceMediaState, targetMediaState) {
-
-        let transitionToRender = {};
-        transitionToRender.coordinates = this.getTransitionCoordinates(sourceMediaState, targetMediaState);
-        transitionToRender.transition = transition;
-
-        return transitionToRender;
-    }
-
-
-
+    
     render() {
 
         let self = this;
-
-        let zoneId = "";
-
-        let currentMediaStates = [];
-        let currentMediaStateIds = [];
-
-        const currentZonePlaylist = this.props.getCurrentZonePlaylist();
-        if (currentZonePlaylist) {
-            currentMediaStateIds = currentZonePlaylist.mediaStateIds;
-        }
 
         let openCloseLabel = "=>";
         if (!this.props.propertySheetOpen) {
             openCloseLabel = "<=";
         }
-
-        let dataIndex = -4;
-        let mediaStates = null;
-        let transitionLines = '';
-
-        let svgData = '';
-        let svgLines = '';
-        let svgLineData = [];
-
-        let bsEventCoordinates = [];
-        let transitionCoordinates = [];
-
-        let transitionsToRender = [];
-
-        if (this.state.x1 >= 0 && this.state.y1 >= 0 && this.state.x2 >= 0 && this.state.y2 >= 0) {
-
-            switch (this.mouseState) {
-                case mouseStateNone:
-                    break;
-                case mouseStateMoveMediaState:
-                    break;
-                case mouseStateCreateTransition:
-                    const selectedMediaState = self.props.mediaStates.mediaStatesById[self.props.selectedMediaStateId];
-
-                    const xStart = selectedMediaState.x + this.mediaStateBtnWidth/2;
-                    const yStart = selectedMediaState.y + this.mediaStateBtnHeight;
-
-                    const xEnd = this.state.x2;
-                    const yEnd = this.state.y2;
-
-                    svgLineData.push({x1: xStart, y1: yStart, x2: xEnd, y2: yEnd});
-                    break;
-            }
-        }
-
-        // retrieve transition lines
-        transitionsToRender.forEach(transitionToRender => {
-            const transitionCoordinate = transitionToRender.coordinates;
-            svgLineData.push({x1: transitionCoordinate.xStart, y1: transitionCoordinate.yStart,
-                x2: transitionCoordinate.xEnd, y2: transitionCoordinate.yEnd});
-        });
-
-        // render all line segments - transitions and rubber band
-        if (svgLineData.length > 0) {
-
-            svgLines = svgLineData.map(function (svgLine, index) {
-
-                const x1 = svgLine.x1;
-                const y1 = svgLine.y1;
-                const x2 = svgLine.x2;
-                const y2 = svgLine.y2;
-
-                return (
-                    <line x1={x1} y1={y1} x2={x2} y2={y2} key={index + 1000} stroke="black" fill="transparent" stroke-width="10"/>
-                );
-            });
-
-            // const svgWidth = 900;
-            // const svgHeight = 800;
-            // HACKEY
-            const pt = this.getCorrectedPoint(
-                { x: 900, y: 800 }
-            );
-
-            svgData =
-                <svg width={pt.x} height={pt.y}> +
-                    {svgLines} +
-                </svg>;
-        }
-
-        // render transition event images
-        let bsEventIconStyle = {};
-        bsEventIconStyle.position = "absolute";
-
-        let bsEventIcons = transitionsToRender.map( (transitionToRender, index) => {
-
-            return (
-                <TransitionEventIcon
-                    selectedBSEventId={this.props.selectedBSEventId}
-                    transitionToRender={transitionToRender}
-                    onMouseDown={this.onBSEventMouseDown.bind(this)}
-                    key={500 + index}
-                />
-            )
-        });
-
-        let zoomStyle = {};
-        const zoomValueStr = (this.state.zoomValue/100).toString();
-        zoomStyle.zoom = zoomValueStr;
-        zoomStyle["MozTransform"] = "scale(" + zoomValueStr + ")";
 
         return (
           <InteractivePlaylist
