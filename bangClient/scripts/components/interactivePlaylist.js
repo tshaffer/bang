@@ -242,7 +242,44 @@ class InteractivePlaylist extends Component {
 
                         dataIndex+= 4;
 
-                        return (
+                        // mouse down on thumb file and on img
+                        // mediaImageContainer
+                        //      onMouseDown={this.handleMediaStateImgMouseDown.bind(this)}
+                        //      this.props.onSelectMediaState(this.props.mediaState);
+                        // mediaStateThumb
+                        //      onSelectMediaState={this.props.onSelectMediaState}
+                        // interactivePlaylist
+                        //      onSelectMediaState={self.onSelectMediaState.bind(self)}
+
+                        // mouse down on thumb tile but not on img
+                        // mediaStateThumb
+                        //      onMouseDown={this.props.onMediaStateMouseDown}
+                        // interactivePlaylist
+                        //      onMediaStateMouseDown={event => {
+                        //          self.props.onMediaStateMouseDown(event, mediaState);
+                        //      }}
+                        // interactivePlaylistContainer
+                        //      onMediaStateMouseDown={self.handleMediaStateMouseDown.bind(this)}
+                        //      handleMediaStateMouseDown(event, mediaState)
+                        //      sets x1, y1, mouseState = mouseStateCreateTransition
+
+                        // mouseMove on thumb img
+                        //      mediaImageLabel: none
+                        //      mediaImage
+                        //          {...this.props}
+                        //      mediaImageContainer
+                        //          onMouseMove={this.handleMediaStateImgMouseMove.bind(this)}
+                        //          this.props.onMoveSelectedMediaState(event);
+                        //      etc.....
+
+                        // mouseMove on playlist / interactive canvas
+                        // interactivePlaylist
+                        //      onMouseMove={self.props.onPlaylistMouseMove}
+                        // interactivePlaylistContainer
+                        //      onPlaylistMouseMove={self.onPlaylistMouseMove.bind(this)}
+                        //      this.processMouseMove(event);
+                        //      
+                return (
                             <MediaStateThumb
 
                                 mediaState={mediaState}
@@ -257,16 +294,21 @@ class InteractivePlaylist extends Component {
                                 dataIndex={dataIndex}
                                 playlistDragStartHandler={self.props.playlistDragStartHandler}
                                 playlistDragOverHandler={self.props.playlistDragOverHandler}
-                                onMouseDown={event => { self.handleMediaStateMouseDown(event, mediaState)}}
+
+
+                                onMouseDown={event => {
+                                    self.handleMediaStateMouseDown(event, mediaState)
+                                }}
                                 onMouseMove={self.props.onMediaStateMouseMove}
                                 onMouseUp={self.props.onMediaStateMouseUp}
 
-                                onMoveSelectedMediaState={self.props.processMouseMove}
-                                processMouseUp={self.props.processMouseUp}
 
                                 onMediaStateMouseDown={event => {
                                     self.props.onMediaStateMouseDown(event, mediaState);
                                 }}
+                                onMoveSelectedMediaState={self.props.processMouseMove}
+                                processMouseUp={self.props.processMouseUp}
+
                             />
                         );
                     }
@@ -277,12 +319,6 @@ class InteractivePlaylist extends Component {
         else {
             mediaStates = <div></div>
         }
-
-        // messed up because setState is called from render??
-        // onMediaStateMouseDown={self.props.onMediaStateMouseDown(event, mediaState)}
-
-        // onMediaStateMouseDown={self.props.onMediaStateMouseDown}
-        // onMediaStateMouseDown={self.handleMediaStateMouseDown(event, mediaState)}
 
         // retrieve transition lines
         transitionsToRender.forEach(transitionToRender => {
