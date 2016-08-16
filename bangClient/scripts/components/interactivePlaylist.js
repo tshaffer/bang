@@ -265,6 +265,7 @@ class InteractivePlaylist extends Component {
                                 onMoveSelectedMediaState={self.props.processMouseMove}
                                 processMouseUp={self.props.processMouseUp}
 
+                                onMediaStateMouseDown={self.props.onMediaStateMouseDown}
                             />
                         );
                     }
@@ -275,6 +276,9 @@ class InteractivePlaylist extends Component {
         else {
             mediaStates = <div></div>
         }
+
+        // onMediaStateMouseDown={self.props.onMediaStateMouseDown}
+        // onMediaStateMouseDown={self.handleMediaStateMouseDown(event, mediaState)}
 
         // retrieve transition lines
         transitionsToRender.forEach(transitionToRender => {
@@ -366,6 +370,9 @@ class InteractivePlaylist extends Component {
                      onMouseDown={self.props.onPlaylistMouseDown}
                      onMouseMove={self.props.onPlaylistMouseMove}
                      onMouseUp={self.props.onPlaylistMouseUp}
+
+                     onMediaStateMouseDown={self.props.onMediaStateMouseDown}
+
                 >
                     {mediaStates}
                     {svgData}
