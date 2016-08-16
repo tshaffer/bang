@@ -194,10 +194,7 @@ class InteractivePlaylistContainer extends Component {
 
         console.log("setState ipc::handleMediaStateMouseDown");
 
-        this.setState ({ x1: pt.x });
-        this.setState ({ y1: pt.y });
-        this.setState ({ x2: -1});
-        this.setState ({ y2: -1});
+        this.setState ({ x1: pt.x, y1: pt.y, x2: -1, y2: -1 });
 
         event.stopPropagation();
     }
@@ -338,7 +335,7 @@ class InteractivePlaylistContainer extends Component {
                     break;
             }
         }
-        
+
         // retrieve transition lines
         transitionsToRender.forEach(transitionToRender => {
             const transitionCoordinate = transitionToRender.coordinates;

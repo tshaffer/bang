@@ -245,7 +245,6 @@ class InteractivePlaylist extends Component {
                         return (
                             <MediaStateThumb
 
-
                                 mediaState={mediaState}
                                 className={className}
 
@@ -258,14 +257,16 @@ class InteractivePlaylist extends Component {
                                 dataIndex={dataIndex}
                                 playlistDragStartHandler={self.props.playlistDragStartHandler}
                                 playlistDragOverHandler={self.props.playlistDragOverHandler}
-                                onMouseDown={self.handleMediaStateMouseDown(event, mediaState)}
+                                onMouseDown={event => { self.handleMediaStateMouseDown(event, mediaState)}}
                                 onMouseMove={self.props.onMediaStateMouseMove}
                                 onMouseUp={self.props.onMediaStateMouseUp}
 
                                 onMoveSelectedMediaState={self.props.processMouseMove}
                                 processMouseUp={self.props.processMouseUp}
 
-                                onMediaStateMouseDown={self.props.onMediaStateMouseDown}
+                                onMediaStateMouseDown={event => {
+                                    self.props.onMediaStateMouseDown(event, mediaState);
+                                }}
                             />
                         );
                     }
@@ -276,6 +277,9 @@ class InteractivePlaylist extends Component {
         else {
             mediaStates = <div></div>
         }
+
+        // messed up because setState is called from render??
+        // onMediaStateMouseDown={self.props.onMediaStateMouseDown(event, mediaState)}
 
         // onMediaStateMouseDown={self.props.onMediaStateMouseDown}
         // onMediaStateMouseDown={self.handleMediaStateMouseDown(event, mediaState)}
