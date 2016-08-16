@@ -32,27 +32,15 @@ class InteractivePlaylistContainer extends Component {
 
     }
 
+    handleZoomValueChanged(updatedZoomValue) {
+        this.setState ({ zoomValue: updatedZoomValue });
+    }
+
     componentDidMount() {
 
         var self = this;
 
         this.playlistOffset = $("#interactiveCanvasDiv").offset();
-
-        // document.addEventListener('keydown', (event) => {
-        //     if (event.keyCode == 8 || event.keyCode == 46) {       // delete key or backspace key
-        //         // check to see if playlistItem has focus
-        //         self.props.onDeleteMediaState();
-        //     }
-        // });
-
-        // const zoomValue = document.getElementById("zoomSlider");
-        // if (zoomValue != undefined) {
-        //     zoomValue.addEventListener("input", function () {
-        //         if (self.state.zoomValue != zoomValue.value) {
-        //             self.setState ({ zoomValue: zoomValue.value });
-        //         }
-        //     }, false);
-        // }
     }
 
     playlistDragOverHandler (ev) {
@@ -392,21 +380,6 @@ class InteractivePlaylistContainer extends Component {
         zoomStyle.zoom = zoomValueStr;
         zoomStyle["MozTransform"] = "scale(" + zoomValueStr + ")";
 
-        // let timeoutClassName = "unSelectedBSEvent";
-        // let timeoutClassName = "unSelectedBSEvent";
-        // let mediaEndClassName = "unSelectedBSEvent";
-        // switch (this.props.activeBSEventType) {
-        //     case "timeout":
-        //         timeoutClassName = "selectedBSEvent";
-        //         break;
-        //     case "mediaEnd":
-        //         mediaEndClassName = "selectedBSEvent";
-        //         break;
-        // }
-
-
-        // playlistDragOverHandler={this.playlistDragOverHandler.bind(this)}
-
         return (
           <InteractivePlaylist
               openCloseLabel={openCloseLabel}
@@ -449,6 +422,9 @@ class InteractivePlaylistContainer extends Component {
               x2={this.state.x2}
               y2={this.state.y2}
               mouseState={this.mouseState}
+              
+              zoomValue={this.state.zoomValue}
+              onZoomValueChanged={this.handleZoomValueChanged.bind(this)}
           />
         );
     }

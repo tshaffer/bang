@@ -2,15 +2,9 @@ import React, { Component } from 'react';
 
 import $ from 'jquery';
 
-import { getThumb } from '../platform/actions';
-
-import MediaState from '../badm/mediaState';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
-import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
 import MediaStateThumb from './mediaStateThumb';
-// import MediaImage from './mediaImage';
-// import MediaImageLabel from './mediaImageLabel';
 import TransitionEventIcon from './TransitionEventIcon';
 
 const mouseStateNone = "none";
@@ -21,9 +15,6 @@ class InteractivePlaylist extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            zoomValue: 100,
-        };
 
         this.mediaStateBtnWidth = 110;
         this.mediaStateBtnHeight = 90;
@@ -48,9 +39,9 @@ class InteractivePlaylist extends Component {
         const zoomValue = document.getElementById("zoomSlider");
         if (zoomValue != undefined) {
             zoomValue.addEventListener("input", function () {
-                if (self.state.zoomValue != zoomValue.value) {
+                if (self.props.zoomValue != zoomValue.value) {
                     console.log("setState on zoomValue from interactivePlaylist");
-                    self.setState ({ zoomValue: zoomValue.value });
+                    self.props.onZoomValueChanged(zoomValue.value);
                 }
             }, false);
         }
@@ -58,7 +49,7 @@ class InteractivePlaylist extends Component {
 
     getCorrectedPoint(inputPoint) {
 
-        const zoomScaleFactor = 100 / this.state.zoomValue;
+        const zoomScaleFactor = 100 / this.props.zoomValue;
 
         let x = inputPoint.x - this.playlistOffset.left;
         let y = inputPoint.y - this.playlistOffset.top;
@@ -277,7 +268,8 @@ class InteractivePlaylist extends Component {
                         //      onPlaylistMouseMove={self.onPlaylistMouseMove.bind(this)}
                         //      this.processMouseMove(event);
                         //          updates the react state for x2, y2
-                    return (
+
+                        return (
                             <MediaStateThumb
 
                                 mediaState={mediaState}
@@ -370,7 +362,7 @@ class InteractivePlaylist extends Component {
         });
 
         let zoomStyle = {};
-        const zoomValueStr = (this.state.zoomValue/100).toString();
+        const zoomValueStr = (this.props.zoomValue/100).toString();
         zoomStyle.zoom = zoomValueStr;
         zoomStyle["MozTransform"] = "scale(" + zoomValueStr + ")";
 
