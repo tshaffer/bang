@@ -23,7 +23,7 @@ import { addPlaylistItemToZonePlaylist, addMediaStateToZonePlaylist, newSign, up
     from '../actions/index';
 
 // import Playlist from '../components/playlist';
-import InteractivePlaylistContainer from './interactivePlaylistContainer';
+import InteractivePlaylist from './interactivePlaylistContainer';
 
 import MediaState from '../badm/mediaState';
 import Transition from '../badm/transition';
@@ -304,7 +304,7 @@ class BA extends Component {
                         mediaFolder={this.props.mediaFolder}
                         mediaThumbs={this.props.mediaThumbs}
                     />
-                    <InteractivePlaylistContainer
+                    <InteractivePlaylist
                         onSetActiveBSEventType={this.handleSetActiveBSEventType.bind(this)}
 
                         onSelectMediaState={this.handleSelectMediaState.bind(this)}
