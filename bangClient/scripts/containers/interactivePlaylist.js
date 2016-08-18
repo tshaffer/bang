@@ -468,9 +468,10 @@ class InteractivePlaylist extends Component {
 
                 mediaState.transitionOutIds.forEach(transitionOutId => {
 
+                    // debugger;
                     const transition = self.props.transitions.transitionsById[transitionOutId];
                     const targetMediaStateId = transition.targetMediaStateId;
-                    const targetMediaState = mediaStates.mediaStatesById[targetMediaStateId];
+                    const targetMediaState = self.props.mediaStates.mediaStatesById[targetMediaStateId];
 
                     transitionsToRender.push(self.getTransitionToRender(transition, mediaState, targetMediaState));
                 });
