@@ -125,10 +125,6 @@ export default function(state = initialState, action) {
             };
             return newState;
 
-        case DELETE_MEDIA_STATE:
-
-
-            break;
     }
 
     return state;
