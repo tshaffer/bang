@@ -201,7 +201,8 @@ class InteractivePlaylist extends Component {
     handleSelectMediaState(mediaState) {
         console.log("setState ba.js::handleSelectMediaState");
         this.setState({ selectedBSEventId: null });
-        this.setState({ selectedMediaStateId: mediaState.getId() });
+        // this.setState({ selectedMediaStateId: mediaState.getId() });
+        this.props.setSelectedMediaStateId(mediaState.getId());
     }
 
 
@@ -215,7 +216,8 @@ class InteractivePlaylist extends Component {
     }
 
     handleSelectBSEvent(bsEvent) {
-        this.setState({ selectedMediaStateId: null });
+        // this.setState({ selectedMediaStateId: null });
+        this.props.setSelectedMediaStateId( null );
         this.setState({ selectedBSEventId: bsEvent.getId() });
     }
 
@@ -373,8 +375,7 @@ class InteractivePlaylist extends Component {
                 { x: event.clientX, y: event.clientY }
             );
             console.log("setState ipc::processMouseMove");
-            this.setState ({ x2: pt.x });
-            this.setState ({ y2: pt.y });
+            this.setState ({ x2: pt.x, y2: pt.y });
         }
 
         event.stopPropagation();
@@ -385,10 +386,7 @@ class InteractivePlaylist extends Component {
         this.mouseState = mouseStateNone;
 
         console.log("setState ipc::processMouseUp");
-        this.setState ({ x1: -1});
-        this.setState ({ y1: -1});
-        this.setState ({ x2: -1});
-        this.setState ({ y2: -1});
+        this.setState ({ x1: -1, y1: -1, x2: -1, y2: -1 });
 
         event.stopPropagation();
     }
@@ -426,7 +424,9 @@ class InteractivePlaylist extends Component {
 
         let transitionsToRender = [];
 
-        if (this.x1 >= 0 && this.y1 >= 0 && this.x2 >= 0 && this.y2 >= 0) {
+        // console.log("render: ", this.x1.toString(), this.y1.toString(), this.x2.toString(), this.y2.toString());
+
+        if (this.state.x1 >= 0 && this.state.y1 >= 0 && this.state.x2 >= 0 && this.state.y2 >= 0) {
 
             switch (this.mouseState) {
                 case mouseStateNone:
@@ -439,8 +439,8 @@ class InteractivePlaylist extends Component {
                     const xStart = selectedMediaState.x + this.mediaStateBtnWidth/2;
                     const yStart = selectedMediaState.y + this.mediaStateBtnHeight;
 
-                    const xEnd = this.x2;
-                    const yEnd = this.y2;
+                    const xEnd = this.state.x2;
+                    const yEnd = this.state.y2;
 
                     svgLineData.push({x1: xStart, y1: yStart, x2: xEnd, y2: yEnd});
                     break;
@@ -468,7 +468,7 @@ class InteractivePlaylist extends Component {
 
                 mediaState.transitionOutIds.forEach(transitionOutId => {
 
-                    const transition = self.transitions.transitionsById[transitionOutId];
+                    const transition = self.props.transitions.transitionsById[transitionOutId];
                     const targetMediaStateId = transition.targetMediaStateId;
                     const targetMediaState = mediaStates.mediaStatesById[targetMediaStateId];
 
