@@ -424,8 +424,6 @@ class InteractivePlaylist extends Component {
 
         let transitionsToRender = [];
 
-        // console.log("render: ", this.x1.toString(), this.y1.toString(), this.x2.toString(), this.y2.toString());
-
         if (this.state.x1 >= 0 && this.state.y1 >= 0 && this.state.x2 >= 0 && this.state.y2 >= 0) {
 
             switch (this.mouseState) {
@@ -468,7 +466,6 @@ class InteractivePlaylist extends Component {
 
                 mediaState.transitionOutIds.forEach(transitionOutId => {
 
-                    // debugger;
                     const transition = self.props.transitions.transitionsById[transitionOutId];
                     const targetMediaStateId = transition.targetMediaStateId;
                     const targetMediaState = self.props.mediaStates.mediaStatesById[targetMediaStateId];
