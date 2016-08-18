@@ -16,20 +16,16 @@ import { getAllThumbs, selectMediaFolder, updateMediaFolder, saveSign } from '..
 import { createDefaultPresentation, saveBSNPresentation } from '../actions/index';
 import { openDB, loadAppData, fetchSign }  from '../actions/index';
 
-import { addPlaylistItemToZonePlaylist, addMediaStateToZonePlaylist, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist,
-    newMediaState, updateMediaState, deleteMediaState,
-    newPlaylistItem, addPlaylistItem, updatePlaylistItem, deletePlaylistItem, movePlaylistItemWithinZonePlaylist, newHtmlSite, addHtmlSiteToPresentation,
-    addTransition }
+import { addPlaylistItemToZonePlaylist, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist,
+    newPlaylistItem, addPlaylistItem, updatePlaylistItem, deletePlaylistItem, movePlaylistItemWithinZonePlaylist, newHtmlSite, addHtmlSiteToPresentation}
     from '../actions/index';
 
 // import Playlist from '../components/playlist';
-import InteractivePlaylist from './interactivePlaylistContainer';
+import InteractivePlaylist from './interactivePlaylist';
 
 import MediaState from '../badm/mediaState';
-import Transition from '../badm/transition';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
-import UserEvent from '../badm/userEvent';
 
 import EditPreferencesDlg from '../components/Dialogs/editPreferencesDlg';
 // import Dialog from 'material-ui/Dialog';
@@ -45,8 +41,6 @@ class BA extends Component {
             propertySheetOpen: true,
             selectedZone: null,
             selectedMediaStateId: null,
-            selectedBSEventId: null,
-            activeBSEventType: "timeout",
             open: false,
         };
 
@@ -71,6 +65,11 @@ class BA extends Component {
 
     }
 
+    // temporary, until I put this in redux or figure out the right way to do this
+    setSelectedMediaStateId(selectedMediaStateId) {
+        this.setState( { selectedMediaStateId: selectedMediaStateId })
+    }
+
     handleEditPreferences() {
         console.log("handleEditPreferences in ba");
         this.refs.editPreferencesDlg.handleOpen();
@@ -81,81 +80,6 @@ class BA extends Component {
         console.log(preferences);
     }
 
-
-    handleDropMediaState(x, y, operation, type, stateName, path) {
-
-        let mediaState = null;
-        let currentZonePlaylistId = null;
-
-        const currentZonePlaylist = this.getCurrentZonePlaylist();
-        if (currentZonePlaylist) {
-            currentZonePlaylistId = currentZonePlaylist.id;
-        }
-        else {
-            return;
-        }
-        
-        if (operation === "copy" ) {
-            if (type === "image") {
-                const playlistItem = new ImagePlaylistItem (stateName, path, 6, 0, 2, false);
-                mediaState = new MediaState (playlistItem, x, y);
-            }
-
-            this.props.newMediaState(mediaState);
-            this.props.addMediaStateToZonePlaylist(currentZonePlaylistId, mediaState.getId());
-        }
-        else {
-
-            mediaState = this.props.mediaStates.mediaStatesById[this.state.selectedMediaStateId];
-
-            // TODO - the following loses transitionOutIds and transitionInIds
-            // TODO - fix it properly
-            const updatedMediaState = new MediaState(mediaState.getMediaPlaylistItem(), x, y);
-
-            // restore them
-            mediaState.transitionOutIds.forEach( transitionOutId => {
-                updatedMediaState.getTransitionOutIds().push(transitionOutId);
-            });
-            mediaState.transitionInIds.forEach( transitionInId => {
-               updatedMediaState.getTransitionInIds().push(transitionInId);
-            });
-            this.props.updateMediaState(this.state.selectedMediaStateId, updatedMediaState);
-        }
-
-        return mediaState;
-    }
-
-    handleAddTransition(targetMediaStateId) {
-        
-        const sourceMediaState = this.props.mediaStates.mediaStatesById[this.state.selectedMediaStateId];
-        const targetMediaState = this.props.mediaStates.mediaStatesById[targetMediaStateId];
-
-        // create userEvent based on current selected event
-        // do this here or in playlist??
-        // const userEvent = new UserEvent("timeout");
-        const userEvent = new UserEvent(this.state.activeBSEventType);
-        userEvent.setValue("5");
-        
-        const transition = new Transition(sourceMediaState, userEvent, targetMediaState); // do this here?
-
-        this.props.addTransition(sourceMediaState, transition, targetMediaState);
-    }
-
-    handleDeleteMediaState() {
-
-        const currentZonePlaylist = this.getCurrentZonePlaylist();
-        if (currentZonePlaylist) {
-            const currentZonePlaylistId = currentZonePlaylist.id;
-            const mediaState = this.props.mediaStates.mediaStatesById[this.state.selectedMediaStateId];
-
-            this.props.deleteMediaState(currentZonePlaylistId, mediaState);
-        }
-        else {
-            return;
-        }
-
-        // this.props.deleteMediaState(this.state.selectedMediaStateId);
-    }
 
     handleAddHtmlSite(name, siteSpec, type) {
         const htmlSite = {
@@ -174,21 +98,6 @@ class BA extends Component {
     }
 
     
-    handleSelectMediaState(mediaState) {
-        console.log("setState ba.js::handleSelectMediaState");
-        this.setState({ selectedBSEventId: null });
-        this.setState({ selectedMediaStateId: mediaState.getId() });
-    }
-
-    handleSelectBSEvent(bsEvent) {
-        this.setState({ selectedMediaStateId: null });
-        this.setState({ selectedBSEventId: bsEvent.getId() });
-    }
-
-    handleSetActiveBSEventType(bsEventType) {
-        this.setState({ activeBSEventType: bsEventType });
-    }
-
     // instead of using action creators, just dispatch the action directly?
     handleUpdateVideoMode(videoMode) {
         // in reducer?
@@ -262,30 +171,6 @@ class BA extends Component {
                 />
         }
 
-        // <Playlist
-        //     onSelectMediaState={this.handleSelectMediaState.bind(this)}
-        //
-        //     onToggleOpenClosePropertySheet={this.handleToggleOpenClosePropertySheet.bind(this)}
-        //     onSelectBSEvent={this.handleSelectBSEvent.bind(this)}
-        //     onSetActiveBSEventType={this.handleSetActiveBSEventType.bind(this)}
-        //     propertySheetOpen = {this.state.propertySheetOpen}
-        //     getCurrentZone = {this.getCurrentZone.bind(this)}
-        //     getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
-        //     onDropMediaState={this.handleDropMediaState.bind(this)}
-        //     onAddTransition={this.handleAddTransition.bind(this)}
-        //     onDeleteMediaState={this.handleDeleteMediaState.bind(this)}
-        //     sign={this.props.sign}
-        //     zones= {this.props.zones}
-        //     zonePlaylists= {this.props.zonePlaylists}
-        //     mediaStates= {this.props.mediaStates}
-        //     transitions={this.props.transitions}
-        //     mediaThumbs= {this.props.mediaThumbs}
-        //     htmlSites= {this.props.htmlSites}
-        //     selectedMediaStateId={this.state.selectedMediaStateId}
-        //     selectedBSEventId={this.state.selectedBSEventId}
-        //     activeBSEventType={this.state.activeBSEventType}
-        // />
-
         return (
 
             <div>
@@ -305,27 +190,14 @@ class BA extends Component {
                         mediaThumbs={this.props.mediaThumbs}
                     />
                     <InteractivePlaylist
-                        onSetActiveBSEventType={this.handleSetActiveBSEventType.bind(this)}
+                        selectedMediaStateId={this.state.selectedMediaStateId}
+                        setSelectedMediaStateId={this.setSelectedMediaStateId.bind(this)}
 
-                        onSelectMediaState={this.handleSelectMediaState.bind(this)}
                         onToggleOpenClosePropertySheet={this.handleToggleOpenClosePropertySheet.bind(this)}
-                        onSelectBSEvent={this.handleSelectBSEvent.bind(this)}
                         propertySheetOpen = {this.state.propertySheetOpen}
                         getCurrentZone = {this.getCurrentZone.bind(this)}
                         getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
-                        onDropMediaState={this.handleDropMediaState.bind(this)}
-                        onAddTransition={this.handleAddTransition.bind(this)}
-                        onDeleteMediaState={this.handleDeleteMediaState.bind(this)}
-                        sign={this.props.sign}
-                        zones= {this.props.zones}
-                        zonePlaylists= {this.props.zonePlaylists}
-                        mediaStates= {this.props.mediaStates}
-                        transitions={this.props.transitions}
                         mediaThumbs= {this.props.mediaThumbs}
-                        htmlSites= {this.props.htmlSites}
-                        selectedMediaStateId={this.state.selectedMediaStateId}
-                        selectedBSEventId={this.state.selectedBSEventId}
-                        activeBSEventType={this.state.activeBSEventType}
                     />
                     {propertySheetTag}
                     <EditPreferencesDlg
@@ -343,8 +215,6 @@ function mapStateToProps(state) {
         sign: state.sign,
         zones: state.zones,
         zonePlaylists: state.zonePlaylists,
-        mediaStates: state.mediaStates,
-        transitions: state.transitions,
         playlistItems: state.playlistItems,
         htmlSites: state.htmlSites,
 
@@ -355,12 +225,11 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ addMediaStateToZonePlaylist, addPlaylistItemToZonePlaylist, deletePlaylistItem, movePlaylistItemWithinZonePlaylist,
+    return bindActionCreators({ addPlaylistItemToZonePlaylist, deletePlaylistItem, movePlaylistItemWithinZonePlaylist,
         createDefaultPresentation, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist,
-        newMediaState, updateMediaState, deleteMediaState,
         newPlaylistItem, addPlaylistItem, updatePlaylistItem, loadAppData, fetchSign, saveBSNPresentation, selectMediaFolder,
-        updateMediaFolder, saveSign, newHtmlSite, addHtmlSiteToPresentation,
-        addTransition},
+        updateMediaFolder, saveSign, newHtmlSite, addHtmlSiteToPresentation
+        },
         dispatch);
 }
 

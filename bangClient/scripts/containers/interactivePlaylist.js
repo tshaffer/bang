@@ -1,17 +1,24 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import $ from 'jquery';
 
-import InteractivePlaylist from '../components/interactivePlaylist';
-
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
+import MediaState from '../badm/mediaState';
+import Transition from '../badm/transition';
 import TransitionEventIcon from '../components/TransitionEventIcon';
+import UserEvent from '../badm/userEvent';
 
 const mouseStateNone = "none";
 const mouseStateMoveMediaState = "moveMediaState";
 const mouseStateCreateTransition = "createTransition";
 
 import MediaStateThumb from '../components/mediaStateThumb';
+
+import { newMediaState, addMediaStateToZonePlaylist, updateMediaState, deleteMediaState, addTransition }
+    from '../actions/index';
+
 
 class InteractivePlaylist extends Component {
 
@@ -22,7 +29,9 @@ class InteractivePlaylist extends Component {
             x1: -1,
             y1: -1,
             x2: -1,
-            y2: -1
+            y2: -1,
+            selectedBSEventId: null,
+            activeBSEventType: "timeout",
         };
 
         this.mouseState = mouseStateNone;
@@ -43,7 +52,7 @@ class InteractivePlaylist extends Component {
         document.addEventListener('keydown', (event) => {
             if (event.keyCode == 8 || event.keyCode == 46) {       // delete key or backspace key
                 // check to see if playlistItem has focus
-                self.onDeleteMediaState();
+                self.handleDeleteMediaState();
             }
         });
 
@@ -58,8 +67,68 @@ class InteractivePlaylist extends Component {
         }
     }
 
+    handleDeleteMediaState() {
+
+        const currentZonePlaylist = this.props.getCurrentZonePlaylist();
+        if (currentZonePlaylist) {
+            const currentZonePlaylistId = currentZonePlaylist.id;
+            const mediaState = this.props.mediaStates.mediaStatesById[this.props.selectedMediaStateId];
+
+            this.props.deleteMediaState(currentZonePlaylistId, mediaState);
+        }
+        else {
+            return;
+        }
+
+        // this.props.deleteMediaState(this.state.selectedMediaStateId);
+    }
+
+
     handleZoomValueChanged(updatedZoomValue) {
         this.setState ({ zoomValue: updatedZoomValue });
+    }
+
+    handleDropMediaState(x, y, operation, type, stateName, path) {
+
+        let mediaState = null;
+        let currentZonePlaylistId = null;
+
+        const currentZonePlaylist = this.props.getCurrentZonePlaylist();
+        if (currentZonePlaylist) {
+            currentZonePlaylistId = currentZonePlaylist.id;
+        }
+        else {
+            return;
+        }
+
+        if (operation === "copy" ) {
+            if (type === "image") {
+                const playlistItem = new ImagePlaylistItem (stateName, path, 6, 0, 2, false);
+                mediaState = new MediaState (playlistItem, x, y);
+            }
+
+            this.props.newMediaState(mediaState);
+            this.props.addMediaStateToZonePlaylist(currentZonePlaylistId, mediaState.getId());
+        }
+        else {
+
+            mediaState = this.props.mediaStates.mediaStatesById[this.props.selectedMediaStateId];
+
+            // TODO - the following loses transitionOutIds and transitionInIds
+            // TODO - fix it properly
+            const updatedMediaState = new MediaState(mediaState.getMediaPlaylistItem(), x, y);
+
+            // restore them
+            mediaState.transitionOutIds.forEach( transitionOutId => {
+                updatedMediaState.getTransitionOutIds().push(transitionOutId);
+            });
+            mediaState.transitionInIds.forEach( transitionInId => {
+                updatedMediaState.getTransitionInIds().push(transitionInId);
+            });
+            this.props.updateMediaState(this.props.selectedMediaStateId, updatedMediaState);
+        }
+
+        return mediaState;
     }
 
     playlistDropHandler (ev) {
@@ -95,7 +164,7 @@ class InteractivePlaylist extends Component {
             // offset image to center it around the drop point
             const mediaStateX = x - (this.mediaStateBtnWidth/2);
             const mediaStateY = y - (this.mediaStateBtnHeight/2);
-            mediaState = this.props.onDropMediaState(mediaStateX, mediaStateY, operation, type, stateName, path);
+            mediaState = this.handleDropMediaState(mediaStateX, mediaStateY, operation, type, stateName, path);
         }
 
         if (mediaState) {
@@ -129,27 +198,45 @@ class InteractivePlaylist extends Component {
     }
 
 
+    handleSelectMediaState(mediaState) {
+        console.log("setState ba.js::handleSelectMediaState");
+        this.setState({ selectedBSEventId: null });
+        this.setState({ selectedMediaStateId: mediaState.getId() });
+    }
+
+
     onSelectMediaState(mediaState) {
 
         console.log("interactivePlaylistContainer.js::onSelectMediaState");
         console.log("mediaState.FileName is: ", mediaState.getFileName());
         console.log("mediaState.Id is: ", mediaState.getId());
 
-        this.props.onSelectMediaState(mediaState);
+        this.handleSelectMediaState(mediaState);
     }
 
-    onSelectBSEvent(bsEvent) {
-        this.props.onSelectBSEvent(bsEvent);
+    handleSelectBSEvent(bsEvent) {
+        this.setState({ selectedMediaStateId: null });
+        this.setState({ selectedBSEventId: bsEvent.getId() });
     }
+
+
+    onSelectBSEvent(bsEvent) {
+        this.handleSelectBSEvent(bsEvent);
+    }
+
+    handleSetActiveBSEventType(bsEventType) {
+        this.setState({ activeBSEventType: bsEventType });
+    }
+
 
     onSelectTimeoutEvent() {
         console.log("select timeoutEvent ");
-        this.props.onSetActiveBSEventType("timeout");
+        this.handleSetActiveBSEventType("timeout");
     }
 
     onSelectMediaEndEvent() {
         console.log("select mediaEndEvent ");
-        this.props.onSetActiveBSEventType("mediaEnd");
+        this.handleSetActiveBSEventType("mediaEnd");
     }
 
     onBSEventMouseDown(bsEvent) {
@@ -242,6 +329,23 @@ class InteractivePlaylist extends Component {
         this.processMouseMove(event);
     }
 
+    handleAddTransition(targetMediaStateId) {
+
+        const sourceMediaState = this.props.mediaStates.mediaStatesById[this.props.selectedMediaStateId];
+        const targetMediaState = this.props.mediaStates.mediaStatesById[targetMediaStateId];
+
+        // create userEvent based on current selected event
+        // do this here or in playlist??
+        // const userEvent = new UserEvent("timeout");
+        const userEvent = new UserEvent(this.state.activeBSEventType);
+        userEvent.setValue("5");
+
+        const transition = new Transition(sourceMediaState, userEvent, targetMediaState); // do this here?
+
+        this.props.addTransition(sourceMediaState, transition, targetMediaState);
+    }
+
+
     onMediaStateMouseUp(event) {
         console.log("onMediaStateMouseUp");
         switch (this.mouseState) {
@@ -255,7 +359,7 @@ class InteractivePlaylist extends Component {
                     // console.log("create transition to " + event.target.id);
                     // create event here or in ba?
                     // send current event type to ba?
-                    this.props.onAddTransition(event.target.id);
+                    this.handleAddTransition(event.target.id);
                 }
                 break;
         }
@@ -299,14 +403,12 @@ class InteractivePlaylist extends Component {
             openCloseLabel = "<=";
         }
 
-        let self = this;
-
         let zoneId = "";
 
         let currentMediaStates = [];
         let currentMediaStateIds = [];
 
-        const currentZonePlaylist = this.getCurrentZonePlaylist();
+        const currentZonePlaylist = this.props.getCurrentZonePlaylist();
         if (currentZonePlaylist) {
             currentMediaStateIds = currentZonePlaylist.mediaStateIds;
         }
@@ -332,7 +434,7 @@ class InteractivePlaylist extends Component {
                 case mouseStateMoveMediaState:
                     break;
                 case mouseStateCreateTransition:
-                    const selectedMediaState = self.mediaStates.mediaStatesById[self.selectedMediaStateId];
+                    const selectedMediaState = self.props.mediaStates.mediaStatesById[self.props.selectedMediaStateId];
 
                     const xStart = selectedMediaState.x + this.mediaStateBtnWidth/2;
                     const yStart = selectedMediaState.y + this.mediaStateBtnHeight;
@@ -348,7 +450,7 @@ class InteractivePlaylist extends Component {
         if (currentMediaStateIds.length > 0) {
 
             currentMediaStateIds.forEach( currentMediaStateId => {
-                currentMediaStates.push(self.mediaStates.mediaStatesById[currentMediaStateId]);
+                currentMediaStates.push(self.props.mediaStates.mediaStatesById[currentMediaStateId]);
             });
 
             mediaStates = currentMediaStates.map(function (mediaState, index) {
@@ -357,7 +459,7 @@ class InteractivePlaylist extends Component {
                 let filePath = "";
 
                 let className = "";
-                if (self.selectedMediaStateId && self.selectedMediaStateId === id) {
+                if (self.props.selectedMediaStateId && self.props.selectedMediaStateId === id) {
                     className = "selectedImage ";
                 }
                 else {
@@ -368,7 +470,7 @@ class InteractivePlaylist extends Component {
 
                     const transition = self.transitions.transitionsById[transitionOutId];
                     const targetMediaStateId = transition.targetMediaStateId;
-                    const targetMediaState = self.mediaStates.mediaStatesById[targetMediaStateId];
+                    const targetMediaState = mediaStates.mediaStatesById[targetMediaStateId];
 
                     transitionsToRender.push(self.getTransitionToRender(transition, mediaState, targetMediaState));
                 });
@@ -376,7 +478,7 @@ class InteractivePlaylist extends Component {
                 const mediaPlaylistItem = mediaState.getMediaPlaylistItem();
                 if (mediaPlaylistItem instanceof ImagePlaylistItem) {
                     filePath = mediaPlaylistItem.getFilePath();
-                    if (self.mediaThumbs.hasOwnProperty(filePath)) {
+                    if (self.props.mediaThumbs.hasOwnProperty(filePath)) {
 
                         className += "mediaStateBtn";
 
@@ -399,28 +501,28 @@ class InteractivePlaylist extends Component {
                                 className={className}
 
                                 onSelectMediaState={self.onSelectMediaState.bind(self)}
-                                onMediaStateMouseUp={self.onMediaStateMouseUp}
+                                onMediaStateMouseUp={self.onMediaStateMouseUp.bind(self)}
 
 
                                 key={dataIndex}
-                                mediaThumbs={self.mediaThumbs}
+                                mediaThumbs={self.props.mediaThumbs}
                                 dataIndex={dataIndex}
-                                playlistDragStartHandler={self.playlistDragStartHandler}
-                                playlistDragOverHandler={self.playlistDragOverHandler}
+                                playlistDragStartHandler={self.playlistDragStartHandler.bind(self)}
+                                playlistDragOverHandler={self.playlistDragOverHandler.bind(self)}
 
 
                                 onMouseDown={event => {
                                     self.handleMediaStateMouseDown(event, mediaState)
                                 }}
-                                onMouseMove={self.onMediaStateMouseMove}
-                                onMouseUp={self.onMediaStateMouseUp}
+                                onMouseMove={self.onMediaStateMouseMove.bind(self)}
+                                onMouseUp={self.onMediaStateMouseUp.bind(self)}
 
 
                                 onMediaStateMouseDown={event => {
-                                    self.onMediaStateMouseDown(event, mediaState);
+                                    self.handleMediaStateMouseDown(event, mediaState);
                                 }}
-                                onMoveSelectedMediaState={self.processMouseMove}
-                                processMouseUp={self.processMouseUp}
+                                onMoveSelectedMediaState={self.processMouseMove.bind(self)}
+                                processMouseUp={self.processMouseUp.bind(self)}
 
                             />
                         );
@@ -516,16 +618,13 @@ class InteractivePlaylist extends Component {
 
                 <div className="interactiveCanvasDiv"
                      id="interactiveCanvasDiv"
-                     onDrop={self.props.playlistDropHandler}
-                     onDragOver={self.props.playlistDragOverHandler}
+                     onDrop={self.playlistDropHandler.bind(self)}
+                     onDragOver={self.playlistDragOverHandler.bind(self)}
                      style={zoomStyle}
 
-                     onMouseDown={self.props.onPlaylistMouseDown}
-                     onMouseMove={self.props.onPlaylistMouseMove}
-                     onMouseUp={self.props.onPlaylistMouseUp}
-
-                     onMediaStateMouseDown={self.props.onMediaStateMouseDown}
-
+                     onMouseDown={self.onPlaylistMouseDown.bind(self)}
+                     onMouseMove={self.onPlaylistMouseMove.bind(self)}
+                     onMouseUp={self.onPlaylistMouseUp.bind(self)}
                 >
                     {mediaStates}
                     {svgData}
@@ -538,4 +637,20 @@ class InteractivePlaylist extends Component {
 
 }
 
-export default InteractivePlaylist;
+// interactiveCanvasDiv - ?? who uses this? anyone?
+// onMediaStateMouseDown={self.handleMediaStateMouseDown}
+
+function mapStateToProps(state) {
+    return {
+        mediaStates: state.mediaStates,
+        transitions: state.transitions,
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ newMediaState, addMediaStateToZonePlaylist, updateMediaState, deleteMediaState, addTransition },
+        dispatch);
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(InteractivePlaylist);
