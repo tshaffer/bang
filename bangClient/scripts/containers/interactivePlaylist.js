@@ -564,8 +564,6 @@ class InteractivePlaylist extends Component {
 
     generateMediaStatesJSX(mediaStatesToRender) {
 
-        debugger;
-
         var self = this;
 
         let dataIndex = 7;
@@ -615,13 +613,13 @@ class InteractivePlaylist extends Component {
                             playlistDragOverHandler={self.playlistDragOverHandler.bind(self)}
 
                             onMouseDown={event => {
-                                    self.handleMediaStateMouseDown(event, mediaState)
+                                    self.handleMediaStateMouseDown(event, mediaStateToRender.mediaState)
                                 }}
                             onMouseMove={self.onMediaStateMouseMove.bind(self)}
                             onMouseUp={self.onMediaStateMouseUp.bind(self)}
 
                             onMediaStateMouseDown={event => {
-                                    self.handleMediaStateMouseDown(event, mediaState);
+                                    self.handleMediaStateMouseDown(event, mediaStateToRender.mediaState);
                                 }}
                             onMoveSelectedMediaState={self.processMouseMove.bind(self)}
                             processMouseUp={self.processMouseUp.bind(self)}
