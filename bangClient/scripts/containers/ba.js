@@ -5,32 +5,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import BAUI from '../platform/baUI';
+import EditPreferencesDlg from '../components/Dialogs/editPreferencesDlg';
+
 import MediaLibrary from '../components/mediaLibrary';
 import PropertySheet from '../components/propertySheet';
-
-import BAUI from '../platform/baUI';
-
-import { getAllThumbs, selectMediaFolder, updateMediaFolder, saveSign } from '../actions/index';
-
-// bangatron vs. bangwapp?
-import { createDefaultPresentation, saveBSNPresentation } from '../actions/index';
-import { openDB, loadAppData, fetchSign }  from '../actions/index';
-
-import { addPlaylistItemToZonePlaylist, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist,
-    newPlaylistItem, addPlaylistItem, updatePlaylistItem, deletePlaylistItem, movePlaylistItemWithinZonePlaylist, newHtmlSite, addHtmlSiteToPresentation}
-    from '../actions/index';
-
-// import Playlist from '../components/playlist';
 import InteractivePlaylist from './interactivePlaylist';
 
-import MediaState from '../badm/mediaState';
-import ImagePlaylistItem from '../badm/imagePlaylistItem';
-import HTML5PlaylistItem from '../badm/html5PlaylistItem';
-
-import EditPreferencesDlg from '../components/Dialogs/editPreferencesDlg';
-// import Dialog from 'material-ui/Dialog';
-// import FlatButton from 'material-ui/FlatButton';
-// import RaisedButton from 'material-ui/RaisedButton';
+import { createDefaultPresentation, updateSign, loadAppData,
+    newHtmlSite, addHtmlSiteToPresentation } from '../actions/index';
 
 class BA extends Component {
 
@@ -58,8 +41,6 @@ class BA extends Component {
     componentDidMount() {
 
         var self = this;
-
-        // console.log("ba.js::componentDidMount invoked");
         
         this.baUI.init();
 
@@ -198,8 +179,6 @@ class BA extends Component {
                         onToggleOpenClosePropertySheet={this.handleToggleOpenClosePropertySheet.bind(this)}
                         propertySheetOpen = {this.state.propertySheetOpen}
 
-                        // getCurrentZone = {this.getCurrentZone.bind(this)}
-                        // getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
                         mediaThumbs= {this.props.mediaThumbs}
                     />
                     {propertySheetTag}
@@ -228,11 +207,8 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ addPlaylistItemToZonePlaylist, deletePlaylistItem, movePlaylistItemWithinZonePlaylist,
-        createDefaultPresentation, newSign, updateSign, newZone, addZone, selectZone, newZonePlaylist, setZonePlaylist,
-        newPlaylistItem, addPlaylistItem, updatePlaylistItem, loadAppData, fetchSign, saveBSNPresentation, selectMediaFolder,
-        updateMediaFolder, saveSign, newHtmlSite, addHtmlSiteToPresentation
-        },
+    return bindActionCreators({createDefaultPresentation, updateSign, loadAppData,
+        newHtmlSite, addHtmlSiteToPresentation},
         dispatch);
 }
 
