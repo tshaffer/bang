@@ -648,7 +648,7 @@ class InteractivePlaylist extends Component {
                 case mouseStateMoveMediaState:
                     break;
                 case mouseStateCreateTransition:
-                    const selectedMediaState = self.props.mediaStates.mediaStatesById[self.props.selectedMediaStateId];
+                    const selectedMediaState = this.props.mediaStates.mediaStatesById[this.props.selectedMediaStateId];
 
                     const xStart = selectedMediaState.x + this.mediaStateBtnWidth/2;
                     const yStart = selectedMediaState.y + this.mediaStateBtnHeight;
@@ -664,12 +664,50 @@ class InteractivePlaylist extends Component {
         return svgLineData;
     }
 
+    generateSVGJSX(svgLineData) {
+
+        let svgData = '';
+        let svgLines = '';
+
+        // render all line segments - transitions and rubber band
+        if (svgLineData.length > 0) {
+
+            svgLines = svgLineData.map(function (svgLine, index) {
+
+                const x1 = svgLine.x1;
+                const y1 = svgLine.y1;
+                const x2 = svgLine.x2;
+                const y2 = svgLine.y2;
+
+                return (
+                    <line x1={x1} y1={y1} x2={x2} y2={y2} key={index + 1000} stroke="black" fill="transparent" stroke-width="10"/>
+                );
+            });
+
+            // const svgWidth = 900;
+            // const svgHeight = 800;
+            // HACKEY
+            const pt = this.getCorrectedPoint(
+                { x: 900, y: 800 }
+            );
+
+            svgData =
+                <svg width={pt.x} height={pt.y}> +
+                    {svgLines} +
+                </svg>;
+        }
+
+        return svgData;
+    }
+
     generateZonePlaylistJSX(mediaStatesToRender, transitionsToRender) {
         const mediaStatesJSX = this.generateMediaStatesJSX(mediaStatesToRender);
         // const transitionsJSX = this.generateTransitionsJSX(transitionsToRender);
 
-        // let rubberBandSVGLineData = this.generateRubberBandSVGLineData();
-        return mediaStatesJSX;
+        let rubberBandSVGLineData = this.generateRubberBandSVGLineData();
+        const svgJSX = this.generateSVGJSX(rubberBandSVGLineData);
+
+        return { mediaStatesJSX, svgJSX };
     }
 
     generateToolbarJSX() {
@@ -740,7 +778,8 @@ class InteractivePlaylist extends Component {
                      onMouseMove={self.onPlaylistMouseMove.bind(self)}
                      onMouseUp={self.onPlaylistMouseUp.bind(self)}
                 >
-                    {interactivePlaylistJSX}
+                    {interactivePlaylistJSX.mediaStatesJSX}
+                    {interactivePlaylistJSX.svgJSX}
                 </div>
             </div>
         );
