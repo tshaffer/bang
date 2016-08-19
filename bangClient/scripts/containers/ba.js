@@ -41,16 +41,12 @@ class BA extends Component {
     componentDidMount() {
 
         var self = this;
-        
+
         this.baUI.init();
 
     }
 
-    // temporary, until I put this in redux or figure out the right way to do this
-    setSelectedMediaStateId(selectedMediaStateId) {
-        this.setState( { selectedMediaStateId: selectedMediaStateId })
-    }
-
+// edit preferences using material ui
     handleEditPreferences() {
         console.log("handleEditPreferences in ba");
         this.refs.editPreferencesDlg.handleOpen();
@@ -61,7 +57,7 @@ class BA extends Component {
         console.log(preferences);
     }
 
-
+// unused at the moment
     handleAddHtmlSite(name, siteSpec, type) {
         const htmlSite = {
             name,
@@ -73,12 +69,7 @@ class BA extends Component {
         this.props.addHtmlSiteToPresentation(htmlSite);
 
     }
-    
-    handleToggleOpenClosePropertySheet() {
-        this.setState({propertySheetOpen: !this.state.propertySheetOpen});
-    }
 
-    
     // instead of using action creators, just dispatch the action directly?
     handleUpdateVideoMode(videoMode) {
         // in reducer?
@@ -87,6 +78,17 @@ class BA extends Component {
         this.props.updateSign(sign);
     }
 
+
+    // temporary, until I put this in redux or figure out the right way to do this
+    setSelectedMediaStateId(selectedMediaStateId) {
+        this.setState( { selectedMediaStateId: selectedMediaStateId })
+    }
+
+    handleToggleOpenClosePropertySheet() {
+        this.setState({propertySheetOpen: !this.state.propertySheetOpen});
+    }
+
+    
     getCurrentZone() {
 
         let selectedZone = null;
@@ -207,8 +209,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({createDefaultPresentation, updateSign, loadAppData,
-        newHtmlSite, addHtmlSiteToPresentation},
+    return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, newHtmlSite, addHtmlSiteToPresentation},
         dispatch);
 }
 

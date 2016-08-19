@@ -405,16 +405,14 @@ class InteractivePlaylist extends Component {
     }
 
 
-    render() {
+    parseMediaStates() {
 
-        let self = this;
+        const self = this;
 
-        let openCloseLabel = "=>";
-        if (!this.props.propertySheetOpen) {
-            openCloseLabel = "<=";
-        }
+        let dataIndex = -4;
 
-        let zoneId = "";
+        let mediaStates = null;
+        let transitionsToRender = [];
 
         let currentMediaStates = [];
         let currentMediaStateIds = [];
@@ -424,47 +422,14 @@ class InteractivePlaylist extends Component {
             currentMediaStateIds = currentZonePlaylist.mediaStateIds;
         }
 
-        let dataIndex = -4;
-        let mediaStates = null;
-        let transitionLines = '';
-
-        let svgData = '';
-        let svgLines = '';
-        let svgLineData = [];
-
-        let bsEventCoordinates = [];
-        let transitionCoordinates = [];
-
-        let transitionsToRender = [];
-
-        if (this.state.x1 >= 0 && this.state.y1 >= 0 && this.state.x2 >= 0 && this.state.y2 >= 0) {
-
-            switch (this.mouseState) {
-                case mouseStateNone:
-                    break;
-                case mouseStateMoveMediaState:
-                    break;
-                case mouseStateCreateTransition:
-                    const selectedMediaState = self.props.mediaStates.mediaStatesById[self.props.selectedMediaStateId];
-
-                    const xStart = selectedMediaState.x + this.mediaStateBtnWidth/2;
-                    const yStart = selectedMediaState.y + this.mediaStateBtnHeight;
-
-                    const xEnd = this.state.x2;
-                    const yEnd = this.state.y2;
-
-                    svgLineData.push({x1: xStart, y1: yStart, x2: xEnd, y2: yEnd});
-                    break;
-            }
-        }
-
         if (currentMediaStateIds.length > 0) {
 
             currentMediaStateIds.forEach( currentMediaStateId => {
-                currentMediaStates.push(self.props.mediaStates.mediaStatesById[currentMediaStateId]);
+                currentMediaStates.push(this.props.mediaStates.mediaStatesById[currentMediaStateId]);
             });
 
             mediaStates = currentMediaStates.map(function (mediaState, index) {
+
                 const id = mediaState.getId();
                 const fileName = mediaState.getFileName();
                 let filePath = "";
@@ -545,6 +510,56 @@ class InteractivePlaylist extends Component {
         else {
             mediaStates = <div></div>
         }
+
+        return { mediaStates, transitionsToRender };
+    }
+
+
+    render() {
+
+        let self = this;
+
+        let openCloseLabel = "=>";
+        if (!this.props.propertySheetOpen) {
+            openCloseLabel = "<=";
+        }
+
+        let zoneId = "";
+
+        let transitionLines = '';
+
+        let svgData = '';
+        let svgLines = '';
+        let svgLineData = [];
+
+        let bsEventCoordinates = [];
+        let transitionCoordinates = [];
+
+        if (this.state.x1 >= 0 && this.state.y1 >= 0 && this.state.x2 >= 0 && this.state.y2 >= 0) {
+
+            switch (this.mouseState) {
+                case mouseStateNone:
+                    break;
+                case mouseStateMoveMediaState:
+                    break;
+                case mouseStateCreateTransition:
+                    const selectedMediaState = self.props.mediaStates.mediaStatesById[self.props.selectedMediaStateId];
+
+                    const xStart = selectedMediaState.x + this.mediaStateBtnWidth/2;
+                    const yStart = selectedMediaState.y + this.mediaStateBtnHeight;
+
+                    const xEnd = this.state.x2;
+                    const yEnd = this.state.y2;
+
+                    svgLineData.push({x1: xStart, y1: yStart, x2: xEnd, y2: yEnd});
+                    break;
+            }
+        }
+
+        // create the JSX to describe the list of media states
+        let parsedData = this.parseMediaStates();
+        const mediaStates = parsedData.mediaStates;
+        const transitionsToRender = parsedData.transitionsToRender;
 
         // retrieve transition lines
         transitionsToRender.forEach(transitionToRender => {
