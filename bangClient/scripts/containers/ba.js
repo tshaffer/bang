@@ -191,12 +191,15 @@ class BA extends Component {
                     />
                     <InteractivePlaylist
                         selectedMediaStateId={this.state.selectedMediaStateId}
+                        selectedZone={this.state.selectedZone}
+                        
                         setSelectedMediaStateId={this.setSelectedMediaStateId.bind(this)}
 
                         onToggleOpenClosePropertySheet={this.handleToggleOpenClosePropertySheet.bind(this)}
                         propertySheetOpen = {this.state.propertySheetOpen}
-                        getCurrentZone = {this.getCurrentZone.bind(this)}
-                        getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
+
+                        // getCurrentZone = {this.getCurrentZone.bind(this)}
+                        // getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
                         mediaThumbs= {this.props.mediaThumbs}
                     />
                     {propertySheetTag}
