@@ -405,6 +405,53 @@ class InteractivePlaylist extends Component {
     }
 
 
+    parseZonePlaylist() {
+
+        const self = this;
+
+        let mediaStatesToRender = [];
+        let transitionsToRender = [];
+
+        let mediaStateIds = [];
+
+        const zonePlaylist = this.getCurrentZonePlaylist();
+        if (zonePlaylist) {
+            mediaStateIds = zonePlaylist.mediaStateIds;
+        }
+
+        mediaStateIds.forEach(mediaStateId => {
+
+            const mediaState = self.props.mediaStates.mediaStatesById[mediaStateId];
+
+            let mediaStateToRender = {};
+            mediaStateToRender.mediaPlaylistItem = mediaState.getMediaPlaylistItem();
+
+            mediaStateToRender.mediaState = mediaState;
+            mediaStateToRender.x = mediaState.x;
+            mediaStateToRender.y = mediaState.y;
+            mediaStateToRender.id = mediaState.getId();
+            mediaStateToRender.fileName = mediaState.getFileName();
+            if (self.props.selectedMediaStateId && self.props.selectedMediaStateId === mediaStateId) {
+                mediaStateToRender.isSelected = true;
+            }
+            else {
+                mediaStateToRender.isSelected = false;
+            }
+            mediaStatesToRender.push(mediaStateToRender);
+
+            mediaState.transitionOutIds.forEach(transitionOutId => {
+
+                const transition = self.props.transitions.transitionsById[transitionOutId];
+                const targetMediaStateId = transition.targetMediaStateId;
+                const targetMediaState = self.props.mediaStates.mediaStatesById[targetMediaStateId];
+
+                transitionsToRender.push(self.getTransitionToRender(transition, mediaState, targetMediaState));
+            });
+        });
+
+        return { mediaStatesToRender, transitionsToRender };
+    }
+
     parseMediaStates() {
 
         const self = this;
@@ -515,25 +562,85 @@ class InteractivePlaylist extends Component {
     }
 
 
-    render() {
+    generateMediaStatesJSX(mediaStatesToRender) {
 
-        let self = this;
+        debugger;
 
-        let openCloseLabel = "=>";
-        if (!this.props.propertySheetOpen) {
-            openCloseLabel = "<=";
-        }
+        var self = this;
 
-        let zoneId = "";
+        let dataIndex = 7;
 
-        let transitionLines = '';
+        let mediaStates = mediaStatesToRender.map(function (mediaStateToRender, index) {
 
-        let svgData = '';
-        let svgLines = '';
+            let className = "";
+            if (self.props.selectedMediaStateId && self.props.selectedMediaStateId === mediaStateToRender.id) {
+                className = "selectedImage ";
+            }
+            else {
+                className = "unSelectedImage ";
+            }
+
+            const mediaPlaylistItem = mediaStateToRender.mediaPlaylistItem;
+            if (mediaPlaylistItem instanceof ImagePlaylistItem) {
+                let filePath = mediaPlaylistItem.getFilePath();
+                if (self.props.mediaThumbs.hasOwnProperty(filePath)) {
+
+                    className += "mediaStateBtn";
+
+                    let mediaStateBtnStyle = {};
+
+                    const leftOffset = mediaStateToRender.x.toString();
+                    const topOffset = mediaStateToRender.y.toString();
+
+                    mediaStateBtnStyle.left = leftOffset+"px";
+                    mediaStateBtnStyle.top = topOffset + "px";
+
+                    const id = mediaPlaylistItem.getId();
+
+                    dataIndex+= 4;
+
+                    return (
+                        <MediaStateThumb
+
+                            mediaState={mediaStateToRender.mediaState}
+                            className={className}
+
+                            onSelectMediaState={self.onSelectMediaState.bind(self)}
+                            onMediaStateMouseUp={self.onMediaStateMouseUp.bind(self)}
+
+                            key={dataIndex}
+                            mediaThumbs={self.props.mediaThumbs}
+                            dataIndex={dataIndex}
+                            playlistDragStartHandler={self.playlistDragStartHandler.bind(self)}
+                            playlistDragOverHandler={self.playlistDragOverHandler.bind(self)}
+
+                            onMouseDown={event => {
+                                    self.handleMediaStateMouseDown(event, mediaState)
+                                }}
+                            onMouseMove={self.onMediaStateMouseMove.bind(self)}
+                            onMouseUp={self.onMediaStateMouseUp.bind(self)}
+
+                            onMediaStateMouseDown={event => {
+                                    self.handleMediaStateMouseDown(event, mediaState);
+                                }}
+                            onMoveSelectedMediaState={self.processMouseMove.bind(self)}
+                            processMouseUp={self.processMouseUp.bind(self)}
+                        />
+                    );
+                }
+            }
+        });
+
+        return mediaStates;
+    }
+
+    generateTransitionsJSX(transitionsToRender) {
+        return null;
+    }
+
+    generateRubberBandSVGLineData() {
+
         let svgLineData = [];
-
-        let bsEventCoordinates = [];
-        let transitionCoordinates = [];
 
         if (this.state.x1 >= 0 && this.state.y1 >= 0 && this.state.x2 >= 0 && this.state.y2 >= 0) {
 
@@ -556,66 +663,18 @@ class InteractivePlaylist extends Component {
             }
         }
 
-        // create the JSX to describe the list of media states
-        let parsedData = this.parseMediaStates();
-        const mediaStates = parsedData.mediaStates;
-        const transitionsToRender = parsedData.transitionsToRender;
+        return svgLineData;
+    }
 
-        // retrieve transition lines
-        transitionsToRender.forEach(transitionToRender => {
-            const transitionCoordinate = transitionToRender.coordinates;
-            svgLineData.push({x1: transitionCoordinate.xStart, y1: transitionCoordinate.yStart,
-                x2: transitionCoordinate.xEnd, y2: transitionCoordinate.yEnd});
-        });
+    generateZonePlaylistJSX(mediaStatesToRender, transitionsToRender) {
+        const mediaStatesJSX = this.generateMediaStatesJSX(mediaStatesToRender);
+        // const transitionsJSX = this.generateTransitionsJSX(transitionsToRender);
 
-        // render all line segments - transitions and rubber band
-        if (svgLineData.length > 0) {
+        // let rubberBandSVGLineData = this.generateRubberBandSVGLineData();
+        return mediaStatesJSX;
+    }
 
-            svgLines = svgLineData.map(function (svgLine, index) {
-
-                const x1 = svgLine.x1;
-                const y1 = svgLine.y1;
-                const x2 = svgLine.x2;
-                const y2 = svgLine.y2;
-
-                return (
-                    <line x1={x1} y1={y1} x2={x2} y2={y2} key={index + 1000} stroke="black" fill="transparent" stroke-width="10"/>
-                );
-            });
-
-            // const svgWidth = 900;
-            // const svgHeight = 800;
-            // HACKEY
-            const pt = this.getCorrectedPoint(
-                { x: 900, y: 800 }
-            );
-
-            svgData =
-                <svg width={pt.x} height={pt.y}> +
-                    {svgLines} +
-                </svg>;
-        }
-
-        // render transition event images
-        let bsEventIconStyle = {};
-        bsEventIconStyle.position = "absolute";
-
-        let bsEventIcons = transitionsToRender.map( (transitionToRender, index) => {
-
-            return (
-                <TransitionEventIcon
-                    selectedBSEventId={this.props.selectedBSEventId}
-                    transitionToRender={transitionToRender}
-                    onMouseDown={this.onBSEventMouseDown.bind(this)}
-                    key={500 + index}
-                />
-            )
-        });
-
-        let zoomStyle = {};
-        const zoomValueStr = (this.state.zoomValue/100).toString();
-        zoomStyle.zoom = zoomValueStr;
-        zoomStyle["MozTransform"] = "scale(" + zoomValueStr + ")";
+    generateToolbarJSX() {
 
         let timeoutClassName = "unSelectedBSEvent";
         let mediaEndClassName = "unSelectedBSEvent";
@@ -628,19 +687,50 @@ class InteractivePlaylist extends Component {
                 break;
         }
 
+        let openCloseLabel = "=>";
+        if (!this.props.propertySheetOpen) {
+            openCloseLabel = "<=";
+        }
+
+        return (
+            <div className="playlistHeaderDiv">
+                <div>
+                    <img src="images/36x36_timeout.png" className={timeoutClassName} onClick={this.onSelectTimeoutEvent.bind(this)}></img>
+                    <img src="images/36x36_videoend.png" className={mediaEndClassName} onClick={this.onSelectMediaEndEvent.bind(this)}></img>
+                </div>
+                <button id="openCloseIcon" className="plainButton" type="button" onClick={this.props.onToggleOpenClosePropertySheet.bind(this)}>{openCloseLabel}</button>
+                <input step="1" id="zoomSlider" type="range" min="0" max="100" defaultValue="100"></input>
+            </div>
+        );
+    }
+
+    generateInteractivePlaylistJSX(mediaStatesToRender, transitionsToRender) {
+        const zonePlaylistJSX = this.generateZonePlaylistJSX(mediaStatesToRender, transitionsToRender);
+        return zonePlaylistJSX;
+    }
+
+    render() {
+
+        var self = this;
+
+        const parsedZonePlaylist = this.parseZonePlaylist();
+        const mediaStatesToRender = parsedZonePlaylist.mediaStatesToRender;
+        const transitionsToRender = parsedZonePlaylist.transitionsToRender;
+
+        const toolbarJSX = this.generateToolbarJSX();
+        const interactivePlaylistJSX = this.generateInteractivePlaylistJSX(mediaStatesToRender, transitionsToRender);
+
+        let zoomStyle = {};
+        const zoomValueStr = (this.state.zoomValue/100).toString();
+        zoomStyle.zoom = zoomValueStr;
+        zoomStyle["MozTransform"] = "scale(" + zoomValueStr + ")";
+
         return (
             <div
                 className="playlistDiv"
                 id="playlistDiv"
             >
-                <div className="playlistHeaderDiv">
-                    <div>
-                        <img src="images/36x36_timeout.png" className={timeoutClassName} onClick={this.onSelectTimeoutEvent.bind(this)}></img>
-                        <img src="images/36x36_videoend.png" className={mediaEndClassName} onClick={this.onSelectMediaEndEvent.bind(this)}></img>
-                    </div>
-                    <button id="openCloseIcon" className="plainButton" type="button" onClick={this.props.onToggleOpenClosePropertySheet.bind(this)}>{openCloseLabel}</button>
-                    <input step="1" id="zoomSlider" type="range" min="0" max="100" defaultValue="100"></input>
-                </div>
+                {toolbarJSX}
 
                 <div className="interactiveCanvasDiv"
                      id="interactiveCanvasDiv"
@@ -652,12 +742,155 @@ class InteractivePlaylist extends Component {
                      onMouseMove={self.onPlaylistMouseMove.bind(self)}
                      onMouseUp={self.onPlaylistMouseUp.bind(self)}
                 >
-                    {mediaStates}
-                    {svgData}
-                    {bsEventIcons}
+                    {interactivePlaylistJSX}
                 </div>
             </div>
         );
+
+
+
+
+        // let self = this;
+        //
+        // let openCloseLabel = "=>";
+        // if (!this.props.propertySheetOpen) {
+        //     openCloseLabel = "<=";
+        // }
+        //
+        // let svgData = '';
+        // let svgLines = '';
+        // let svgLineData = [];
+        //
+        // let bsEventCoordinates = [];
+        // let transitionCoordinates = [];
+        //
+        // if (this.state.x1 >= 0 && this.state.y1 >= 0 && this.state.x2 >= 0 && this.state.y2 >= 0) {
+        //
+        //     switch (this.mouseState) {
+        //         case mouseStateNone:
+        //             break;
+        //         case mouseStateMoveMediaState:
+        //             break;
+        //         case mouseStateCreateTransition:
+        //             const selectedMediaState = self.props.mediaStates.mediaStatesById[self.props.selectedMediaStateId];
+        //
+        //             const xStart = selectedMediaState.x + this.mediaStateBtnWidth/2;
+        //             const yStart = selectedMediaState.y + this.mediaStateBtnHeight;
+        //
+        //             const xEnd = this.state.x2;
+        //             const yEnd = this.state.y2;
+        //
+        //             svgLineData.push({x1: xStart, y1: yStart, x2: xEnd, y2: yEnd});
+        //             break;
+        //     }
+        // }
+        //
+        // // create the JSX to describe the list of media states
+        // // let parsedData = this.parseMediaStates();
+        // // const mediaStates = parsedData.mediaStates;
+        // // const transitionsToRender = parsedData.transitionsToRender;
+        //
+        // const parsedZonePlaylist = this.parseZonePlaylist();
+        // const mediaStatesToRender = parsedZonePlaylist.mediaStatesToRender;
+        // const transitionsToRender = parsedZonePlaylist.transitionsToRender;
+        //
+        // // retrieve transition lines
+        // transitionsToRender.forEach(transitionToRender => {
+        //     const transitionCoordinate = transitionToRender.coordinates;
+        //     svgLineData.push({x1: transitionCoordinate.xStart, y1: transitionCoordinate.yStart,
+        //         x2: transitionCoordinate.xEnd, y2: transitionCoordinate.yEnd});
+        // });
+        //
+        // // render all line segments - transitions and rubber band
+        // if (svgLineData.length > 0) {
+        //
+        //     svgLines = svgLineData.map(function (svgLine, index) {
+        //
+        //         const x1 = svgLine.x1;
+        //         const y1 = svgLine.y1;
+        //         const x2 = svgLine.x2;
+        //         const y2 = svgLine.y2;
+        //
+        //         return (
+        //             <line x1={x1} y1={y1} x2={x2} y2={y2} key={index + 1000} stroke="black" fill="transparent" stroke-width="10"/>
+        //         );
+        //     });
+        //
+        //     // const svgWidth = 900;
+        //     // const svgHeight = 800;
+        //     // HACKEY
+        //     const pt = this.getCorrectedPoint(
+        //         { x: 900, y: 800 }
+        //     );
+        //
+        //     svgData =
+        //         <svg width={pt.x} height={pt.y}> +
+        //             {svgLines} +
+        //         </svg>;
+        // }
+        //
+        // // render transition event images
+        // let bsEventIconStyle = {};
+        // bsEventIconStyle.position = "absolute";
+        //
+        // let bsEventIcons = transitionsToRender.map( (transitionToRender, index) => {
+        //
+        //     return (
+        //         <TransitionEventIcon
+        //             selectedBSEventId={this.props.selectedBSEventId}
+        //             transitionToRender={transitionToRender}
+        //             onMouseDown={this.onBSEventMouseDown.bind(this)}
+        //             key={500 + index}
+        //         />
+        //     )
+        // });
+        //
+        // let zoomStyle = {};
+        // const zoomValueStr = (this.state.zoomValue/100).toString();
+        // zoomStyle.zoom = zoomValueStr;
+        // zoomStyle["MozTransform"] = "scale(" + zoomValueStr + ")";
+        //
+        // let timeoutClassName = "unSelectedBSEvent";
+        // let mediaEndClassName = "unSelectedBSEvent";
+        // switch (this.state.activeBSEventType) {
+        //     case "timeout":
+        //         timeoutClassName = "selectedBSEvent";
+        //         break;
+        //     case "mediaEnd":
+        //         mediaEndClassName = "selectedBSEvent";
+        //         break;
+        // }
+        //
+        // return (
+        //     <div
+        //         className="playlistDiv"
+        //         id="playlistDiv"
+        //     >
+        //         <div className="playlistHeaderDiv">
+        //             <div>
+        //                 <img src="images/36x36_timeout.png" className={timeoutClassName} onClick={this.onSelectTimeoutEvent.bind(this)}></img>
+        //                 <img src="images/36x36_videoend.png" className={mediaEndClassName} onClick={this.onSelectMediaEndEvent.bind(this)}></img>
+        //             </div>
+        //             <button id="openCloseIcon" className="plainButton" type="button" onClick={this.props.onToggleOpenClosePropertySheet.bind(this)}>{openCloseLabel}</button>
+        //             <input step="1" id="zoomSlider" type="range" min="0" max="100" defaultValue="100"></input>
+        //         </div>
+        //
+        //         <div className="interactiveCanvasDiv"
+        //              id="interactiveCanvasDiv"
+        //              onDrop={self.playlistDropHandler.bind(self)}
+        //              onDragOver={self.playlistDragOverHandler.bind(self)}
+        //              style={zoomStyle}
+        //
+        //              onMouseDown={self.onPlaylistMouseDown.bind(self)}
+        //              onMouseMove={self.onPlaylistMouseMove.bind(self)}
+        //              onMouseUp={self.onPlaylistMouseUp.bind(self)}
+        //         >
+        //             {mediaStates}
+        //             {svgData}
+        //             {bsEventIcons}
+        //         </div>
+        //     </div>
+        // );
 
     }
 
