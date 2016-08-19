@@ -632,8 +632,18 @@ class InteractivePlaylist extends Component {
         return mediaStates;
     }
 
-    generateTransitionsJSX(transitionsToRender) {
-        return null;
+    generateTransitionsSVGLineData(transitionsToRender) {
+
+        let svgLineData = [];
+
+        transitionsToRender.forEach(transitionToRender => {
+            const transitionCoordinate = transitionToRender.coordinates;
+            svgLineData.push({x1: transitionCoordinate.xStart, y1: transitionCoordinate.yStart,
+                x2: transitionCoordinate.xEnd, y2: transitionCoordinate.yEnd});
+        });
+
+        return svgLineData;
+
     }
 
     generateRubberBandSVGLineData() {
@@ -702,10 +712,13 @@ class InteractivePlaylist extends Component {
 
     generateZonePlaylistJSX(mediaStatesToRender, transitionsToRender) {
         const mediaStatesJSX = this.generateMediaStatesJSX(mediaStatesToRender);
-        // const transitionsJSX = this.generateTransitionsJSX(transitionsToRender);
+        const transitionsJSX = this.generateTransitionsSVGLineData(transitionsToRender);
 
-        let rubberBandSVGLineData = this.generateRubberBandSVGLineData();
-        const svgJSX = this.generateSVGJSX(rubberBandSVGLineData);
+        const rubberBandSVGLineData = this.generateRubberBandSVGLineData();
+        const transitionsSVGLineData = this.generateTransitionsSVGLineData(transitionsToRender);
+        const allSVGLineData = rubberBandSVGLineData.concat(transitionsSVGLineData);
+
+        const svgJSX = this.generateSVGJSX(allSVGLineData);
 
         return { mediaStatesJSX, svgJSX };
     }
