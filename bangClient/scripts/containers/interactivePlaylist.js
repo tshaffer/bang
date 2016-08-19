@@ -61,7 +61,7 @@ class InteractivePlaylist extends Component {
             zoomValue.addEventListener("input", function () {
                 if (self.zoomValue != zoomValue.value) {
                     console.log("setState on zoomValue from interactivePlaylist");
-                    self.onZoomValueChanged(zoomValue.value);
+                    self.handleZoomValueChanged(zoomValue.value);
                 }
             }, false);
         }
@@ -604,7 +604,7 @@ class InteractivePlaylist extends Component {
 
         let timeoutClassName = "unSelectedBSEvent";
         let mediaEndClassName = "unSelectedBSEvent";
-        switch (this.props.activeBSEventType) {
+        switch (this.state.activeBSEventType) {
             case "timeout":
                 timeoutClassName = "selectedBSEvent";
                 break;
