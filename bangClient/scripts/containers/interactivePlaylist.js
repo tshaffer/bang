@@ -40,9 +40,6 @@ class InteractivePlaylist extends Component {
         this.mediaStateBtnHeight = 90;
     }
 
-    componentWillMount() {
-    }
-
     componentDidMount() {
 
         var self = this;
@@ -161,14 +158,14 @@ class InteractivePlaylist extends Component {
     }
 
 
-    handleDropMediaState (ev) {
+    handleDropMediaState (event) {
 
-        ev.preventDefault();
+        event.preventDefault();
 
         // copy or move?
         let operation = "";
         let startIndex = -1;
-        if (ev.dataTransfer.effectAllowed === "move") {
+        if (event.dataTransfer.effectAllowed === "move") {
             operation = "move";
         }
         else {
@@ -176,14 +173,14 @@ class InteractivePlaylist extends Component {
         }
 
         // get dropped playlist item
-        const stateName = ev.dataTransfer.getData("name");
-        const path = ev.dataTransfer.getData("path");
-        const type = ev.dataTransfer.getData("type");
+        const stateName = event.dataTransfer.getData("name");
+        const path = event.dataTransfer.getData("path");
+        const type = event.dataTransfer.getData("type");
 
         // get position of drop
         const zoomScaleFactor = 100 / this.state.zoomValue;
-        const pt = this.getCorrectedPoint(
-            { x: ev.pageX, y: ev.pageY}
+        const pt = this.getScaledCoordinate(
+            { x: event.pageX, y: event.pageY}
         );
         const x = pt.x;
         const y = pt.y;
@@ -202,7 +199,7 @@ class InteractivePlaylist extends Component {
         }
     }
 
-    getCorrectedPoint(inputPoint) {
+    getScaledCoordinate(inputPoint) {
 
         const zoomScaleFactor = 100 / this.state.zoomValue;
 
@@ -221,10 +218,23 @@ class InteractivePlaylist extends Component {
         return outputPoint;
     }
 
-    playlistDragOverHandler (ev) {
+    playlistDragStartHandler(event) {
 
-        ev.preventDefault();
-        ev.dataTransfer.dropEffect = "move";
+        event.dataTransfer.setData("path", event.target.dataset.path);
+        event.dataTransfer.setData("name", event.target.dataset.name);
+        event.dataTransfer.setData("type", event.target.dataset.type);
+        event.dataTransfer.setData("index", event.target.dataset.index);
+
+        // I don't think the following statement is necessarily correct
+        event.dataTransfer.dropEffect = "move";
+        event.dataTransfer.effectAllowed = 'move';
+    }
+
+
+    playlistDragOverHandler (event) {
+
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "move";
     }
 
 
@@ -232,17 +242,17 @@ class InteractivePlaylist extends Component {
         this.setState({ activeBSEventType: bsEventType });
     }
 
-    onSelectTimeoutEvent() {
+    handleSelectTimeoutEvent() {
         console.log("select timeoutEvent ");
         this.handleSetActiveBSEventType("timeout");
     }
 
-    onSelectMediaEndEvent() {
+    handleSelectMediaEndEvent() {
         console.log("select mediaEndEvent ");
         this.handleSetActiveBSEventType("mediaEnd");
     }
 
-    onBSEventMouseDown(bsEvent) {
+    handleBSEventMouseDown(bsEvent) {
         this.props.setSelectedMediaStateId( null );
         this.setState({ selectedBSEventId: bsEvent.getId() });
     }
@@ -277,18 +287,6 @@ class InteractivePlaylist extends Component {
         return transitionToRender;
     }
 
-    playlistDragStartHandler(ev) {
-
-        ev.dataTransfer.setData("path", ev.target.dataset.path);
-        ev.dataTransfer.setData("name", ev.target.dataset.name);
-        ev.dataTransfer.setData("type", ev.target.dataset.type);
-        ev.dataTransfer.setData("index", ev.target.dataset.index);
-
-        // I don't think the following statement is necessarily correct
-        ev.dataTransfer.dropEffect = "move";
-        ev.dataTransfer.effectAllowed = 'move';
-    }
-
 
     handleSelectMediaState(mediaState) {
 
@@ -312,7 +310,7 @@ class InteractivePlaylist extends Component {
 
         this.mouseState = mouseStateCreateTransition;
 
-        const pt = this.getCorrectedPoint(
+        const pt = this.getScaledCoordinate(
             { x: event.clientX, y: event.clientY }
         );
 
@@ -332,7 +330,7 @@ class InteractivePlaylist extends Component {
     processMouseMove(event) {
 
         if (this.mouseState != mouseStateNone) {
-            const pt = this.getCorrectedPoint(
+            const pt = this.getScaledCoordinate(
                 { x: event.clientX, y: event.clientY }
             );
             console.log("setState ipc::processMouseMove");
@@ -596,7 +594,7 @@ class InteractivePlaylist extends Component {
             // const svgWidth = 900;
             // const svgHeight = 800;
             // HACKEY
-            const pt = this.getCorrectedPoint(
+            const pt = this.getScaledCoordinate(
                 { x: 900, y: 800 }
             );
 
@@ -619,7 +617,7 @@ class InteractivePlaylist extends Component {
                 <TransitionEventIcon
                     selectedBSEventId={self.props.selectedBSEventId}
                     transitionToRender={transitionToRender}
-                    onMouseDown={self.onBSEventMouseDown.bind(self)}
+                    onMouseDown={self.handleBSEventMouseDown.bind(self)}
                     key={500 + index}
                 />
             )
@@ -663,8 +661,8 @@ class InteractivePlaylist extends Component {
         return (
             <div className="playlistHeaderDiv">
                 <div>
-                    <img src="images/36x36_timeout.png" className={timeoutClassName} onClick={this.onSelectTimeoutEvent.bind(this)}></img>
-                    <img src="images/36x36_videoend.png" className={mediaEndClassName} onClick={this.onSelectMediaEndEvent.bind(this)}></img>
+                    <img src="images/36x36_timeout.png" className={timeoutClassName} onClick={this.handleSelectTimeoutEvent.bind(this)}></img>
+                    <img src="images/36x36_videoend.png" className={mediaEndClassName} onClick={this.handleSelectMediaEndEvent.bind(this)}></img>
                 </div>
                 <button id="openCloseIcon" className="plainButton" type="button" onClick={this.props.onToggleOpenClosePropertySheet.bind(this)}>{openCloseLabel}</button>
                 <input step="1" id="zoomSlider" type="range" min="0" max="100" defaultValue="100"></input>
