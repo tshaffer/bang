@@ -710,9 +710,29 @@ class InteractivePlaylist extends Component {
         return svgData;
     }
 
+    generateBSEventIcons(transitionsToRender) {
+
+        var self = this;
+
+        let bsEventIcons = transitionsToRender.map( (transitionToRender, index) => {
+
+            return (
+                <TransitionEventIcon
+                    selectedBSEventId={self.props.selectedBSEventId}
+                    transitionToRender={transitionToRender}
+                    onMouseDown={self.onBSEventMouseDown.bind(self)}
+                    key={500 + index}
+                />
+            )
+        });
+
+        return bsEventIcons;
+    }
+
     generateZonePlaylistJSX(mediaStatesToRender, transitionsToRender) {
+
         const mediaStatesJSX = this.generateMediaStatesJSX(mediaStatesToRender);
-        const transitionsJSX = this.generateTransitionsSVGLineData(transitionsToRender);
+        const bsEventsJSX = this.generateBSEventIcons(transitionsToRender);
 
         const rubberBandSVGLineData = this.generateRubberBandSVGLineData();
         const transitionsSVGLineData = this.generateTransitionsSVGLineData(transitionsToRender);
@@ -720,7 +740,7 @@ class InteractivePlaylist extends Component {
 
         const svgJSX = this.generateSVGJSX(allSVGLineData);
 
-        return { mediaStatesJSX, svgJSX };
+        return { mediaStatesJSX, bsEventsJSX, svgJSX };
     }
 
     generateToolbarJSX() {
@@ -793,6 +813,7 @@ class InteractivePlaylist extends Component {
                 >
                     {interactivePlaylistJSX.mediaStatesJSX}
                     {interactivePlaylistJSX.svgJSX}
+                    {interactivePlaylistJSX.bsEventsJSX}
                 </div>
             </div>
         );
