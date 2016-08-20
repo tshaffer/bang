@@ -117,7 +117,7 @@ class InteractivePlaylist extends Component {
     }
 
 
-    handleDropMediaState(x, y, operation, type, stateName, path) {
+    executeDropMediaState(x, y, operation, type, stateName, path) {
 
         let mediaState = null;
         let currentZonePlaylistId = null;
@@ -161,7 +161,7 @@ class InteractivePlaylist extends Component {
     }
 
 
-    playlistDropHandler (ev) {
+    handleDropMediaState (ev) {
 
         ev.preventDefault();
 
@@ -180,8 +180,8 @@ class InteractivePlaylist extends Component {
         const path = ev.dataTransfer.getData("path");
         const type = ev.dataTransfer.getData("type");
 
+        // get position of drop
         const zoomScaleFactor = 100 / this.state.zoomValue;
-
         const pt = this.getCorrectedPoint(
             { x: ev.pageX, y: ev.pageY}
         );
@@ -194,7 +194,7 @@ class InteractivePlaylist extends Component {
             // offset image to center it around the drop point
             const mediaStateX = x - (this.mediaStateBtnWidth/2);
             const mediaStateY = y - (this.mediaStateBtnHeight/2);
-            mediaState = this.handleDropMediaState(mediaStateX, mediaStateY, operation, type, stateName, path);
+            mediaState = this.executeDropMediaState(mediaStateX, mediaStateY, operation, type, stateName, path);
         }
 
         if (mediaState) {
@@ -696,7 +696,7 @@ class InteractivePlaylist extends Component {
                      id="interactiveCanvasDiv"
                      style={zoomFactor}
 
-                     onDrop={this.playlistDropHandler.bind(this)}
+                     onDrop={this.handleDropMediaState.bind(this)}
                      onDragOver={this.playlistDragOverHandler.bind(this)}
 
                      onMouseDown={this.onPlaylistMouseDown.bind(this)}
