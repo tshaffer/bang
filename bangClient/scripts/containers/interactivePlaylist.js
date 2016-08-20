@@ -64,44 +64,23 @@ class InteractivePlaylist extends Component {
         }
     }
 
-    getCurrentZone() {
+    getSelectedZonePlaylist() {
 
-        let selectedZone = null;
         if (this.props.sign && this.props.sign.zoneIds.length > 0 && this.props.zones && this.props.zones.zonesById) {
-
-            if (!this.props.selectedZone) {
-                selectedZone = this.props.zones.zonesById[this.props.sign.zoneIds[0]];
-            }
-            else {
-                selectedZone = this.props.selectedZone;
-            }
-
-            if (!selectedZone) {
-                selectedZone = null;
-            }
-        }
-        return selectedZone;
+            const selectedZone = this.props.zones.zonesById[this.props.sign.zoneIds[0]];
+            return this.props.zonePlaylists.zonePlaylistsById[selectedZone.zonePlaylistId];
+        }  
+        return null;
     }
-
-    getCurrentZonePlaylist() {
-
-        let currentZonePlaylist = null;
-
-        let selectedZone = this.getCurrentZone();
-        if (selectedZone) {
-            currentZonePlaylist = this.props.zonePlaylists.zonePlaylistsById[selectedZone.zonePlaylistId];
-        }
-        return currentZonePlaylist;
-    }
-
+    
     handleDeleteMediaState() {
 
-        const currentZonePlaylist = this.getCurrentZonePlaylist();
-        if (currentZonePlaylist) {
-            const currentZonePlaylistId = currentZonePlaylist.id;
+        const selectedZonePlaylist = this.getSelectedZonePlaylist();
+        if (selectedZonePlaylist) {
+            const selectedZonePlaylistId = selectedZonePlaylist.id;
             const mediaState = this.props.mediaStates.mediaStatesById[this.props.selectedMediaStateId];
 
-            this.props.deleteMediaState(currentZonePlaylistId, mediaState);
+            this.props.deleteMediaState(selectedZonePlaylistId, mediaState);
         }
         else {
             return;
@@ -117,11 +96,11 @@ class InteractivePlaylist extends Component {
     executeDropMediaState(x, y, operation, type, stateName, path) {
 
         let mediaState = null;
-        let currentZonePlaylistId = null;
+        let selectedZonePlaylistId = null;
 
-        const currentZonePlaylist = this.getCurrentZonePlaylist();
-        if (currentZonePlaylist) {
-            currentZonePlaylistId = currentZonePlaylist.id;
+        const selectedZonePlaylist = this.getSelectedZonePlaylist();
+        if (selectedZonePlaylist) {
+            selectedZonePlaylistId = selectedZonePlaylist.id;
         }
         else {
             return;
@@ -134,7 +113,7 @@ class InteractivePlaylist extends Component {
             }
 
             this.props.newMediaState(mediaState);
-            this.props.addMediaStateToZonePlaylist(currentZonePlaylistId, mediaState.getId());
+            this.props.addMediaStateToZonePlaylist(selectedZonePlaylistId, mediaState.getId());
         }
         else {
 
@@ -422,7 +401,7 @@ class InteractivePlaylist extends Component {
 
         let mediaStateIds = [];
 
-        const zonePlaylist = this.getCurrentZonePlaylist();
+        const zonePlaylist = this.getSelectedZonePlaylist();
         if (zonePlaylist) {
             mediaStateIds = zonePlaylist.mediaStateIds;
         }
