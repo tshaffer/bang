@@ -323,8 +323,8 @@ class InteractivePlaylist extends Component {
         event.stopPropagation();
     }
 
-    onPlaylistMouseDown(event) {
-        console.log("onPlaylistMouseDown");
+    handlePlaylistMouseDown(event) {
+        console.log("handlePlaylistMouseDown");
         this.mouseState = mouseStateNone;
         event.stopPropagation();
     }
@@ -346,8 +346,8 @@ class InteractivePlaylist extends Component {
         this.processMouseMove(event);
     }
 
-    onPlaylistMouseMove(event) {
-        console.log("onPlaylistMouseMove");
+    handlePlaylistMouseMove(event) {
+        console.log("handlePlaylistMouseMove");
         this.processMouseMove(event);
     }
 
@@ -368,8 +368,8 @@ class InteractivePlaylist extends Component {
     }
 
 
-    onPlaylistMouseUp(event) {
-        console.log("onPlaylistMouseUp");
+    handlePlaylistMouseUp(event) {
+        console.log("handlePlaylistMouseUp");
         this.processMouseUp(event);
     }
 
@@ -707,9 +707,9 @@ class InteractivePlaylist extends Component {
                      onDrop={this.handleDropMediaState.bind(this)}
                      onDragOver={this.playlistDragOverHandler.bind(this)}
 
-                     onMouseDown={this.onPlaylistMouseDown.bind(this)}
-                     onMouseMove={this.onPlaylistMouseMove.bind(this)}
-                     onMouseUp={this.onPlaylistMouseUp.bind(this)}
+                     onMouseDown={this.handlePlaylistMouseDown.bind(this)}
+                     onMouseMove={this.handlePlaylistMouseMove.bind(this)}
+                     onMouseUp={this.handlePlaylistMouseUp.bind(this)}
                 >
                     {interactivePlaylistJSX.mediaStatesJSX}
                     {interactivePlaylistJSX.svgJSX}
