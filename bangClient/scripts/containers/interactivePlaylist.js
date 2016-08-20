@@ -300,6 +300,9 @@ class InteractivePlaylist extends Component {
         this.props.setSelectedMediaStateId(mediaState.getId());
     }
 
+    handleMediaStateImgMouseDown(mediaState) {
+        this.handleSelectMediaState(mediaState);
+    }
 
     handleMediaStateMouseDown(event, mediaState) {
 
@@ -337,6 +340,10 @@ class InteractivePlaylist extends Component {
         }
 
         event.stopPropagation();
+    }
+
+    handleMediaStateImgMouseMove(event) {
+        this.processMouseMove(event);
     }
 
     onPlaylistMouseMove(event) {
@@ -385,6 +392,10 @@ class InteractivePlaylist extends Component {
                 break;
         }
         this.processMouseUp(event);
+    }
+
+    handleMediaStateImgMouseUp(event) {
+        this.handleMediaStateMouseUp(event);
     }
 
     handleAddTransition(targetMediaStateId) {
@@ -497,9 +508,9 @@ class InteractivePlaylist extends Component {
                             filePath={mediaStateToRender.filePath}
                             isSelected={mediaStateToRender.isSelected}
 
-                            onMediaStateImgMouseDown={self.handleSelectMediaState.bind(self)}
-                            onMediaStateImgMouseMove={self.processMouseMove.bind(self)}
-                            onMediaStateImgMouseUp={self.handleMediaStateMouseUp.bind(self)}
+                            onMediaStateImgMouseDown={self.handleMediaStateImgMouseDown.bind(self)}
+                            onMediaStateImgMouseMove={self.handleMediaStateImgMouseMove.bind(self)}
+                            onMediaStateImgMouseUp={self.handleMediaStateImgMouseUp.bind(self)}
 
                             key={dataIndex}
                             mediaThumbs={self.props.mediaThumbs}
