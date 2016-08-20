@@ -670,16 +670,17 @@ class InteractivePlaylist extends Component {
     render() {
         
         const parsedZonePlaylist = this.parseZonePlaylist();
+        
         const mediaStatesToRender = parsedZonePlaylist.mediaStatesToRender;
         const transitionsToRender = parsedZonePlaylist.transitionsToRender;
 
         const toolbarJSX = this.generateToolbarJSX();
         const interactivePlaylistJSX = this.generateInteractivePlaylistJSX(mediaStatesToRender, transitionsToRender);
 
-        let zoomStyle = {};
+        let zoomFactor = {};
         const zoomValueStr = (this.state.zoomValue/100).toString();
-        zoomStyle.zoom = zoomValueStr;
-        zoomStyle["MozTransform"] = "scale(" + zoomValueStr + ")";
+        zoomFactor.zoom = zoomValueStr;
+        zoomFactor["MozTransform"] = "scale(" + zoomValueStr + ")";
 
         return (
             <div
@@ -689,10 +690,12 @@ class InteractivePlaylist extends Component {
                 {toolbarJSX}
 
                 <div className="interactiveCanvasDiv"
+                     
                      id="interactiveCanvasDiv"
+                     style={zoomFactor}
+
                      onDrop={this.playlistDropHandler.bind(this)}
                      onDragOver={this.playlistDragOverHandler.bind(this)}
-                     style={zoomStyle}
 
                      onMouseDown={this.onPlaylistMouseDown.bind(this)}
                      onMouseMove={this.onPlaylistMouseMove.bind(this)}
