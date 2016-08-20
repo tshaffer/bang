@@ -232,7 +232,6 @@ class InteractivePlaylist extends Component {
         this.setState({ activeBSEventType: bsEventType });
     }
 
-
     onSelectTimeoutEvent() {
         console.log("select timeoutEvent ");
         this.handleSetActiveBSEventType("timeout");
@@ -451,117 +450,7 @@ class InteractivePlaylist extends Component {
 
         return { mediaStatesToRender, transitionsToRender };
     }
-
-    parseMediaStates() {
-
-        const self = this;
-
-        let dataIndex = -4;
-
-        let mediaStates = null;
-        let transitionsToRender = [];
-
-        let currentMediaStates = [];
-        let currentMediaStateIds = [];
-
-        const currentZonePlaylist = this.getCurrentZonePlaylist();
-        if (currentZonePlaylist) {
-            currentMediaStateIds = currentZonePlaylist.mediaStateIds;
-        }
-
-        if (currentMediaStateIds.length > 0) {
-
-            currentMediaStateIds.forEach( currentMediaStateId => {
-                currentMediaStates.push(this.props.mediaStates.mediaStatesById[currentMediaStateId]);
-            });
-
-            mediaStates = currentMediaStates.map(function (mediaState, index) {
-
-                const id = mediaState.getId();
-                const fileName = mediaState.getFileName();
-                let filePath = "";
-
-                let className = "";
-                if (self.props.selectedMediaStateId && self.props.selectedMediaStateId === id) {
-                    className = "selectedImage ";
-                }
-                else {
-                    className = "unSelectedImage ";
-                }
-
-                mediaState.transitionOutIds.forEach(transitionOutId => {
-
-                    const transition = self.props.transitions.transitionsById[transitionOutId];
-                    const targetMediaStateId = transition.targetMediaStateId;
-                    const targetMediaState = self.props.mediaStates.mediaStatesById[targetMediaStateId];
-
-                    transitionsToRender.push(self.getTransitionToRender(transition, mediaState, targetMediaState));
-                });
-
-                const mediaPlaylistItem = mediaState.getMediaPlaylistItem();
-                if (mediaPlaylistItem instanceof ImagePlaylistItem) {
-                    filePath = mediaPlaylistItem.getFilePath();
-                    if (self.props.mediaThumbs.hasOwnProperty(filePath)) {
-
-                        className += "mediaStateBtn";
-
-                        let mediaStateBtnStyle = {};
-
-                        const leftOffset = mediaState.x.toString();
-                        const topOffset = mediaState.y.toString();
-
-                        mediaStateBtnStyle.left = leftOffset+"px";
-                        mediaStateBtnStyle.top = topOffset + "px";
-
-                        const id = mediaPlaylistItem.getId();
-
-                        dataIndex+= 4;
-
-                        return (
-                            <MediaStateThumb
-
-                                mediaState={mediaState}
-                                className={className}
-
-                                onSelectMediaState={self.onSelectMediaState.bind(self)}
-                                onMediaStateMouseUp={self.onMediaStateMouseUp.bind(self)}
-
-
-                                key={dataIndex}
-                                mediaThumbs={self.props.mediaThumbs}
-                                dataIndex={dataIndex}
-                                playlistDragStartHandler={self.playlistDragStartHandler.bind(self)}
-                                playlistDragOverHandler={self.playlistDragOverHandler.bind(self)}
-
-
-                                onMouseDown={event => {
-                                    self.handleMediaStateMouseDown(event, mediaState)
-                                }}
-                                onMouseMove={self.onMediaStateMouseMove.bind(self)}
-                                onMouseUp={self.onMediaStateMouseUp.bind(self)}
-
-
-                                onMediaStateMouseDown={event => {
-                                    self.handleMediaStateMouseDown(event, mediaState);
-                                }}
-                                onMoveSelectedMediaState={self.processMouseMove.bind(self)}
-                                processMouseUp={self.processMouseUp.bind(self)}
-
-                            />
-                        );
-                    }
-                }
-
-            });
-        }
-        else {
-            mediaStates = <div></div>
-        }
-
-        return { mediaStates, transitionsToRender };
-    }
-
-
+    
     generateMediaStatesJSX(mediaStatesToRender) {
 
         var self = this;
@@ -779,9 +668,7 @@ class InteractivePlaylist extends Component {
     }
 
     render() {
-
-        var self = this;
-
+        
         const parsedZonePlaylist = this.parseZonePlaylist();
         const mediaStatesToRender = parsedZonePlaylist.mediaStatesToRender;
         const transitionsToRender = parsedZonePlaylist.transitionsToRender;
@@ -803,13 +690,13 @@ class InteractivePlaylist extends Component {
 
                 <div className="interactiveCanvasDiv"
                      id="interactiveCanvasDiv"
-                     onDrop={self.playlistDropHandler.bind(self)}
-                     onDragOver={self.playlistDragOverHandler.bind(self)}
+                     onDrop={this.playlistDropHandler.bind(this)}
+                     onDragOver={this.playlistDragOverHandler.bind(this)}
                      style={zoomStyle}
 
-                     onMouseDown={self.onPlaylistMouseDown.bind(self)}
-                     onMouseMove={self.onPlaylistMouseMove.bind(self)}
-                     onMouseUp={self.onPlaylistMouseUp.bind(self)}
+                     onMouseDown={this.onPlaylistMouseDown.bind(this)}
+                     onMouseMove={this.onPlaylistMouseMove.bind(this)}
+                     onMouseUp={this.onPlaylistMouseUp.bind(this)}
                 >
                     {interactivePlaylistJSX.mediaStatesJSX}
                     {interactivePlaylistJSX.svgJSX}
@@ -817,154 +704,7 @@ class InteractivePlaylist extends Component {
                 </div>
             </div>
         );
-
-
-
-
-        // let self = this;
-        //
-        // let openCloseLabel = "=>";
-        // if (!this.props.propertySheetOpen) {
-        //     openCloseLabel = "<=";
-        // }
-        //
-        // let svgData = '';
-        // let svgLines = '';
-        // let svgLineData = [];
-        //
-        // let bsEventCoordinates = [];
-        // let transitionCoordinates = [];
-        //
-        // if (this.state.x1 >= 0 && this.state.y1 >= 0 && this.state.x2 >= 0 && this.state.y2 >= 0) {
-        //
-        //     switch (this.mouseState) {
-        //         case mouseStateNone:
-        //             break;
-        //         case mouseStateMoveMediaState:
-        //             break;
-        //         case mouseStateCreateTransition:
-        //             const selectedMediaState = self.props.mediaStates.mediaStatesById[self.props.selectedMediaStateId];
-        //
-        //             const xStart = selectedMediaState.x + this.mediaStateBtnWidth/2;
-        //             const yStart = selectedMediaState.y + this.mediaStateBtnHeight;
-        //
-        //             const xEnd = this.state.x2;
-        //             const yEnd = this.state.y2;
-        //
-        //             svgLineData.push({x1: xStart, y1: yStart, x2: xEnd, y2: yEnd});
-        //             break;
-        //     }
-        // }
-        //
-        // // create the JSX to describe the list of media states
-        // // let parsedData = this.parseMediaStates();
-        // // const mediaStates = parsedData.mediaStates;
-        // // const transitionsToRender = parsedData.transitionsToRender;
-        //
-        // const parsedZonePlaylist = this.parseZonePlaylist();
-        // const mediaStatesToRender = parsedZonePlaylist.mediaStatesToRender;
-        // const transitionsToRender = parsedZonePlaylist.transitionsToRender;
-        //
-        // // retrieve transition lines
-        // transitionsToRender.forEach(transitionToRender => {
-        //     const transitionCoordinate = transitionToRender.coordinates;
-        //     svgLineData.push({x1: transitionCoordinate.xStart, y1: transitionCoordinate.yStart,
-        //         x2: transitionCoordinate.xEnd, y2: transitionCoordinate.yEnd});
-        // });
-        //
-        // // render all line segments - transitions and rubber band
-        // if (svgLineData.length > 0) {
-        //
-        //     svgLines = svgLineData.map(function (svgLine, index) {
-        //
-        //         const x1 = svgLine.x1;
-        //         const y1 = svgLine.y1;
-        //         const x2 = svgLine.x2;
-        //         const y2 = svgLine.y2;
-        //
-        //         return (
-        //             <line x1={x1} y1={y1} x2={x2} y2={y2} key={index + 1000} stroke="black" fill="transparent" stroke-width="10"/>
-        //         );
-        //     });
-        //
-        //     // const svgWidth = 900;
-        //     // const svgHeight = 800;
-        //     // HACKEY
-        //     const pt = this.getCorrectedPoint(
-        //         { x: 900, y: 800 }
-        //     );
-        //
-        //     svgData =
-        //         <svg width={pt.x} height={pt.y}> +
-        //             {svgLines} +
-        //         </svg>;
-        // }
-        //
-        // // render transition event images
-        // let bsEventIconStyle = {};
-        // bsEventIconStyle.position = "absolute";
-        //
-        // let bsEventIcons = transitionsToRender.map( (transitionToRender, index) => {
-        //
-        //     return (
-        //         <TransitionEventIcon
-        //             selectedBSEventId={this.props.selectedBSEventId}
-        //             transitionToRender={transitionToRender}
-        //             onMouseDown={this.onBSEventMouseDown.bind(this)}
-        //             key={500 + index}
-        //         />
-        //     )
-        // });
-        //
-        // let zoomStyle = {};
-        // const zoomValueStr = (this.state.zoomValue/100).toString();
-        // zoomStyle.zoom = zoomValueStr;
-        // zoomStyle["MozTransform"] = "scale(" + zoomValueStr + ")";
-        //
-        // let timeoutClassName = "unSelectedBSEvent";
-        // let mediaEndClassName = "unSelectedBSEvent";
-        // switch (this.state.activeBSEventType) {
-        //     case "timeout":
-        //         timeoutClassName = "selectedBSEvent";
-        //         break;
-        //     case "mediaEnd":
-        //         mediaEndClassName = "selectedBSEvent";
-        //         break;
-        // }
-        //
-        // return (
-        //     <div
-        //         className="playlistDiv"
-        //         id="playlistDiv"
-        //     >
-        //         <div className="playlistHeaderDiv">
-        //             <div>
-        //                 <img src="images/36x36_timeout.png" className={timeoutClassName} onClick={this.onSelectTimeoutEvent.bind(this)}></img>
-        //                 <img src="images/36x36_videoend.png" className={mediaEndClassName} onClick={this.onSelectMediaEndEvent.bind(this)}></img>
-        //             </div>
-        //             <button id="openCloseIcon" className="plainButton" type="button" onClick={this.props.onToggleOpenClosePropertySheet.bind(this)}>{openCloseLabel}</button>
-        //             <input step="1" id="zoomSlider" type="range" min="0" max="100" defaultValue="100"></input>
-        //         </div>
-        //
-        //         <div className="interactiveCanvasDiv"
-        //              id="interactiveCanvasDiv"
-        //              onDrop={self.playlistDropHandler.bind(self)}
-        //              onDragOver={self.playlistDragOverHandler.bind(self)}
-        //              style={zoomStyle}
-        //
-        //              onMouseDown={self.onPlaylistMouseDown.bind(self)}
-        //              onMouseMove={self.onPlaylistMouseMove.bind(self)}
-        //              onMouseUp={self.onPlaylistMouseUp.bind(self)}
-        //         >
-        //             {mediaStates}
-        //             {svgData}
-        //             {bsEventIcons}
-        //         </div>
-        //     </div>
-        // );
-
     }
-
 }
 
 function mapStateToProps(state) {
