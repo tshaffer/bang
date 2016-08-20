@@ -9,15 +9,10 @@ class MediaStateThumb extends Component {
 
         const self = this;
 
-        const mediaState = this.props.mediaState;
-        const mediaPlaylistItem = this.props.mediaState.getMediaPlaylistItem();
+        const leftOffset = this.props.x.toString();
+        const topOffset = this.props.y.toString();
 
-        const id = mediaPlaylistItem.getId();
-
-        const leftOffset = mediaState.x.toString();
-        const topOffset = mediaState.y.toString();
-
-        const dataIndex = self.props.dataIndex;
+        const dataIndex = this.props.dataIndex;
 
         // Joel says:
         //      if you don't need to use a variable, don't pull it out of props
@@ -39,7 +34,7 @@ class MediaStateThumb extends Component {
 
             <btn
 
-                id={id}
+                id={self.props.id}
                 className={self.props.className}
 
                 {...this.props}
@@ -50,7 +45,11 @@ class MediaStateThumb extends Component {
                 key={dataIndex}>
 
                 <MediaImageContainer
-                    mediaState={mediaState}
+
+                    mediaState={this.props.mediaState}
+                    id={this.props.id}
+                    fileName={this.props.fileName}
+                    filePath={this.props.filePath}
                     mediaThumbs={self.props.mediaThumbs}
                     dataIndex={dataIndex}
                     key={dataIndex+2}
@@ -63,8 +62,8 @@ class MediaStateThumb extends Component {
                     playlistDragOverHandler={self.props.playlistDragOverHandler} />
                 
                 <MediaImageLabel
-                    fileName={mediaPlaylistItem.getFileName()}
-                    id={mediaPlaylistItem.getId()}
+                    id={this.props.id}
+                    fileName={this.props.fileName}
                     key={(dataIndex+3)} />
 
             </btn>

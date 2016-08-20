@@ -37,12 +37,16 @@ class MediaImageContainer extends Component {
 
         var self = this;
 
-        const mediaPlaylistItem = this.props.mediaState.getMediaPlaylistItem();
+        // const mediaPlaylistItem = this.props.mediaState.getMediaPlaylistItem();
+        //
+        // const id = mediaPlaylistItem.getId();
+        // const filePath = mediaPlaylistItem.getFilePath();
+        // const fileName = mediaPlaylistItem.getFileName();
 
-        const id = mediaPlaylistItem.getId();
-        const filePath = mediaPlaylistItem.getFilePath();
-        const fileName = mediaPlaylistItem.getFileName();
-
+        const id = this.props.id;
+        const fileName = this.props.fileName;
+        const filePath = this.props.filePath;
+        
         const mediaItem = self.props.mediaThumbs[filePath];
         const thumb = getThumb(mediaItem);
 

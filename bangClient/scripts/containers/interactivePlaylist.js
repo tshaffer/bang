@@ -423,13 +423,18 @@ class InteractivePlaylist extends Component {
             const mediaState = self.props.mediaStates.mediaStatesById[mediaStateId];
 
             let mediaStateToRender = {};
+
+            // x, y, id, fileName, filePath
+
             mediaStateToRender.mediaPlaylistItem = mediaState.getMediaPlaylistItem();
+            // mediaStateToRender.mediaState = mediaState;
 
             mediaStateToRender.mediaState = mediaState;
             mediaStateToRender.x = mediaState.x;
             mediaStateToRender.y = mediaState.y;
             mediaStateToRender.id = mediaState.getId();
             mediaStateToRender.fileName = mediaState.getFileName();
+            mediaStateToRender.filePath = mediaState.getMediaPlaylistItem().getFilePath();
             if (self.props.selectedMediaStateId && self.props.selectedMediaStateId === mediaStateId) {
                 mediaStateToRender.isSelected = true;
             }
@@ -474,23 +479,20 @@ class InteractivePlaylist extends Component {
 
                     className += "mediaStateBtn";
 
-                    let mediaStateBtnStyle = {};
-
-                    const leftOffset = mediaStateToRender.x.toString();
-                    const topOffset = mediaStateToRender.y.toString();
-
-                    mediaStateBtnStyle.left = leftOffset+"px";
-                    mediaStateBtnStyle.top = topOffset + "px";
-
-                    const id = mediaPlaylistItem.getId();
-
                     dataIndex+= 4;
 
                     return (
                         <MediaStateThumb
 
-                            mediaState={mediaStateToRender.mediaState}
                             className={className}
+
+                            mediaState={mediaStateToRender.mediaState}
+                            x={mediaStateToRender.x}
+                            y={mediaStateToRender.y}
+                            id={mediaStateToRender.id}
+                            fileName={mediaStateToRender.fileName}
+                            filePath={mediaStateToRender.filePath}
+                            isSelected={mediaStateToRender.isSelected}
 
                             onSelectMediaState={self.onSelectMediaState.bind(self)}
                             onMediaStateMouseUp={self.onMediaStateMouseUp.bind(self)}
