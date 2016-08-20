@@ -188,7 +188,7 @@ class InteractivePlaylist extends Component {
         const x = pt.x;
         const y = pt.y;
 
-        // specify playlist item to drop
+        // specify playlist item to drop and perform drop
         let mediaState = null;
         if (type === "image") {
             // offset image to center it around the drop point
@@ -198,7 +198,7 @@ class InteractivePlaylist extends Component {
         }
 
         if (mediaState) {
-            this.onSelectMediaState(mediaState);
+            this.handleSelectMediaState(mediaState);
         }
     }
 
@@ -290,7 +290,7 @@ class InteractivePlaylist extends Component {
     }
 
 
-    onSelectMediaState(mediaState) {
+    handleSelectMediaState(mediaState) {
 
         console.log("interactivePlaylistContainer.js::onSelectMediaState");
         console.log("mediaState.FileName is: ", mediaState.getFileName());
@@ -303,7 +303,7 @@ class InteractivePlaylist extends Component {
 
     handleMediaStateMouseDown(event, mediaState) {
 
-        this.onSelectMediaState(mediaState);
+        this.handleSelectMediaState(mediaState);
 
         console.log("handleMediaStateMouseDown");
 
@@ -344,8 +344,8 @@ class InteractivePlaylist extends Component {
         this.processMouseMove(event);
     }
 
-    onMediaStateMouseMove(event) {
-        console.log("onMediaStateMouseMove");
+    handleMediaStateMouseMove(event) {
+        console.log("handleMediaStateMouseMove");
         this.processMouseMove(event);
     }
 
@@ -367,8 +367,8 @@ class InteractivePlaylist extends Component {
     }
 
 
-    onMediaStateMouseUp(event) {
-        console.log("onMediaStateMouseUp");
+    handleMediaStateMouseUp(event) {
+        console.log("handleMediaStateMouseUp");
         switch (this.mouseState) {
             case mouseStateNone:
                 break;
@@ -481,6 +481,9 @@ class InteractivePlaylist extends Component {
 
                     dataIndex+= 4;
 
+// onMediaStateImgMouse...: events on the image within the media state thumb
+// onMouse...: events on parts of the media state thumb outside of the thumb
+
                     return (
                         <MediaStateThumb
 
@@ -494,8 +497,9 @@ class InteractivePlaylist extends Component {
                             filePath={mediaStateToRender.filePath}
                             isSelected={mediaStateToRender.isSelected}
 
-                            onSelectMediaState={self.onSelectMediaState.bind(self)}
-                            onMediaStateMouseUp={self.onMediaStateMouseUp.bind(self)}
+                            onMediaStateImgMouseDown={self.handleSelectMediaState.bind(self)}
+                            onMediaStateImgMouseMove={self.processMouseMove.bind(self)}
+                            onMediaStateImgMouseUp={self.handleMediaStateMouseUp.bind(self)}
 
                             key={dataIndex}
                             mediaThumbs={self.props.mediaThumbs}
@@ -503,17 +507,10 @@ class InteractivePlaylist extends Component {
                             playlistDragStartHandler={self.playlistDragStartHandler.bind(self)}
                             playlistDragOverHandler={self.playlistDragOverHandler.bind(self)}
 
-                            onMouseDown={event => {
-                                    self.handleMediaStateMouseDown(event, mediaStateToRender.mediaState)
-                                }}
-                            onMouseMove={self.onMediaStateMouseMove.bind(self)}
-                            onMouseUp={self.onMediaStateMouseUp.bind(self)}
+                            onMouseDown={event => { self.handleMediaStateMouseDown(event, mediaStateToRender.mediaState)}}
+                            onMouseMove={self.handleMediaStateMouseMove.bind(self)}
+                            onMouseUp={self.handleMediaStateMouseUp.bind(self)}
 
-                            onMediaStateMouseDown={event => {
-                                    self.handleMediaStateMouseDown(event, mediaStateToRender.mediaState);
-                                }}
-                            onMoveSelectedMediaState={self.processMouseMove.bind(self)}
-                            processMouseUp={self.processMouseUp.bind(self)}
                         />
                     );
                 }

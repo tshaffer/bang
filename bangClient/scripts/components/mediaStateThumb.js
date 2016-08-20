@@ -39,8 +39,6 @@ class MediaStateThumb extends Component {
 
                 {...this.props}
 
-                onMouseDown={this.props.onMediaStateMouseDown}
-                
                 style={ { left: leftOffset+"px", top: topOffset+"px" } }
                 key={dataIndex}>
 
@@ -54,9 +52,9 @@ class MediaStateThumb extends Component {
                     dataIndex={dataIndex}
                     key={dataIndex+2}
 
-                    onSelectMediaState={this.props.onSelectMediaState}
-                    onMoveSelectedMediaState={this.props.onMoveSelectedMediaState}
-                    onMouseUp={this.props.onMediaStateMouseUp}
+                    onMediaStateImgMouseDown={this.props.onMediaStateImgMouseDown}
+                    onMediaStateImgMouseMove={this.props.onMediaStateImgMouseMove}
+                    onMediaStateImgMouseUp={this.props.onMediaStateImgMouseUp}
 
                     playlistDragStartHandler={self.props.playlistDragStartHandler}
                     playlistDragOverHandler={self.props.playlistDragOverHandler} />

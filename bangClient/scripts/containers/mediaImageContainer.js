@@ -8,19 +8,19 @@ class MediaImageContainer extends Component {
 
     handleMediaStateImgMouseDown(event) {
         console.log("handleMediaStateImgMouseDown");
-        this.props.onSelectMediaState(this.props.mediaState);
-
+        // this.props.onSelectMediaState(this.props.mediaState);
+        this.props.onMediaStateImgMouseDown(this.props.mediaState);
         event.stopPropagation();
     }
 
     handleMediaStateImgMouseMove(event) {
         console.log("handleMediaStateImgMouseMove");
-        this.props.onMoveSelectedMediaState(event);
+        this.props.onMediaStateImgMouseMove(event);
     }
 
     handleMediaStateImgMouseUp(event) {
         console.log("handleMediaStateImgMouseUp");
-        this.props.onMouseUp(event);
+        this.props.onMediaStateImgMouseUp(event);
     }
 
     handleMediaImageDragStartHandler(event) {
