@@ -23,6 +23,17 @@ class MediaImage extends Component {
     }
 }
 
+MediaImage.propTypes = {
+    id: React.PropTypes.string.isRequired,
+    src: React.PropTypes.string.isRequired,
+    'data-index': React.PropTypes.number.isRequired,
+    onMouseDown: React.PropTypes.func.isRequired,
+    fileName: React.PropTypes.string.isRequired,
+    filePath: React.PropTypes.string.isRequired
+
+};
+
+
 export default MediaImage;
 
 // export () => (

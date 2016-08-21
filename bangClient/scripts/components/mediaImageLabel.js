@@ -15,4 +15,9 @@ class MediaImageLabel extends Component {
     }
 }
 
+MediaImageLabel.propTypes = {
+    fileName: React.PropTypes.string.isRequired,
+    id: React.PropTypes.string.isRequired
+};
+
 export default MediaImageLabel;
