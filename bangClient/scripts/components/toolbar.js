@@ -50,12 +50,12 @@ class Toolbar extends Component {
     }
 }
 
-// Toolbar.propTypes = {
-//     activeBSEventType: React.PropTypes.string.required,
-//     propertySheetOpen: React.PropTypes.bool.required,
-//     onSelectTimeoutEvent: React.PropTypes.func.required,
-//     onSelectMediaEndEvent: React.PropTypes.func.required,
-//     onToggleOpenClosePropertySheet: React.PropTypes.func.required
-// };
+Toolbar.propTypes = {
+    activeBSEventType: React.PropTypes.string.isRequired,
+    propertySheetOpen: React.PropTypes.bool.isRequired,
+    onSelectTimeoutEvent: React.PropTypes.func.isRequired,
+    onSelectMediaEndEvent: React.PropTypes.func.isRequired,
+    onToggleOpenClosePropertySheet: React.PropTypes.func.isRequired
+};
 
 export default Toolbar;

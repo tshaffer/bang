@@ -622,7 +622,6 @@ class InteractivePlaylist extends Component {
         const mediaStatesToRender = parsedZonePlaylist.mediaStatesToRender;
         const transitionsToRender = parsedZonePlaylist.transitionsToRender;
 
-        // const toolbarJSX = this.generateToolbarJSX();
         const interactivePlaylistJSX = this.generateInteractivePlaylistJSX(mediaStatesToRender, transitionsToRender);
 
         let zoomFactor = {};
@@ -639,7 +638,7 @@ class InteractivePlaylist extends Component {
 
                 <Toolbar
                     activeBSEventType = {this.state.activeBSEventType}
-                    propertySheetOpen = {this.state.propertySheetOpen}
+                    propertySheetOpen = {this.props.propertySheetOpen}
                     onSelectTimeoutEvent = {this.handleSelectTimeoutEvent.bind(this)}
                     onSelectMediaEndEvent = {this.handleSelectMediaEndEvent.bind(this)}
                     onToggleOpenClosePropertySheet = {this.props.onToggleOpenClosePropertySheet.bind(this)}
