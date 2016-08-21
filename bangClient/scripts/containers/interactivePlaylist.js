@@ -232,7 +232,7 @@ class InteractivePlaylist extends Component {
     }
 
     handleBSEventMouseDown(bsEvent) {
-        this.props.setSelectedMediaStateId( null );
+        this.props.onSetSelectedMediaStateId( null );
         this.setState({ selectedBSEventId: bsEvent.getId() });
     }
 
@@ -274,7 +274,7 @@ class InteractivePlaylist extends Component {
         console.log("mediaState.Id is: ", mediaState.getId());
 
         this.setState({ selectedBSEventId: null });
-        this.props.setSelectedMediaStateId(mediaState.getId());
+        this.props.onSetSelectedMediaStateId(mediaState.getId());
     }
 
     handleMediaStateImgMouseDown(mediaState) {

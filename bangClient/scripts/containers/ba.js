@@ -79,8 +79,7 @@ class BA extends Component {
     }
 
 
-    // temporary, until I put this in redux or figure out the right way to do this
-    setSelectedMediaStateId(selectedMediaStateId) {
+    handleSetSelectedMediaStateId(selectedMediaStateId) {
         this.setState( { selectedMediaStateId: selectedMediaStateId })
     }
 
@@ -175,8 +174,8 @@ class BA extends Component {
                     <InteractivePlaylist
                         selectedMediaStateId={this.state.selectedMediaStateId}
                         selectedZone={this.state.selectedZone}
-                        
-                        setSelectedMediaStateId={this.setSelectedMediaStateId.bind(this)}
+
+                        onSetSelectedMediaStateId={this.handleSetSelectedMediaStateId.bind(this)}
 
                         onToggleOpenClosePropertySheet={this.handleToggleOpenClosePropertySheet.bind(this)}
                         propertySheetOpen = {this.state.propertySheetOpen}
