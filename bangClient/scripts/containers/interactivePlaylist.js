@@ -656,6 +656,7 @@ class InteractivePlaylist extends Component {
                      onMouseMove={this.handlePlaylistMouseMove.bind(this)}
                      onMouseUp={this.handlePlaylistMouseUp.bind(this)}
                 >
+                    <span>reselectLabel: {this.props.reselectLabel}</span>
                     {interactivePlaylistJSX.mediaStatesJSX}
                     {interactivePlaylistJSX.svgJSX}
                     {interactivePlaylistJSX.bsEventsJSX}
@@ -673,9 +674,31 @@ function mapStateToProps(state) {
         sign: state.sign,
         zones: state.zones,
         zonePlaylists: state.zonePlaylists,
-
+        reselectLabel: getReselectLabel(state.mediaStates, state.transitions)
     };
 }
+
+function getReselectLabel(mediaStates, transitions) {
+    let reselectLabel = "";
+    if (mediaStates) {
+        var numMediaStates = Object.keys(mediaStates.mediaStatesById).length;
+        reselectLabel += "mediaStates length=" + numMediaStates.toString();
+    }
+    else {
+        reselectLabel += "no mediaStates";
+    }
+    reselectLabel += " ";
+    if (transitions) {
+        var numTransitions = Object.keys(transitions.transitionsById).length;
+        reselectLabel += "transitions length=" + numTransitions.toString();
+    }
+    else {
+        reselectLabel += "no transitions";
+    }
+
+    return reselectLabel;
+}
+
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({ newMediaState, addMediaStateToZonePlaylist, updateMediaState, deleteMediaState, addTransition },
