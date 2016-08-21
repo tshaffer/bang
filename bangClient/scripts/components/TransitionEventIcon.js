@@ -31,10 +31,10 @@ class TransitionEventIcon extends Component {
         
         let srcPath = "";
         if (bsEventName == "timeout") {
-            srcPath="images/36x36_timeout.png"
+            srcPath="images/36x36_timeout.png";
         }
         else if (bsEventName == "mediaEnd") {
-            srcPath="images/36x36_videoend.png"
+            srcPath="images/36x36_videoend.png";
         }
         
         let className = "";

@@ -8,17 +8,27 @@ module.exports = {
     devtool: "source-map",
     target: 'electron',
     module: {
-        loaders: [{
-            test: /\.jsx?$/,
-            loader: 'babel-loader',
-            exclude: /node_modules/,
-            query: {
-                presets: ['react', 'es2015']
-            }
-        },
+        preLoaders: [
             {
-        test: /\.json?$/,
-        loader: 'json'
-        }]
+                test: /\.jsx$|\.js$/,
+                loader: 'eslint-loader',
+                include: __dirname + '/scripts',
+                exclude: /build\.js$/
+            }
+        ],
+        loaders: [
+            {
+                test: /\.jsx?$/,
+                loader: 'babel-loader',
+                exclude: /node_modules/,
+                query: {
+                    presets: ['react', 'es2015']
+                }
+            },
+            {
+                test: /\.json?$/,
+                loader: 'json'
+            }
+        ]
     }
 }

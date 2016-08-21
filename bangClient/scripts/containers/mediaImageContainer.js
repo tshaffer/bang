@@ -1,8 +1,6 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 
-import { getThumb } from '../platform/actions';
-
-import MediaImage from '../components/mediaImage';
+import { getThumb } from "../platform/actions";
 
 class MediaImageContainer extends Component {
 

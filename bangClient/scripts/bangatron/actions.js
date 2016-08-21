@@ -28,7 +28,7 @@ export function executeLoadAppData() {
         openDB().then(function() {
             fetchStartupData(dispatch);
         });
-    }
+    };
 }
 
 function fetchStartupData(dispatch) {
@@ -146,7 +146,7 @@ export function executeSelectMediaFolder(mediaFolder, mediaThumbs) {
 
         // update store with selected media folder
         dispatch(setMediaFolder(mediaFolder));
-    }
+    };
 }
 
 
@@ -285,7 +285,7 @@ export function executeFetchSign(filePath) {
                     const imagePlaylistItem = new ImagePlaylistItem(jsonPlaylistItem.fileName,jsonPlaylistItem.filePath,
                         jsonPlaylistItem.timeOnScreen, jsonPlaylistItem.transition, jsonPlaylistItem.transitionDuration, jsonPlaylistItem.videoPlayerRequired);
                     badmZonePlaylist.playlistItems.push(imagePlaylistItem);
-                })
+                });
             });
 
             // update redux with fetched sign
@@ -315,8 +315,8 @@ export function executeFetchSign(filePath) {
                     dispatch(addPlaylistItem(zonePlaylistId, badmPlaylistItem.id));
                 });
             } );
-        })
-    }
+        });
+    };
 }
 
 export function getFileName(filePath) {
@@ -364,8 +364,8 @@ export function executeSaveSign(filePath) {
 
         fs.writeFile(filePath, presentation, () => {
             console.log("bpf writeFile successful");
-        })
-    }
+        });
+    };
 }
 
 
