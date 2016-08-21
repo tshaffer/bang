@@ -14,6 +14,7 @@ const mouseStateNone = "none";
 const mouseStateMoveMediaState = "moveMediaState";
 const mouseStateCreateTransition = "createTransition";
 
+import Toolbar from '../components/toolbar';
 import MediaStateThumb from '../components/mediaStateThumb';
 
 import { newMediaState, addMediaStateToZonePlaylist, updateMediaState, deleteMediaState, addTransition }
@@ -52,16 +53,6 @@ class InteractivePlaylist extends Component {
                 self.handleDeleteMediaState();
             }
         });
-
-        const zoomValue = document.getElementById("zoomSlider");
-        if (zoomValue != undefined) {
-            zoomValue.addEventListener("input", function () {
-                if (self.zoomValue != zoomValue.value) {
-                    console.log("setState on zoomValue from interactivePlaylist");
-                    self.handleZoomValueChanged(zoomValue.value);
-                }
-            }, false);
-        }
     }
 
     getSelectedZonePlaylist() {
@@ -619,36 +610,6 @@ class InteractivePlaylist extends Component {
         return { mediaStatesJSX, bsEventsJSX, svgJSX };
     }
 
-    generateToolbarJSX() {
-
-        let timeoutClassName = "unSelectedBSEvent";
-        let mediaEndClassName = "unSelectedBSEvent";
-        switch (this.state.activeBSEventType) {
-            case "timeout":
-                timeoutClassName = "selectedBSEvent";
-                break;
-            case "mediaEnd":
-                mediaEndClassName = "selectedBSEvent";
-                break;
-        }
-
-        let openCloseLabel = "=>";
-        if (!this.props.propertySheetOpen) {
-            openCloseLabel = "<=";
-        }
-
-        return (
-            <div className="playlistHeaderDiv">
-                <div>
-                    <img src="images/36x36_timeout.png" className={timeoutClassName} onClick={this.handleSelectTimeoutEvent.bind(this)}></img>
-                    <img src="images/36x36_videoend.png" className={mediaEndClassName} onClick={this.handleSelectMediaEndEvent.bind(this)}></img>
-                </div>
-                <button id="openCloseIcon" className="plainButton" type="button" onClick={this.props.onToggleOpenClosePropertySheet.bind(this)}>{openCloseLabel}</button>
-                <input step="1" id="zoomSlider" type="range" min="0" max="100" defaultValue="100"></input>
-            </div>
-        );
-    }
-
     generateInteractivePlaylistJSX(mediaStatesToRender, transitionsToRender) {
         const zonePlaylistJSX = this.generateZonePlaylistJSX(mediaStatesToRender, transitionsToRender);
         return zonePlaylistJSX;
@@ -661,7 +622,7 @@ class InteractivePlaylist extends Component {
         const mediaStatesToRender = parsedZonePlaylist.mediaStatesToRender;
         const transitionsToRender = parsedZonePlaylist.transitionsToRender;
 
-        const toolbarJSX = this.generateToolbarJSX();
+        // const toolbarJSX = this.generateToolbarJSX();
         const interactivePlaylistJSX = this.generateInteractivePlaylistJSX(mediaStatesToRender, transitionsToRender);
 
         let zoomFactor = {};
@@ -669,13 +630,21 @@ class InteractivePlaylist extends Component {
         zoomFactor.zoom = zoomValueStr;
         zoomFactor["MozTransform"] = "scale(" + zoomValueStr + ")";
 
+        // {toolbarJSX}
         return (
             <div
                 className="playlistDiv"
                 id="playlistDiv"
             >
-                {toolbarJSX}
 
+                <Toolbar
+                    activeBSEventType = {this.state.activeBSEventType}
+                    propertySheetOpen = {this.state.propertySheetOpen}
+                    onSelectTimeoutEvent = {this.handleSelectTimeoutEvent.bind(this)}
+                    onSelectMediaEndEvent = {this.handleSelectMediaEndEvent.bind(this)}
+                    onToggleOpenClosePropertySheet = {this.props.onToggleOpenClosePropertySheet.bind(this)}
+                    onZoomValueChanged = {this.handleZoomValueChanged.bind(this)}
+                />
                 <div className="interactiveCanvasDiv"
                      
                      id="interactiveCanvasDiv"
