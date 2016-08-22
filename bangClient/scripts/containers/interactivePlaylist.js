@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import { getReselectLabel } from '../selectors'
+
 import $ from 'jquery';
 
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
@@ -674,36 +676,13 @@ function mapStateToProps(state) {
         sign: state.sign,
         zones: state.zones,
         zonePlaylists: state.zonePlaylists,
-        reselectLabel: getReselectLabel(state.mediaStates, state.transitions)
+        reselectLabel: getReselectLabel(state)
     };
 }
-
-function getReselectLabel(mediaStates, transitions) {
-    let reselectLabel = "";
-    if (mediaStates) {
-        var numMediaStates = Object.keys(mediaStates.mediaStatesById).length;
-        reselectLabel += "mediaStates length=" + numMediaStates.toString();
-    }
-    else {
-        reselectLabel += "no mediaStates";
-    }
-    reselectLabel += " ";
-    if (transitions) {
-        var numTransitions = Object.keys(transitions.transitionsById).length;
-        reselectLabel += "transitions length=" + numTransitions.toString();
-    }
-    else {
-        reselectLabel += "no transitions";
-    }
-
-    return reselectLabel;
-}
-
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({ newMediaState, addMediaStateToZonePlaylist, updateMediaState, deleteMediaState, addTransition },
         dispatch);
 }
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(InteractivePlaylist);
