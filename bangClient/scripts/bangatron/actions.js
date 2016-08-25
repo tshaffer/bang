@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const exifReader = require('./nodeExif');
 const easyImage = require("easyimage");
+const ffmpeg = require('ffmpeg');
 
 var util = require("util");
 var mime = require("mime");
@@ -19,7 +20,7 @@ import HtmlSite from '../badm/htmlSite';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
-const mediaFileSuffixes = ['jpg'];
+const mediaFileSuffixes = ['jpg','mpg'];
 
 export function executeLoadAppData() {
 
@@ -174,6 +175,35 @@ function findMediaFiles(dir, mediaFiles) {
 function getThumbs(mediaFiles) {
 
     return new Promise(function(resolve, reject) {
+
+        const sourceFilePath = mediaFiles[0].filePath;
+        const ext = path.extname(sourceFilePath);
+        const sourceFileName = path.basename(sourceFilePath, ext);
+        const destinationFolder = path.dirname(sourceFilePath);
+
+        debugger;
+
+        // video file test
+        try {
+            var process = new ffmpeg(sourceFilePath);
+            process.then(function (video) {
+                debugger;
+                video.fnExtractFrameToJPG(destinationFolder, {
+                    frame_rate : 1,
+                    number : 1,
+                    file_name : sourceFileName+"_thumb",
+                }, function (error, files) {
+                    if (!error)
+                        console.log('Frames: ' + files);
+                });            }, function (err) {
+                console.log('Error: ' + err);
+            });
+        } catch (e) {
+            console.log(e.code);
+            console.log(e.msg);
+        }
+
+        return;
 
         var getExifDataPromise = exifReader.getAllExifData(mediaFiles);
         getExifDataPromise.then(function(mediaFilesWithExif) {
