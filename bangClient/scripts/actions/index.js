@@ -21,6 +21,7 @@ export function selectMediaFolder(mediaFolder, mediaThumbs) {
     return executeSelectMediaFolder(mediaFolder, mediaThumbs);
 }
 
+export const SET_MEDIA_FOLDER = 'SET_MEDIA_FOLDER';
 export function setMediaFolder(mediaFolder) {
     return {
         type: SET_MEDIA_FOLDER,
