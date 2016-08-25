@@ -4,6 +4,7 @@
 import { CLEAR_MEDIA_STATES, NEW_MEDIA_STATE, MOVE_MEDIA_STATE, UPDATE_MEDIA_STATE,
     DELETE_MEDIA_STATE,
     ADD_TRANSITION_OUT, ADD_TRANSITION_IN, DELETE_TRANSITION_OUT
+    , DELETE_TRANSITION_IN
     } from '../actions/index';
 
 import MediaState from '../badm/mediaState';
@@ -116,6 +117,23 @@ export default function(state = initialState, action) {
             emptyMediaState = new MediaState(null, -1, -1);
             newMediaState = Object.assign(emptyMediaState, mediaState);
             newMediaState.transitionOutIds = newMediaState.transitionOutIds.filter(function(ele) { return ele != transitionId; });
+
+            newMediaStatesById = Object.assign({}, state.mediaStatesById);
+            newMediaStatesById[newMediaState.getId()] = newMediaState;
+
+            newState = {
+                mediaStatesById: newMediaStatesById
+            };
+            return newState;
+
+        case DELETE_TRANSITION_IN:
+
+            mediaState = action.mediaState;
+            transitionId = action.transitionId;
+
+            emptyMediaState = new MediaState(null, -1, -1);
+            newMediaState = Object.assign(emptyMediaState, mediaState);
+            newMediaState.transitionInIds = newMediaState.transitionInIds.filter(function(ele) { return ele != transitionId; });
 
             newMediaStatesById = Object.assign({}, state.mediaStatesById);
             newMediaStatesById[newMediaState.getId()] = newMediaState;
