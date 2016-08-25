@@ -13,7 +13,7 @@ import PropertySheet from '../components/propertySheet';
 import InteractivePlaylist from './interactivePlaylist';
 
 import { createDefaultPresentation, updateSign, loadAppData,
-    newHtmlSite, addHtmlSiteToPresentation } from '../actions/index';
+    newHtmlSite, addHtmlSiteToPresentation, selectMediaFolder } from '../actions/index';
 
 class BA extends Component {
 
@@ -208,7 +208,8 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, newHtmlSite, addHtmlSiteToPresentation},
+    return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, newHtmlSite, addHtmlSiteToPresentation,
+        selectMediaFolder},
         dispatch);
 }
 
