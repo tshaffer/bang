@@ -21,6 +21,8 @@ import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
 const mediaFileSuffixes = ['jpg','mpg'];
+const imageFileSuffixes = ['jpg'];
+const videoFileSuffixes = ['mpg'];
 
 export function executeLoadAppData() {
 
@@ -172,42 +174,71 @@ function findMediaFiles(dir, mediaFiles) {
 };
 
 
+function buildMediaFileList(file, fileTypeSuffixes, files) {
+    fileTypeSuffixes.forEach(function(suffix) {
+        if (file.toLowerCase().endsWith(suffix)) {
+            var mediaFile = {};
+            mediaFile.filePath = path.join(dir, file);
+            files.push(mediaFile);
+        }
+    });
+};
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
 function getThumbs(mediaFiles) {
 
     return new Promise(function(resolve, reject) {
 
-        const sourceFilePath = mediaFiles[0].filePath;
-        const ext = path.extname(sourceFilePath);
-        const sourceFileName = path.basename(sourceFilePath, ext);
-        const destinationFolder = path.dirname(sourceFilePath);
+        let promises = [];
 
-        debugger;
+        let imageFiles = [];
+        let videoFiles = [];
 
-        // video file test
-        try {
-            var process = new ffmpeg(sourceFilePath);
-            process.then(function (video) {
-                debugger;
-                video.fnExtractFrameToJPG(destinationFolder, {
-                    frame_rate : 1,
-                    number : 1,
-                    file_name : sourceFileName+"_thumb",
-                }, function (error, files) {
-                    if (!error)
-                        console.log('Frames: ' + files);
-                });            }, function (err) {
-                console.log('Error: ' + err);
-            });
-        } catch (e) {
-            console.log(e.code);
-            console.log(e.msg);
-        }
+        // separate media files into lists of image files and video files
+        files.forEach( file => {
+            buildMediaFileList(file, imageFileSuffixes, imageFiles);
+            buildMediaFileList(file, videoFileSuffixes, videoFiles);
+        });
 
-        return;
+        videoFiles.forEach( videoFile => {
 
-        var getExifDataPromise = exifReader.getAllExifData(mediaFiles);
+            const sourceFilePath = videoFile.filePath;
+            const ext = path.extname(sourceFilePath);
+            const sourceFileName = path.basename(sourceFilePath, ext);
+            const destinationFolder = path.dirname(sourceFilePath);
+
+            try {
+                let ffmpegPromise = new ffmpeg(sourceFilePath);
+                promises.push(ffmpegPromise);
+                ffmpegPromise.then(function (video) {
+                    video.fnExtractFrameToJPG(destinationFolder, {
+                        frame_rate : 1,
+                        number : 1,
+                        file_name : sourceFileName+"_thumb",
+                    }, function (error, files) {
+                        if (!error) {
+                            console.log('Frames: ' + files);
+                            ffmpegPromise.resolve();
+                        }
+                        else {
+                            ffmpegPromise.reject();
+                        }
+                    });
+                }, function (err) {
+                    console.log('Error: ' + err);
+                });
+            } catch (e) {
+                console.log(e.code);
+                console.log(e.msg);
+            }
+
+        });
+
+        var getExifDataPromise = exifReader.getAllExifData(imageFiles);
+        promises.push(getExifDataPromise);
         getExifDataPromise.then(function(mediaFilesWithExif) {
             var buildThumbnailsPromise = buildThumbnails(mediaFilesWithExif);
+            promises.push(buildThumbnailsPromise);
             buildThumbnailsPromise.then(function(obj) {
 
                 // at this point, each entry in mediaFilesWithExif includes the following fields
@@ -221,6 +252,11 @@ function getThumbs(mediaFiles) {
                 //      thumbUrl                /thumbs/backend_menu_Notes_thumb.jpg
                 resolve(mediaFilesWithExif);
             });
+            resolve();
+        });
+
+        Promise.all(promises).then(function(values) {
+            debugger;
         });
     });
 }
