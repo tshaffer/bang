@@ -2,7 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const exifReader = require('./nodeExif');
 const easyImage = require("easyimage");
-const ffmpeg = require('ffmpeg');
+// const ffmpeg = require('ffmpeg');
+const ffmpeg = require('fluent-ffmpeg');
 
 var util = require("util");
 var mime = require("mime");
@@ -23,6 +24,32 @@ import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 const mediaFileSuffixes = ['jpg','mpg'];
 const imageFileSuffixes = ['jpg'];
 const videoFileSuffixes = ['mpg'];
+
+
+
+// ffmpeg('/path/to/video.avi')
+//     .on('filenames', function(filenames) {
+//         console.log('Will generate ' + filenames.join(', '))
+//     })
+//     .on('end', function() {
+//         console.log('Screenshots taken');
+//     })
+//     .screenshots({
+//         // Will take screens at 20%, 40%, 60% and 80% of the video
+//         count: 4,
+//         folder: '/path/to/output'
+//     });
+//
+// ffmpeg('/path/to/video.avi')
+//     .screenshots({
+//         timestamps: [30.5, '50%', '01:10.123'],
+//         filename: 'thumbnail-at-%s-seconds.png',
+//         folder: '/path/to/output',
+//         size: '320x240'
+//     });
+
+
+
 
 export function executeLoadAppData() {
 
@@ -174,18 +201,20 @@ function findMediaFiles(dir, mediaFiles) {
 };
 
 
-function buildMediaFileList(file, fileTypeSuffixes, files) {
+function buildMediaFileList(mediaFile, fileTypeSuffixes, mediaFiles) {
     fileTypeSuffixes.forEach(function(suffix) {
-        if (file.toLowerCase().endsWith(suffix)) {
-            var mediaFile = {};
-            mediaFile.filePath = path.join(dir, file);
-            files.push(mediaFile);
+        if (mediaFile.filePath.toLowerCase().endsWith(suffix)) {
+            mediaFiles.push(mediaFile);
         }
     });
 };
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
+// mediaFiles is a list of all the media files that need to be thumbified
 function getThumbs(mediaFiles) {
+
+    console.log("number of mediaFiles is: ", mediaFiles.length);
+    debugger;
 
     return new Promise(function(resolve, reject) {
 
@@ -195,10 +224,12 @@ function getThumbs(mediaFiles) {
         let videoFiles = [];
 
         // separate media files into lists of image files and video files
-        files.forEach( file => {
-            buildMediaFileList(file, imageFileSuffixes, imageFiles);
-            buildMediaFileList(file, videoFileSuffixes, videoFiles);
+        mediaFiles.forEach( mediaFile => {
+            buildMediaFileList(mediaFile, imageFileSuffixes, imageFiles);
+            buildMediaFileList(mediaFile, videoFileSuffixes, videoFiles);
         });
+
+        console.log("mediaFileLists built");
 
         videoFiles.forEach( videoFile => {
 
@@ -208,29 +239,57 @@ function getThumbs(mediaFiles) {
             const destinationFolder = path.dirname(sourceFilePath);
 
             try {
-                let ffmpegPromise = new ffmpeg(sourceFilePath);
-                promises.push(ffmpegPromise);
-                ffmpegPromise.then(function (video) {
-                    video.fnExtractFrameToJPG(destinationFolder, {
-                        frame_rate : 1,
-                        number : 1,
-                        file_name : sourceFileName+"_thumb",
-                    }, function (error, files) {
-                        if (!error) {
-                            console.log('Frames: ' + files);
-                            ffmpegPromise.resolve();
-                        }
-                        else {
-                            ffmpegPromise.reject();
-                        }
+                ffmpeg(sourceFilePath)
+                    .on('filenames', function (filenames) {
+                        console.log('Will generate ' + filenames.join(', '))
+                    })
+                    .on('end', function () {
+                        console.log('Screenshots taken');
+                        debugger;
+                    })
+                    .screenshots({
+                        // Will take screens at 20%, 40%, 60% and 80% of the video
+                        count: 4,
+                        folder: destinationFolder
                     });
-                }, function (err) {
-                    console.log('Error: ' + err);
-                });
-            } catch (e) {
-                console.log(e.code);
-                console.log(e.msg);
+
+                // ffmpeg('/path/to/video.avi')
+                //     .screenshots({
+                //         timestamps: [30.5, '50%', '01:10.123'],
+                //         filename: 'thumbnail-at-%s-seconds.png',
+                //         folder: '/path/to/output',
+                //         size: '320x240'
+                //     });
+
             }
+            catch (e) {
+                debugger;
+            };
+
+            // try {
+            //     let ffmpegPromise = new ffmpeg(sourceFilePath);
+            //     promises.push(ffmpegPromise);
+            //     ffmpegPromise.then(function (video) {
+            //         video.fnExtractFrameToJPG(destinationFolder, {
+            //             frame_rate : 1,
+            //             number : 1,
+            //             file_name : sourceFileName+"_thumb",
+            //         }, function (error, files) {
+            //             if (!error) {
+            //                 console.log('Frames: ' + files);
+            //                 ffmpegPromise.resolve();
+            //             }
+            //             else {
+            //                 ffmpegPromise.reject();
+            //             }
+            //         });
+            //     }, function (err) {
+            //         console.log('Error: ' + err);
+            //     });
+            // } catch (e) {
+            //     console.log(e.code);
+            //     console.log(e.msg);
+            // }
 
         });
 
@@ -255,9 +314,9 @@ function getThumbs(mediaFiles) {
             resolve();
         });
 
-        Promise.all(promises).then(function(values) {
-            debugger;
-        });
+        // Promise.all(promises).then(function(values) {
+        //     debugger;
+        // });
     });
 }
 

@@ -1,4 +1,3 @@
-var webpack = require("webpack")
 module.exports = {
 
     entry: './scripts/index.js',
@@ -21,8 +20,5 @@ module.exports = {
         test: /\.json?$/,
         loader: 'json'
         }]
-    },
-    plugins: [
-        new webpack.IgnorePlugin(/vertx/),
-    ],
+    }
 }
