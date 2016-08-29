@@ -238,6 +238,7 @@ function getThumbs(mediaFiles) {
             const sourceFileName = path.basename(sourceFilePath, ext);
             const destinationFolder = path.dirname(sourceFilePath);
 
+
             try {
                 ffmpeg(sourceFilePath)
                     .on('filenames', function (filenames) {
@@ -248,48 +249,15 @@ function getThumbs(mediaFiles) {
                         debugger;
                     })
                     .screenshots({
-                        // Will take screens at 20%, 40%, 60% and 80% of the video
-                        count: 4,
-                        folder: destinationFolder
+                        filename: sourceFileName + "_thumb",
+                        timestamps: [2],
+                        folder: destinationFolder,
+                        size: '?x120'
                     });
-
-                // ffmpeg('/path/to/video.avi')
-                //     .screenshots({
-                //         timestamps: [30.5, '50%', '01:10.123'],
-                //         filename: 'thumbnail-at-%s-seconds.png',
-                //         folder: '/path/to/output',
-                //         size: '320x240'
-                //     });
-
             }
             catch (e) {
                 debugger;
             };
-
-            // try {
-            //     let ffmpegPromise = new ffmpeg(sourceFilePath);
-            //     promises.push(ffmpegPromise);
-            //     ffmpegPromise.then(function (video) {
-            //         video.fnExtractFrameToJPG(destinationFolder, {
-            //             frame_rate : 1,
-            //             number : 1,
-            //             file_name : sourceFileName+"_thumb",
-            //         }, function (error, files) {
-            //             if (!error) {
-            //                 console.log('Frames: ' + files);
-            //                 ffmpegPromise.resolve();
-            //             }
-            //             else {
-            //                 ffmpegPromise.reject();
-            //             }
-            //         });
-            //     }, function (err) {
-            //         console.log('Error: ' + err);
-            //     });
-            // } catch (e) {
-            //     console.log(e.code);
-            //     console.log(e.msg);
-            // }
 
         });
 
