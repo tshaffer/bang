@@ -234,38 +234,44 @@ function getThumbs(mediaFiles) {
         videoFiles.forEach( videoFile => {
 
             const sourceFilePath = videoFile.filePath;
+            console.log("sourceFilePath", sourceFilePath);
             const ext = path.extname(sourceFilePath);
             const sourceFileName = path.basename(sourceFilePath, ext);
             const destinationFolder = path.dirname(sourceFilePath);
 
-
-            try {
-                ffmpeg(sourceFilePath)
-                    .on('filenames', function (filenames) {
-                        console.log('Will generate ' + filenames.join(', '))
-                    })
-                    .on('end', function () {
-                        console.log('Screenshots taken');
-                        debugger;
-                    })
-                    .screenshots({
-                        filename: sourceFileName + "_thumb",
-                        timestamps: [2],
-                        folder: destinationFolder,
-                        size: '?x120'
-                    });
-            }
-            catch (e) {
-                debugger;
-            };
-
+            promises.push(new Promise ( (resolve, reject) => {
+                try {
+                    ffmpeg(sourceFilePath)
+                        .on('filenames', function (filenames) {
+                            console.log('Will generate ' + filenames.join(', '))
+                        })
+                        .on('end', function () {
+                            console.log('Screenshots taken');
+                            resolve();
+                        })
+                        .screenshots({
+                            filename: sourceFileName + "_thumb",
+                            timestamps: [2],
+                            folder: destinationFolder,
+                            size: '?x120'
+                        });
+                }
+                catch (e) {
+                    debugger;
+                    reject();
+                };
+            }));
         });
 
+        console.log("imageFiles");
+        console.log(imageFiles);
+
+        // which of the following should be pushed to promises?
         var getExifDataPromise = exifReader.getAllExifData(imageFiles);
-        promises.push(getExifDataPromise);
+        // promises.push(getExifDataPromise);
         getExifDataPromise.then(function(mediaFilesWithExif) {
             var buildThumbnailsPromise = buildThumbnails(mediaFilesWithExif);
-            promises.push(buildThumbnailsPromise);
+            // promises.push(buildThumbnailsPromise);
             buildThumbnailsPromise.then(function(obj) {
 
                 // at this point, each entry in mediaFilesWithExif includes the following fields
@@ -282,9 +288,10 @@ function getThumbs(mediaFiles) {
             resolve();
         });
 
-        // Promise.all(promises).then(function(values) {
-        //     debugger;
-        // });
+        console.log("number of promises is: ", promises.length)
+        Promise.all(promises).then(function(values) {
+            debugger;
+        });
     });
 }
 
