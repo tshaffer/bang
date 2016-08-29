@@ -8,6 +8,9 @@ const ffmpeg = require('fluent-ffmpeg');
 var util = require("util");
 var mime = require("mime");
 
+// https://www.npmjs.com/package/image-size
+var sizeOf = require('image-size');
+
 import { getLastKey } from '../utilities/utils';
 
 import { setMediaThumbs, mergeMediaThumbs, setMediaFolder, openSign, setMediaLibraryFiles } from '../actions/index';
@@ -146,7 +149,7 @@ export function executeSelectMediaFolder(mediaFolder, mediaThumbs) {
                 //      imageWidth
                 //      orientation
                 //      thumbFileName           backend_menu_Notes_thumb.jpg
-                //      thumbUrl                /thumbs/backend_menu_Notes_thumb.jpg
+                //      thumbUrl                /thumbs/backend_menu_Notes_thumb.jpg - leading slash?
                 // add each entry to the thumbFiles object store in the db
 
                 let promises = [];
@@ -214,7 +217,6 @@ function buildMediaFileList(mediaFile, fileTypeSuffixes, mediaFiles) {
 function getThumbs(mediaFiles) {
 
     console.log("number of mediaFiles is: ", mediaFiles.length);
-    debugger;
 
     return new Promise(function(resolve, reject) {
 
@@ -236,21 +238,36 @@ function getThumbs(mediaFiles) {
             const sourceFilePath = videoFile.filePath;
             console.log("sourceFilePath", sourceFilePath);
             const ext = path.extname(sourceFilePath);
-            const sourceFileName = path.basename(sourceFilePath, ext);
-            const destinationFolder = path.dirname(sourceFilePath);
+            const sourceFileName = path.basename(sourceFilePath);
+            const sourceFileNameWithoutExtension = path.basename(sourceFilePath, ext);
+
+            const destinationFolder = "thumbs";
 
             promises.push(new Promise ( (resolve, reject) => {
                 try {
                     ffmpeg(sourceFilePath)
                         .on('filenames', function (filenames) {
-                            console.log('Will generate ' + filenames.join(', '))
+                            console.log('Generate thumbnail ' + filenames[0]);
                         })
                         .on('end', function () {
-                            console.log('Screenshots taken');
+                            console.log('Thumbnail generated for: ' + videoFile.filePath);
+                            videoFile.dateTaken = Date.now();
+                            videoFile.fileName = sourceFileName;
+                            videoFile.orientation = 1;
+                            videoFile.thumbFileName = sourceFileNameWithoutExtension + "_thumb.png";
+                            videoFile.thumbUrl = "thumbs/" + videoFile.thumbFileName;
+
+                            const dimensions = sizeOf(videoFile.thumbUrl);
+                            // const dimensions = sizeOf(destinationFolder + "/" + videoFile.thumbFileName);
+                            videoFile.imageHeight = dimensions.height;
+                            videoFile.imageWidth = dimensions.width;
+
+                            console.log(videoFile);
+
                             resolve();
                         })
                         .screenshots({
-                            filename: sourceFileName + "_thumb",
+                            filename: sourceFileNameWithoutExtension + "_thumb",
                             timestamps: [2],
                             folder: destinationFolder,
                             size: '?x120'
@@ -262,9 +279,6 @@ function getThumbs(mediaFiles) {
                 };
             }));
         });
-
-        console.log("imageFiles");
-        console.log(imageFiles);
 
         // which of the following should be pushed to promises?
         var getExifDataPromise = exifReader.getAllExifData(imageFiles);
@@ -282,7 +296,7 @@ function getThumbs(mediaFiles) {
                 //      imageWidth
                 //      orientation
                 //      thumbFileName           backend_menu_Notes_thumb.jpg
-                //      thumbUrl                /thumbs/backend_menu_Notes_thumb.jpg
+                //      thumbUrl                /thumbs/backend_menu_Notes_thumb.jpg (there may actually not be a leading slash)
                 resolve(mediaFilesWithExif);
             });
             resolve();
