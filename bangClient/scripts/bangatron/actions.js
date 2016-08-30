@@ -29,31 +29,6 @@ const imageFileSuffixes = ['jpg'];
 const videoFileSuffixes = ['mpg'];
 
 
-
-// ffmpeg('/path/to/video.avi')
-//     .on('filenames', function(filenames) {
-//         console.log('Will generate ' + filenames.join(', '))
-//     })
-//     .on('end', function() {
-//         console.log('Screenshots taken');
-//     })
-//     .screenshots({
-//         // Will take screens at 20%, 40%, 60% and 80% of the video
-//         count: 4,
-//         folder: '/path/to/output'
-//     });
-//
-// ffmpeg('/path/to/video.avi')
-//     .screenshots({
-//         timestamps: [30.5, '50%', '01:10.123'],
-//         filename: 'thumbnail-at-%s-seconds.png',
-//         folder: '/path/to/output',
-//         size: '320x240'
-//     });
-
-
-
-
 export function executeLoadAppData() {
 
     return function(dispatch) {
@@ -153,6 +128,7 @@ export function executeSelectMediaFolder(mediaFolder, mediaThumbs) {
                 // add each entry to the thumbFiles object store in the db
 
                 let promises = [];
+                debugger;
                 mediaFilesWithThumbInfo.forEach( (mediaFileWithThumbInfo) => {
                     const thumbData = {
                         thumbPath: mediaFileWithThumbInfo.thumbPath,
@@ -217,7 +193,7 @@ function buildMediaFileList(mediaFile, fileTypeSuffixes, mediaFiles) {
 // mediaFiles is a list of all the media files that need to be thumbified
 function getThumbs(mediaFiles) {
 
-    console.log("number of mediaFiles is: ", mediaFiles.length);
+    console.log("create thumbs for ", mediaFiles.length, " files.");
 
     return new Promise(function(resolve, reject) {
 
@@ -232,46 +208,56 @@ function getThumbs(mediaFiles) {
             buildMediaFileList(mediaFile, videoFileSuffixes, videoFiles);
         });
 
-        console.log("mediaFileLists built");
-
         let allMediaFilesWithExif = [];
 
         videoFiles.forEach( videoFile => {
             promises.push(buildThumbFromVideoFile(videoFile));
         });
 
-        // which of the following should be pushed to promises?
-        // var getExifDataPromise = exifReader.getAllExifData(imageFiles);
-        // // promises.push(getExifDataPromise);
-        // getExifDataPromise.then(function(mediaFilesWithExif) {
-        //     var buildThumbnailsPromise = buildThumbnails(mediaFilesWithExif);
-        //     // promises.push(buildThumbnailsPromise);
-        //     buildThumbnailsPromise.then(function(obj) {
-        //
-        //         // at this point, each entry in mediaFilesWithExif includes the following fields
-        //         //      dateTaken
-        //         //      fileName                backend_menu_Notes.jpg
-        //         //      filePath                /Users/tedshaffer/Pictures/BangPhotos2/backend_menu_Notes.jpg
-        //         //      imageHeight
-        //         //      imageWidth
-        //         //      orientation
-        //         //      thumbFileName           backend_menu_Notes_thumb.jpg
-        //         //      thumbUrl                /thumbs/backend_menu_Notes_thumb.jpg (there may actually not be a leading slash)
-        //         resolve(mediaFilesWithExif);
-        //     });
-        //     resolve();
-        // });
+        if (imageFiles.length > 0) {
+            var getExifDataPromise = exifReader.getAllExifData(imageFiles);
+            getExifDataPromise.then(function (imageFilesWithExif) {
+                var buildThumbnailsPromise = buildThumbnails(imageFilesWithExif);
+                promises.push(buildThumbnailsPromise);
+                buildThumbnailsPromise.then(function (obj) {
 
-        console.log("number of promises is: ", promises.length)
-        Promise.all(promises).then(function(mediaFilesWithExif) {
-            // BOGUS - try just directly resolving mediaFilesWithExif
-            // need to do a resolve similar to resolve(mediaFilesWithExif) but that includes video thumb info
-            mediaFilesWithExif.forEach(mediaFileWithExif => {
-                allMediaFilesWithExif.push(mediaFileWithExif);
+                    // at this point, each entry in imageFilesWithExif includes the following fields
+                    //      dateTaken
+                    //      fileName                backend_menu_Notes.jpg
+                    //      filePath                /Users/tedshaffer/Pictures/BangPhotos2/backend_menu_Notes.jpg
+                    //      imageHeight
+                    //      imageWidth
+                    //      orientation
+                    //      thumbFileName           backend_menu_Notes_thumb.jpg
+                    //      thumbUrl                /thumbs/backend_menu_Notes_thumb.jpg (there may actually not be a leading slash)
+                    resolve(imageFilesWithExif);
+                });
+                Promise.all(promises).then(function (mediaFilesWithExif) {
+                    debugger;
+                    // BOGUS - try just directly resolving mediaFilesWithExif
+                    // need to do a resolve similar to resolve(mediaFilesWithExif) but that includes video thumb info
+                    mediaFilesWithExif.forEach(mediaFileWithExif => {
+                        allMediaFilesWithExif.push(mediaFileWithExif);
+                    });
+                    resolve(allMediaFilesWithExif);
+                });
             });
-            debugger;
-            resolve(allMediaFilesWithExif);
-        });
+        }
+        else if (videoFiles.length > 0) {
+            Promise.all(promises).then(function(mediaFilesWithExif) {
+                debugger;
+                // BOGUS - try just directly resolving mediaFilesWithExif
+                // need to do a resolve similar to resolve(mediaFilesWithExif) but that includes video thumb info
+                mediaFilesWithExif.forEach(mediaFileWithExif => {
+                    allMediaFilesWithExif.push(mediaFileWithExif);
+                });
+                resolve(allMediaFilesWithExif);
+            });
+        }
+        else {
+            console.log("no thumbs created - resolve with empty array");
+            resolve([]);
+        }
     });
 }
 
@@ -307,8 +293,6 @@ function buildThumbFromVideoFile(videoFile) {
                     // const dimensions = sizeOf(destinationFolder + "/" + videoFile.thumbFileName);
                     videoFile.imageHeight = dimensions.height;
                     videoFile.imageWidth = dimensions.width;
-
-                    console.log(videoFile);
 
                     // allMediaFilesWithExif.push(videoFile);
 
