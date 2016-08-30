@@ -127,8 +127,6 @@ export function executeSelectMediaFolder(mediaFolder, mediaThumbs) {
                 //      thumbUrl                /thumbs/backend_menu_Notes_thumb.jpg - leading slash?
                 // add each entry to the thumbFiles object store in the db
 
-                debugger;
-
                 let promises = [];
                 mediaFilesWithThumbInfo.forEach( (mediaFileWithThumbInfo) => {
                     const thumbData = {
@@ -143,7 +141,6 @@ export function executeSelectMediaFolder(mediaFolder, mediaThumbs) {
 
                 Promise.all(promises).then(function(values) {
                     console.log("added thumbs to db: count was ", promises.length);
-                    console.log(values);
 
                     // TODO - it's not really necessary to wait for the db updates to invoke mergeMediaThumbs
                     dispatch(mergeMediaThumbs(thumbsByPathToMerge));
@@ -219,23 +216,7 @@ function getThumbs(mediaFiles) {
             getExifDataPromise.then(function (imageFilesWithExif) {
                 var buildThumbnailsPromise = buildThumbnails(imageFilesWithExif);
                 promises.push(buildThumbnailsPromise);
-                // buildThumbnailsPromise.then(function (obj) {
-                //
-                //     // at this point, each entry in imageFilesWithExif includes the following fields
-                //     //      dateTaken
-                //     //      fileName                backend_menu_Notes.jpg
-                //     //      filePath                /Users/tedshaffer/Pictures/BangPhotos2/backend_menu_Notes.jpg
-                //     //      imageHeight
-                //     //      imageWidth
-                //     //      orientation
-                //     //      thumbFileName           backend_menu_Notes_thumb.jpg
-                //     //      thumbUrl                /thumbs/backend_menu_Notes_thumb.jpg (there may actually not be a leading slash)
-                //     resolve(imageFilesWithExif);
-                // });
                 Promise.all(promises).then(function (mediaFilesWithExif) {
-                    debugger;
-                    // BOGUS - try just directly resolving mediaFilesWithExif
-                    // need to do a resolve similar to resolve(mediaFilesWithExif) but that includes video thumb info
                     mediaFilesWithExif.forEach(mediaFileWithExif => {
                         // HACK HACK
                         if (mediaFileWithExif instanceof Array) {
@@ -247,15 +228,12 @@ function getThumbs(mediaFiles) {
                             allMediaFilesWithExif.push(mediaFileWithExif);
                         }
                     });
-                    debugger;
                     resolve(allMediaFilesWithExif);
                 });
             });
         }
         else if (videoFiles.length > 0) {
             Promise.all(promises).then(function(mediaFilesWithExif) {
-                // BOGUS - try just directly resolving mediaFilesWithExif
-                // need to do a resolve similar to resolve(mediaFilesWithExif) but that includes video thumb info
                 mediaFilesWithExif.forEach(mediaFileWithExif => {
                     allMediaFilesWithExif.push(mediaFileWithExif);
                 });
@@ -336,7 +314,6 @@ function buildThumbnails(mediaFiles) {
                 fileCount--;
                 console.log("fileCount=" + fileCount);
                 if (fileCount == 0) {
-                    debugger;
                     resolve(mediaFilesWithExif);
                 }
             });

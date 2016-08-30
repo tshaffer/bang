@@ -4,6 +4,9 @@
 //https://github.com/gomfunkel/node-exif
 var ExifImage = require('exif').ExifImage;
 
+// https://www.npmjs.com/package/image-size
+var sizeOf = require('image-size');
+
 // http://www.html5rocks.com/en/tutorials/es6/promises/#toc-chaining
 function getAllExifData(photos) {
 
@@ -32,7 +35,7 @@ function getAllExifData(photos) {
     });
 }
 
-var getExifData = function getExifData(photo) {
+function getExifData(photo) {
 
     return new Promise(function(resolve, reject) {
 
@@ -49,13 +52,19 @@ var getExifData = function getExifData(photo) {
                 }
                 else {
                     console.log("return from ExifImage");
+
                     var imageWidth = 0;
                     var imageHeight = 0;
+
                     if (typeof exifData.exif.ExifImageWidth == "number" && typeof exifData.exif.ExifImageHeight == "number") {
                         imageWidth = exifData.exif.ExifImageWidth;
                         imageHeight = exifData.exif.ExifImageHeight;
                     }
-                    console.log(exifData.exif.ExifImageWidth.toString() + " " + exifData.exif.ExifImageHeight.toString());
+                    else {
+                        const dimensions = sizeOf(filePath);
+                        imageHeight = dimensions.height;
+                        imageWidth = dimensions.width;
+                    }
                     photo.imageWidth = imageWidth;
                     photo.imageHeight = imageHeight;
 
