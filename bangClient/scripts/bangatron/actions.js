@@ -158,6 +158,7 @@ export function executeSelectMediaFolder(mediaFolder, mediaThumbs) {
                         thumbPath: mediaFileWithThumbInfo.thumbPath,
                         modified: new Date()
                     };
+                    debugger;
                     let promise = addRecordToDB("thumbFiles", mediaFileWithThumbInfo.filePath, thumbData);
                     promises.push(promise);
 
@@ -233,6 +234,8 @@ function getThumbs(mediaFiles) {
 
         console.log("mediaFileLists built");
 
+        let allMediaFilesWithExif = [];
+
         videoFiles.forEach( videoFile => {
 
             const sourceFilePath = videoFile.filePath;
@@ -256,6 +259,7 @@ function getThumbs(mediaFiles) {
                             videoFile.orientation = 1;
                             videoFile.thumbFileName = sourceFileNameWithoutExtension + "_thumb.png";
                             videoFile.thumbUrl = "thumbs/" + videoFile.thumbFileName;
+                            videoFile.thumbPath = videoFile.thumbUrl;
 
                             const dimensions = sizeOf(videoFile.thumbUrl);
                             // const dimensions = sizeOf(destinationFolder + "/" + videoFile.thumbFileName);
@@ -263,6 +267,8 @@ function getThumbs(mediaFiles) {
                             videoFile.imageWidth = dimensions.width;
 
                             console.log(videoFile);
+
+                            allMediaFilesWithExif.push(videoFile);
 
                             resolve();
                         })
@@ -281,30 +287,32 @@ function getThumbs(mediaFiles) {
         });
 
         // which of the following should be pushed to promises?
-        var getExifDataPromise = exifReader.getAllExifData(imageFiles);
-        // promises.push(getExifDataPromise);
-        getExifDataPromise.then(function(mediaFilesWithExif) {
-            var buildThumbnailsPromise = buildThumbnails(mediaFilesWithExif);
-            // promises.push(buildThumbnailsPromise);
-            buildThumbnailsPromise.then(function(obj) {
-
-                // at this point, each entry in mediaFilesWithExif includes the following fields
-                //      dateTaken
-                //      fileName                backend_menu_Notes.jpg
-                //      filePath                /Users/tedshaffer/Pictures/BangPhotos2/backend_menu_Notes.jpg
-                //      imageHeight
-                //      imageWidth
-                //      orientation
-                //      thumbFileName           backend_menu_Notes_thumb.jpg
-                //      thumbUrl                /thumbs/backend_menu_Notes_thumb.jpg (there may actually not be a leading slash)
-                resolve(mediaFilesWithExif);
-            });
-            resolve();
-        });
+        // var getExifDataPromise = exifReader.getAllExifData(imageFiles);
+        // // promises.push(getExifDataPromise);
+        // getExifDataPromise.then(function(mediaFilesWithExif) {
+        //     var buildThumbnailsPromise = buildThumbnails(mediaFilesWithExif);
+        //     // promises.push(buildThumbnailsPromise);
+        //     buildThumbnailsPromise.then(function(obj) {
+        //
+        //         // at this point, each entry in mediaFilesWithExif includes the following fields
+        //         //      dateTaken
+        //         //      fileName                backend_menu_Notes.jpg
+        //         //      filePath                /Users/tedshaffer/Pictures/BangPhotos2/backend_menu_Notes.jpg
+        //         //      imageHeight
+        //         //      imageWidth
+        //         //      orientation
+        //         //      thumbFileName           backend_menu_Notes_thumb.jpg
+        //         //      thumbUrl                /thumbs/backend_menu_Notes_thumb.jpg (there may actually not be a leading slash)
+        //         resolve(mediaFilesWithExif);
+        //     });
+        //     resolve();
+        // });
 
         console.log("number of promises is: ", promises.length)
         Promise.all(promises).then(function(values) {
+            // need to do a resolve similar to resolve(mediaFilesWithExif) but that includes video thumb info
             debugger;
+            resolve(allMediaFilesWithExif);
         });
     });
 }
