@@ -84,7 +84,6 @@ function findFilesThenSetMediaLibraryFiles(dispatch, mediaFolder) {
     return mediaFiles;
 }
 
-
 export function getThumb(mediaItem) {
 
     const filePath = mediaItem.thumbPath;
@@ -156,7 +155,6 @@ export function executeSelectMediaFolder(mediaFolder, mediaThumbs) {
     }
 }
 
-
 function findMediaFiles(dir, mediaFiles) {
 
     var files = fs.readdirSync(dir);
@@ -176,7 +174,6 @@ function findMediaFiles(dir, mediaFiles) {
     });
     return mediaFiles;
 };
-
 
 function buildMediaFileList(mediaFile, fileTypeSuffixes, mediaFiles) {
     fileTypeSuffixes.forEach(function(suffix) {
@@ -216,16 +213,16 @@ function getThumbs(mediaFiles) {
             getExifDataPromise.then(function (imageFilesWithExif) {
                 var buildThumbnailsPromise = buildThumbnails(imageFilesWithExif);
                 promises.push(buildThumbnailsPromise);
-                Promise.all(promises).then(function (mediaFilesWithExif) {
-                    mediaFilesWithExif.forEach(mediaFileWithExif => {
-                        // HACK HACK
-                        if (mediaFileWithExif instanceof Array) {
-                            mediaFileWithExif.forEach( (mediaFile) => {
-                                allMediaFilesWithExif.push(mediaFile);
+                Promise.all(promises).then(function (values) {
+                    values.forEach(value => {
+                        // HACK HACK - figure out how to fix this so that an array is not returned
+                        if (value instanceof Array) {
+                            value.forEach( (mediaFileWithExif) => {
+                                allMediaFilesWithExif.push(mediaFileWithExif);
                             });
                         }
                         else {
-                            allMediaFilesWithExif.push(mediaFileWithExif);
+                            allMediaFilesWithExif.push(value);
                         }
                     });
                     resolve(allMediaFilesWithExif);
@@ -247,8 +244,6 @@ function getThumbs(mediaFiles) {
     });
 }
 
-
-// build thumbs for the media library
 function buildThumbFromVideoFile(videoFile) {
 
     console.log("buildThumbFromVideoFile: ", videoFile.filePath);
@@ -320,7 +315,6 @@ function buildThumbnails(mediaFiles) {
         });
     });
 }
-
 
 function buildThumb(mediaFile) {
 
