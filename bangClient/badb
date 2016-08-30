@@ -1,17 +1,5 @@
 {
 	"thumbsByPath": {
-		"/Users/tedshaffer/Pictures/BangPhotos2/WindRiverRange.jpg": {
-			"thumbPath": "thumbs/WindRiverRange_thumb.jpg",
-			"modified": "2016-06-20T19:26:47.481Z"
-		},
-		"/Users/tedshaffer/Pictures/BangPhotos2/amsterdam(8).JPG": {
-			"thumbPath": "thumbs/amsterdam(8)_thumb.JPG",
-			"modified": "2016-06-20T19:26:47.482Z"
-		},
-		"/Users/tedshaffer/Pictures/BangPhotos2/backend_menu_Notes.jpg": {
-			"thumbPath": "thumbs/backend_menu_Notes_thumb.jpg",
-			"modified": "2016-06-20T19:26:47.482Z"
-		},
 		"/Users/tedshaffer/Pictures/SanMateoCoast2013/IMG_7093.JPG": {
 			"thumbPath": "thumbs/IMG_7093_thumb.JPG",
 			"modified": "2016-06-20T19:54:27.296Z"
@@ -39,6 +27,26 @@
 		"/Users/tedshaffer/Pictures/BangPhotos/GrandTetonWyoming.jpg": {
 			"thumbPath": "thumbs/GrandTetonWyoming_thumb.jpg",
 			"modified": "2016-06-20T19:54:34.724Z"
+		},
+		"/Users/tedshaffer/Pictures/BangPhotos2/WindRiverRange.jpg": {
+			"thumbPath": "thumbs/WindRiverRange_thumb.jpg",
+			"modified": "2016-08-30T15:01:10.003Z"
+		},
+		"/Users/tedshaffer/Pictures/BangPhotos2/amsterdam(8).JPG": {
+			"thumbPath": "thumbs/amsterdam(8)_thumb.JPG",
+			"modified": "2016-08-30T15:01:13.118Z"
+		},
+		"/Users/tedshaffer/Pictures/BangPhotos2/backend_menu_Notes.jpg": {
+			"thumbPath": "thumbs/backend_menu_Notes_thumb.jpg",
+			"modified": "2016-08-30T15:01:15.221Z"
+		},
+		"/Users/tedshaffer/Pictures/Videos/DesertSunset.mpg": {
+			"thumbPath": "thumbs/DesertSunset_thumb.png",
+			"modified": "2016-08-30T15:01:58.246Z"
+		},
+		"/Users/tedshaffer/Pictures/Videos/MountainStream.mpg": {
+			"thumbPath": "thumbs/MountainStream_thumb.png",
+			"modified": "2016-08-30T15:02:08.864Z"
 		}
 	},
 	"mediaLibraryFolder": "/Users/tedshaffer/Pictures/BangPhotos"
