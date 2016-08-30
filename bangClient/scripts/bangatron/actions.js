@@ -127,14 +127,14 @@ export function executeSelectMediaFolder(mediaFolder, mediaThumbs) {
                 //      thumbUrl                /thumbs/backend_menu_Notes_thumb.jpg - leading slash?
                 // add each entry to the thumbFiles object store in the db
 
-                let promises = [];
                 debugger;
+
+                let promises = [];
                 mediaFilesWithThumbInfo.forEach( (mediaFileWithThumbInfo) => {
                     const thumbData = {
                         thumbPath: mediaFileWithThumbInfo.thumbPath,
                         modified: new Date()
                     };
-                    debugger;
                     let promise = addRecordToDB("thumbFiles", mediaFileWithThumbInfo.filePath, thumbData);
                     promises.push(promise);
 
@@ -219,33 +219,41 @@ function getThumbs(mediaFiles) {
             getExifDataPromise.then(function (imageFilesWithExif) {
                 var buildThumbnailsPromise = buildThumbnails(imageFilesWithExif);
                 promises.push(buildThumbnailsPromise);
-                buildThumbnailsPromise.then(function (obj) {
-
-                    // at this point, each entry in imageFilesWithExif includes the following fields
-                    //      dateTaken
-                    //      fileName                backend_menu_Notes.jpg
-                    //      filePath                /Users/tedshaffer/Pictures/BangPhotos2/backend_menu_Notes.jpg
-                    //      imageHeight
-                    //      imageWidth
-                    //      orientation
-                    //      thumbFileName           backend_menu_Notes_thumb.jpg
-                    //      thumbUrl                /thumbs/backend_menu_Notes_thumb.jpg (there may actually not be a leading slash)
-                    resolve(imageFilesWithExif);
-                });
+                // buildThumbnailsPromise.then(function (obj) {
+                //
+                //     // at this point, each entry in imageFilesWithExif includes the following fields
+                //     //      dateTaken
+                //     //      fileName                backend_menu_Notes.jpg
+                //     //      filePath                /Users/tedshaffer/Pictures/BangPhotos2/backend_menu_Notes.jpg
+                //     //      imageHeight
+                //     //      imageWidth
+                //     //      orientation
+                //     //      thumbFileName           backend_menu_Notes_thumb.jpg
+                //     //      thumbUrl                /thumbs/backend_menu_Notes_thumb.jpg (there may actually not be a leading slash)
+                //     resolve(imageFilesWithExif);
+                // });
                 Promise.all(promises).then(function (mediaFilesWithExif) {
                     debugger;
                     // BOGUS - try just directly resolving mediaFilesWithExif
                     // need to do a resolve similar to resolve(mediaFilesWithExif) but that includes video thumb info
                     mediaFilesWithExif.forEach(mediaFileWithExif => {
-                        allMediaFilesWithExif.push(mediaFileWithExif);
+                        // HACK HACK
+                        if (mediaFileWithExif instanceof Array) {
+                            mediaFileWithExif.forEach( (mediaFile) => {
+                                allMediaFilesWithExif.push(mediaFile);
+                            });
+                        }
+                        else {
+                            allMediaFilesWithExif.push(mediaFileWithExif);
+                        }
                     });
+                    debugger;
                     resolve(allMediaFilesWithExif);
                 });
             });
         }
         else if (videoFiles.length > 0) {
             Promise.all(promises).then(function(mediaFilesWithExif) {
-                debugger;
                 // BOGUS - try just directly resolving mediaFilesWithExif
                 // need to do a resolve similar to resolve(mediaFilesWithExif) but that includes video thumb info
                 mediaFilesWithExif.forEach(mediaFileWithExif => {
@@ -290,11 +298,8 @@ function buildThumbFromVideoFile(videoFile) {
                     videoFile.thumbPath = videoFile.thumbUrl;
 
                     const dimensions = sizeOf(videoFile.thumbUrl);
-                    // const dimensions = sizeOf(destinationFolder + "/" + videoFile.thumbFileName);
                     videoFile.imageHeight = dimensions.height;
                     videoFile.imageWidth = dimensions.width;
-
-                    // allMediaFilesWithExif.push(videoFile);
 
                     resolve(videoFile);
                 })
@@ -314,6 +319,8 @@ function buildThumbFromVideoFile(videoFile) {
 
 function buildThumbnails(mediaFiles) {
 
+    let mediaFilesWithExif = [];
+
     var fileCount = mediaFiles.length;
 
     return new Promise(function(resolve, reject) {
@@ -324,11 +331,13 @@ function buildThumbnails(mediaFiles) {
             // Add these actions to the end of the sequence
             sequence = sequence.then(function() {
                 return buildThumb(mediaFile);
-            }).then(function(imageFile) {
+            }).then(function(thumbifiedMediaFile) {
+                mediaFilesWithExif.push(thumbifiedMediaFile);
                 fileCount--;
                 console.log("fileCount=" + fileCount);
                 if (fileCount == 0) {
-                    resolve(null);
+                    debugger;
+                    resolve(mediaFilesWithExif);
                 }
             });
         });
@@ -359,8 +368,7 @@ function buildThumb(mediaFile) {
             quality: 75
         });
         createThumbPromise.then(function (thumbImage) {
-            // thumbImage is the object returned from easyimage - it's not used
-            resolve(thumbImage);
+            resolve(mediaFile);
         });
     });
 }
