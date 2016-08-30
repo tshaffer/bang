@@ -237,53 +237,7 @@ function getThumbs(mediaFiles) {
         let allMediaFilesWithExif = [];
 
         videoFiles.forEach( videoFile => {
-
-            const sourceFilePath = videoFile.filePath;
-            console.log("sourceFilePath", sourceFilePath);
-            const ext = path.extname(sourceFilePath);
-            const sourceFileName = path.basename(sourceFilePath);
-            const sourceFileNameWithoutExtension = path.basename(sourceFilePath, ext);
-
-            const destinationFolder = "thumbs";
-
-            promises.push(new Promise ( (resolve, reject) => {
-                try {
-                    ffmpeg(sourceFilePath)
-                        .on('filenames', function (filenames) {
-                            console.log('Generate thumbnail ' + filenames[0]);
-                        })
-                        .on('end', function () {
-                            console.log('Thumbnail generated for: ' + videoFile.filePath);
-                            videoFile.dateTaken = Date.now();
-                            videoFile.fileName = sourceFileName;
-                            videoFile.orientation = 1;
-                            videoFile.thumbFileName = sourceFileNameWithoutExtension + "_thumb.png";
-                            videoFile.thumbUrl = "thumbs/" + videoFile.thumbFileName;
-                            videoFile.thumbPath = videoFile.thumbUrl;
-
-                            const dimensions = sizeOf(videoFile.thumbUrl);
-                            // const dimensions = sizeOf(destinationFolder + "/" + videoFile.thumbFileName);
-                            videoFile.imageHeight = dimensions.height;
-                            videoFile.imageWidth = dimensions.width;
-
-                            console.log(videoFile);
-
-                            allMediaFilesWithExif.push(videoFile);
-
-                            resolve();
-                        })
-                        .screenshots({
-                            filename: sourceFileNameWithoutExtension + "_thumb",
-                            timestamps: [2],
-                            folder: destinationFolder,
-                            size: '?x120'
-                        });
-                }
-                catch (e) {
-                    debugger;
-                    reject();
-                };
-            }));
+            promises.push(buildThumbFromVideoFile(videoFile));
         });
 
         // which of the following should be pushed to promises?
@@ -309,8 +263,12 @@ function getThumbs(mediaFiles) {
         // });
 
         console.log("number of promises is: ", promises.length)
-        Promise.all(promises).then(function(values) {
+        Promise.all(promises).then(function(mediaFilesWithExif) {
+            // BOGUS - try just directly resolving mediaFilesWithExif
             // need to do a resolve similar to resolve(mediaFilesWithExif) but that includes video thumb info
+            mediaFilesWithExif.forEach(mediaFileWithExif => {
+                allMediaFilesWithExif.push(mediaFileWithExif);
+            });
             debugger;
             resolve(allMediaFilesWithExif);
         });
@@ -319,6 +277,57 @@ function getThumbs(mediaFiles) {
 
 
 // build thumbs for the media library
+function buildThumbFromVideoFile(videoFile) {
+
+    console.log("buildThumbFromVideoFile: ", videoFile.filePath);
+
+    return new Promise( (resolve, reject) => {
+        const sourceFilePath = videoFile.filePath;
+        const ext = path.extname(sourceFilePath);
+        const sourceFileName = path.basename(sourceFilePath);
+        const sourceFileNameWithoutExtension = path.basename(sourceFilePath, ext);
+
+        const destinationFolder = "thumbs";
+
+        try {
+            ffmpeg(sourceFilePath)
+                .on('filenames', function (filenames) {
+                    console.log('Generate thumbnail ' + filenames[0]);
+                })
+                .on('end', function () {
+                    console.log('Thumbnail generated for: ' + sourceFilePath);
+                    videoFile.dateTaken = Date.now();
+                    videoFile.fileName = sourceFileName;
+                    videoFile.orientation = 1;
+                    videoFile.thumbFileName = sourceFileNameWithoutExtension + "_thumb.png";
+                    videoFile.thumbUrl = "thumbs/" + videoFile.thumbFileName;
+                    videoFile.thumbPath = videoFile.thumbUrl;
+
+                    const dimensions = sizeOf(videoFile.thumbUrl);
+                    // const dimensions = sizeOf(destinationFolder + "/" + videoFile.thumbFileName);
+                    videoFile.imageHeight = dimensions.height;
+                    videoFile.imageWidth = dimensions.width;
+
+                    console.log(videoFile);
+
+                    // allMediaFilesWithExif.push(videoFile);
+
+                    resolve(videoFile);
+                })
+                .screenshots({
+                    filename: sourceFileNameWithoutExtension + "_thumb",
+                    timestamps: [2],
+                    folder: destinationFolder,
+                    size: '?x120'
+                });
+        }
+        catch (e) {
+            debugger;
+            reject();
+        };
+    });
+}
+
 function buildThumbnails(mediaFiles) {
 
     var fileCount = mediaFiles.length;
