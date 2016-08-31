@@ -86,4 +86,8 @@ class EditPreferencesDlg extends Component {
     }
 }
 
+EditPreferencesDlg.propTypes = {
+    onEditPreferencesOK: React.PropTypes.func.isRequired,
+};
+
 export default EditPreferencesDlg;

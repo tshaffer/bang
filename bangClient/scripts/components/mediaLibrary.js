@@ -36,7 +36,7 @@ class MediaLibrary extends Component {
         console.log("onNavigateUpMediaLibrary invoked");
     }
 
-    mediaLibraryDragStartHandler(ev) {
+    handleMediaLibraryDragStart(ev) {
         
         ev.dataTransfer.setData("path", ev.target.dataset.path);
         ev.dataTransfer.setData("name", ev.target.dataset.name);
@@ -74,7 +74,7 @@ class MediaLibrary extends Component {
                         <li
                             className="flex-item mediaLibraryThumbDiv"
                             draggable={true}
-                            onDragStart={self.mediaLibraryDragStartHandler}
+                            onDragStart={self.handleMediaLibraryDragStart}
                             data-name={fileName}
                             data-path={filePath}
                             data-type="image"
@@ -101,9 +101,9 @@ class MediaLibrary extends Component {
             });
 
             mediaLibraryDiv =
-                <ul className="flex-container wrap">
+                (<ul className="flex-container wrap">
                     {mediaLibraryPlaylistItems}
-                </ul>;
+                </ul>);
         }
 
         let theOtherPlaylistItems = [];
@@ -138,7 +138,7 @@ class MediaLibrary extends Component {
                         data-path={otherPlaylistItem.filePath}
                         data-type={otherPlaylistItem.type}
                         draggable={true}
-                        onDragStart={self.mediaLibraryDragStartHandler}
+                        onDragStart={self.handleMediaLibraryDragStart}
                     />
                     <p className="mediaLibraryThumbLbl">{otherPlaylistItem.fileName}</p>
                 </li>
@@ -146,9 +146,9 @@ class MediaLibrary extends Component {
         });
 
         let otherDiv =
-            <ul className="flex-container wrap">
+            (<ul className="flex-container wrap">
                 {otherPlaylistItems}
-            </ul>;
+            </ul>);
 
         return (
             <div className="mediaLibraryDiv">
@@ -167,7 +167,7 @@ class MediaLibrary extends Component {
                             <input type="image" src="images/24x24_sync.png" onClick={this.onRefreshMediaLibrary.bind(this)}/>
                             <input type="image" src="images/iconNavigateUp.png" onClick={this.onNavigateUpMediaLibrary.bind(this)}/>
                         </div>
-                        <input type="text" id="mediaLibraryFolder" value={this.props.mediaFolder} onChange={this.handleChange}></input>
+                        <input type="text" id="mediaLibraryFolder" value={this.props.mediaFolder} onChange={this.handleChange}/>
                         {mediaLibraryDiv}
                     </TabPanel>
 
@@ -189,6 +189,8 @@ class MediaLibrary extends Component {
 }
 
 MediaLibrary.propTypes = {
+    onBrowseForMediaLibrary: React.PropTypes.func.isRequired,
+    mediaFolder: React.PropTypes.string.isRequired,
     mediaLibraryPlaylistItems: React.PropTypes.array.isRequired
 };
 

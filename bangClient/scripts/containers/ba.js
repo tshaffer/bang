@@ -8,12 +8,14 @@ import { bindActionCreators } from 'redux';
 import BAUI from '../platform/baUI';
 import EditPreferencesDlg from '../components/Dialogs/editPreferencesDlg';
 
+import ImagePlaylistItem from '../badm/imagePlaylistItem';
+import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 import MediaLibrary from '../components/mediaLibrary';
 import PropertySheet from '../components/propertySheet';
 import NonInteractivePlaylist from './nonInteractivePlaylist';
 
 import { createDefaultPresentation, updateSign, loadAppData,
-    newHtmlSite, addHtmlSiteToPresentation, selectMediaFolder } from '../actions/index';
+    newHtmlSite, addHtmlSiteToPresentation, selectMediaFolder, updatePlaylistItem } from '../actions/index';
 
 class BA extends Component {
 
@@ -65,7 +67,6 @@ class BA extends Component {
             type
         };
 
-        // this.props.newHtmlSite(htmlSite);
         this.props.addHtmlSiteToPresentation(htmlSite);
 
     }
@@ -87,7 +88,98 @@ class BA extends Component {
         this.setState({propertySheetOpen: !this.state.propertySheetOpen});
     }
 
-    
+    handleUpdateImageTimeOnScreen(selectedPlaylistItemId, timeOnScreen) {
+
+        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
+        updatedPlaylistItem.timeOnScreen = timeOnScreen;
+        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+    }
+
+    handleUpdateImageTransition(selectedPlaylistItemId, transition) {
+
+        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
+        updatedPlaylistItem.transition = transition;
+        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+    }
+
+    handleUpdateImageTransitionDuration(selectedPlaylistItemId, transitionDuration) {
+
+        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
+        updatedPlaylistItem.transitionDuration = transitionDuration;
+        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+    }
+
+    getEmptyPlaylistItem(existingPlaylistItem) {
+
+        let emptyPlaylistItem = null;
+        const emptyImagePlaylistItem = new ImagePlaylistItem();
+        const emptyHTML5PlaylistItem = new HTML5PlaylistItem();
+        if (existingPlaylistItem instanceof ImagePlaylistItem) {
+            emptyPlaylistItem = emptyImagePlaylistItem;
+        }
+        else if (existingPlaylistItem instanceof HTML5PlaylistItem) {
+            emptyPlaylistItem = emptyHTML5PlaylistItem;
+        }
+        else {
+            console.log("handleUpdateImageTimeOnScreen: unknown playlistItem type");
+        }
+        return emptyPlaylistItem;
+    }
+
+
+    copyExistingPlaylistItem(selectedPlaylistItemId) {
+
+        const existingPlaylistItem = this.props.playlistItems.playlistItemsById[selectedPlaylistItemId];
+        let emptyPlaylistItem = this.getEmptyPlaylistItem(existingPlaylistItem);
+        if (!emptyPlaylistItem) return null;
+
+        return Object.assign(emptyPlaylistItem, existingPlaylistItem);
+
+    }
+
+    handleUpdateHTML5StateName(selectedPlaylistItemId, html5StateName) {
+
+        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
+        updatedPlaylistItem.setFileName(html5StateName);
+        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+    }
+
+    handleUpdateHTML5SiteName(selectedPlaylistItemId, html5SiteName) {
+
+        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
+        updatedPlaylistItem.htmlSiteName = html5SiteName;
+        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+    }
+
+    handleUpdateHTML5EnableExternalData(selectedPlaylistItemId, enableExternalData) {
+
+        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
+        updatedPlaylistItem.enableExternalData = enableExternalData;
+        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+    }
+
+    handleUpdateHTML5EnableMouseEvents(selectedPlaylistItemId, enableMouseEvents) {
+
+        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
+        updatedPlaylistItem.enableMouseEvents = enableMouseEvents;
+        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+    }
+
+    handleUpdateHTML5DisplayCursor(selectedPlaylistItemId, displayCursor) {
+
+        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
+        updatedPlaylistItem.displayCursor = displayCursor;
+        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+    }
+
+    handleUpdateHTML5HWZOn(selectedPlaylistItemId, hwzOn) {
+
+        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
+        updatedPlaylistItem.hwzOn = hwzOn;
+        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+    }
+
+
     getCurrentZone() {
 
         let selectedZone = null;
@@ -141,6 +233,7 @@ class BA extends Component {
         if (this.state.propertySheetOpen) {
             propertySheetTag =
                 <PropertySheet
+                    onAddHtmlSite={this.handleAddHtmlSite.bind(this)}
                     onBrowseForHTMLSite={this.baUI.handleBrowseForHTMLSite.bind(this.baUI)}
                     onUpdateVideoMode = {this.handleUpdateVideoMode.bind(this)}
                     getCurrentZone = {this.getCurrentZone.bind(this)}
@@ -150,7 +243,20 @@ class BA extends Component {
                     zones= {this.props.zones}
                     zonePlaylists= {this.props.zonePlaylists}
                     playlistItems= {this.props.playlistItems}
-                />;
+
+                    htmlSites= {this.props.htmlSites}
+                    onUpdateHTML5StateName = {this.handleUpdateHTML5StateName.bind(this)}
+                    onUpdateHTML5SiteName = {this.handleUpdateHTML5SiteName.bind(this)}
+                    onUpdateHTML5EnableExternalData = {this.handleUpdateHTML5EnableExternalData.bind(this) }
+                    onUpdateHTML5EnableMouseEvents = {this.handleUpdateHTML5EnableMouseEvents.bind(this) }
+                    onUpdateHTML5DisplayCursor = {this.handleUpdateHTML5DisplayCursor.bind(this) }
+                    onUpdateHTML5HWZOn = {this.handleUpdateHTML5HWZOn.bind(this) }
+
+                    onUpdateImageTimeOnScreen = {this.handleUpdateImageTimeOnScreen.bind(this) }
+                    onUpdateImageTransition = {this.handleUpdateImageTransition.bind(this) }
+                    onUpdateImageTransitionDuration = {this.handleUpdateImageTransitionDuration.bind(this) }
+
+        />;
         }
 
         return (
@@ -199,8 +305,25 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, newHtmlSite, addHtmlSiteToPresentation,
-        selectMediaFolder},
+        selectMediaFolder, updatePlaylistItem},
         dispatch);
 }
+
+BA.propTypes = {
+    createDefaultPresentation: React.PropTypes.func.isRequired,
+    loadAppData: React.PropTypes.func.isRequired,
+    addHtmlSiteToPresentation: React.PropTypes.func.isRequired,
+    updateSign: React.PropTypes.func.isRequired,
+    sign: React.PropTypes.object.isRequired,
+    zones: React.PropTypes.object.isRequired,
+    zonePlaylists: React.PropTypes.object.isRequired,
+    playlistItems: React.PropTypes.object.isRequired,
+    mediaFolder: React.PropTypes.string.isRequired,
+    mediaThumbs: React.PropTypes.object.isRequired,
+    mediaLibraryPlaylistItems: React.PropTypes.array.isRequired,
+    updatePlaylistItem: React.PropTypes.func.isRequired,
+    htmlSites: React.PropTypes.object.isRequired,
+};
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);

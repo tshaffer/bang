@@ -4,7 +4,9 @@
 
 import { SET_MEDIA_FOLDER } from '../actions/index';
 
-export default function(state = [], action) {
+const initialState = "";
+
+export default function(state = initialState, action) {
 
     switch (action.type) {
         case SET_MEDIA_FOLDER:
