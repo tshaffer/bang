@@ -26,6 +26,7 @@ class BA extends Component {
             propertySheetOpen: true,
             selectedZone: null,
             selectedMediaStateId: null,
+            selectedPlaylistItemId: "",
             open: false,
         };
 
@@ -239,6 +240,7 @@ class BA extends Component {
                     getCurrentZone = {this.getCurrentZone.bind(this)}
                     getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
                     selectedMediaStateId={this.state.selectedMediaStateId}
+                    selectedPlaylistItemId={this.state.selectedPlaylistItemId}
                     sign={this.props.sign}
                     zones= {this.props.zones}
                     zonePlaylists= {this.props.zonePlaylists}

@@ -486,6 +486,7 @@ class PropertySheet extends Component {
 }
 
 PropertySheet.propTypes = {
+    selectedPlaylistItemId: React.PropTypes.string.isRequired,
     onUpdateVideoMode: React.PropTypes.func.isRequired,
     onBrowseForHTMLSite: React.PropTypes.func.isRequired,
     onAddHtmlSite: React.PropTypes.func.isRequired,
@@ -499,7 +500,6 @@ PropertySheet.propTypes = {
     onUpdateImageTransition: React.PropTypes.func.isRequired,
     onUpdateImageTransitionDuration: React.PropTypes.func.isRequired,
     getCurrentZonePlaylist: React.PropTypes.func.isRequired,
-    // selectedPlaylistItemId: React.PropTypes.string.isRequired,
     playlistItems: React.PropTypes.object.isRequired,
     htmlSites: React.PropTypes.object.isRequired,
     sign: React.PropTypes.object.isRequired
