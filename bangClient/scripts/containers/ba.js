@@ -10,7 +10,7 @@ import EditPreferencesDlg from '../components/Dialogs/editPreferencesDlg';
 
 import MediaLibrary from '../components/mediaLibrary';
 import PropertySheet from '../components/propertySheet';
-import InteractivePlaylist from './interactivePlaylist';
+import NonInteractivePlaylist from './nonInteractivePlaylist';
 
 import { createDefaultPresentation, updateSign, loadAppData,
     newHtmlSite, addHtmlSiteToPresentation, selectMediaFolder } from '../actions/index';
@@ -80,7 +80,7 @@ class BA extends Component {
 
 
     handleSetSelectedMediaStateId(selectedMediaStateId) {
-        this.setState( { selectedMediaStateId: selectedMediaStateId })
+        this.setState( { selectedMediaStateId: selectedMediaStateId });
     }
 
     handleToggleOpenClosePropertySheet() {
@@ -120,11 +120,11 @@ class BA extends Component {
 
     handleOpen() {
         this.setState({open: true});
-    };
+    }
 
     handleClose() {
         this.setState({open: false});
-    };
+    }
 
     render () {
         
@@ -137,7 +137,7 @@ class BA extends Component {
         
         const openSavePresentationJSX = this.baUI.getOpenSavePresentationJSX(this.state.bsnPresentations);
 
-        let propertySheetTag = <div></div>
+        let propertySheetTag = <div></div>;
         if (this.state.propertySheetOpen) {
             propertySheetTag =
                 <PropertySheet
@@ -150,7 +150,7 @@ class BA extends Component {
                     zones= {this.props.zones}
                     zonePlaylists= {this.props.zonePlaylists}
                     playlistItems= {this.props.playlistItems}
-                />
+                />;
         }
 
         return (
@@ -171,17 +171,7 @@ class BA extends Component {
                         mediaFolder={this.props.mediaFolder}
                         mediaThumbs={this.props.mediaThumbs}
                     />
-                    <InteractivePlaylist
-                        selectedMediaStateId={this.state.selectedMediaStateId}
-                        selectedZone={this.state.selectedZone}
-
-                        onSetSelectedMediaStateId={this.handleSetSelectedMediaStateId.bind(this)}
-
-                        onToggleOpenClosePropertySheet={this.handleToggleOpenClosePropertySheet.bind(this)}
-                        propertySheetOpen = {this.state.propertySheetOpen}
-
-                        mediaThumbs= {this.props.mediaThumbs}
-                    />
+                    <NonInteractivePlaylist/>
                     {propertySheetTag}
                     <EditPreferencesDlg
                         ref="editPreferencesDlg"
@@ -189,7 +179,7 @@ class BA extends Component {
                     />
                 </div>
             </div>
-        )
+        );
     }
 }
 

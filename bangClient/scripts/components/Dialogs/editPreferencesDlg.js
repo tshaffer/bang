@@ -17,11 +17,11 @@ class EditPreferencesDlg extends Component {
 
     handleOpen() {
         this.setState({open: true});
-    };
+    }
 
     handleClose() {
         this.setState({open: false});
-    };
+    }
 
     handleOK() {
 

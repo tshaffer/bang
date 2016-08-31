@@ -167,11 +167,11 @@ class PropertySheet extends Component {
                     Video mode: <br/>
                     <select id="videoModeSelect" value={this.props.sign.videoMode}
                             onChange={this.onUpdateVideoMode.bind(this)}>{selectOptions}</select>
-                </div>
+                </div>;
 
             // this.shortenedHtmlSitePath = getShortenedFilePath(this.state.htmlSitePath, 36);
 
-            let existingSites = <span></span>
+            let existingSites = <span></span>;
             if (this.props.htmlSites !== undefined && Object.keys(this.props.htmlSites.htmlSitesById).length > 0) {
 
                 let htmlSites = [];
@@ -197,7 +197,7 @@ class PropertySheet extends Component {
                     <div>
                         <span className="smallishFont">Existing Sites</span>
                         {existingHtmlSites}
-                    </div>
+                    </div>;
             }
 
             htmlProperties =
@@ -221,7 +221,7 @@ class PropertySheet extends Component {
 
                     <br/>
                     {existingSites}
-                </div>
+                </div>;
         }
 
         if (this.props.selectedPlaylistItemId) {
@@ -268,7 +268,7 @@ class PropertySheet extends Component {
             else if (playlistItem instanceof HTML5PlaylistItem) {
                 let html5PlaylistItem = playlistItem;
 
-                let htmlSitesDropDown = <div>No sites defined</div>
+                let htmlSitesDropDown = <div>No sites defined</div>;
 
                 if (this.props.sign) {
 
@@ -280,13 +280,13 @@ class PropertySheet extends Component {
                                 <option value={htmlSite.name} key={htmlSite.id}>{htmlSite.name}</option>
                             );
                         }
-                    })
+                    });
 
                     htmlSitesDropDown =
                         <div>
                             HTML5 Site:
                             <select value={html5PlaylistItem.htmlSiteName} onChange={this.onUpdateHtmlSiteName.bind(this)}>{selectOptions}</select>
-                        </div>
+                        </div>;
                 }
 
                 // <select className="leftSpacing" ref="htmlSiteSelect"
@@ -305,11 +305,11 @@ class PropertySheet extends Component {
                         <label><input ref="cbDisplayCursor" type="checkbox" checked={html5PlaylistItem.displayCursor} onChange={this.onUpdateHTML5DisplayCursor.bind(this)}></input>Display cursor</label><br/>
                         <label><input ref="cbHWZOn" type="checkbox" checked={html5PlaylistItem.hwzOn} onChange={this.onUpdateHTML5HWZOn.bind(this)} ></input> native video plane playback</label><br/>
                         <br/>
-                    </div>
+                    </div>;
             }
         }
         else {
-            selectedMediaProperties = <div></div>
+            selectedMediaProperties = <div></div>;
         }
 
         return (
@@ -483,5 +483,11 @@ class PropertySheet extends Component {
         );
     }
 }
+
+// PropertySheet.propTypes = {
+//     onUpdateVideoMode: React.PropTypes.func.isRequired,
+//     onBrowseForHTMLSite: React.PropTypes.func.isRequired
+// };
+
 
 export default PropertySheet;

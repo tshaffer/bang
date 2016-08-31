@@ -6,9 +6,9 @@ import { NEW_ZONE, SET_ZONE_PLAYLIST } from '../actions/index';
 import Norm_Zone from '../normalizedBADM/norm_zone';
 
 const initialState =
-{
-    zonesById: {}
-};
+    {
+        zonesById: {}
+    };
 
 export default function(state = initialState, action) {
 
@@ -20,36 +20,40 @@ export default function(state = initialState, action) {
 
     switch (action.type) {
         case NEW_ZONE:
+            {
+                newZone = new Norm_Zone(action.payload.name, action.payload.type);
 
-            newZone = new Norm_Zone(action.payload.name, action.payload.type);
+                const newItem = {};
+                newItem[newZone.id] = newZone;
+                newZonesById = Object.assign({}, state.zonesById, newItem);
 
-            const newItem = {};
-            newItem[newZone.id] = newZone;
-            newZonesById = Object.assign({}, state.zonesById, newItem);
-
-            newState = {
-                zonesById: newZonesById,
+                newState = {
+                    zonesById: newZonesById,
+                };
+                return newState;
             }
-            return newState;
+
 
         case SET_ZONE_PLAYLIST:
-            const zoneId = action.payload.zoneId;
-            const zonePlaylistId = action.payload.zonePlaylistId;
-        
-            newZone = Object.assign({}, state.zonesById[zoneId], {zonePlaylistId: zonePlaylistId});
-        
-            // update zonesById to point to new zone
-            newZonesById = Object.assign({}, state.zonesById);
-            newZonesById[zoneId] = newZone;
-        
-            newState = {
-                zonesById: newZonesById,
+            {
+                const zoneId = action.payload.zoneId;
+                const zonePlaylistId = action.payload.zonePlaylistId;
+
+                newZone = Object.assign({}, state.zonesById[zoneId], {zonePlaylistId: zonePlaylistId});
+
+                // update zonesById to point to new zone
+                newZonesById = Object.assign({}, state.zonesById);
+                newZonesById[zoneId] = newZone;
+
+                newState = {
+                    zonesById: newZonesById,
+                };
+                return newState;
             }
-            return newState;
     }
 
     return state;
-};
+}
 
 // http://redux.js.org/docs/recipes/UsingObjectSpreadOperator.html
 // didn't work

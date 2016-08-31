@@ -26,7 +26,7 @@ export function setMediaFolder(mediaFolder) {
     return {
         type: SET_MEDIA_FOLDER,
         payload: mediaFolder
-    }
+    };
 }
 
 export const SET_MEDIA_LIBRARY_FILES = 'SET_MEDIA_LIBRARY_FILES';
@@ -43,7 +43,7 @@ export function setMediaLibraryFiles(mediaLibraryFiles) {
     return {
         type: SET_MEDIA_LIBRARY_FILES,
         payload: mediaLibraryPlaylistItems
-    }
+    };
 }
 
 export const SET_MEDIA_THUMBS = 'SET_MEDIA_THUMBS';
@@ -52,7 +52,7 @@ export function setMediaThumbs(thumbsByPath) {
     return {
         type: SET_MEDIA_THUMBS,
         payload: thumbsByPath
-    }
+    };
 }
 
 export const MERGE_MEDIA_THUMBS = 'MERGE_MEDIA_THUMBS';
@@ -61,37 +61,37 @@ export function mergeMediaThumbs(thumbsByPath) {
     return {
         type: MERGE_MEDIA_THUMBS,
         payload: thumbsByPath
-    }
+    };
 }
 
 export const NEW_SIGN = 'NEW_SIGN';
 export function newSign(name, videoMode) {
 
     const signData =
-    {
-        name,
-        videoMode
-    };
+        {
+            name,
+            videoMode
+        };
 
     return {
         type: NEW_SIGN,
         payload: signData
-    }
+    };
 }
 
 export const OPEN_SIGN = 'OPEN_SIGN';
 export function openSign(name, videoMode) {
 
     const signData =
-    {
-        name,
-        videoMode
-    };
+        {
+            name,
+            videoMode
+        };
 
     return {
         type: OPEN_SIGN,
         payload: signData
-    }
+    };
 }
 
 export const UPDATE_SIGN = 'UPDATE_SIGN';
@@ -102,7 +102,7 @@ export function updateSign(sign) {
     return {
         type: UPDATE_SIGN,
         payload: sign
-    }
+    };
 }
 
 export const NEW_HTML_SITE = 'NEW_HTML_SITE';
@@ -111,7 +111,7 @@ export function newHtmlSite(htmlSite) {
     return {
         type: NEW_HTML_SITE,
         payload: htmlSite
-    }
+    };
 }
 
 export const ADD_HTML_SITE = 'ADD_HTML_SITE';
@@ -120,22 +120,22 @@ export function addHtmlSite(htmlSiteId) {
     return {
         type: ADD_HTML_SITE,
         payload: htmlSiteId
-    }
+    };
 }
 
 export const NEW_ZONE = 'NEW_ZONE';
 export function newZone(name, type) {
 
     const zoneData =
-    {
-        name,
-        type
-    };
+        {
+            name,
+            type
+        };
 
     return {
         type: NEW_ZONE,
         payload: zoneData
-    }
+    };
 }
 
 // assumes there is a single, defined sign
@@ -145,7 +145,7 @@ export function addZone(zoneId) {
     return {
         type: ADD_ZONE,
         payload: zoneId
-    }
+    };
 }
 
 export const SET_SELECTED_ZONE = 'SET_SELECTED_ZONE';
@@ -153,14 +153,14 @@ export function selectZone(zone) {
     return {
         type: SET_SELECTED_ZONE,
         payload: zone
-    }
+    };
 }
 
 export const CLEAR_ZONE_PLAYLISTS = 'CLEAR_ZONE_PLAYLISTS';
 export function clearZonePlaylists() {
     return {
         type: CLEAR_ZONE_PLAYLISTS
-    }
+    };
 }
 
 export const NEW_ZONE_PLAYLIST = 'NEW_ZONE_PLAYLIST';
@@ -168,7 +168,7 @@ export function newZonePlaylist() {
 
     return {
         type: NEW_ZONE_PLAYLIST
-    }
+    };
 }
 
 export const SET_ZONE_PLAYLIST = 'SET_ZONE_PLAYLIST';
@@ -182,14 +182,14 @@ export function setZonePlaylist(zoneId, zonePlaylistId) {
     return {
         type: SET_ZONE_PLAYLIST,
         payload: payload
-    }
+    };
 }
 
 export const CLEAR_PLAYLIST_ITEMS = 'CLEAR_PLAYLIST_ITEMS';
 export function clearPlaylistItems() {
     return {
         type: CLEAR_PLAYLIST_ITEMS
-    }
+    };
 }
 
 export const NEW_MEDIA_STATE = 'NEW_MEDIA_STATE';
@@ -197,7 +197,7 @@ export function newMediaState(mediaState) {
     return {
         type: NEW_MEDIA_STATE,
         payload: mediaState
-    }
+    };
 }
 
 // export const ADD_TRANSITION = 'ADD_TRANSITION';
@@ -215,7 +215,7 @@ export function updateMediaState(mediaStateId, mediaState) {
         type: UPDATE_MEDIA_STATE,
         mediaStateId: mediaStateId,
         mediaState: mediaState
-    }
+    };
 }
 
 export const NEW_PLAYLIST_ITEM = 'NEW_PLAYLIST_ITEM';
@@ -223,7 +223,7 @@ export function newPlaylistItem(playlistItem) {
     return {
         type: NEW_PLAYLIST_ITEM,
         payload: playlistItem
-    }
+    };
 }
 
 export const ADD_PLAYLIST_ITEM = 'ADD_PLAYLIST_ITEM';
@@ -232,7 +232,7 @@ export function addPlaylistItem(zonePlaylistId, playlistItemId) {
         type: ADD_PLAYLIST_ITEM,
         zonePlaylistId: zonePlaylistId,
         playlistItemId: playlistItemId
-    }
+    };
 }
 
 export const ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST = 'ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST';
@@ -243,7 +243,7 @@ export function addPlaylistItemToZonePlaylist(zonePlaylistId, playlistItemId, in
         zonePlaylistId: zonePlaylistId,
         playlistItemId: playlistItemId,
         index: index
-    }
+    };
 }
 
 export const ADD_MEDIA_STATE_TO_ZONE_PLAYLIST = 'ADD_MEDIA_STATE_TO_ZONE_PLAYLIST';
@@ -253,7 +253,7 @@ export function addMediaStateToZonePlaylist(zonePlaylistId, mediaStateId) {
         type: ADD_MEDIA_STATE_TO_ZONE_PLAYLIST,
         zonePlaylistId: zonePlaylistId,
         mediaStateId: mediaStateId
-    }
+    };
 }
 
 export const DELETE_PLAYLIST_ITEM = 'DELETE_PLAYLIST_ITEM';
@@ -262,7 +262,7 @@ export function deletePlaylistItem(zonePlaylistId, playlistItemId) {
         type: DELETE_PLAYLIST_ITEM,
         zonePlaylistId: zonePlaylistId,
         playlistItemId: playlistItemId
-    }
+    };
 }
 
 export const MOVE_PLAYLIST_ITEM_WITHIN_ZONE_PLAYLIST = 'MOVE_PLAYLIST_ITEM_WITHIN_ZONE_PLAYLIST';
@@ -273,7 +273,7 @@ export function movePlaylistItemWithinZonePlaylist(zonePlaylistId, sourceIndex, 
         zonePlaylistId: zonePlaylistId,
         sourceIndex: sourceIndex,
         destinationIndex: destinationIndex
-    }
+    };
 }
 
 export const UPDATE_PLAYLIST_ITEM = 'UPDATE_PLAYLIST_ITEM';
@@ -282,7 +282,7 @@ export function updatePlaylistItem(playlistItemId, playlistItem) {
         type: UPDATE_PLAYLIST_ITEM,
         playlistItemId: playlistItemId,
         playlistItem: playlistItem
-    }
+    };
 }
 
 // export const ADD_TRANSITION = 'ADD_TRANSITION';
@@ -308,7 +308,7 @@ export function newTransition(transition) {
     return {
         type: NEW_TRANSITION,
         transition
-    }
+    };
 }
 
 export const ADD_TRANSITION_OUT = 'ADD_TRANSITION_OUT';
@@ -318,7 +318,7 @@ export function addTransitionOut(sourceMediaState, transitionId) {
         type: ADD_TRANSITION_OUT,
         sourceMediaState,
         transitionId
-    }
+    };
 }
 
 export const ADD_TRANSITION_IN = 'ADD_TRANSITION_IN';
@@ -328,7 +328,7 @@ export function addTransitionIn(targetMediaState, transitionId) {
         type: ADD_TRANSITION_IN,
         targetMediaState,
         transitionId
-    }
+    };
 }
 
 export const DELETE_TRANSITION_IN = 'DELETE_TRANSITION_IN';
@@ -338,7 +338,7 @@ export function deleteTransitionIn(mediaState, transitionId) {
         type: DELETE_TRANSITION_IN,
         mediaState,
         transitionId
-    }
+    };
 }
 
 
@@ -349,7 +349,7 @@ export function deleteTransitionOut(mediaState, transitionId) {
         type: DELETE_TRANSITION_OUT,
         mediaState,
         transitionId
-    }
+    };
 }
 
 export const DELETE_TRANSITION = 'DELETE_TRANSITION';
@@ -358,7 +358,7 @@ export function deleteTransition(transitionId) {
     return {
         type: DELETE_TRANSITION,
         transitionId
-    }
+    };
 }
 
 export const DELETE_MEDIA_STATE = 'DELETE_MEDIA_STATE';
@@ -368,7 +368,7 @@ function deleteAMediaState(zonePlaylistId, mediaStateId) {
         type: DELETE_MEDIA_STATE,
         zonePlaylistId: zonePlaylistId,
         mediaStateId: mediaStateId
-    }
+    };
 
 }
 export function deleteMediaState(zonePlaylistId, mediaState) {
@@ -472,14 +472,14 @@ export function deleteMediaState(zonePlaylistId, mediaState) {
 
         transitionsToDelete.forEach(transitionToDelete => {
             dispatch(deleteTransition(transitionToDelete));
-        })
+        });
 
         // end of new code
 
         dispatch(deleteAMediaState(zonePlaylistId, mediaState.getId()));
 
         debugger;
-    }
+    };
 }
 
 export function addTransition(sourceMediaState, transition, targetMediaState) {
@@ -494,7 +494,7 @@ export function addTransition(sourceMediaState, transition, targetMediaState) {
 
         dispatch(addTransitionOut(sourceMediaState, transitionId));
         dispatch(addTransitionIn(targetMediaState, transitionId));
-    }
+    };
 }
 
 export function createDefaultPresentation(presentationName) {
@@ -517,7 +517,7 @@ export function createDefaultPresentation(presentationName) {
         const zonePlaylistId = getLastKey(nextState.zonePlaylists.zonePlaylistsById);
 
         dispatch(setZonePlaylist(zoneId, zonePlaylistId));
-    }
+    };
 }
 
 export function fetchSign(signId) {
@@ -535,7 +535,7 @@ export function addHtmlSiteToPresentation(htmlSite) {
         dispatch(addHtmlSite(htmlSiteId));
 
         nextState = getState();
-    }
+    };
 }
 
 export function saveBSNPresentation(name, sign) {
@@ -548,24 +548,24 @@ export function saveBSNPresentation(name, sign) {
             params: { name: name, sign: sign }
         }).then(function() {
             console.log("savePresentation - return from server call");
-        })
-    }
+        });
+    };
 }
 
 // currently unused
-export function updateMediaFolder(mediaFolder) {
-
-    return function(dispatch) {
-
-        const updateMediaFolderUrl = "http://localhost:6969/" + "updateMediaFolder";
-        axios.get(updateMediaFolderUrl, {
-            params: { mediaFolder: mediaFolder }
-        }).then(function() {
-
-            return getMediaFiles(dispatch, mediaFolder);
-        })
-    }
-}
+// export function updateMediaFolder(mediaFolder) {
+//
+//     return function(dispatch) {
+//
+//         const updateMediaFolderUrl = "http://localhost:6969/" + "updateMediaFolder";
+//         axios.get(updateMediaFolderUrl, {
+//             params: { mediaFolder: mediaFolder }
+//         }).then(function() {
+//
+//             return getMediaFiles(dispatch, mediaFolder);
+//         });
+//     };
+// }
 
 
 

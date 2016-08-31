@@ -53,7 +53,7 @@ class MediaLibrary extends Component {
 
         var self = this;
 
-        let mediaLibraryDiv = <div>No thumbs</div>
+        let mediaLibraryDiv = <div>No thumbs</div>;
 
         if (this.props.mediaLibraryPlaylistItems && this.props.mediaLibraryPlaylistItems.length > 0) {
 
@@ -96,14 +96,14 @@ class MediaLibrary extends Component {
                         <li key={id}>
                             <p className="mediaLibraryThumbLbl">{name}</p>
                         </li>
-                    )
+                    );
                 }
             });
 
             mediaLibraryDiv =
                 <ul className="flex-container wrap">
                     {mediaLibraryPlaylistItems}
-                </ul>
+                </ul>;
         }
 
         let theOtherPlaylistItems = [];
@@ -115,7 +115,7 @@ class MediaLibrary extends Component {
                 filePath: "HTML5",
                 type: "html5"
             }
-        )
+        );
         theOtherPlaylistItems.push(
             {
                 id: "2",
@@ -124,7 +124,7 @@ class MediaLibrary extends Component {
                 filePath: "Media List",
                 type: "mediaList"
             }
-        )
+        );
 
         let otherPlaylistItems = theOtherPlaylistItems.map(function (otherPlaylistItem) {
 
@@ -148,7 +148,7 @@ class MediaLibrary extends Component {
         let otherDiv =
             <ul className="flex-container wrap">
                 {otherPlaylistItems}
-            </ul>
+            </ul>;
 
         return (
             <div className="mediaLibraryDiv">
@@ -187,5 +187,10 @@ class MediaLibrary extends Component {
         );
     }
 }
+
+MediaLibrary.propTypes = {
+    mediaLibraryPlaylistItems: React.PropTypes.array.isRequired
+};
+
 
 export default MediaLibrary;

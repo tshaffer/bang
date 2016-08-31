@@ -117,10 +117,10 @@ export default class BAUI {
             filters: [
                 { name: 'Presentations', extensions: ['bpf'] }
             ]
-        }
+        };
         dialog.showOpenDialog(options, filenameDir => {
             self.ba.props.fetchSign(filenameDir[0]);
-        })
+        });
     }
     
     handleSavePresentation() {
@@ -132,10 +132,10 @@ export default class BAUI {
             filters: [
                 { name: 'Presentations', extensions: ['bpf'] }
             ]
-        }
+        };
         dialog.showSaveDialog(options, filename => {
             this.ba.props.saveSign(filename);
-        })
+        });
     }
     
     handleBrowseForMediaLibrary() {
@@ -149,7 +149,7 @@ export default class BAUI {
                 const mediaFolder = directories[0];
                 self.ba.props.selectMediaFolder(mediaFolder, self.ba.props.mediaThumbs);
             }
-        })
+        });
     }
 
     handleBrowseForHTMLSite() {
@@ -168,8 +168,8 @@ export default class BAUI {
                 else {
                     reject();
                 }
-            })
-        })
+            });
+        });
     }
 
     handleEditPreferences() {
@@ -179,8 +179,7 @@ export default class BAUI {
     getOpenSavePresentationJSX(bsnPresentations) {
 
         return (
-            <div>
-            </div>
-        )
+            <div/>
+        );
     }
 }

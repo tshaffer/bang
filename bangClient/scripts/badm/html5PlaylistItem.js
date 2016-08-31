@@ -14,7 +14,7 @@ export default class HTML5PlaylistItem   {
         this.displayCursor = displayCursor;
         this.hwzOn = hwzOn;
         this.useUserStylesheet = useUserStylesheet;
-        this.userStyleSheet = userStyleSheet
+        this.userStyleSheet = userStyleSheet;
     }
 
     getId() {

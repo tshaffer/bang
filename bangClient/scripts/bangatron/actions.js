@@ -173,7 +173,7 @@ function findMediaFiles(dir, mediaFiles) {
         }
     });
     return mediaFiles;
-};
+}
 
 function buildMediaFileList(mediaFile, fileTypeSuffixes, mediaFiles) {
     fileTypeSuffixes.forEach(function(suffix) {
@@ -181,7 +181,7 @@ function buildMediaFileList(mediaFile, fileTypeSuffixes, mediaFiles) {
             mediaFiles.push(mediaFile);
         }
     });
-};
+}
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
 // mediaFiles is a list of all the media files that need to be thumbified
@@ -286,7 +286,7 @@ function buildThumbFromVideoFile(videoFile) {
         catch (e) {
             debugger;
             reject();
-        };
+        }
     });
 }
 
@@ -358,7 +358,6 @@ export function executeFetchSign(filePath) {
             // TODO - proper error handling?
             if (err) {
                 throw err;
-                return;
             }
             console.log("fs.ReadFile successful");
 

@@ -10,9 +10,9 @@ import { CLEAR_MEDIA_STATES, NEW_MEDIA_STATE, MOVE_MEDIA_STATE, UPDATE_MEDIA_STA
 import MediaState from '../badm/mediaState';
 
 const initialState =
-{
-    mediaStatesById: {}
-};
+    {
+        mediaStatesById: {}
+    };
 
 export default function(state = initialState, action) {
 
@@ -76,38 +76,42 @@ export default function(state = initialState, action) {
         //     break;
 
         case ADD_TRANSITION_OUT:
+            {
+                const sourceMediaState = action.sourceMediaState;
+                transitionId = action.transitionId;
 
-            const sourceMediaState = action.sourceMediaState;
-            transitionId = action.transitionId;
+                emptyMediaState = new MediaState(null, -1, -1);
+                newMediaState = Object.assign(emptyMediaState, sourceMediaState);
+                newMediaState.transitionOutIds.push(transitionId);
 
-            emptyMediaState = new MediaState(null, -1, -1);
-            newMediaState = Object.assign(emptyMediaState, sourceMediaState);
-            newMediaState.transitionOutIds.push(transitionId);
+                newMediaStatesById = Object.assign({}, state.mediaStatesById);
+                newMediaStatesById[newMediaState.getId()] = newMediaState;
 
-            newMediaStatesById = Object.assign({}, state.mediaStatesById);
-            newMediaStatesById[newMediaState.getId()] = newMediaState;
+                newState = {
+                    mediaStatesById: newMediaStatesById
+                };
+                return newState;
+            }
 
-            newState = {
-                mediaStatesById: newMediaStatesById
-            };
-            return newState;
 
         case ADD_TRANSITION_IN:
+            {
+                const targetMediaState = action.targetMediaState;
+                transitionId = action.transitionId;
+
+                emptyMediaState = new MediaState(null, -1, -1);
+                newMediaState = Object.assign(emptyMediaState, targetMediaState);
+                newMediaState.transitionInIds.push(transitionId);
+
+                newMediaStatesById = Object.assign({}, state.mediaStatesById);
+                newMediaStatesById[newMediaState.getId()] = newMediaState;
+
+                newState = {
+                    mediaStatesById: newMediaStatesById
+                };
+                return newState;
+            }
             
-            const targetMediaState = action.targetMediaState;
-            transitionId = action.transitionId;
-
-            emptyMediaState = new MediaState(null, -1, -1);
-            newMediaState = Object.assign(emptyMediaState, targetMediaState);
-            newMediaState.transitionInIds.push(transitionId);
-
-            newMediaStatesById = Object.assign({}, state.mediaStatesById);
-            newMediaStatesById[newMediaState.getId()] = newMediaState;
-
-            newState = {
-                mediaStatesById: newMediaStatesById
-            };
-            return newState;
 
         case DELETE_TRANSITION_OUT:
 
@@ -146,4 +150,4 @@ export default function(state = initialState, action) {
     }
 
     return state;
-};
+}

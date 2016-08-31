@@ -116,4 +116,4 @@ function parseDate(dateIn) {
 
 module.exports = {
     getAllExifData: getAllExifData
-}
+};

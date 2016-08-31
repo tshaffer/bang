@@ -3,7 +3,7 @@ import {Component} from 'react';
 
 import BA from '../containers/ba';
 
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 export default class App extends Component {
