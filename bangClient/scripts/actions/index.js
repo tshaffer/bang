@@ -615,7 +615,7 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
         const numberOfMediaStates = Object.keys(mediaStatesById).length;
 
         dispatch(addMediaStateToZonePlaylist(selectedZonePlaylist.id, mediaState));
-        if (numberOfMediaStates === 0) {
+        if (numberOfMediaStates === 0 || destinationIndex === 0) {
             dispatch(setInitialMediaState(selectedZonePlaylist.id, mediaState.getId()));
         }
 
@@ -665,7 +665,7 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
 
             else if (destinationIndex === 0) {
 
-                //  insertion to the beginning of the list
+                //  insertion at the beginning of the list
                 //      create one transition
                 //      source is created media state
                 //      destination is the current first media state (initialMediaState)

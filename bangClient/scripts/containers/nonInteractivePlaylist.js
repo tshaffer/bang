@@ -6,7 +6,6 @@ import $ from 'jquery';
 import { guid } from '../utilities/utils';
 
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
-import MediaState from '../badm/mediaState';
 
 import { addMediaStateToNonInteractivePlaylist } from '../actions/index';
 import { getThumb } from '../platform/actions';
@@ -18,15 +17,6 @@ class NonInteractivePlaylist extends Component {
         event.preventDefault();
         event.dataTransfer.dropEffect = "move";
     }
-
-    // getSelectedZonePlaylist() {
-    //
-    //     if (this.props.sign && this.props.sign.zoneIds.length > 0 && this.props.zones && this.props.zones.zonesById) {
-    //         const selectedZone = this.props.zones.zonesById[this.props.sign.zoneIds[0]];
-    //         return this.props.zonePlaylists.zonePlaylistsById[selectedZone.zonePlaylistId];
-    //     }
-    //     return null;
-    // }
 
     getSelectedZonePlaylist() {
 
@@ -71,17 +61,6 @@ class NonInteractivePlaylist extends Component {
 
         return index;
     }
-
-
-
-    // addMediaStateToNonInteractivePlaylist(operation, type, stateName, path, sourceIndex, destinationIndex) {
-    //
-    //     console.log(arguments);
-    //
-    //     const selectedZonePlaylist = this.getSelectedZonePlaylist();
-    //
-    //     this.props.addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, operation, type, stateName, path, sourceIndex, destinationIndex);
-    // }
 
 
     handlePlaylistDrop (event) {
@@ -146,18 +125,6 @@ class NonInteractivePlaylist extends Component {
         const transitionsById = this.props.transitions.transitionsById;
 
         let mediaStates = [];
-
-        // const initialMediaStateId = selectedZonePlaylist.initialMediaStateId;
-        // let mediaState = selectedZonePlaylist.mediaStatesById[initialMediaStateId];
-        // mediaStates.push(mediaState);
-        //
-        // while (mediaState.transitionOutIds && mediaState.transitionOutIds.length === 1) {
-        //     const transitionOutId = mediaState.transitionOutIds[0];
-        //     const transition = transitionsById[transitionOutId];
-        //     const targetMediaStateId = transition.targetMediaStateId;
-        //     mediaState = selectedZonePlaylist.mediaStatesById[targetMediaStateId];
-        //     mediaStates.push(mediaState);
-        // }
 
         let mediaStateId = selectedZonePlaylist.initialMediaStateId;
         while (mediaStateId) {
@@ -282,9 +249,6 @@ NonInteractivePlaylist.propTypes = {
 
 function mapStateToProps(state) {
     return {
-        // mediaStates: state.mediaStates,
-        // transitions: state.transitions,
-
         sign: state.sign,
         zones: state.zones,
         zonePlaylists: state.zonePlaylists,
