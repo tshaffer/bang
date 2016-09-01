@@ -249,10 +249,21 @@ export function newPlaylistItem(playlistItem) {
 // }
 //
 export const ADD_MEDIA_STATE_TO_ZONE_PLAYLIST = 'ADD_MEDIA_STATE_TO_ZONE_PLAYLIST';
-export function addMediaStateToZonePlaylist(zonePlaylistId, mediaStateId) {
+export function addMediaStateToZonePlaylist(zonePlaylistId, mediaState) {
 
     return {
         type: ADD_MEDIA_STATE_TO_ZONE_PLAYLIST,
+        zonePlaylistId,
+        mediaState
+    };
+}
+
+
+export const SET_INITIAL_MEDIA_STATE = 'SET_INITIAL_MEDIA_STATE';
+export function setInitialMediaState(zonePlaylistId, mediaStateId) {
+
+    return {
+        type: SET_INITIAL_MEDIA_STATE,
         zonePlaylistId: zonePlaylistId,
         mediaStateId: mediaStateId
     };
@@ -586,17 +597,15 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
 
     return function(dispatch, getState) {
 
-        debugger;
-
         const playlistItem = new ImagePlaylistItem (stateName, path, 6, 0, 2, false);
         const mediaState = new MediaState (playlistItem, 0, 0);
 
-        const newMediaStateAction = dispatch(newMediaState(mediaState));
+        // const newMediaStateAction = dispatch(newMediaState(mediaState));
 
         let state = getState();
 
-        const mediaStatesById = selectedZonePlaylist.mediaStateIds;
-        const numberOfMediaStates = mediaStatesById.length;
+        const mediaStatesById = selectedZonePlaylist.mediaStatesById;
+        const numberOfMediaStates = Object.keys(mediaStatesById).length;
 
         if (destinationIndex < 0) {
             // append to end of playlist
@@ -611,9 +620,12 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
             // create transition and assign it transitionOut from this state
         }
 
-        dispatch(addMediaStateToZonePlaylist(selectedZonePlaylist.id, mediaState.getId()));
+        dispatch(addMediaStateToZonePlaylist(selectedZonePlaylist.id, mediaState));
+        if (numberOfMediaStates === 0) {
+            dispatch(setInitialMediaState(selectedZonePlaylist.id, mediaState.getId()));
+        }
 
-        debugger;
+        state = getState();
         // from master / old noninteractive playlist implementation
         // http://stackoverflow.com/questions/5306680/move-an-array-element-from-one-array-position-to-another
         // if (destinationIndex >= newPlaylistItemIds.length) {

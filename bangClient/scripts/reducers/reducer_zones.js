@@ -30,6 +30,7 @@ export default function(state = initialState, action) {
                 newState = {
                     zonesById: newZonesById,
                 };
+
                 return newState;
             }
 
@@ -48,6 +49,7 @@ export default function(state = initialState, action) {
                 newState = {
                     zonesById: newZonesById,
                 };
+
                 return newState;
             }
     }

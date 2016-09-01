@@ -30,10 +30,11 @@ class NonInteractivePlaylist extends Component {
 
         if (this.props.sign && this.props.sign.zoneIds.length > 0 && this.props.zones && this.props.zones.zonesById) {
             const selectedZone = this.props.zones.zonesById[this.props.sign.zoneIds[0]];
-            // return selectedZone.zonePlaylistId;
-            const zonePlaylistId = selectedZone.zonePlaylistId;
-            const zonePlaylist = this.props.zonePlaylists.zonePlaylistsById[zonePlaylistId];
-            return zonePlaylist;
+            if (selectedZone) {
+                const zonePlaylistId = selectedZone.zonePlaylistId;
+                const zonePlaylist = this.props.zonePlaylists.zonePlaylistsById[zonePlaylistId];
+                return zonePlaylist;
+            }
         }
         return null;
     }
@@ -154,10 +155,17 @@ class NonInteractivePlaylist extends Component {
 
     render() {
 
+        let selectedZonePlaylist = null;
+        let numberOfMediaStates = 0;
         let playlistItems = null;
 
-        if (playlistItems) {
-            playlistItems = <div>I am playlistItems</div>;
+        selectedZonePlaylist = this.getSelectedZonePlaylist();
+        if (selectedZonePlaylist) {
+            numberOfMediaStates = Object.keys(selectedZonePlaylist.mediaStatesById).length;
+        }
+
+        if (numberOfMediaStates > 0) {
+            playlistItems = <div>some media states</div>;
         }
         else {
             playlistItems =
@@ -166,7 +174,6 @@ class NonInteractivePlaylist extends Component {
                     <p id="lblDropItemHere" className="mediaLibraryThumbLbl">Drop Item Here</p>
                 </li>
                 );
-
         }
 
         return (
