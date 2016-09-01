@@ -17,7 +17,6 @@ import Norm_ZonePlaylist from '../normalizedBADM/norm_zonePlaylist';
 const initialState =
     {
         zonePlaylistsById: {},
-        mediaStatesById: {}
     };
 
 export default function(state = initialState, action) {
@@ -29,10 +28,8 @@ export default function(state = initialState, action) {
     let newZonePlaylistsById;
 
     let existingZonePlaylist;
-    let newPlaylistItemIds;
 
     let zonePlaylistId;
-    let playlistItemId;
 
     let mediaStateId;
     let newMediaStateIds;
@@ -58,133 +55,138 @@ export default function(state = initialState, action) {
             }
 
 
-        case ADD_PLAYLIST_ITEM:
+        // case ADD_PLAYLIST_ITEM:
+        //
+        //     zonePlaylistId = action.zonePlaylistId;
+        //     playlistItemId = action.playlistItemId;
+        //
+        //     existingZonePlaylist = state.zonePlaylistsById[zonePlaylistId];
+        //
+        //     // make copy of existing fields
+        //     newZonePlaylistsById = Object.assign({}, state.zonePlaylistsById);
+        //     newPlaylistItemIds = Object.assign([], existingZonePlaylist.playlistItemIds);
+        //     newPlaylistItemIds.push(playlistItemId);
+        //
+        //     newZonePlaylist = Object.assign({}, existingZonePlaylist);
+        //     newZonePlaylist.playlistItemIds = newPlaylistItemIds;
+        //
+        //     newZonePlaylistsById[zonePlaylistId] = newZonePlaylist;
+        //
+        //     newState = {
+        //         zonePlaylistsById: newZonePlaylistsById,
+        //         mediaStatesById
+        //     };
+        //
+        //     return newState;
 
-            zonePlaylistId = action.zonePlaylistId;
-            playlistItemId = action.playlistItemId;
+        // case DELETE_PLAYLIST_ITEM:
+        //
+        //     zonePlaylistId = action.zonePlaylistId;
+        //     playlistItemId = action.playlistItemId;
+        //
+        //     // is all this necessary?
+        //     existingZonePlaylist = state.zonePlaylistsById[zonePlaylistId];
+        //
+        //     newZonePlaylistsById = Object.assign(initialState, state.zonePlaylistsById);
+        //     newPlaylistItemIds = Object.assign([], existingZonePlaylist.playlistItemIds);
+        //
+        //     index = newPlaylistItemIds.indexOf(playlistItemId);
+        //     if (index > -1) {
+        //         newPlaylistItemIds.splice(index, 1);
+        //     }
+        //
+        //     newZonePlaylist = Object.assign({}, existingZonePlaylist);
+        //     newZonePlaylist.playlistItemIds = newPlaylistItemIds;
+        //
+        //     newZonePlaylistsById[zonePlaylistId] = newZonePlaylist;
+        //
+        //     newState = {
+        //         zonePlaylistsById: newZonePlaylistsById,
+        //         mediaStatesById
+        //     };
+        //
+        //     return newState;
 
-            existingZonePlaylist = state.zonePlaylistsById[zonePlaylistId];
-
-            // make copy of existing fields
-            newZonePlaylistsById = Object.assign({}, state.zonePlaylistsById);
-            newPlaylistItemIds = Object.assign([], existingZonePlaylist.playlistItemIds);
-            newPlaylistItemIds.push(playlistItemId);
-
-            newZonePlaylist = Object.assign({}, existingZonePlaylist);
-            newZonePlaylist.playlistItemIds = newPlaylistItemIds;
-
-            newZonePlaylistsById[zonePlaylistId] = newZonePlaylist;
-
-            newState = {
-                zonePlaylistsById: newZonePlaylistsById
-            };
-
-            return newState;
-
-        case DELETE_PLAYLIST_ITEM:
-
-            zonePlaylistId = action.zonePlaylistId;
-            playlistItemId = action.playlistItemId;
-
-            // is all this necessary?
-            existingZonePlaylist = state.zonePlaylistsById[zonePlaylistId];
-
-            newZonePlaylistsById = Object.assign(initialState, state.zonePlaylistsById);
-            newPlaylistItemIds = Object.assign([], existingZonePlaylist.playlistItemIds);
-
-            index = newPlaylistItemIds.indexOf(playlistItemId);
-            if (index > -1) {
-                newPlaylistItemIds.splice(index, 1);
-            }
-
-            newZonePlaylist = Object.assign({}, existingZonePlaylist);
-            newZonePlaylist.playlistItemIds = newPlaylistItemIds;
-
-            newZonePlaylistsById[zonePlaylistId] = newZonePlaylist;
-
-            newState = {
-                zonePlaylistsById: newZonePlaylistsById
-            };
-
-            return newState;
-
-        case ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST:
-            
-            zonePlaylistId = action.zonePlaylistId;
-            playlistItemId = action.playlistItemId;
-            index = action.index;
-
-            existingZonePlaylist = state.zonePlaylistsById[zonePlaylistId];
-
-            // make copy of existing fields
-            newZonePlaylistsById = Object.assign({}, state.zonePlaylistsById);
-            newPlaylistItemIds = Object.assign([], existingZonePlaylist.playlistItemIds);
-
-            // add playlist item in proper position
-            if (index >= 0) {
-                // insert prior to index
-                newPlaylistItemIds.splice(index, 0, playlistItemId);
-            }
-            else {
-                // append to list
-                newPlaylistItemIds.push(playlistItemId);
-            }
-
-            newZonePlaylist = Object.assign({}, existingZonePlaylist);
-            newZonePlaylist.playlistItemIds = newPlaylistItemIds;
-
-            newZonePlaylistsById[zonePlaylistId] = newZonePlaylist;
-
-            newState = {
-                zonePlaylistsById: newZonePlaylistsById
-            };
-
-            return newState;
-
-        case MOVE_PLAYLIST_ITEM_WITHIN_ZONE_PLAYLIST:
-            {
-                zonePlaylistId = action.zonePlaylistId;
-                let sourceIndex = action.sourceIndex;
-                let destinationIndex = action.destinationIndex;
-
-                existingZonePlaylist = state.zonePlaylistsById[zonePlaylistId];
-
-                // make copy of existing fields
-                newZonePlaylistsById = Object.assign({}, state.zonePlaylistsById);
-                newPlaylistItemIds = Object.assign([], existingZonePlaylist.playlistItemIds);
-
-                if (sourceIndex < 0) {
-                    sourceIndex = newPlaylistItemIds.length;
-                }
-                if (destinationIndex < 0) {
-                    destinationIndex = newPlaylistItemIds.length;
-                }
-                if (destinationIndex > sourceIndex) {
-                    destinationIndex--;
-                }
-
-                // http://stackoverflow.com/questions/5306680/move-an-array-element-from-one-array-position-to-another
-                if (destinationIndex >= newPlaylistItemIds.length) {
-                    var k = destinationIndex - newPlaylistItemIds.length;
-                    while ((k--) + 1) {
-                        newPlaylistItemIds.push(undefined);
-                    }
-                }
-                newPlaylistItemIds.splice(destinationIndex, 0, newPlaylistItemIds.splice(sourceIndex, 1)[0]);
-
-                newZonePlaylist = Object.assign({}, existingZonePlaylist);
-                newZonePlaylist.playlistItemIds = newPlaylistItemIds;
-
-                newZonePlaylistsById[zonePlaylistId] = newZonePlaylist;
-
-                newState = {
-                    zonePlaylistsById: newZonePlaylistsById
-                };
-
-                return newState;
-            }
+        // case ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST:
+        //
+        //     zonePlaylistId = action.zonePlaylistId;
+        //     playlistItemId = action.playlistItemId;
+        //     index = action.index;
+        //
+        //     existingZonePlaylist = state.zonePlaylistsById[zonePlaylistId];
+        //
+        //     // make copy of existing fields
+        //     newZonePlaylistsById = Object.assign({}, state.zonePlaylistsById);
+        //     newPlaylistItemIds = Object.assign([], existingZonePlaylist.playlistItemIds);
+        //
+        //     // add playlist item in proper position
+        //     if (index >= 0) {
+        //         // insert prior to index
+        //         newPlaylistItemIds.splice(index, 0, playlistItemId);
+        //     }
+        //     else {
+        //         // append to list
+        //         newPlaylistItemIds.push(playlistItemId);
+        //     }
+        //
+        //     newZonePlaylist = Object.assign({}, existingZonePlaylist);
+        //     newZonePlaylist.playlistItemIds = newPlaylistItemIds;
+        //
+        //     newZonePlaylistsById[zonePlaylistId] = newZonePlaylist;
+        //
+        //     newState = {
+        //         zonePlaylistsById: newZonePlaylistsById,
+        //         mediaStatesById
+        //     };
+        //
+        //     return newState;
+        //
+        // case MOVE_PLAYLIST_ITEM_WITHIN_ZONE_PLAYLIST:
+        //     {
+        //         zonePlaylistId = action.zonePlaylistId;
+        //         let sourceIndex = action.sourceIndex;
+        //         let destinationIndex = action.destinationIndex;
+        //
+        //         existingZonePlaylist = state.zonePlaylistsById[zonePlaylistId];
+        //
+        //         // make copy of existing fields
+        //         newZonePlaylistsById = Object.assign({}, state.zonePlaylistsById);
+        //         newPlaylistItemIds = Object.assign([], existingZonePlaylist.playlistItemIds);
+        //
+        //         if (sourceIndex < 0) {
+        //             sourceIndex = newPlaylistItemIds.length;
+        //         }
+        //         if (destinationIndex < 0) {
+        //             destinationIndex = newPlaylistItemIds.length;
+        //         }
+        //         if (destinationIndex > sourceIndex) {
+        //             destinationIndex--;
+        //         }
+        //
+        //         // http://stackoverflow.com/questions/5306680/move-an-array-element-from-one-array-position-to-another
+        //         if (destinationIndex >= newPlaylistItemIds.length) {
+        //             var k = destinationIndex - newPlaylistItemIds.length;
+        //             while ((k--) + 1) {
+        //                 newPlaylistItemIds.push(undefined);
+        //             }
+        //         }
+        //         newPlaylistItemIds.splice(destinationIndex, 0, newPlaylistItemIds.splice(sourceIndex, 1)[0]);
+        //
+        //         newZonePlaylist = Object.assign({}, existingZonePlaylist);
+        //         newZonePlaylist.playlistItemIds = newPlaylistItemIds;
+        //
+        //         newZonePlaylistsById[zonePlaylistId] = newZonePlaylist;
+        //
+        //         newState = {
+        //             zonePlaylistsById: newZonePlaylistsById
+        //         };
+        //
+        //         return newState;
+        //     }
 
         case ADD_MEDIA_STATE_TO_ZONE_PLAYLIST:
+
+            debugger;
 
             zonePlaylistId = action.zonePlaylistId;
             mediaStateId = action.mediaStateId;

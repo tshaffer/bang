@@ -6,6 +6,8 @@ import { getLastKey } from '../utilities/utils';
 import axios from 'axios';
 
 import ImageMediaItem from '../entities/imageMediaItem';
+import ImagePlaylistItem from '../badm/imagePlaylistItem';
+import MediaState from '../badm/mediaState';
 
 import { executeLoadAppData, executeFetchSign, executeSelectMediaFolder, getFileName, executeSaveSign } from '../platform/actions';
 
@@ -226,26 +228,26 @@ export function newPlaylistItem(playlistItem) {
     };
 }
 
-export const ADD_PLAYLIST_ITEM = 'ADD_PLAYLIST_ITEM';
-export function addPlaylistItem(zonePlaylistId, playlistItemId) {
-    return {
-        type: ADD_PLAYLIST_ITEM,
-        zonePlaylistId: zonePlaylistId,
-        playlistItemId: playlistItemId
-    };
-}
-
-export const ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST = 'ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST';
-export function addPlaylistItemToZonePlaylist(zonePlaylistId, playlistItemId, index) {
-
-    return {
-        type: ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST,
-        zonePlaylistId: zonePlaylistId,
-        playlistItemId: playlistItemId,
-        index: index
-    };
-}
-
+// export const ADD_PLAYLIST_ITEM = 'ADD_PLAYLIST_ITEM';
+// export function addPlaylistItem(zonePlaylistId, playlistItemId) {
+//     return {
+//         type: ADD_PLAYLIST_ITEM,
+//         zonePlaylistId: zonePlaylistId,
+//         playlistItemId: playlistItemId
+//     };
+// }
+//
+// export const ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST = 'ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST';
+// export function addPlaylistItemToZonePlaylist(zonePlaylistId, playlistItemId, index) {
+//
+//     return {
+//         type: ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST,
+//         zonePlaylistId: zonePlaylistId,
+//         playlistItemId: playlistItemId,
+//         index: index
+//     };
+// }
+//
 export const ADD_MEDIA_STATE_TO_ZONE_PLAYLIST = 'ADD_MEDIA_STATE_TO_ZONE_PLAYLIST';
 export function addMediaStateToZonePlaylist(zonePlaylistId, mediaStateId) {
 
@@ -256,35 +258,35 @@ export function addMediaStateToZonePlaylist(zonePlaylistId, mediaStateId) {
     };
 }
 
-export const DELETE_PLAYLIST_ITEM = 'DELETE_PLAYLIST_ITEM';
-export function deletePlaylistItem(zonePlaylistId, playlistItemId) {
-    return {
-        type: DELETE_PLAYLIST_ITEM,
-        zonePlaylistId: zonePlaylistId,
-        playlistItemId: playlistItemId
-    };
-}
-
-export const MOVE_PLAYLIST_ITEM_WITHIN_ZONE_PLAYLIST = 'MOVE_PLAYLIST_ITEM_WITHIN_ZONE_PLAYLIST';
-export function movePlaylistItemWithinZonePlaylist(zonePlaylistId, sourceIndex, destinationIndex) {
-
-    return {
-        type: MOVE_PLAYLIST_ITEM_WITHIN_ZONE_PLAYLIST,
-        zonePlaylistId: zonePlaylistId,
-        sourceIndex: sourceIndex,
-        destinationIndex: destinationIndex
-    };
-}
-
-export const UPDATE_PLAYLIST_ITEM = 'UPDATE_PLAYLIST_ITEM';
-export function updatePlaylistItem(playlistItemId, playlistItem) {
-    return {
-        type: UPDATE_PLAYLIST_ITEM,
-        playlistItemId: playlistItemId,
-        playlistItem: playlistItem
-    };
-}
-
+// export const DELETE_PLAYLIST_ITEM = 'DELETE_PLAYLIST_ITEM';
+// export function deletePlaylistItem(zonePlaylistId, playlistItemId) {
+//     return {
+//         type: DELETE_PLAYLIST_ITEM,
+//         zonePlaylistId: zonePlaylistId,
+//         playlistItemId: playlistItemId
+//     };
+// }
+//
+// export const MOVE_PLAYLIST_ITEM_WITHIN_ZONE_PLAYLIST = 'MOVE_PLAYLIST_ITEM_WITHIN_ZONE_PLAYLIST';
+// export function movePlaylistItemWithinZonePlaylist(zonePlaylistId, sourceIndex, destinationIndex) {
+//
+//     return {
+//         type: MOVE_PLAYLIST_ITEM_WITHIN_ZONE_PLAYLIST,
+//         zonePlaylistId: zonePlaylistId,
+//         sourceIndex: sourceIndex,
+//         destinationIndex: destinationIndex
+//     };
+// }
+//
+// export const UPDATE_PLAYLIST_ITEM = 'UPDATE_PLAYLIST_ITEM';
+// export function updatePlaylistItem(playlistItemId, playlistItem) {
+//     return {
+//         type: UPDATE_PLAYLIST_ITEM,
+//         playlistItemId: playlistItemId,
+//         playlistItem: playlistItem
+//     };
+// }
+//
 // export const ADD_TRANSITION = 'ADD_TRANSITION';
 // export function addTransition(sourceMediaStateId, destinationMediaStateId) {
 //     return {
@@ -451,7 +453,6 @@ export function deleteMediaState(zonePlaylistId, mediaState) {
                 }
             }
         });
-        debugger;
 
         mediaState.transitionInIds.forEach(function(transitionInId) {
             for (let mediaStateId in state.mediaStates.mediaStatesById) {
@@ -468,8 +469,6 @@ export function deleteMediaState(zonePlaylistId, mediaState) {
             dispatch(deleteTransitionIn(mediaState, transitionInId));
         });
 
-        debugger;
-
         transitionsToDelete.forEach(transitionToDelete => {
             dispatch(deleteTransition(transitionToDelete));
         });
@@ -477,8 +476,6 @@ export function deleteMediaState(zonePlaylistId, mediaState) {
         // end of new code
 
         dispatch(deleteAMediaState(zonePlaylistId, mediaState.getId()));
-
-        debugger;
     };
 }
 
@@ -569,3 +566,74 @@ export function saveBSNPresentation(name, sign) {
 
 
 
+// const sourceMediaState = this.props.mediaStates.mediaStatesById[this.props.selectedMediaStateId];
+// const targetMediaState = this.props.mediaStates.mediaStatesById[targetMediaStateId];
+//
+// // create userEvent based on current selected event
+// // do this here or in playlist??
+// // const userEvent = new UserEvent("timeout");
+// const userEvent = new UserEvent(this.state.activeBSEventType);
+// userEvent.setValue("5");
+//
+// const transition = new Transition(sourceMediaState, userEvent, targetMediaState); // do this here?
+//
+// this.props.addTransition(sourceMediaState, transition, targetMediaState);
+
+
+export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, operation, type, stateName, path, sourceIndex, destinationIndex) {
+
+    // initial implementation  - ignore move, implement copy from media library
+
+    return function(dispatch, getState) {
+
+        debugger;
+
+        const playlistItem = new ImagePlaylistItem (stateName, path, 6, 0, 2, false);
+        const mediaState = new MediaState (playlistItem, 0, 0);
+
+        const newMediaStateAction = dispatch(newMediaState(mediaState));
+
+        let state = getState();
+
+        const mediaStatesById = selectedZonePlaylist.mediaStateIds;
+        const numberOfMediaStates = mediaStatesById.length;
+
+        if (destinationIndex < 0) {
+            // append to end of playlist
+            destinationIndex = numberOfMediaStates;
+        }
+
+        if (destinationIndex > 0) {
+            // create transition and assign it as the transitionIn to this state
+        }
+
+        if (destinationIndex < numberOfMediaStates) {
+            // create transition and assign it transitionOut from this state
+        }
+
+        dispatch(addMediaStateToZonePlaylist(selectedZonePlaylist.id, mediaState.getId()));
+
+        debugger;
+        // from master / old noninteractive playlist implementation
+        // http://stackoverflow.com/questions/5306680/move-an-array-element-from-one-array-position-to-another
+        // if (destinationIndex >= newPlaylistItemIds.length) {
+        //     var k = destinationIndex - newPlaylistItemIds.length;
+        //     while ((k--) + 1) {
+        //         newPlaylistItemIds.push(undefined);
+        //     }
+        // }
+        // newPlaylistItemIds.splice(destinationIndex, 0, newPlaylistItemIds.splice(sourceIndex, 1)[0]);
+        //
+        // newZonePlaylist = Object.assign({}, existingZonePlaylist);
+        // newZonePlaylist.playlistItemIds = newPlaylistItemIds;
+        //
+        // newZonePlaylistsById[zonePlaylistId] = newZonePlaylist;
+        //
+        // newState = {
+        //     zonePlaylistsById: newZonePlaylistsById
+        // };
+        //
+        // return newState;
+    };
+
+}

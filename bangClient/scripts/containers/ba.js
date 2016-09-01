@@ -15,7 +15,7 @@ import PropertySheet from '../components/propertySheet';
 import NonInteractivePlaylist from './nonInteractivePlaylist';
 
 import { createDefaultPresentation, updateSign, loadAppData,
-    newHtmlSite, addHtmlSiteToPresentation, selectMediaFolder, updatePlaylistItem } from '../actions/index';
+    newHtmlSite, addHtmlSiteToPresentation, selectMediaFolder } from '../actions/index';
 
 class BA extends Component {
 
@@ -93,21 +93,21 @@ class BA extends Component {
 
         let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
         updatedPlaylistItem.timeOnScreen = timeOnScreen;
-        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+        // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
     }
 
     handleUpdateImageTransition(selectedPlaylistItemId, transition) {
 
         let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
         updatedPlaylistItem.transition = transition;
-        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+        // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
     }
 
     handleUpdateImageTransitionDuration(selectedPlaylistItemId, transitionDuration) {
 
         let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
         updatedPlaylistItem.transitionDuration = transitionDuration;
-        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+        // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
     }
 
     getEmptyPlaylistItem(existingPlaylistItem) {
@@ -142,42 +142,42 @@ class BA extends Component {
 
         let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
         updatedPlaylistItem.setFileName(html5StateName);
-        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+        // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
     }
 
     handleUpdateHTML5SiteName(selectedPlaylistItemId, html5SiteName) {
 
         let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
         updatedPlaylistItem.htmlSiteName = html5SiteName;
-        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+        // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
     }
 
     handleUpdateHTML5EnableExternalData(selectedPlaylistItemId, enableExternalData) {
 
         let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
         updatedPlaylistItem.enableExternalData = enableExternalData;
-        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+        // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
     }
 
     handleUpdateHTML5EnableMouseEvents(selectedPlaylistItemId, enableMouseEvents) {
 
         let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
         updatedPlaylistItem.enableMouseEvents = enableMouseEvents;
-        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+        // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
     }
 
     handleUpdateHTML5DisplayCursor(selectedPlaylistItemId, displayCursor) {
 
         let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
         updatedPlaylistItem.displayCursor = displayCursor;
-        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+        // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
     }
 
     handleUpdateHTML5HWZOn(selectedPlaylistItemId, hwzOn) {
 
         let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
         updatedPlaylistItem.hwzOn = hwzOn;
-        this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+        // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
     }
 
 
@@ -279,7 +279,11 @@ class BA extends Component {
                         mediaFolder={this.props.mediaFolder}
                         mediaThumbs={this.props.mediaThumbs}
                     />
-                    <NonInteractivePlaylist/>
+                    <NonInteractivePlaylist
+                        sign={this.props.sign}
+                        zones={this.props.zones}
+                        zonePlaylists={this.props.zonePlaylists}
+                    />
                     {propertySheetTag}
                     <EditPreferencesDlg
                         ref="editPreferencesDlg"
@@ -305,12 +309,14 @@ function mapStateToProps(state) {
     };
 }
 
+// updateMediaState
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, newHtmlSite, addHtmlSiteToPresentation,
-        selectMediaFolder, updatePlaylistItem},
+        selectMediaFolder},
         dispatch);
 }
 
+// updateMediaState
 BA.propTypes = {
     createDefaultPresentation: React.PropTypes.func.isRequired,
     loadAppData: React.PropTypes.func.isRequired,
@@ -323,7 +329,6 @@ BA.propTypes = {
     mediaFolder: React.PropTypes.string.isRequired,
     mediaThumbs: React.PropTypes.object.isRequired,
     mediaLibraryPlaylistItems: React.PropTypes.array.isRequired,
-    updatePlaylistItem: React.PropTypes.func.isRequired,
     htmlSites: React.PropTypes.object.isRequired,
 };
 

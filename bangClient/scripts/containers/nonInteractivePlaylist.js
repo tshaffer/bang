@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import { guid } from '../utilities/utils';
+
+import ImagePlaylistItem from '../badm/imagePlaylistItem';
+import MediaState from '../badm/mediaState';
+
+import { addMediaStateToNonInteractivePlaylist } from '../actions/index';
 
 class NonInteractivePlaylist extends Component {
 
@@ -10,6 +17,68 @@ class NonInteractivePlaylist extends Component {
         event.dataTransfer.dropEffect = "move";
     }
 
+    // getSelectedZonePlaylist() {
+    //
+    //     if (this.props.sign && this.props.sign.zoneIds.length > 0 && this.props.zones && this.props.zones.zonesById) {
+    //         const selectedZone = this.props.zones.zonesById[this.props.sign.zoneIds[0]];
+    //         return this.props.zonePlaylists.zonePlaylistsById[selectedZone.zonePlaylistId];
+    //     }
+    //     return null;
+    // }
+
+    getSelectedZonePlaylist() {
+
+        if (this.props.sign && this.props.sign.zoneIds.length > 0 && this.props.zones && this.props.zones.zonesById) {
+            const selectedZone = this.props.zones.zonesById[this.props.sign.zoneIds[0]];
+            // return selectedZone.zonePlaylistId;
+            const zonePlaylistId = selectedZone.zonePlaylistId;
+            const zonePlaylist = this.props.zonePlaylists.zonePlaylistsById[zonePlaylistId];
+            return zonePlaylist;
+        }
+        return null;
+    }
+
+
+
+    addMediaStateToNonInteractivePlaylist(operation, type, stateName, path, sourceIndex, destinationIndex) {
+
+        // ignore type for now
+        // stateName is fileName
+        // hard code values for timeOnScreen, transition, transitionDuration, videoPlayerRequired
+        // const playlistItem = new ImagePlaylistItem (stateName, path, 6, 0, 2, false);
+        // const mediaState = new MediaState (playlistItem, 0, 0);
+
+        // from interactivePlaylist
+        //      this.props.newMediaState(mediaState);
+        //      this.props.addMediaStateToZonePlaylist(selectedZonePlaylistId, mediaState.getId());
+
+        // from master (old nonInteractivePlaylist)
+        //      this.props.newPlaylistItem(playlistItem);
+        //      this.props.addPlaylistItemToZonePlaylist(currentZonePlaylistId, playlistItem.getId(), destinationIndex);
+
+        // what needs to be done
+        //      create playlistItem based on what was dropped (done)
+        //      create media state from playlistItem (done)
+        //      is there a prior item? if yes,
+        //          create transition out from prior item to this item
+        //      is there a following item? if yes,
+        //          create transition in from this item to following item
+        //      do these last two items get done here or in redux / action land?
+        //      in interactivePlaylist, what's done where?
+        //          transition is created here, but it's added to the store, specifying source and destination in redux land
+
+        // proposal
+        //  react understands at a high level what needs to be done; gets all the information based on the UI and passes that information on to redux
+        //  what redux would need
+        //          all parameters passed to this function (type may be questionable in my opinion)
+        //          what is sourceIndex used for?
+        //              it's required for the 'move' operation.
+        console.log(arguments);
+
+        const selectedZonePlaylist = this.getSelectedZonePlaylist();
+
+        this.props.addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, operation, type, stateName, path, sourceIndex, destinationIndex);
+    }
 
     handlePlaylistDrop (event) {
 
@@ -55,11 +124,11 @@ class NonInteractivePlaylist extends Component {
             return;
         }
 
-        // // specify playlist item to drop
-        // let playlistItem = null;
-        // if (type === "image") {
-        //     playlistItem = this.props.onDropPlaylistItem(operation, type, stateName, path, startIndex, index);
-        // }
+        // specify playlist item to drop
+        let playlistItem = null;
+        if (type === "image") {
+            playlistItem = this.addMediaStateToNonInteractivePlaylist(operation, type, stateName, path, startIndex, index);
+        }
         // else if (type == "html5") {
         //     // TODO - for now, set the state name and site name to the first site in the sign (if it exists)
         //     let defaultName = "";
@@ -115,4 +184,34 @@ class NonInteractivePlaylist extends Component {
     }
 }
 
-export default NonInteractivePlaylist;
+
+NonInteractivePlaylist.propTypes = {
+    sign: React.PropTypes.object.isRequired,
+    zones: React.PropTypes.object.isRequired,
+    zonePlaylists: React.PropTypes.object.isRequired,
+};
+
+
+function mapStateToProps(state) {
+    return {
+        // mediaStates: state.mediaStates,
+        // transitions: state.transitions,
+
+        sign: state.sign,
+        zones: state.zones,
+        zonePlaylists: state.zonePlaylists,
+    };
+}
+
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ addMediaStateToNonInteractivePlaylist },
+        dispatch);
+}
+
+NonInteractivePlaylist.propTypes = {
+    addMediaStateToNonInteractivePlaylist: React.PropTypes.func.isRequired,
+};
+
+
+export default connect(null, mapDispatchToProps)(NonInteractivePlaylist);
