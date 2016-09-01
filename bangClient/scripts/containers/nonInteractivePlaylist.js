@@ -147,16 +147,30 @@ class NonInteractivePlaylist extends Component {
 
         let mediaStates = [];
 
-        const initialMediaStateId = selectedZonePlaylist.initialMediaStateId;
-        let mediaState = selectedZonePlaylist.mediaStatesById[initialMediaStateId];
-        mediaStates.push(mediaState);
+        // const initialMediaStateId = selectedZonePlaylist.initialMediaStateId;
+        // let mediaState = selectedZonePlaylist.mediaStatesById[initialMediaStateId];
+        // mediaStates.push(mediaState);
+        //
+        // while (mediaState.transitionOutIds && mediaState.transitionOutIds.length === 1) {
+        //     const transitionOutId = mediaState.transitionOutIds[0];
+        //     const transition = transitionsById[transitionOutId];
+        //     const targetMediaStateId = transition.targetMediaStateId;
+        //     mediaState = selectedZonePlaylist.mediaStatesById[targetMediaStateId];
+        //     mediaStates.push(mediaState);
+        // }
 
-        while (mediaState.transitionOutIds && mediaState.transitionOutIds.length === 1) {
-            const transitionOutId = mediaState.transitionOutIds[0];
-            const transition = transitionsById[transitionOutId];
-            const targetMediaStateId = transition.targetMediaStateId;
-            mediaState = selectedZonePlaylist.mediaStatesById[targetMediaStateId];
+        let mediaStateId = selectedZonePlaylist.initialMediaStateId;
+        while (mediaStateId) {
+            let mediaState = selectedZonePlaylist.mediaStatesById[mediaStateId];
             mediaStates.push(mediaState);
+            if (mediaState.transitionOutIds.length === 1) {
+                const transitionOutId = mediaState.transitionOutIds[0];
+                const transition = transitionsById[transitionOutId];
+                mediaStateId = transition.targetMediaStateId;
+            }
+            else {
+                mediaStateId = null;
+            }
         }
 
         let dataIndex = -1;
