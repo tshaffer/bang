@@ -653,6 +653,7 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
         // appears that destinationIndex is the index of where the dropped item should appear in the 'array' of items
         // that is, if there are currently 4 items and destinationIndex is 2, the dropped item would become the 3rd item in the list.
 
+        // NOTE - destinationIndex refers to the index prior to adding the new item
         if (numberOfMediaStates > 0) {
 
             if (destinationIndex < 0 || destinationIndex >= numberOfMediaStates) {
@@ -689,42 +690,29 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
                 dispatch(addTransition(sourceMediaState, transition, targetMediaState));
             }
 
-            // if (destinationIndex > 0) {
-            //     // create transition and assign it as the transitionIn to this state
-            //
-            //     // sourceMediaState = just created media state
-            //     // destinationMediaState = media state at destinationMediaState
-            // }
-            //
-            // if (destinationIndex < numberOfMediaStates) {
-            //     // create transition and assign it transitionOut from this state
-            //
-            //     // sourceMediaState =
-            //     // destinationMediaState = ??
-            // }
-        }
+            else {
 
-        state = getState();
-        // from master / old noninteractive playlist implementation
-        // http://stackoverflow.com/questions/5306680/move-an-array-element-from-one-array-position-to-another
-        // if (destinationIndex >= newPlaylistItemIds.length) {
-        //     var k = destinationIndex - newPlaylistItemIds.length;
-        //     while ((k--) + 1) {
-        //         newPlaylistItemIds.push(undefined);
-        //     }
-        // }
-        // newPlaylistItemIds.splice(destinationIndex, 0, newPlaylistItemIds.splice(sourceIndex, 1)[0]);
-        //
-        // newZonePlaylist = Object.assign({}, existingZonePlaylist);
-        // newZonePlaylist.playlistItemIds = newPlaylistItemIds;
-        //
-        // newZonePlaylistsById[zonePlaylistId] = newZonePlaylist;
-        //
-        // newState = {
-        //     zonePlaylistsById: newZonePlaylistsById
-        // };
-        //
-        // return newState;
+                //  create two transitions
+                //  transition 1
+                //      source is media state at destination index - 1
+                //      destination is created media state
+                //  transition 2
+                //      source is media created media state
+                //      destination is media state at destination index
+
+                const userEvent = new UserEvent("timeout");
+
+                const sourceMediaState0 = getMediaStateAt(state, selectedZonePlaylist, destinationIndex - 1);
+                const targetMediaState0 = mediaState;
+                const transition0 = new Transition(sourceMediaState0, userEvent, targetMediaState0);
+                dispatch(addTransition(sourceMediaState0, transition0, targetMediaState0));
+
+                const sourceMediaState1 = mediaState;
+                const targetMediaState1 = getMediaStateAt(state, selectedZonePlaylist, destinationIndex);
+                const transition1 = new Transition(sourceMediaState1, userEvent, targetMediaState1);
+                dispatch(addTransition(sourceMediaState1, transition1, targetMediaState1));
+            }
+        }
     };
 
 }
