@@ -8,6 +8,8 @@ import axios from 'axios';
 import ImageMediaItem from '../entities/imageMediaItem';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import MediaState from '../badm/mediaState';
+import UserEvent from '../badm/userEvent';
+import Transition from '../badm/transition';
 
 import { executeLoadAppData, executeFetchSign, executeSelectMediaFolder, getFileName, executeSaveSign } from '../platform/actions';
 
@@ -496,10 +498,7 @@ export function addTransition(sourceMediaState, transition, targetMediaState) {
 
         dispatch(newTransition(transition));
 
-        let nextState = getState();
-        // getLastKey was not built for an array, but still might work.
-        const transitionId = getLastKey(nextState.transitions.transitionsById);
-
+        const transitionId = transition.id;
         dispatch(addTransitionOut(sourceMediaState, transitionId));
         dispatch(addTransitionIn(targetMediaState, transitionId));
     };
@@ -591,6 +590,16 @@ export function saveBSNPresentation(name, sign) {
 // this.props.addTransition(sourceMediaState, transition, targetMediaState);
 
 
+function getMediaStateAt(state, selectedZonePlaylist, indexInNonInteractivePlaylist) {
+
+    // only returns first state currently
+
+    const initialMediaStateId = selectedZonePlaylist.initialMediaStateId;
+    const mediaState = selectedZonePlaylist.mediaStatesById[initialMediaStateId];
+
+    return mediaState;
+}
+
 export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, operation, type, stateName, path, sourceIndex, destinationIndex) {
 
     // initial implementation  - ignore move, implement copy from media library
@@ -600,29 +609,89 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
         const playlistItem = new ImagePlaylistItem (stateName, path, 6, 0, 2, false);
         const mediaState = new MediaState (playlistItem, 0, 0);
 
-        // const newMediaStateAction = dispatch(newMediaState(mediaState));
-
         let state = getState();
 
         const mediaStatesById = selectedZonePlaylist.mediaStatesById;
         const numberOfMediaStates = Object.keys(mediaStatesById).length;
 
-        if (destinationIndex < 0) {
-            // append to end of playlist
-            destinationIndex = numberOfMediaStates;
-        }
-
-        if (destinationIndex > 0) {
-            // create transition and assign it as the transitionIn to this state
-        }
-
-        if (destinationIndex < numberOfMediaStates) {
-            // create transition and assign it transitionOut from this state
-        }
-
         dispatch(addMediaStateToZonePlaylist(selectedZonePlaylist.id, mediaState));
         if (numberOfMediaStates === 0) {
             dispatch(setInitialMediaState(selectedZonePlaylist.id, mediaState.getId()));
+        }
+
+        // if this is the first media state, then no transitions are required
+        // else
+        //      if this is an insertion to the beginning of the list
+        //          create one transition
+        //          source is created media state
+        //          destination is the current first media state (initialMediaState)
+        //      else if this is appending to the end of the playlist
+        //          create one transition
+        //          source is last media state in the playlist
+        //          destination is the created media state
+        //      else
+        //          create two transitions
+        //          transition 1
+        //              source is media state at destination index
+        //              destination is created media state
+        //          transition 2
+        //              source is media created media state
+        //              destination is media state at destination index
+        //  endif
+
+        //  could be off by one errors
+        // appears that destinationIndex is the index of where the dropped item should appear in the 'array' of items
+        // that is, if there are currently 4 items and destinationIndex is 2, the dropped item would become the 3rd item in the list.
+
+        if (numberOfMediaStates > 0) {
+
+            if (destinationIndex < 0) {
+
+                //  append to the end of the playlist
+                //      create one transition
+                //      source is last media state in the playlist
+                //      destination is the created media state
+
+                destinationIndex = numberOfMediaStates;
+                const sourceMediaState = getMediaStateAt(state, selectedZonePlaylist, destinationIndex - 1);
+                const targetMediaState = mediaState;
+
+                const userEvent = new UserEvent("timeout");
+                userEvent.setValue("5");
+
+                const transition = new Transition(sourceMediaState, userEvent, targetMediaState);
+                dispatch(addTransition(sourceMediaState, transition, targetMediaState));
+            }
+
+            else if (destinationIndex === 0) {
+
+                //  insertion to the beginning of the list
+                //      create one transition
+                //      source is created media state
+                //      destination is the current first media state (initialMediaState)
+                const sourceMediaState = mediaState;
+                const targetMediaState = getMediaStateAt(state, selectedZonePlaylist, 0);
+
+                const userEvent = new UserEvent("timeout");
+                userEvent.setValue("5");
+
+                const transition = new Transition(sourceMediaState, userEvent, targetMediaState);
+                dispatch(addTransition(sourceMediaState, transition, targetMediaState));
+            }
+
+            // if (destinationIndex > 0) {
+            //     // create transition and assign it as the transitionIn to this state
+            //
+            //     // sourceMediaState = just created media state
+            //     // destinationMediaState = media state at destinationMediaState
+            // }
+            //
+            // if (destinationIndex < numberOfMediaStates) {
+            //     // create transition and assign it transitionOut from this state
+            //
+            //     // sourceMediaState =
+            //     // destinationMediaState = ??
+            // }
         }
 
         state = getState();

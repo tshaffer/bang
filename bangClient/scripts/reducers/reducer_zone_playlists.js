@@ -195,7 +195,7 @@ export default function(state = initialState, action) {
 
             // make copy of existing fields
             newZonePlaylistsById = Object.assign({}, state.zonePlaylistsById);
-            newMediaStatesById = Object.assign([], existingZonePlaylist.mediaStatesById);
+            newMediaStatesById = Object.assign({}, existingZonePlaylist.mediaStatesById);
 
             newMediaStatesById[mediaStateId] = mediaState;
 

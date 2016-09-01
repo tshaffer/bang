@@ -107,6 +107,7 @@ class NonInteractivePlaylist extends Component {
         let index = -1;
         let indexOfDropTarget = -1;
 
+        // index == -1 => drop item at end of list
         if (event.target.id === "playlistItemsUl") {
             // drop item at end of list
         }
@@ -196,7 +197,7 @@ class NonInteractivePlaylist extends Component {
                     // {/*data-name={fileName}*/}
                     // {/*data-path={filePath}*/}
                     // {/*data-type="image"*/}
-                    
+
                     return (
                         <li className="flex-item mediaLibraryThumbDiv" key={index} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
                             <img
