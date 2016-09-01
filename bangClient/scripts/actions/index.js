@@ -590,12 +590,22 @@ export function saveBSNPresentation(name, sign) {
 // this.props.addTransition(sourceMediaState, transition, targetMediaState);
 
 
-function getMediaStateAt(state, selectedZonePlaylist, indexInNonInteractivePlaylist) {
+function getMediaStateAt(state, selectedZonePlaylist, targetIndex) {
 
-    // only returns first state currently
+    const transitionsById = state.transitions.transitionsById;
 
-    const initialMediaStateId = selectedZonePlaylist.initialMediaStateId;
-    const mediaState = selectedZonePlaylist.mediaStatesById[initialMediaStateId];
+    let currentIndex = 0;
+    let mediaStateId = selectedZonePlaylist.initialMediaStateId;
+    let mediaState = selectedZonePlaylist.mediaStatesById[mediaStateId];
+
+    while (currentIndex < targetIndex) {
+        // code could be safer here but this **should** always work
+        const transitionOutId = mediaState.transitionOutIds[0];
+        const transition = transitionsById[transitionOutId];
+        mediaStateId = transition.targetMediaStateId;
+        mediaState = selectedZonePlaylist.mediaStatesById[mediaStateId];
+        currentIndex++;
+    }
 
     return mediaState;
 }
