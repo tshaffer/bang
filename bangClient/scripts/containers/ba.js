@@ -284,6 +284,7 @@ class BA extends Component {
                         zones={this.props.zones}
                         zonePlaylists={this.props.zonePlaylists}
                         mediaThumbs={this.props.mediaThumbs}
+                        transitions={this.props.transitions}
                     />
                     {propertySheetTag}
                     <EditPreferencesDlg
@@ -303,6 +304,7 @@ function mapStateToProps(state) {
         zonePlaylists: state.zonePlaylists,
         playlistItems: state.playlistItems,
         htmlSites: state.htmlSites,
+        transitions: state.transitions,
 
         mediaLibraryPlaylistItems: state.mediaLibraryPlaylistItems,
         mediaFolder: state.mediaFolder,
@@ -331,6 +333,7 @@ BA.propTypes = {
     mediaThumbs: React.PropTypes.object.isRequired,
     mediaLibraryPlaylistItems: React.PropTypes.array.isRequired,
     htmlSites: React.PropTypes.object.isRequired,
+    transitions: React.PropTypes.object.isRequired
 };
 
 

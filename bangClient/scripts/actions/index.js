@@ -645,7 +645,7 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
 
         if (numberOfMediaStates > 0) {
 
-            if (destinationIndex < 0) {
+            if (destinationIndex < 0 || destinationIndex >= numberOfMediaStates) {
 
                 //  append to the end of the playlist
                 //      create one transition

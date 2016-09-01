@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import $ from 'jquery';
 
 import { guid } from '../utilities/utils';
 
@@ -40,47 +41,48 @@ class NonInteractivePlaylist extends Component {
         return null;
     }
 
+    
+    getDropIndex(event) {
 
-
-    addMediaStateToNonInteractivePlaylist(operation, type, stateName, path, sourceIndex, destinationIndex) {
-
-        // ignore type for now
-        // stateName is fileName
-        // hard code values for timeOnScreen, transition, transitionDuration, videoPlayerRequired
-        // const playlistItem = new ImagePlaylistItem (stateName, path, 6, 0, 2, false);
-        // const mediaState = new MediaState (playlistItem, 0, 0);
-
-        // from interactivePlaylist
-        //      this.props.newMediaState(mediaState);
-        //      this.props.addMediaStateToZonePlaylist(selectedZonePlaylistId, mediaState.getId());
-
-        // from master (old nonInteractivePlaylist)
-        //      this.props.newPlaylistItem(playlistItem);
-        //      this.props.addPlaylistItemToZonePlaylist(currentZonePlaylistId, playlistItem.getId(), destinationIndex);
-
-        // what needs to be done
-        //      create playlistItem based on what was dropped (done)
-        //      create media state from playlistItem (done)
-        //      is there a prior item? if yes,
-        //          create transition out from prior item to this item
-        //      is there a following item? if yes,
-        //          create transition in from this item to following item
-        //      do these last two items get done here or in redux / action land?
-        //      in interactivePlaylist, what's done where?
-        //          transition is created here, but it's added to the store, specifying source and destination in redux land
-
-        // proposal
-        //  react understands at a high level what needs to be done; gets all the information based on the UI and passes that information on to redux
-        //  what redux would need
-        //          all parameters passed to this function (type may be questionable in my opinion)
-        //          what is sourceIndex used for?
-        //              it's required for the 'move' operation.
-        console.log(arguments);
-
+        let numberOfMediaStates = 0;
         const selectedZonePlaylist = this.getSelectedZonePlaylist();
+        if (selectedZonePlaylist) {
+            numberOfMediaStates = Object.keys(selectedZonePlaylist.mediaStatesById).length;
+        }
 
-        this.props.addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, operation, type, stateName, path, sourceIndex, destinationIndex);
+        let index = -1;
+        let indexOfDropTarget = -1;
+
+        const offset = $("#" + event.target.id).offset();
+        const left = event.pageX - offset.left;
+        let targetWidth = event.target.width;
+        if (targetWidth == undefined) {
+            targetWidth = $("#" + event.target.id).outerWidth();
+        }
+
+        indexOfDropTarget = Number(event.target.dataset.index);
+
+        if (left < (targetWidth / 2)) {
+            index = indexOfDropTarget;
+        }
+        else if (indexOfDropTarget <= (numberOfMediaStates - 1)) {
+            index = indexOfDropTarget + 1;
+        }
+
+        return index;
     }
+
+
+
+    // addMediaStateToNonInteractivePlaylist(operation, type, stateName, path, sourceIndex, destinationIndex) {
+    //
+    //     console.log(arguments);
+    //
+    //     const selectedZonePlaylist = this.getSelectedZonePlaylist();
+    //
+    //     this.props.addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, operation, type, stateName, path, sourceIndex, destinationIndex);
+    // }
+
 
     handlePlaylistDrop (event) {
 
@@ -130,28 +132,10 @@ class NonInteractivePlaylist extends Component {
         // specify playlist item to drop
         let playlistItem = null;
         if (type === "image") {
-            playlistItem = this.addMediaStateToNonInteractivePlaylist(operation, type, stateName, path, startIndex, index);
+            const selectedZonePlaylist = this.getSelectedZonePlaylist();
+            this.props.addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, operation, type, stateName, path, startIndex, index);
+            // playlistItem = this.addMediaStateToNonInteractivePlaylist(operation, type, stateName, path, startIndex, index);
         }
-        // else if (type == "html5") {
-        //     // TODO - for now, set the state name and site name to the first site in the sign (if it exists)
-        //     let defaultName = "";
-        //     if (this.props.sign.htmlSiteIds.length > 0) {
-        //         const htmlSiteId = this.props.sign.htmlSiteIds[0];
-        //         const htmlSite = this.props.htmlSites.htmlSitesById[htmlSiteId];
-        //         defaultName = htmlSite.name;
-        //     }
-        //     else {
-        //         defaultName = "html5";
-        //     }
-        //     playlistItem = this.props.onDropPlaylistItem(operation, type, defaultName, defaultName, startIndex, index);
-        // }
-        // else if (type == "mediaList") {
-        //     // TBD
-        // }
-        //
-        // if (playlistItem) {
-        //     this.onSelectPlaylistItem(playlistItem);
-        // }
     }
 
 
@@ -159,12 +143,21 @@ class NonInteractivePlaylist extends Component {
 
         const self = this;
 
-        const initialMediaStateId = selectedZonePlaylist.initialMediaStateId;
-        const mediaState = selectedZonePlaylist.mediaStatesById[initialMediaStateId];
+        const transitionsById = this.props.transitions.transitionsById;
 
-        // only support one state - initial testing
         let mediaStates = [];
+
+        const initialMediaStateId = selectedZonePlaylist.initialMediaStateId;
+        let mediaState = selectedZonePlaylist.mediaStatesById[initialMediaStateId];
         mediaStates.push(mediaState);
+
+        while (mediaState.transitionOutIds && mediaState.transitionOutIds.length === 1) {
+            const transitionOutId = mediaState.transitionOutIds[0];
+            const transition = transitionsById[transitionOutId];
+            const targetMediaStateId = transition.targetMediaStateId;
+            mediaState = selectedZonePlaylist.mediaStatesById[targetMediaStateId];
+            mediaStates.push(mediaState);
+        }
 
         let dataIndex = -1;
 
@@ -269,6 +262,7 @@ NonInteractivePlaylist.propTypes = {
     zones: React.PropTypes.object.isRequired,
     zonePlaylists: React.PropTypes.object.isRequired,
     mediaThumbs: React.PropTypes.object.isRequired,
+    transitions: React.PropTypes.object.isRequired,
 };
 
 
@@ -280,6 +274,7 @@ function mapStateToProps(state) {
         sign: state.sign,
         zones: state.zones,
         zonePlaylists: state.zonePlaylists,
+        transitions: state.transitions
     };
 }
 
