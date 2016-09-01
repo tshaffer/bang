@@ -8,6 +8,7 @@ import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import MediaState from '../badm/mediaState';
 
 import { addMediaStateToNonInteractivePlaylist } from '../actions/index';
+import { getThumb } from '../platform/actions';
 
 class NonInteractivePlaylist extends Component {
 
@@ -153,11 +154,81 @@ class NonInteractivePlaylist extends Component {
     }
 
 
+    getMediaStatesJSX(selectedZonePlaylist) {
+
+        const self = this;
+
+        const initialMediaStateId = selectedZonePlaylist.initialMediaStateId;
+        const mediaState = selectedZonePlaylist.mediaStatesById[initialMediaStateId];
+
+        // only support one state - initial testing
+        let mediaStates = [];
+        mediaStates.push(mediaState);
+
+        let dataIndex = -1;
+
+        let mediaStatesJSX = mediaStates.map(function (mediaState, index) {
+
+            dataIndex++;
+
+            const id = mediaState.getId();
+            const fileName = mediaState.getFileName();
+            let filePath = "";
+
+            let className = "";
+            // if (self.props.selectedPlaylistItemId && self.props.selectedPlaylistItemId === id) {
+            //     className = "selectedImage ";
+            // }
+
+            const mediaPlaylistItem = mediaState.getMediaPlaylistItem();
+
+            if (mediaPlaylistItem instanceof ImagePlaylistItem) {
+                filePath = mediaPlaylistItem.getFilePath();
+                if (self.props.mediaThumbs.hasOwnProperty(filePath)) {
+
+                    const mediaItem = self.props.mediaThumbs[filePath];
+                    const thumb = getThumb(mediaItem);
+                    className += "mediaLibraryThumbImg";
+
+                    // onClick={() => self.onSelectPlaylistItem(playlistItem)}
+                    // {/*draggable={true}*/}
+                    // {/*onDragStart={self.playlistDragStartHandler}*/}
+                    // {/*data-name={fileName}*/}
+                    // {/*data-path={filePath}*/}
+                    // {/*data-type="image"*/}
+                    
+                    return (
+                        <li className="flex-item mediaLibraryThumbDiv" key={index} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
+                            <img
+                                id={id}
+                                src={thumb}
+                                className={className}
+                                data-index={dataIndex}
+                            />
+                            <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>{fileName}</p>
+                        </li>
+                    );
+
+                }
+                else {
+                    return (
+                        <li key={id} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
+                            <p className="mediaLibraryThumbLbl">{fileName}</p>
+                        </li>
+                    );
+                }
+
+            }
+        });
+
+        return mediaStatesJSX;
+    }
+
     render() {
 
         let selectedZonePlaylist = null;
         let numberOfMediaStates = 0;
-        let playlistItems = null;
+        let mediaStatesJSX = null;
 
         selectedZonePlaylist = this.getSelectedZonePlaylist();
         if (selectedZonePlaylist) {
@@ -165,10 +236,10 @@ class NonInteractivePlaylist extends Component {
         }
 
         if (numberOfMediaStates > 0) {
-            playlistItems = <div>some media states</div>;
+            mediaStatesJSX = this.getMediaStatesJSX(selectedZonePlaylist);
         }
         else {
-            playlistItems =
+            mediaStatesJSX =
                 (
                 <li id="liDropItemHere" className="mediaLibraryThumbDiv" key={guid()}>
                     <p id="lblDropItemHere" className="mediaLibraryThumbLbl">Drop Item Here</p>
@@ -183,7 +254,7 @@ class NonInteractivePlaylist extends Component {
                 id="playlistDiv"
             >
                 <ul id="playlistItemsUl" className="playlist-flex-container wrap" onDrop={this.handlePlaylistDrop.bind(this)} onDragOver={this.handlePlaylistDragOver.bind(this)}>
-                    {playlistItems}
+                    {mediaStatesJSX}
                 </ul>
             </div>
             )
@@ -196,6 +267,7 @@ NonInteractivePlaylist.propTypes = {
     sign: React.PropTypes.object.isRequired,
     zones: React.PropTypes.object.isRequired,
     zonePlaylists: React.PropTypes.object.isRequired,
+    mediaThumbs: React.PropTypes.object.isRequired,
 };
 
 

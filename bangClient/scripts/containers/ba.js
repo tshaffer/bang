@@ -283,6 +283,7 @@ class BA extends Component {
                         sign={this.props.sign}
                         zones={this.props.zones}
                         zonePlaylists={this.props.zonePlaylists}
+                        mediaThumbs={this.props.mediaThumbs}
                     />
                     {propertySheetTag}
                     <EditPreferencesDlg
