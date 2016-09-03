@@ -270,15 +270,15 @@ export function newPlaylistItem(playlistItem) {
 //     };
 // }
 //
-export const ADD_MEDIA_STATE_TO_ZONE_PLAYLIST = 'ADD_MEDIA_STATE_TO_ZONE_PLAYLIST';
-export function addMediaStateToZonePlaylist(zonePlaylistId, mediaState) {
-
-    return {
-        type: ADD_MEDIA_STATE_TO_ZONE_PLAYLIST,
-        zonePlaylistId,
-        mediaState
-    };
-}
+// export const ADD_MEDIA_STATE_TO_ZONE_PLAYLIST = 'ADD_MEDIA_STATE_TO_ZONE_PLAYLIST';
+// export function addMediaStateToZonePlaylist(zonePlaylistId, mediaState) {
+//
+//     return {
+//         type: ADD_MEDIA_STATE_TO_ZONE_PLAYLIST,
+//         zonePlaylistId,
+//         mediaState
+//     };
+// }
 
 
 export const SET_INITIAL_MEDIA_STATE = 'SET_INITIAL_MEDIA_STATE';
@@ -616,18 +616,24 @@ function getMediaStateAt(state, selectedZonePlaylist, targetIndex) {
 
     let currentIndex = 0;
     let mediaStateId = selectedZonePlaylist.initialMediaStateId;
-    let mediaState = selectedZonePlaylist.mediaStatesById[mediaStateId];
+    const mediaStatesById = state.mediaStates.mediaStatesById;
+
+    let mediaState = mediaStatesById[mediaStateId];
 
     while (currentIndex < targetIndex) {
         // code could be safer here but this **should** always work
         const transitionOutId = mediaState.transitionOutIds[0];
         const transition = transitionsById[transitionOutId];
         mediaStateId = transition.targetMediaStateId;
-        mediaState = selectedZonePlaylist.mediaStatesById[mediaStateId];
+        mediaState = mediaStatesById[mediaStateId];
         currentIndex++;
     }
 
     return mediaState;
+}
+
+function getMediaState(state, mediaStateId) {
+    return state.mediaStates.mediaStatesById[mediaStateId];
 }
 
 export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, operation, type, stateName, path, sourceIndex, destinationIndex) {
@@ -638,13 +644,17 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
 
         const playlistItem = new ImagePlaylistItem (stateName, path, 6, 0, 2, false);
         const mediaState = new MediaState (playlistItem, 0, 0);
+        const newMediaStateId = mediaState.getId();
 
         let state = getState();
 
-        const mediaStatesById = selectedZonePlaylist.mediaStatesById;
+        // get number of media states before adding new media state
+        const mediaStatesById = state.mediaStates.mediaStatesById;
         const numberOfMediaStates = Object.keys(mediaStatesById).length;
 
-        dispatch(addMediaStateToZonePlaylist(selectedZonePlaylist.id, mediaState));
+        // add mediaState to store
+        dispatch(newMediaState(mediaState));
+        // dispatch(addMediaStateToZonePlaylist(selectedZonePlaylist.id, mediaState));
         if (numberOfMediaStates === 0 || destinationIndex === 0) {
             dispatch(setInitialMediaState(selectedZonePlaylist.id, mediaState.getId()));
         }
@@ -713,9 +723,6 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
             else {
 
                 //  first, delete the existing transition
-                //          deleteTransition - actually deletes the transition itself from the transitions data structure
-                //          deleteTransitionIn(mediaState, transitionId)
-                //          deleteTransitionOut(mediaState, transitionId)
                 //  then, create two transitions
                 //  transition 1
                 //      source is media state at destination index - 1
@@ -723,7 +730,6 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
                 //  transition 2
                 //      source is media created media state
                 //      destination is media state at destination index
-
 
                 let existingSourceMediaState = getMediaStateAt(state, selectedZonePlaylist, destinationIndex - 1);
                 let existingSourceMediaStateId = existingSourceMediaState.getId();
@@ -733,53 +739,38 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
                 let existingTargetMediaStateId = existingTargetMediaState.getId();
                 let existingTransitionInId = existingTargetMediaState.transitionInIds[0];
 
-
+                // remove transitions (from media states) between two states where new media state is getting inserted
+                // then remove actual transition
                 dispatch(deleteTransitionOut(existingSourceMediaState, existingTransitionOutId));
-                // for some reason, the transitionOut, which appears as though it's getting removed when 'single stepping', does not appear to be removed by the time it gets here.
-
-                // further debugging info
-                //      transitionOutIds is wrong in ZonePlaylists, but correct in MediaStates
-                //      maybe that's because the MediaStates reducer is called but the ZonePlaylists reducer is not
-                //      think through this!!
-                //      Perhaps add an updateMediaState function in the ZonePlaylists reducer?
-                //      if this is true, it may imply some design issues
-                //
-                //      I think there should only really be one mediaStatesById data structure, not two copies of it!!
-
                 dispatch(deleteTransitionIn(existingTargetMediaState, existingTransitionInId));
                 dispatch(deleteTransition(existingTransitionOutId));
-
-                // now, update the zone playlists so that their media states are consistent with mediaStates
-                // - not the way to get the most recent media state: existingSourceMediaState = getMediaStateAt(state, selectedZonePlaylist, destinationIndex - 1);
 
                 state = getState();
 
                 debugger;
 
-                // this is a hack that needs to be removed after I figure out how to fix it - the fix
-                // should result in a single copy of mediaStatesById
-                const mediaStatesById = state.mediaStates.mediaStatesById;
-                dispatch(updateMediaStatesById(selectedZonePlaylist.id, mediaStatesById));
-
-                // existingSourceMediaState = state.mediaStates.mediaStatesById[existingSourceMediaStateId];
-                // dispatch(updateMediaStateInZonePlaylist(selectedZonePlaylist.id, existingSourceMediaState.getId(), existingSourceMediaState));
-                //
-                // existingTargetMediaState = state.mediaStates.mediaStatesById[existingTargetMediaStateId];
-                // dispatch(updateMediaStateInZonePlaylist(selectedZonePlaylist.id, existingTargetMediaStateId, existingTargetMediaState));
-
-                debugger;
-
+                // next, create new transition and add it to the three media states
                 const userEvent = new UserEvent("timeout");
 
-                const sourceMediaState0 = getMediaStateAt(state, selectedZonePlaylist, destinationIndex - 1);
-                const targetMediaState0 = mediaState;
-                const transition0 = new Transition(sourceMediaState0, userEvent, targetMediaState0);
-                dispatch(addTransition(sourceMediaState0, transition0, targetMediaState0));
+                let sourceMediaState = getMediaState(state, existingSourceMediaStateId);
+                let targetMediaState = getMediaState(state, existingTargetMediaStateId);
+                let newMediaState = getMediaState(state, newMediaStateId);
 
-                const sourceMediaState1 = mediaState;
-                const targetMediaState1 = getMediaStateAt(state, selectedZonePlaylist, destinationIndex);
-                const transition1 = new Transition(sourceMediaState1, userEvent, targetMediaState1);
-                dispatch(addTransition(sourceMediaState1, transition1, targetMediaState1));
+                const transition0 = new Transition(sourceMediaState, userEvent, newMediaState);
+                dispatch(addTransition(sourceMediaState, transition0, newMediaState));
+
+                const transition1 = new Transition(newMediaState, userEvent, targetMediaState);
+                dispatch(addTransition(newMediaState, transition1, targetMediaState));
+
+                // const sourceMediaState0 = getMediaStateAt(state, selectedZonePlaylist, destinationIndex - 1);
+                // const targetMediaState0 = mediaState;
+                // const transition0 = new Transition(sourceMediaState0, userEvent, targetMediaState0);
+                // dispatch(addTransition(sourceMediaState0, transition0, targetMediaState0));
+                //
+                // const sourceMediaState1 = mediaState;
+                // const targetMediaState1 = getMediaStateAt(state, selectedZonePlaylist, destinationIndex);
+                // const transition1 = new Transition(sourceMediaState1, userEvent, targetMediaState1);
+                // dispatch(addTransition(sourceMediaState1, transition1, targetMediaState1));
 
                 const newState = getState();
                 debugger;

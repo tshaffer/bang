@@ -333,7 +333,7 @@ BA.propTypes = {
     mediaThumbs: React.PropTypes.object.isRequired,
     mediaLibraryPlaylistItems: React.PropTypes.array.isRequired,
     htmlSites: React.PropTypes.object.isRequired,
-    transitions: React.PropTypes.object.isRequired
+    transitions: React.PropTypes.object.isRequired,
 };
 
 

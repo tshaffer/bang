@@ -37,7 +37,7 @@ class NonInteractivePlaylist extends Component {
         let numberOfMediaStates = 0;
         const selectedZonePlaylist = this.getSelectedZonePlaylist();
         if (selectedZonePlaylist) {
-            numberOfMediaStates = Object.keys(selectedZonePlaylist.mediaStatesById).length;
+            numberOfMediaStates = Object.keys(this.props.mediaStates.mediaStatesById).length;
         }
 
         let index = -1;
@@ -128,7 +128,8 @@ class NonInteractivePlaylist extends Component {
 
         let mediaStateId = selectedZonePlaylist.initialMediaStateId;
         while (mediaStateId) {
-            let mediaState = selectedZonePlaylist.mediaStatesById[mediaStateId];
+            // let mediaState = selectedZonePlaylist.mediaStatesById[mediaStateId];
+            let mediaState = this.props.mediaStates.mediaStatesById[mediaStateId];
             mediaStates.push(mediaState);
             if (mediaState.transitionOutIds.length === 1) {
                 const transitionOutId = mediaState.transitionOutIds[0];
@@ -207,7 +208,9 @@ class NonInteractivePlaylist extends Component {
 
         selectedZonePlaylist = this.getSelectedZonePlaylist();
         if (selectedZonePlaylist) {
-            numberOfMediaStates = Object.keys(selectedZonePlaylist.mediaStatesById).length;
+            if (this.props.mediaStates) {
+                numberOfMediaStates = Object.keys(this.props.mediaStates.mediaStatesById).length;
+            }
         }
 
         if (numberOfMediaStates > 0) {
@@ -244,21 +247,25 @@ NonInteractivePlaylist.propTypes = {
     zonePlaylists: React.PropTypes.object.isRequired,
     mediaThumbs: React.PropTypes.object.isRequired,
     transitions: React.PropTypes.object.isRequired,
+    mediaStates: React.PropTypes.object.isRequired
 };
 
 
 function mapStateToProps(state) {
+
     return {
         sign: state.sign,
         zones: state.zones,
         zonePlaylists: state.zonePlaylists,
-        transitions: state.transitions
+        transitions: state.transitions,
+        mediaStates: state.mediaStates
     };
 }
 
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ addMediaStateToNonInteractivePlaylist },
+    return bindActionCreators(
+        { addMediaStateToNonInteractivePlaylist },
         dispatch);
 }
 
@@ -267,4 +274,4 @@ NonInteractivePlaylist.propTypes = {
 };
 
 
-export default connect(null, mapDispatchToProps)(NonInteractivePlaylist);
+export default connect(mapStateToProps, mapDispatchToProps)(NonInteractivePlaylist);

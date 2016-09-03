@@ -7,6 +7,5 @@ export default class Norm_ZonePlaylist   {
     constructor() {
         this.id = guid();
         this.initialMediaStateId = null;
-        this.mediaStatesById = {};
     }
 }
