@@ -5,8 +5,8 @@
  * Created by tedshaffer on 6/24/16.
  */
 import { NEW_ZONE_PLAYLIST, CLEAR_ZONE_PLAYLISTS,  ADD_MEDIA_STATE_TO_ZONE_PLAYLIST,
-    DELETE_MEDIA_STATE,
-    SET_INITIAL_MEDIA_STATE}
+    DELETE_MEDIA_STATE, UPDATE_MEDIA_STATES_BY_ID,
+    UPDATE_MEDIA_STATE, SET_INITIAL_MEDIA_STATE}
     from '../actions/index';
 import { guid } from '../utilities/utils';
 
@@ -186,6 +186,55 @@ export default function(state = initialState, action) {
         //     }
 
         case ADD_MEDIA_STATE_TO_ZONE_PLAYLIST:
+
+            zonePlaylistId = action.zonePlaylistId;
+            mediaState = action.mediaState;
+            mediaStateId = mediaState.getId();
+
+            existingZonePlaylist = state.zonePlaylistsById[zonePlaylistId];
+
+            // make copy of existing fields
+            newZonePlaylistsById = Object.assign({}, state.zonePlaylistsById);
+            newMediaStatesById = Object.assign({}, existingZonePlaylist.mediaStatesById);
+
+            newMediaStatesById[mediaStateId] = mediaState;
+
+            newZonePlaylist = Object.assign({}, existingZonePlaylist);
+            newZonePlaylist.mediaStatesById = newMediaStatesById;
+
+            newZonePlaylistsById[zonePlaylistId] = newZonePlaylist;
+
+            newState = {
+                zonePlaylistsById: newZonePlaylistsById
+            };
+
+            return newState;
+
+        case UPDATE_MEDIA_STATES_BY_ID:
+            {
+                zonePlaylistId = action.zonePlaylistId;
+                const mediaStatesById = action.mediaStatesById;
+
+                existingZonePlaylist = state.zonePlaylistsById[zonePlaylistId];
+
+                // make copy of existing fields
+                newZonePlaylistsById = Object.assign({}, state.zonePlaylistsById);
+                newMediaStatesById = Object.assign({}, mediaStatesById);
+
+                newZonePlaylist = Object.assign({}, existingZonePlaylist);
+                newZonePlaylist.mediaStatesById = newMediaStatesById;
+
+                newZonePlaylistsById[zonePlaylistId] = newZonePlaylist;
+
+                newState = {
+                    zonePlaylistsById: newZonePlaylistsById
+                };
+
+                return newState;
+            }
+
+
+        case UPDATE_MEDIA_STATE:
 
             zonePlaylistId = action.zonePlaylistId;
             mediaState = action.mediaState;
