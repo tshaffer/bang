@@ -679,11 +679,9 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
         //              destination is media state at destination index
         //  endif
 
-        //  could be off by one errors
-        // appears that destinationIndex is the index of where the dropped item should appear in the 'array' of items
-        // that is, if there are currently 4 items and destinationIndex is 2, the dropped item would become the 3rd item in the list.
-
-        // NOTE - destinationIndex refers to the index prior to adding the new item
+        // destinationIndex is the index of where the dropped item should appear in the existing 'array' of items
+        // (destinationIndex refers to the index prior to adding the new item)
+        // destinationIndex === -1 => append it to the list
         if (numberOfMediaStates > 0) {
 
             if (destinationIndex < 0 || destinationIndex >= numberOfMediaStates) {
@@ -746,9 +744,7 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
                 dispatch(deleteTransition(existingTransitionOutId));
 
                 state = getState();
-
-                debugger;
-
+                
                 // next, create new transition and add it to the three media states
                 const userEvent = new UserEvent("timeout");
 
@@ -761,19 +757,6 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
 
                 const transition1 = new Transition(newMediaState, userEvent, targetMediaState);
                 dispatch(addTransition(newMediaState, transition1, targetMediaState));
-
-                // const sourceMediaState0 = getMediaStateAt(state, selectedZonePlaylist, destinationIndex - 1);
-                // const targetMediaState0 = mediaState;
-                // const transition0 = new Transition(sourceMediaState0, userEvent, targetMediaState0);
-                // dispatch(addTransition(sourceMediaState0, transition0, targetMediaState0));
-                //
-                // const sourceMediaState1 = mediaState;
-                // const targetMediaState1 = getMediaStateAt(state, selectedZonePlaylist, destinationIndex);
-                // const transition1 = new Transition(sourceMediaState1, userEvent, targetMediaState1);
-                // dispatch(addTransition(sourceMediaState1, transition1, targetMediaState1));
-
-                const newState = getState();
-                debugger;
             }
         }
     };
