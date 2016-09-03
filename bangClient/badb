@@ -47,7 +47,27 @@
 		"/Users/tedshaffer/Pictures/Videos/MountainStream.mpg": {
 			"thumbPath": "thumbs/MountainStream_thumb.png",
 			"modified": "2016-08-31T16:17:56.494Z"
+		},
+		"/Users/tedshaffer/Pictures/MixedMedia/Least_Likely_PSA_720p.mpg": {
+			"thumbPath": "thumbs/Least_Likely_PSA_720p_thumb.png",
+			"modified": "2016-09-01T21:47:35.563Z"
+		},
+		"/Users/tedshaffer/Pictures/MixedMedia/Roku_brand_720p.mpg": {
+			"thumbPath": "thumbs/Roku_brand_720p_thumb.png",
+			"modified": "2016-09-01T21:47:35.564Z"
+		},
+		"/Users/tedshaffer/Pictures/MixedMedia/Alaska (10 of 274).jpg": {
+			"thumbPath": "thumbs/Alaska (10 of 274)_thumb.jpg",
+			"modified": "2016-09-01T21:47:35.564Z"
+		},
+		"/Users/tedshaffer/Pictures/MixedMedia/ManWithFeet.jpg": {
+			"thumbPath": "thumbs/ManWithFeet_thumb.jpg",
+			"modified": "2016-09-01T21:47:35.564Z"
+		},
+		"/Users/tedshaffer/Pictures/MixedMedia/SignageLiveOSSupport.jpg": {
+			"thumbPath": "thumbs/SignageLiveOSSupport_thumb.jpg",
+			"modified": "2016-09-01T21:47:35.564Z"
 		}
 	},
-	"mediaLibraryFolder": "/Users/tedshaffer/Pictures/Videos"
+	"mediaLibraryFolder": "/Users/tedshaffer/Pictures/MixedMedia"
 }
