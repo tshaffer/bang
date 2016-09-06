@@ -152,21 +152,6 @@ export function addZone(zoneId) {
     };
 }
 
-export const SET_SELECTED_ZONE = 'SET_SELECTED_ZONE';
-export function selectZone(zone) {
-    return {
-        type: SET_SELECTED_ZONE,
-        payload: zone
-    };
-}
-
-export const CLEAR_ZONE_PLAYLISTS = 'CLEAR_ZONE_PLAYLISTS';
-export function clearZonePlaylists() {
-    return {
-        type: CLEAR_ZONE_PLAYLISTS
-    };
-}
-
 export const NEW_ZONE_PLAYLIST = 'NEW_ZONE_PLAYLIST';
 export function newZonePlaylist() {
 
@@ -189,13 +174,6 @@ export function setZonePlaylist(zoneId, zonePlaylistId) {
     };
 }
 
-export const CLEAR_PLAYLIST_ITEMS = 'CLEAR_PLAYLIST_ITEMS';
-export function clearPlaylistItems() {
-    return {
-        type: CLEAR_PLAYLIST_ITEMS
-    };
-}
-
 export const NEW_MEDIA_STATE = 'NEW_MEDIA_STATE';
 export function newMediaState(mediaState) {
     return {
@@ -203,15 +181,6 @@ export function newMediaState(mediaState) {
         payload: mediaState
     };
 }
-
-// export const ADD_TRANSITION = 'ADD_TRANSITION';
-// export function addTransition(sourceMediaStateId, destinationMediaStateId) {
-//     return {
-//         type: ADD_TRANSITION,
-//         sourceMediaStateId: sourceMediaStateId,
-//         destinationMediaStateId: destinationMediaStateId
-//     }
-// }
 
 export const UPDATE_MEDIA_STATE = 'UPDATE_MEDIA_STATE';
 export function updateMediaState(mediaStateId, mediaState) {
@@ -222,65 +191,6 @@ export function updateMediaState(mediaStateId, mediaState) {
     };
 }
 
-
-export const UPDATE_MEDIA_STATES_BY_ID = 'UPDATE_MEDIA_STATES_BY_ID';
-export function updateMediaStatesById(zonePlaylistId, mediaStatesById) {
-    return {
-        type: UPDATE_MEDIA_STATES_BY_ID,
-        zonePlaylistId,
-        mediaStatesById
-    };
-}
-
-export const UPDATE_MEDIA_STATE_IN_ZONE_PLAYLIST = 'UPDATE_MEDIA_STATE';
-export function updateMediaStateInZonePlaylist(zonePlaylistId, mediaStateId, mediaState) {
-    return {
-        type: UPDATE_MEDIA_STATE_IN_ZONE_PLAYLIST,
-        zonePlaylistId,
-        mediaStateId,
-        mediaState
-    };
-}
-
-export const NEW_PLAYLIST_ITEM = 'NEW_PLAYLIST_ITEM';
-export function newPlaylistItem(playlistItem) {
-    return {
-        type: NEW_PLAYLIST_ITEM,
-        payload: playlistItem
-    };
-}
-
-// export const ADD_PLAYLIST_ITEM = 'ADD_PLAYLIST_ITEM';
-// export function addPlaylistItem(zonePlaylistId, playlistItemId) {
-//     return {
-//         type: ADD_PLAYLIST_ITEM,
-//         zonePlaylistId: zonePlaylistId,
-//         playlistItemId: playlistItemId
-//     };
-// }
-//
-// export const ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST = 'ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST';
-// export function addPlaylistItemToZonePlaylist(zonePlaylistId, playlistItemId, index) {
-//
-//     return {
-//         type: ADD_PLAYLIST_ITEM_TO_ZONE_PLAYLIST,
-//         zonePlaylistId: zonePlaylistId,
-//         playlistItemId: playlistItemId,
-//         index: index
-//     };
-// }
-//
-// export const ADD_MEDIA_STATE_TO_ZONE_PLAYLIST = 'ADD_MEDIA_STATE_TO_ZONE_PLAYLIST';
-// export function addMediaStateToZonePlaylist(zonePlaylistId, mediaState) {
-//
-//     return {
-//         type: ADD_MEDIA_STATE_TO_ZONE_PLAYLIST,
-//         zonePlaylistId,
-//         mediaState
-//     };
-// }
-
-
 export const SET_INITIAL_MEDIA_STATE = 'SET_INITIAL_MEDIA_STATE';
 export function setInitialMediaState(zonePlaylistId, mediaStateId) {
 
@@ -290,52 +200,6 @@ export function setInitialMediaState(zonePlaylistId, mediaStateId) {
         mediaStateId: mediaStateId
     };
 }
-
-// export const DELETE_PLAYLIST_ITEM = 'DELETE_PLAYLIST_ITEM';
-// export function deletePlaylistItem(zonePlaylistId, playlistItemId) {
-//     return {
-//         type: DELETE_PLAYLIST_ITEM,
-//         zonePlaylistId: zonePlaylistId,
-//         playlistItemId: playlistItemId
-//     };
-// }
-//
-// export const MOVE_PLAYLIST_ITEM_WITHIN_ZONE_PLAYLIST = 'MOVE_PLAYLIST_ITEM_WITHIN_ZONE_PLAYLIST';
-// export function movePlaylistItemWithinZonePlaylist(zonePlaylistId, sourceIndex, destinationIndex) {
-//
-//     return {
-//         type: MOVE_PLAYLIST_ITEM_WITHIN_ZONE_PLAYLIST,
-//         zonePlaylistId: zonePlaylistId,
-//         sourceIndex: sourceIndex,
-//         destinationIndex: destinationIndex
-//     };
-// }
-//
-// export const UPDATE_PLAYLIST_ITEM = 'UPDATE_PLAYLIST_ITEM';
-// export function updatePlaylistItem(playlistItemId, playlistItem) {
-//     return {
-//         type: UPDATE_PLAYLIST_ITEM,
-//         playlistItemId: playlistItemId,
-//         playlistItem: playlistItem
-//     };
-// }
-//
-// export const ADD_TRANSITION = 'ADD_TRANSITION';
-// export function addTransition(sourceMediaStateId, destinationMediaStateId) {
-//     return {
-//         type: ADD_TRANSITION,
-//         sourceMediaStateId: sourceMediaStateId,
-//         destinationMediaStateId: destinationMediaStateId
-//     }
-// }
-// inputs
-//      sourceMediaState (exists in store)
-//      targeMediaState (exists in store)
-//      transition (doesn't exist in store)
-//  actions
-//      add transition to store
-//      add transition id to sourceMediaState's transitionOutIds
-//      add transition id to destinationMediaState's transitionInIds
 
 export const NEW_TRANSITION = 'NEW_TRANSITION';
 export function newTransition(transition) {
@@ -594,20 +458,6 @@ export function saveBSNPresentation(name, sign) {
 //     };
 // }
 
-
-
-// const sourceMediaState = this.props.mediaStates.mediaStatesById[this.props.selectedMediaStateId];
-// const targetMediaState = this.props.mediaStates.mediaStatesById[targetMediaStateId];
-//
-// // create userEvent based on current selected event
-// // do this here or in playlist??
-// // const userEvent = new UserEvent("timeout");
-// const userEvent = new UserEvent(this.state.activeBSEventType);
-// userEvent.setValue("5");
-//
-// const transition = new Transition(sourceMediaState, userEvent, targetMediaState); // do this here?
-//
-// this.props.addTransition(sourceMediaState, transition, targetMediaState);
 
 
 function getMediaStateAt(state, selectedZonePlaylist, targetIndex) {
