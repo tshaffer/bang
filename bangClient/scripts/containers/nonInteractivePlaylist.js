@@ -117,6 +117,11 @@ class NonInteractivePlaylist extends Component {
         }
     }
 
+    onSelectMediaState(mediaState) {
+        console.log("mediaState ", mediaState.getFileName(), " selected");
+        this.props.onSelectMediaState(mediaState);
+    }
+
 
     getMediaStatesJSX(selectedZonePlaylist) {
 
@@ -152,9 +157,9 @@ class NonInteractivePlaylist extends Component {
             let filePath = "";
 
             let className = "";
-            // if (self.props.selectedPlaylistItemId && self.props.selectedPlaylistItemId === id) {
-            //     className = "selectedImage ";
-            // }
+            if (self.props.selectedMediaStateId && self.props.selectedMediaStateId === id) {
+                className = "selectedImage ";
+            }
 
             const mediaPlaylistItem = mediaState.getMediaPlaylistItem();
 
@@ -166,13 +171,13 @@ class NonInteractivePlaylist extends Component {
                     const thumb = getThumb(mediaItem);
                     className += "mediaLibraryThumbImg";
 
-                    // onClick={() => self.onSelectPlaylistItem(playlistItem)}
                     // {/*draggable={true}*/}
                     // {/*onDragStart={self.playlistDragStartHandler}*/}
                     // {/*data-name={fileName}*/}
                     // {/*data-path={filePath}*/}
                     // {/*data-type="image"*/}
 
+                    // indicate media state is selected by marking the entire list item?
                     return (
                         <li className="flex-item mediaLibraryThumbDiv" key={index} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
                             <img
@@ -180,6 +185,7 @@ class NonInteractivePlaylist extends Component {
                                 src={thumb}
                                 className={className}
                                 data-index={dataIndex}
+                                onClick={() => self.onSelectMediaState(mediaState)}
                             />
                             <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>{fileName}</p>
                         </li>
@@ -247,7 +253,8 @@ NonInteractivePlaylist.propTypes = {
     zonePlaylists: React.PropTypes.object.isRequired,
     mediaThumbs: React.PropTypes.object.isRequired,
     transitions: React.PropTypes.object.isRequired,
-    mediaStates: React.PropTypes.object.isRequired
+    mediaStates: React.PropTypes.object.isRequired,
+    onSelectMediaState: React.PropTypes.func.isRequired
 };
 
 

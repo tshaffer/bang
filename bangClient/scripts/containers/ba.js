@@ -49,6 +49,11 @@ class BA extends Component {
 
     }
 
+    handleSelectMediaState(mediaState) {
+        this.setState({ selectedMediaStateId: mediaState.getId() });
+    }
+
+
 // edit preferences using material ui
     handleEditPreferences() {
         console.log("handleEditPreferences in ba");
@@ -80,10 +85,6 @@ class BA extends Component {
         this.props.updateSign(sign);
     }
 
-
-    handleSetSelectedMediaStateId(selectedMediaStateId) {
-        this.setState( { selectedMediaStateId: selectedMediaStateId });
-    }
 
     handleToggleOpenClosePropertySheet() {
         this.setState({propertySheetOpen: !this.state.propertySheetOpen});
@@ -285,6 +286,8 @@ class BA extends Component {
                         zonePlaylists={this.props.zonePlaylists}
                         mediaThumbs={this.props.mediaThumbs}
                         transitions={this.props.transitions}
+                        onSelectMediaState={this.handleSelectMediaState.bind(this)}
+                        selectedMediaStateId={this.state.selectedMediaStateId}
                     />
                     {propertySheetTag}
                     <EditPreferencesDlg
