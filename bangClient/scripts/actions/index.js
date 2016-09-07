@@ -292,8 +292,12 @@ export function deleteMediaStateFromNonInteractivePlaylist(zonePlaylistId, media
             transitionOutId = mediaState.transitionOutIds[0];
         }
 
+        // if transitionInId === null, then the media state getting deleted is the first media state in the playlist
+        // if transitionInId === null && if transitionOutId !== null, then its target media state will become the first media state in the playlist
+        // else the list is empty after the deletion
+
         if (transitionInId && transitionOutId) {
-            // create a transition between these two states.
+            // not deleting first state - create a transition between these two states.
             const transitionIn = state.transitions.transitionsById[transitionInId];
             const sourceMediaState = state.mediaStates.mediaStatesById[transitionIn.sourceMediaStateId];
 
@@ -307,11 +311,15 @@ export function deleteMediaStateFromNonInteractivePlaylist(zonePlaylistId, media
             dispatch(addTransition(sourceMediaState, transition, targetMediaState));
 
             state = getState();
-
+        }
+        else if (!transitionInId && transitionOutId) {
+            // deleting first state
+            const transitionOut = state.transitions.transitionsById[transitionOutId];
+            // const targetMediaState = state.mediaStates.mediaStatesById[transitionOut.targetMediaStateId];
+            dispatch(setInitialMediaState(zonePlaylistId, transitionOut.targetMediaStateId));
 
         }
 
-        // if this is the initial media state, then we have a problem
         deleteMediaState(dispatch, state, zonePlaylistId, mediaState);
 
     };
