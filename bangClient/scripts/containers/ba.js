@@ -25,7 +25,7 @@ class BA extends Component {
             bsnPresentations: [],
             propertySheetOpen: true,
             selectedZone: null,
-            selectedMediaStateId: null,
+            selectedMediaStateId: "",
             selectedPlaylistItemId: "",
             open: false,
         };

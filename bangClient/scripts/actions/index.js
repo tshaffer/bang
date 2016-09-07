@@ -260,7 +260,6 @@ export function deleteTransition(transitionId) {
     };
 }
 
-export const DELETE_MEDIA_STATE = 'DELETE_MEDIA_STATE';
 function deleteAMediaState(zonePlaylistId, mediaStateId) {
 
     return {
@@ -268,112 +267,133 @@ function deleteAMediaState(zonePlaylistId, mediaStateId) {
         zonePlaylistId: zonePlaylistId,
         mediaStateId: mediaStateId
     };
+}
+
+export const DELETE_MEDIA_STATE = 'DELETE_MEDIA_STATE';
+
+export function deleteMediaStateFromNonInteractivePlaylist(zonePlaylistId, mediaState) {
+
+    // after deleting the media state, the code needs to
+    //      create a transition from the preceding to the succeeding state
+    //      potentially update the initialImageState
+
+
+    return function (dispatch, getState) {
+
+        let state = getState();
+
+        let transitionInId = null;
+        let transitionOutId = null;
+
+        if (mediaState.transitionInIds.length === 1) {
+            transitionInId = mediaState.transitionInIds[0];
+        }
+        if (mediaState.transitionOutIds.length === 1) {
+            transitionOutId = mediaState.transitionOutIds[0];
+        }
+
+        if (transitionInId && transitionOutId) {
+            // create a transition between these two states.
+            const transitionIn = state.transitions.transitionsById[transitionInId];
+            const sourceMediaState = state.mediaStates.mediaStatesById[transitionIn.sourceMediaStateId];
+
+            const transitionOut = state.transitions.transitionsById[transitionOutId];
+            const targetMediaState = state.mediaStates.mediaStatesById[transitionOut.targetMediaStateId];
+
+            const userEvent = new UserEvent("timeout");
+            userEvent.setValue("5");
+
+            const transition = new Transition(sourceMediaState, userEvent, targetMediaState);
+            dispatch(addTransition(sourceMediaState, transition, targetMediaState));
+
+            state = getState();
+
+
+        }
+
+        // if this is the initial media state, then we have a problem
+        deleteMediaState(dispatch, state, zonePlaylistId, mediaState);
+
+    };
+
 
 }
-export function deleteMediaState(zonePlaylistId, mediaState) {
+function deleteMediaState(dispatch, state, zonePlaylistId, mediaState) {
 
     // for each transition in
     //      find all references to the transition from other media states' transition out's
     //          delete those transition out references
     //      delete the transition
     // delete the media state
-    return function (dispatch, getState) {
 
-        const state = getState();
+    // pseudo code for how I think it should work
+    // for each transitionOut from the selected media state
+    //      delete the transition from the mediaState.transitionInIds of the target mediaState for this transitionOut
+    //      add the transitionOut to the list of transitions outs to delete
+    //      dispatch the delete
+    //      iterate through all media states
+    //          for each transitionIn to the mediaState
+    //              if it matches the transitionOut, delete this transition In
+    // for each transitionIn to the selected media state
+    //      iterate through all other media states
+    //          iterate through their transition out id's
+    //              if one of their transitionOutId's matches the transitionInId of the selected media state
+    //                  add the transition to the list of transitions to delete
+    //                  delete the transitionOut from the mediaState.transitionOutIds of the other media state for this transitionIn
+    // beginning of new code
+    let transitionsToDelete = [];
+    mediaState.transitionOutIds.forEach(function(transitionOutId) {
+        const transition = state.transitions.transitionsById[transitionOutId];
+        const targetMediaStateId = transition.targetMediaStateId;
+        const targetMediaState = state.mediaStates.mediaStatesById[targetMediaStateId];
+        dispatch(deleteTransitionOut(mediaState, transitionOutId));
+        transitionsToDelete.push(transitionOutId);
 
-        // delete transitions where mediaState is the destination
-        // mediaState.transitionInIds.forEach(function(transitionInId) {
-        //
-        //     for (let mediaStateId in state.mediaStates.mediaStatesById) {
-        //         if (state.mediaStates.mediaStatesById.hasOwnProperty(mediaStateId)) {
-        //             const otherMediaState = state.mediaStates.mediaStatesById[mediaStateId];
-        //             otherMediaState.transitionOutIds.forEach(function(transitionOutId) {
-        //                 if (transitionOutId === transitionInId) {
-        //                     // delete this transition out reference from otherMediaState
-        //                     dispatch(deleteTransitionOut(otherMediaState, transitionOutId));
-        //                 }
-        //             });
-        //         }
-        //     }
-        //     dispatch(deleteTransition(transitionInId));
-        // });
-
-        // delete transitions where mediaState is the source
-        // mediaState.transitionOutIds.forEach(function(transitionOutId) {
-        //
-        //     for (let mediaStateId in state.mediaStates.mediaStatesById) {
-        //         if (state.mediaStates.mediaStatesById.hasOwnProperty(mediaStateId)) {
-        //             const otherMediaState = state.mediaStates.mediaStatesById[mediaStateId];
-        //             otherMediaState.transitionInIds.forEach(function(transitionInId) {
-        //                 if (transitionInId === transitionOutId) {
-        //                     // delete this transition in reference from otherMediaState
-        //                     dispatch(deleteTransitionOut(otherMediaState, transitionInId));
-        //                 }
-        //             });
-        //         }
-        //     }
-        //     dispatch(deleteTransition(transitionOutId));
-        // });
-
-        // pseudo code for how I think it should work
-        // for each transitionOut from the selected media state
-        //      delete the transition from the mediaState.transitionInIds of the target mediaState for this transitionOut
-        //      add the transitionOut to the list of transitions outs to delete
-        //      dispatch the delete
-        //      iterate through all media states
-        //          for each transitionIn to the mediaState
-        //              if it matches the transitionOut, delete this transition In
-        // for each transitionIn to the selected media state
-        //      iterate through all other media states
-        //          iterate through their transition out id's
-        //              if one of their transitionOutId's matches the transitionInId of the selected media state
-        //                  add the transition to the list of transitions to delete
-        //                  delete the transitionOut from the mediaState.transitionOutIds of the other media state for this transitionIn
-        // beginning of new code
-        let transitionsToDelete = [];
-        mediaState.transitionOutIds.forEach(function(transitionOutId) {
-            const transition = state.transitions.transitionsById[transitionOutId];
-            const targetMediaStateId = transition.targetMediaStateId;
-            const targetMediaState = state.mediaStates.mediaStatesById[targetMediaStateId];
-            dispatch(deleteTransitionOut(mediaState, transitionOutId));
-            transitionsToDelete.push(transitionOutId);
-
-            for (let mediaStateId in state.mediaStates.mediaStatesById) {
-                if (state.mediaStates.mediaStatesById.hasOwnProperty(mediaStateId)) {
-                    const targetMediaState = state.mediaStates.mediaStatesById[mediaStateId];
-                    targetMediaState.transitionInIds.forEach(function(transitionInId) {
-                        if (transitionInId == transitionOutId) {
-                            // delete the transitionInId from this mediaState
-                            dispatch(deleteTransitionIn(targetMediaState, transitionInId));
-                        }
-                    });
-                }
+        for (let mediaStateId in state.mediaStates.mediaStatesById) {
+            if (state.mediaStates.mediaStatesById.hasOwnProperty(mediaStateId)) {
+                const targetMediaState = state.mediaStates.mediaStatesById[mediaStateId];
+                targetMediaState.transitionInIds.forEach(function(transitionInId) {
+                    if (transitionInId == transitionOutId) {
+                        // delete the transitionInId from this mediaState
+                        dispatch(deleteTransitionIn(targetMediaState, transitionInId));
+                    }
+                });
             }
-        });
+        }
+    });
 
-        mediaState.transitionInIds.forEach(function(transitionInId) {
-            for (let mediaStateId in state.mediaStates.mediaStatesById) {
-                if (state.mediaStates.mediaStatesById.hasOwnProperty(mediaStateId)) {
-                    const sourceMediaState = state.mediaStates.mediaStatesById[mediaStateId];
-                    sourceMediaState.transitionOutIds.forEach(function(transitionOutId) {
-                        if (transitionOutId === transitionInId) {
-                            // delete this transition out reference from otherMediaState
-                            dispatch(deleteTransitionOut(sourceMediaState, transitionOutId));
-                        }
-                    });
-                }
+    mediaState.transitionInIds.forEach(function(transitionInId) {
+        for (let mediaStateId in state.mediaStates.mediaStatesById) {
+            if (state.mediaStates.mediaStatesById.hasOwnProperty(mediaStateId)) {
+                const sourceMediaState = state.mediaStates.mediaStatesById[mediaStateId];
+                sourceMediaState.transitionOutIds.forEach(function(transitionOutId) {
+                    if (transitionOutId === transitionInId) {
+                        // delete this transition out reference from otherMediaState
+                        dispatch(deleteTransitionOut(sourceMediaState, transitionOutId));
+                    }
+                });
             }
-            dispatch(deleteTransitionIn(mediaState, transitionInId));
-        });
+        }
+        dispatch(deleteTransitionIn(mediaState, transitionInId));
+    });
 
-        transitionsToDelete.forEach(transitionToDelete => {
-            dispatch(deleteTransition(transitionToDelete));
-        });
+    transitionsToDelete.forEach(transitionToDelete => {
+        dispatch(deleteTransition(transitionToDelete));
+    });
 
-        // end of new code
+    // end of new code
 
-        dispatch(deleteAMediaState(zonePlaylistId, mediaState.getId()));
-    };
+    // before deleting the media state
+    //      check to see if it's the initial media state
+    //      if it is, change the initial media state to a valid media state
+    //      heuristic - if the media state getting deleted is the initial media state, either there are no other
+    //      media states or (at least for a non interactive playlist), a valid media state is one that was the target media state of
+    //      the one getting deleted.
+    // if (state.zonePlaylists.zonePlaylistsById[zonePlaylistId].initialMediaStateId == mediaState.getId()) {
+    //     dispatch(setInitialMediaState(zonePlaylistId, targetMediaStateId));
+    // }
+
+    dispatch(deleteAMediaState(zonePlaylistId, mediaState.getId()));
 }
 
 export function addTransition(sourceMediaState, transition, targetMediaState) {

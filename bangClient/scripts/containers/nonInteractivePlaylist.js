@@ -7,10 +7,29 @@ import { guid } from '../utilities/utils';
 
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 
-import { addMediaStateToNonInteractivePlaylist } from '../actions/index';
+import { addMediaStateToNonInteractivePlaylist, deleteMediaStateFromNonInteractivePlaylist } from '../actions/index';
 import { getThumb } from '../platform/actions';
 
 class NonInteractivePlaylist extends Component {
+
+    componentDidMount() {
+
+        var self = this;
+        document.addEventListener('keydown', (event) => {
+            if (event.keyCode == 8 || event.keyCode == 46) {       // delete key or backspace key
+                this.handleDeleteSelectedMediaState();
+            }
+        });
+    }
+
+    handleDeleteSelectedMediaState() {
+        if (this.props.selectedMediaStateId && this.props.selectedMediaStateId != "") {
+            const mediaState = this.props.mediaStates.mediaStatesById[this.props.selectedMediaStateId];
+            if (mediaState) {
+                this.props.deleteMediaStateFromNonInteractivePlaylist(this.getSelectedZonePlaylist().id, mediaState);
+            }
+        }
+    }
 
     handlePlaylistDragOver (event) {
 
@@ -177,7 +196,7 @@ class NonInteractivePlaylist extends Component {
                     // {/*data-path={filePath}*/}
                     // {/*data-type="image"*/}
 
-                    // indicate media state is selected by marking the entire list item?
+                    // indicate media state is selected by marking the entire <li rather htan just the <img ?
                     return (
                         <li className="flex-item mediaLibraryThumbDiv" key={index} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
                             <img
@@ -254,7 +273,10 @@ NonInteractivePlaylist.propTypes = {
     mediaThumbs: React.PropTypes.object.isRequired,
     transitions: React.PropTypes.object.isRequired,
     mediaStates: React.PropTypes.object.isRequired,
-    onSelectMediaState: React.PropTypes.func.isRequired
+    onSelectMediaState: React.PropTypes.func.isRequired,
+    addMediaStateToNonInteractivePlaylist: React.PropTypes.func.isRequired,
+    deleteMediaStateFromNonInteractivePlaylist: React.PropTypes.func.isRequired,
+    selectedMediaStateId: React.PropTypes.string.isRequired
 };
 
 
@@ -272,13 +294,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators(
-        { addMediaStateToNonInteractivePlaylist },
+        { addMediaStateToNonInteractivePlaylist, deleteMediaStateFromNonInteractivePlaylist },
         dispatch);
 }
-
-NonInteractivePlaylist.propTypes = {
-    addMediaStateToNonInteractivePlaylist: React.PropTypes.func.isRequired,
-};
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(NonInteractivePlaylist);
