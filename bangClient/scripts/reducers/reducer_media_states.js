@@ -5,9 +5,15 @@ import { CLEAR_MEDIA_STATES, NEW_MEDIA_STATE, MOVE_MEDIA_STATE, UPDATE_MEDIA_STA
     UPDATE_IMAGE_TIME_ON_SCREEN,
     UPDATE_IMAGE_TRANSITION,
     UPDATE_IMAGE_TRANSITION_DURATION,
+    UPDATE_HTML5_STATE_NAME,
+    UPDATE_HTML5_SITE_NAME,
+    UPDATE_HTML5_ENABLE_EXTERNAL_DATA,
+    UPDATE_HTML5_ENABLE_MOUSE_EVENTS,
+    UPDATE_HTML5_DISPLAY_CURSOR,
+    UPDATE_HTML5_HWZ_ON,
     DELETE_MEDIA_STATE,
-    ADD_TRANSITION_OUT, ADD_TRANSITION_IN, DELETE_TRANSITION_OUT
-    , DELETE_TRANSITION_IN
+    ADD_TRANSITION_OUT, ADD_TRANSITION_IN, DELETE_TRANSITION_OUT,
+    DELETE_TRANSITION_IN
     } from '../actions/index';
 
 import MediaState from '../badm/mediaState';
@@ -27,8 +33,8 @@ function updateAttribute(state, action, attribute) {
     let newMediaStatesById = Object.assign({}, state.mediaStatesById);
     let newMediaState = Object.assign(emptyMediaState, mediaState);
 
-    let imagePlaylistItem = newMediaState.getMediaPlaylistItem();
-    imagePlaylistItem[attribute] = action[attribute];
+    let mediaPlaylistItem = newMediaState.getMediaPlaylistItem();
+    mediaPlaylistItem[attribute] = action[attribute];
     newMediaStatesById[mediaStateId] = newMediaState;
 
     let newState = {
@@ -90,6 +96,30 @@ export default function(state = initialState, action) {
 
             return updateAttribute(state, action, "transitionDuration");
 
+        case UPDATE_HTML5_STATE_NAME:
+
+            return updateAttribute(state, action, "fileName");
+
+        case UPDATE_HTML5_SITE_NAME:
+
+            return updateAttribute(state, action, "htmlSiteName");
+
+        case UPDATE_HTML5_ENABLE_EXTERNAL_DATA:
+
+            return updateAttribute(state, action, "enableExternalData");
+
+        case UPDATE_HTML5_ENABLE_MOUSE_EVENTS:
+
+            return updateAttribute(state, action, "enableMouseEvents");
+
+        case UPDATE_HTML5_DISPLAY_CURSOR:
+
+            return updateAttribute(state, action, "displayCursor");
+
+        case UPDATE_HTML5_HWZ_ON:
+
+            return updateAttribute(state, action, "hwzOn");
+
         case DELETE_MEDIA_STATE:
 
             mediaStateId = action.mediaStateId;
@@ -101,14 +131,6 @@ export default function(state = initialState, action) {
                 mediaStatesById: newMediaStatesById
             };
             return newState;
-
-        // case ADD_TRANSITION:
-        //
-        //     let sourceMediaStateId = action.sourceMediaStateId;
-        //     let destinationMediaStateId = action.destinationMediaStateId;
-        //
-        //     let updatedMediaState = Object.assign()
-        //     break;
 
         case ADD_TRANSITION_OUT:
             {

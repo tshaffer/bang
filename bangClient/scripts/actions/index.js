@@ -690,22 +690,22 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
 }
 
 export const UPDATE_HTML5_STATE_NAME = 'UPDATE_HTML5_STATE_NAME';
-export function updateHTML5StateName(mediaStateId, html5StateName) {
+export function updateHTML5StateName(mediaStateId, fileName) {
 
     return {
         type: UPDATE_HTML5_STATE_NAME,
         mediaStateId,
-        html5StateName
+        fileName
     };
 }
 
 export const UPDATE_HTML5_SITE_NAME = 'UPDATE_HTML5_SITE_NAME';
-export function updateHTML5SiteName(mediaStateId, html5SiteName) {
+export function updateHTML5SiteName(mediaStateId, htmlSiteName) {
 
     return {
         type: UPDATE_HTML5_SITE_NAME,
         mediaStateId,
-        html5SiteName
+        htmlSiteName
     };
 }
 

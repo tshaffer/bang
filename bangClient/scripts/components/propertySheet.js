@@ -135,6 +135,7 @@ class PropertySheet extends Component {
     }
 
     handleUpdateHTML5StateName(event) {
+
         const html5StateName = event.target.value;
         this.props.updateHTML5StateName(this.props.selectedMediaStateId, html5StateName);
     }
