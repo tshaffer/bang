@@ -502,23 +502,6 @@ export function saveBSNPresentation(name, sign) {
     };
 }
 
-// currently unused
-// export function updateMediaFolder(mediaFolder) {
-//
-//     return function(dispatch) {
-//
-//         const updateMediaFolderUrl = "http://localhost:6969/" + "updateMediaFolder";
-//         axios.get(updateMediaFolderUrl, {
-//             params: { mediaFolder: mediaFolder }
-//         }).then(function() {
-//
-//             return getMediaFiles(dispatch, mediaFolder);
-//         });
-//     };
-// }
-
-
-
 function getMediaStateAt(state, selectedZonePlaylist, targetIndex) {
 
     const transitionsById = state.transitions.transitionsById;
