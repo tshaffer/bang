@@ -11,7 +11,8 @@ import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
 import { getMediaPlaylistItem } from '../badm/mediaState';
 
-import { updateImageTimeOnScreen, updateImageTransition, updateImageTransitionDuration} from '../actions/index';
+import { updateImageTimeOnScreen, updateImageTransition, updateImageTransitionDuration,
+    addHtmlSiteToPresentation} from '../actions/index';
 
 import ReactTabs from 'react-tabs';
 var Tab = ReactTabs.Tab;
@@ -79,7 +80,14 @@ class PropertySheet extends Component {
             type = "remote";
         }
 
-        this.props.onAddHtmlSite(htmlSiteName, siteSpec, type);
+        const htmlSite = {
+            htmlSiteName,
+            siteSpec,
+            type
+        };
+        this.props.addHtmlSiteToPresentation(htmlSite);
+
+        // this.props.onAddHtmlSite(htmlSiteName, siteSpec, type);
 
         this.refs.htmlLocalSitePath.value = "";
         this.refs.htmlSiteUrl.value = "";
@@ -121,32 +129,32 @@ class PropertySheet extends Component {
         }
     }
 
-    onUpdateHTML5StateName(event) {
+    handleHTML5StateName(event) {
         const html5StateName = event.target.value;
-        this.props.onUpdateHTML5StateName(this.props.selectedMediaStateId, html5StateName);
+        this.props.handleHTML5StateName(this.props.selectedMediaStateId, html5StateName);
     }
 
-    onUpdateHtmlSiteName(event) {
+    handleHtmlSiteName(event) {
         const selectedHTMLSiteName = event.target.value;
-        this.props.onUpdateHTML5SiteName(this.props.selectedMediaStateId, selectedHTMLSiteName);
+        this.props.handleHTML5SiteName(this.props.selectedMediaStateId, selectedHTMLSiteName);
     }
 
-    onUpdateHTML5EnableExternalData(event) {
+    handleHTML5EnableExternalData(event) {
         const enableExternalData = this.refs.cbEnableExternalData.checked;
-        this.props.onUpdateHTML5EnableExternalData(this.props.selectedMediaStateId, enableExternalData);
+        this.props.handleHTML5EnableExternalData(this.props.selectedMediaStateId, enableExternalData);
     }
 
-    onUpdateHTML5EnableMouseEvents(event) {
+    handleHTML5EnableMouseEvents(event) {
         const enableMouseEvents = this.refs.cbEnableMouseEvents.checked;
-        this.props.onUpdateHTML5EnableMouseEvents(this.props.selectedMediaStateId, enableMouseEvents);
+        this.props.handleHTML5EnableMouseEvents(this.props.selectedMediaStateId, enableMouseEvents);
     }
 
-    onUpdateHTML5DisplayCursor(event) {
+    handleHTML5DisplayCursor(event) {
         const displayCursor = this.refs.cbDisplayCursor.checked;
-        this.props.onUpdateHTML5DisplayCursor(this.props.selectedMediaStateId, displayCursor);
+        this.props.handleHTML5DisplayCursor(this.props.selectedMediaStateId, displayCursor);
     }
 
-    onUpdateHTML5HWZOn(event) {
+    handleHTML5HWZOn(event) {
         const hwzOn = this.refs.cbHWZOn.checked;
         this.props.onUpdateHTML5HWZOn(this.props.selectedMediaStateId, hwzOn);
     }
@@ -378,16 +386,7 @@ class PropertySheet extends Component {
         if (this.props.selectedMediaStateId) {
 
             // get the selected media state
-            // const mediaStateId = this.props.selectedMediaStateId;
             const mediaState = this.props.mediaStates.mediaStatesById[this.props.selectedMediaStateId];
-
-            // let playlistItem = null;
-            // const currentZonePlaylist = this.props.getCurrentZonePlaylist();
-            // currentZonePlaylist.playlistItemIds.forEach( playlistItemId => {
-            //     if (playlistItemId === this.props.selectedPlaylistItemId) {
-            //         playlistItem = this.props.playlistItems.playlistItemsById[playlistItemId];
-            //     }
-            // });
 
             const fileName = mediaState.getFileName();
 
@@ -430,7 +429,6 @@ class PropertySheet extends Component {
 
                     let selectOptions = this.props.sign.htmlSiteIds.map( (htmlSiteId) => {
                         const htmlSite = this.props.htmlSites.htmlSitesById[htmlSiteId];
-                        // <option value={htmlSite.id} key={htmlSite.id}>{htmlSite.name}</option>
                         if (htmlSite) {
                             return (
                                 <option value={htmlSite.name} key={htmlSite.id}>{htmlSite.name}</option>
@@ -452,14 +450,14 @@ class PropertySheet extends Component {
                     (<div>
                         <p>
                             State name:
-                            <input type="text" value={fileName} onChange={this.onUpdateHTML5StateName.bind(this)}/>
+                            <input type="text" value={fileName} onChange={this.handleUpdateHTML5StateName.bind(this)}/>
                         </p>
                         {htmlSitesDropDown}
                         <br/>
-                        <label><input ref="cbEnableExternalData" type="checkbox" checked={html5PlaylistItem.enableExternalData} onChange={this.onUpdateHTML5EnableExternalData.bind(this)}/>Enable external data</label><br/>
-                        <label><input ref="cbEnableMouseEvents" type="checkbox" checked={html5PlaylistItem.enableMouseEvents} onChange={this.onUpdateHTML5EnableMouseEvents.bind(this)}/>Enable mouse and touch events</label><br/>
-                        <label><input ref="cbDisplayCursor" type="checkbox" checked={html5PlaylistItem.displayCursor} onChange={this.onUpdateHTML5DisplayCursor.bind(this)}/>Display cursor</label><br/>
-                        <label><input ref="cbHWZOn" type="checkbox" checked={html5PlaylistItem.hwzOn} onChange={this.onUpdateHTML5HWZOn.bind(this)}/> native video plane playback</label><br/>
+                        <label><input ref="cbEnableExternalData" type="checkbox" checked={html5PlaylistItem.enableExternalData} onChange={this.handleUpdateHTML5EnableExternalData.bind(this)}/>Enable external data</label><br/>
+                        <label><input ref="cbEnableMouseEvents" type="checkbox" checked={html5PlaylistItem.enableMouseEvents} onChange={this.handleUpdateHTML5EnableMouseEvents.bind(this)}/>Enable mouse and touch events</label><br/>
+                        <label><input ref="cbDisplayCursor" type="checkbox" checked={html5PlaylistItem.displayCursor} onChange={this.handleUpdateHTML5DisplayCursor.bind(this)}/>Display cursor</label><br/>
+                        <label><input ref="cbHWZOn" type="checkbox" checked={html5PlaylistItem.hwzOn} onChange={this.handleUpdateHTML5HWZOn.bind(this)}/> native video plane playback</label><br/>
                         <br/>
                     </div>);
             }
@@ -500,7 +498,7 @@ PropertySheet.propTypes = {
     selectedMediaStateId: React.PropTypes.string.isRequired,
     onUpdateVideoMode: React.PropTypes.func.isRequired,
     onBrowseForHTMLSite: React.PropTypes.func.isRequired,
-    onAddHtmlSite: React.PropTypes.func.isRequired,
+    addHtmlSiteToPresentation: React.PropTypes.func.isRequired,
     onUpdateHTML5StateName: React.PropTypes.func.isRequired,
     onUpdateHTML5SiteName: React.PropTypes.func.isRequired,
     onUpdateHTML5EnableExternalData: React.PropTypes.func.isRequired,
@@ -519,7 +517,8 @@ PropertySheet.propTypes = {
 };
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({updateImageTimeOnScreen, updateImageTransition, updateImageTransitionDuration},
+    return bindActionCreators({updateImageTimeOnScreen, updateImageTransition, updateImageTransitionDuration,
+            addHtmlSiteToPresentation},
         dispatch);
 }
 

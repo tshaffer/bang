@@ -14,8 +14,7 @@ import MediaLibrary from '../components/mediaLibrary';
 import PropertySheet from '../components/propertySheet';
 import NonInteractivePlaylist from './nonInteractivePlaylist';
 
-import { createDefaultPresentation, updateSign, loadAppData,
-    newHtmlSite, addHtmlSiteToPresentation, selectMediaFolder } from '../actions/index';
+import { createDefaultPresentation, updateSign, loadAppData, selectMediaFolder } from '../actions/index';
 
 class BA extends Component {
 
@@ -63,18 +62,6 @@ class BA extends Component {
     handleEditPreferencesOK(preferences) {
         console.log("handleEditPreferencesOK invoked");
         console.log(preferences);
-    }
-
-// unused at the moment
-    handleAddHtmlSite(name, siteSpec, type) {
-        const htmlSite = {
-            name,
-            siteSpec,
-            type
-        };
-
-        this.props.addHtmlSiteToPresentation(htmlSite);
-
     }
 
     // instead of using action creators, just dispatch the action directly?
@@ -214,7 +201,6 @@ class BA extends Component {
         if (this.state.propertySheetOpen) {
             propertySheetTag =
                 <PropertySheet
-                    onAddHtmlSite={this.handleAddHtmlSite.bind(this)}
                     onBrowseForHTMLSite={this.baUI.handleBrowseForHTMLSite.bind(this.baUI)}
                     onUpdateVideoMode = {this.handleUpdateVideoMode.bind(this)}
                     getCurrentZone = {this.getCurrentZone.bind(this)}
@@ -290,8 +276,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, newHtmlSite, addHtmlSiteToPresentation,
-        selectMediaFolder},
+    return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, selectMediaFolder},
         dispatch);
 }
 
@@ -299,7 +284,6 @@ function mapDispatchToProps(dispatch) {
 BA.propTypes = {
     createDefaultPresentation: React.PropTypes.func.isRequired,
     loadAppData: React.PropTypes.func.isRequired,
-    addHtmlSiteToPresentation: React.PropTypes.func.isRequired,
     updateSign: React.PropTypes.func.isRequired,
     sign: React.PropTypes.object.isRequired,
     zones: React.PropTypes.object.isRequired,
