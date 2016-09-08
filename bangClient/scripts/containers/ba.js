@@ -116,7 +116,7 @@ class BA extends Component {
             emptyPlaylistItem = emptyHTML5PlaylistItem;
         }
         else {
-            console.log("handleUpdateImageTimeOnScreen: unknown playlistItem type");
+            console.log("existingPlaylistItem: unknown playlistItem type");
         }
         return emptyPlaylistItem;
     }
@@ -332,6 +332,5 @@ BA.propTypes = {
     htmlSites: React.PropTypes.object.isRequired,
     transitions: React.PropTypes.object.isRequired,
 };
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);

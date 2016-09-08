@@ -272,14 +272,30 @@ function deleteAMediaState(zonePlaylistId, mediaStateId) {
 export const UPDATE_IMAGE_TIME_ON_SCREEN = 'UPDATE_IMAGE_TIME_ON_SCREEN';
 export function updateImageTimeOnScreen(mediaStateId, timeOnScreen) {
 
-    // let state = getState();
-    // const mediaState = state.mediaStates.mediaStatesById[mediaStateId];
-    // const imagePlaylistItem = mediaState.getMediaPlaylistItem();
-    // imagePlaylistItem.timeOnScreen
     return {
         type: UPDATE_IMAGE_TIME_ON_SCREEN,
-        mediaStateId: mediaStateId,
-        timeOnScreen: timeOnScreen
+        mediaStateId,
+        timeOnScreen
+    };
+}
+
+export const UPDATE_IMAGE_TRANSITION = 'UPDATE_IMAGE_TRANSITION';
+export function updateImageTransition(mediaStateId, transition) {
+
+    return {
+        type: UPDATE_IMAGE_TRANSITION,
+        mediaStateId,
+        transition
+    };
+}
+
+export const UPDATE_IMAGE_TRANSITION_DURATION = 'UPDATE_IMAGE_TRANSITION_DURATION';
+export function updateImageTransitionDuration(mediaStateId, transitionDuration) {
+
+    return {
+        type: UPDATE_IMAGE_TRANSITION_DURATION,
+        mediaStateId,
+        transitionDuration
     };
 }
 

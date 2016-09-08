@@ -3,6 +3,8 @@
  */
 import { CLEAR_MEDIA_STATES, NEW_MEDIA_STATE, MOVE_MEDIA_STATE, UPDATE_MEDIA_STATE,
     UPDATE_IMAGE_TIME_ON_SCREEN,
+    UPDATE_IMAGE_TRANSITION,
+    UPDATE_IMAGE_TRANSITION_DURATION,
     DELETE_MEDIA_STATE,
     ADD_TRANSITION_OUT, ADD_TRANSITION_IN, DELETE_TRANSITION_OUT
     , DELETE_TRANSITION_IN
@@ -14,6 +16,26 @@ const initialState =
     {
         mediaStatesById: {}
     };
+
+function updateAttribute(state, action, attribute) {
+
+    const emptyMediaState= new MediaState(null, -1, -1);
+
+    const mediaStateId = action.mediaStateId;
+    const mediaState = state.mediaStatesById[mediaStateId];
+
+    let newMediaStatesById = Object.assign({}, state.mediaStatesById);
+    let newMediaState = Object.assign(emptyMediaState, mediaState);
+
+    let imagePlaylistItem = newMediaState.getMediaPlaylistItem();
+    imagePlaylistItem[attribute] = action[attribute];
+    newMediaStatesById[mediaStateId] = newMediaState;
+
+    let newState = {
+        mediaStatesById: newMediaStatesById
+    };
+    return newState;
+}
 
 export default function(state = initialState, action) {
 
@@ -57,22 +79,16 @@ export default function(state = initialState, action) {
             return newState;
 
         case UPDATE_IMAGE_TIME_ON_SCREEN:
-            {
-                mediaStateId = action.mediaStateId;
-                mediaState = state.mediaStatesById[mediaStateId];
 
-                newMediaStatesById = Object.assign({}, state.mediaStatesById);
-                newMediaState = Object.assign(emptyMediaState, mediaState);
+            return updateAttribute(state, action, "timeOnScreen");
 
-                let imagePlaylistItem = newMediaState.getMediaPlaylistItem();
-                imagePlaylistItem.timeOnScreen = action.timeOnScreen;
-                newMediaStatesById[mediaStateId] = newMediaState;
+        case UPDATE_IMAGE_TRANSITION:
 
-                newState = {
-                    mediaStatesById: newMediaStatesById
-                };
-                return newState;
-            }
+            return updateAttribute(state, action, "transition");
+
+        case UPDATE_IMAGE_TRANSITION_DURATION:
+
+            return updateAttribute(state, action, "transitionDuration");
 
         case DELETE_MEDIA_STATE:
 

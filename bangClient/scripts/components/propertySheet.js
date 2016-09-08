@@ -11,7 +11,7 @@ import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
 import { getMediaPlaylistItem } from '../badm/mediaState';
 
-import { updateImageTimeOnScreen} from '../actions/index';
+import { updateImageTimeOnScreen, updateImageTransition, updateImageTransitionDuration} from '../actions/index';
 
 import ReactTabs from 'react-tabs';
 var Tab = ReactTabs.Tab;
@@ -105,19 +105,19 @@ class PropertySheet extends Component {
         }
     }
 
-    onUpdateImageTransition(event) {
+    handleUpdateImageTransition(event) {
 
         if (event != undefined) {
-            const transition = event.target.value;
-            this.props.onUpdateImageTransition(this.props.selectedMediaStateId, transition);
+            const imageTransition = event.target.value;
+            this.props.updateImageTransition(this.props.selectedMediaStateId, imageTransition);
         }
     }
 
-    onUpdateImageTransitionDuration(event) {
+    handleUpdateImageTransitionDuration(event) {
 
         if (event != undefined) {
             const transitionDuration = Number(event.target.value);
-            this.props.onUpdateImageTransitionDuration(this.props.selectedMediaStateId, transitionDuration);
+            this.props.updateImageTransitionDuration(this.props.selectedMediaStateId, transitionDuration);
         }
     }
 
@@ -412,11 +412,11 @@ class PropertySheet extends Component {
                         </p>
                         <div>
                             Transition:
-                            <select ref="transitionsSelect" value={imagePlaylistItem.transition} onChange={this.onUpdateImageTransition.bind(this)}>{selectOptions}</select>
+                            <select ref="transitionsSelect" value={imagePlaylistItem.transition} onChange={this.handleUpdateImageTransition.bind(this)}>{selectOptions}</select>
                         </div>
                         <p>
                             Transition duration:
-                            <input type="text" value={imagePlaylistItem.transitionDuration} onChange={this.onUpdateImageTransitionDuration.bind(this)}/>
+                            <input type="text" value={imagePlaylistItem.transitionDuration} onChange={this.handleUpdateImageTransitionDuration.bind(this)}/>
                         </p>
                     </div>)
                 ;
@@ -508,8 +508,8 @@ PropertySheet.propTypes = {
     onUpdateHTML5DisplayCursor: React.PropTypes.func.isRequired,
     onUpdateHTML5HWZOn: React.PropTypes.func.isRequired,
     updateImageTimeOnScreen: React.PropTypes.func.isRequired,
-    onUpdateImageTransition: React.PropTypes.func.isRequired,
-    onUpdateImageTransitionDuration: React.PropTypes.func.isRequired,
+    updateImageTransition: React.PropTypes.func.isRequired,
+    updateImageTransitionDuration: React.PropTypes.func.isRequired,
     getCurrentZonePlaylist: React.PropTypes.func.isRequired,
     playlistItems: React.PropTypes.object.isRequired,
     htmlSites: React.PropTypes.object.isRequired,
@@ -519,7 +519,7 @@ PropertySheet.propTypes = {
 };
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({updateImageTimeOnScreen},
+    return bindActionCreators({updateImageTimeOnScreen, updateImageTransition, updateImageTransitionDuration},
         dispatch);
 }
 
