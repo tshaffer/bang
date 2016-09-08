@@ -7,6 +7,8 @@ import { getShortenedFilePath } from '../utilities/utils';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
+import { getMediaPlaylistItem } from '../badm/mediaState';
+
 import ReactTabs from 'react-tabs';
 var Tab = ReactTabs.Tab;
 var Tabs = ReactTabs.Tabs;
@@ -95,7 +97,7 @@ class PropertySheet extends Component {
 
         if (event != undefined) {
             const timeOnScreen = Number(event.target.value);
-            this.props.onUpdateImageTimeOnScreen(this.props.selectedPlaylistItemId, timeOnScreen);
+            this.props.onUpdateImageTimeOnScreen(this.props.selectedMediaStateId, timeOnScreen);
         }
     }
 
@@ -103,7 +105,7 @@ class PropertySheet extends Component {
 
         if (event != undefined) {
             const transition = event.target.value;
-            this.props.onUpdateImageTransition(this.props.selectedPlaylistItemId, transition);
+            this.props.onUpdateImageTransition(this.props.selectedMediaStateId, transition);
         }
     }
 
@@ -111,38 +113,38 @@ class PropertySheet extends Component {
 
         if (event != undefined) {
             const transitionDuration = Number(event.target.value);
-            this.props.onUpdateImageTransitionDuration(this.props.selectedPlaylistItemId, transitionDuration);
+            this.props.onUpdateImageTransitionDuration(this.props.selectedMediaStateId, transitionDuration);
         }
     }
 
     onUpdateHTML5StateName(event) {
         const html5StateName = event.target.value;
-        this.props.onUpdateHTML5StateName(this.props.selectedPlaylistItemId, html5StateName);
+        this.props.onUpdateHTML5StateName(this.props.selectedMediaStateId, html5StateName);
     }
 
     onUpdateHtmlSiteName(event) {
         const selectedHTMLSiteName = event.target.value;
-        this.props.onUpdateHTML5SiteName(this.props.selectedPlaylistItemId, selectedHTMLSiteName);
+        this.props.onUpdateHTML5SiteName(this.props.selectedMediaStateId, selectedHTMLSiteName);
     }
 
     onUpdateHTML5EnableExternalData(event) {
         const enableExternalData = this.refs.cbEnableExternalData.checked;
-        this.props.onUpdateHTML5EnableExternalData(this.props.selectedPlaylistItemId, enableExternalData);
+        this.props.onUpdateHTML5EnableExternalData(this.props.selectedMediaStateId, enableExternalData);
     }
 
     onUpdateHTML5EnableMouseEvents(event) {
         const enableMouseEvents = this.refs.cbEnableMouseEvents.checked;
-        this.props.onUpdateHTML5EnableMouseEvents(this.props.selectedPlaylistItemId, enableMouseEvents);
+        this.props.onUpdateHTML5EnableMouseEvents(this.props.selectedMediaStateId, enableMouseEvents);
     }
 
     onUpdateHTML5DisplayCursor(event) {
         const displayCursor = this.refs.cbDisplayCursor.checked;
-        this.props.onUpdateHTML5DisplayCursor(this.props.selectedPlaylistItemId, displayCursor);
+        this.props.onUpdateHTML5DisplayCursor(this.props.selectedMediaStateId, displayCursor);
     }
 
     onUpdateHTML5HWZOn(event) {
         const hwzOn = this.refs.cbHWZOn.checked;
-        this.props.onUpdateHTML5HWZOn(this.props.selectedPlaylistItemId, hwzOn);
+        this.props.onUpdateHTML5HWZOn(this.props.selectedMediaStateId, hwzOn);
     }
 
     buildVideoModesList() {
@@ -369,22 +371,27 @@ class PropertySheet extends Component {
                 </div>;
         }
 
-        if (this.props.selectedPlaylistItemId) {
+        if (this.props.selectedMediaStateId) {
 
+            // get the selected media state
+            // const mediaStateId = this.props.selectedMediaStateId;
+            const mediaState = this.props.mediaStates.mediaStatesById[this.props.selectedMediaStateId];
 
-            let playlistItem = null;
-            const currentZonePlaylist = this.props.getCurrentZonePlaylist();
-            currentZonePlaylist.playlistItemIds.forEach( playlistItemId => {
-                if (playlistItemId === this.props.selectedPlaylistItemId) {
-                    playlistItem = this.props.playlistItems.playlistItemsById[playlistItemId];
-                }
-            });
+            // let playlistItem = null;
+            // const currentZonePlaylist = this.props.getCurrentZonePlaylist();
+            // currentZonePlaylist.playlistItemIds.forEach( playlistItemId => {
+            //     if (playlistItemId === this.props.selectedPlaylistItemId) {
+            //         playlistItem = this.props.playlistItems.playlistItemsById[playlistItemId];
+            //     }
+            // });
 
-            const fileName = playlistItem.getFileName();
+            const fileName = mediaState.getFileName();
 
-            if (playlistItem instanceof ImagePlaylistItem) {
+            const mediaStatePlaylistItem = mediaState.getMediaPlaylistItem();
 
-                let imagePlaylistItem = playlistItem;
+            if (mediaStatePlaylistItem instanceof ImagePlaylistItem) {
+
+                let imagePlaylistItem = mediaStatePlaylistItem;
                 let selectOptions = this.transitionSpecs.map(function(transitionSpec, index) {
 
                     return (
@@ -410,8 +417,8 @@ class PropertySheet extends Component {
                     </div>)
                 ;
             }
-            else if (playlistItem instanceof HTML5PlaylistItem) {
-                let html5PlaylistItem = playlistItem;
+            else if (mediaStatePlaylistItem instanceof HTML5PlaylistItem) {
+                let html5PlaylistItem = mediaStatePlaylistItem;
 
                 let htmlSitesDropDown = <div>No sites defined</div>;
 
@@ -486,7 +493,7 @@ class PropertySheet extends Component {
 }
 
 PropertySheet.propTypes = {
-    selectedPlaylistItemId: React.PropTypes.string.isRequired,
+    selectedMediaStateId: React.PropTypes.string.isRequired,
     onUpdateVideoMode: React.PropTypes.func.isRequired,
     onBrowseForHTMLSite: React.PropTypes.func.isRequired,
     onAddHtmlSite: React.PropTypes.func.isRequired,
@@ -502,7 +509,8 @@ PropertySheet.propTypes = {
     getCurrentZonePlaylist: React.PropTypes.func.isRequired,
     playlistItems: React.PropTypes.object.isRequired,
     htmlSites: React.PropTypes.object.isRequired,
-    sign: React.PropTypes.object.isRequired
+    sign: React.PropTypes.object.isRequired,
+    mediaStates: React.PropTypes.object.isRequired,
 };
 
 

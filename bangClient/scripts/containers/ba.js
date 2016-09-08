@@ -14,7 +14,7 @@ import MediaLibrary from '../components/mediaLibrary';
 import PropertySheet from '../components/propertySheet';
 import NonInteractivePlaylist from './nonInteractivePlaylist';
 
-import { createDefaultPresentation, updateSign, loadAppData,
+import { createDefaultPresentation, updateSign, loadAppData, updateImageTimeOnScreen,
     newHtmlSite, addHtmlSiteToPresentation, selectMediaFolder } from '../actions/index';
 
 class BA extends Component {
@@ -90,10 +90,12 @@ class BA extends Component {
         this.setState({propertySheetOpen: !this.state.propertySheetOpen});
     }
 
-    handleUpdateImageTimeOnScreen(selectedPlaylistItemId, timeOnScreen) {
+    handleUpdateImageTimeOnScreen(selectedMediaStateId, timeOnScreen) {
 
-        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
-        updatedPlaylistItem.timeOnScreen = timeOnScreen;
+        this.props.updateImageTimeOnScreen(selectedMediaStateId, timeOnScreen);
+
+        // let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedMediaStateId);
+        // updatedPlaylistItem.timeOnScreen = timeOnScreen;
         // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
     }
 
@@ -246,6 +248,7 @@ class BA extends Component {
                     zones= {this.props.zones}
                     zonePlaylists= {this.props.zonePlaylists}
                     playlistItems= {this.props.playlistItems}
+                    mediaStates= {this.props.mediaStates}
 
                     htmlSites= {this.props.htmlSites}
                     onUpdateHTML5StateName = {this.handleUpdateHTML5StateName.bind(this)}
@@ -305,6 +308,7 @@ function mapStateToProps(state) {
         sign: state.sign,
         zones: state.zones,
         zonePlaylists: state.zonePlaylists,
+        mediaStates: state.mediaStates,
         playlistItems: state.playlistItems,
         htmlSites: state.htmlSites,
         transitions: state.transitions,
@@ -318,7 +322,7 @@ function mapStateToProps(state) {
 // updateMediaState
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, newHtmlSite, addHtmlSiteToPresentation,
-        selectMediaFolder},
+        selectMediaFolder, updateImageTimeOnScreen},
         dispatch);
 }
 
@@ -331,12 +335,14 @@ BA.propTypes = {
     sign: React.PropTypes.object.isRequired,
     zones: React.PropTypes.object.isRequired,
     zonePlaylists: React.PropTypes.object.isRequired,
+    mediaStates: React.PropTypes.object.isRequired,
     playlistItems: React.PropTypes.object.isRequired,
     mediaFolder: React.PropTypes.string.isRequired,
     mediaThumbs: React.PropTypes.object.isRequired,
     mediaLibraryPlaylistItems: React.PropTypes.array.isRequired,
     htmlSites: React.PropTypes.object.isRequired,
     transitions: React.PropTypes.object.isRequired,
+    updateImageTimeOnScreen: React.PropTypes.func.isRequired
 };
 
 

@@ -2,6 +2,7 @@
  * Created by tedshaffer on 7/17/16.
  */
 import { CLEAR_MEDIA_STATES, NEW_MEDIA_STATE, MOVE_MEDIA_STATE, UPDATE_MEDIA_STATE,
+    UPDATE_IMAGE_TIME_ON_SCREEN,
     DELETE_MEDIA_STATE,
     ADD_TRANSITION_OUT, ADD_TRANSITION_IN, DELETE_TRANSITION_OUT
     , DELETE_TRANSITION_IN
@@ -21,7 +22,7 @@ export default function(state = initialState, action) {
     let newState;
     let newMediaState = null;
     let mediaState;
-    let emptyMediaState = null;
+    let emptyMediaState= new MediaState(null, -1, -1);
 
     let newMediaStatesById;
     let mediaStateId = "";
@@ -55,6 +56,28 @@ export default function(state = initialState, action) {
             };
             return newState;
 
+        case UPDATE_IMAGE_TIME_ON_SCREEN:
+            {
+                debugger;
+
+                mediaStateId = action.mediaStateId;
+                mediaState = state.mediaStatesById[mediaStateId];
+
+                newMediaStatesById = Object.assign({}, state.mediaStatesById);
+                newMediaState = Object.assign(emptyMediaState, mediaState);
+
+                let imagePlaylistItem = newMediaState.getMediaPlaylistItem();
+                imagePlaylistItem.timeOnScreen = action.timeOnScreen;
+                newMediaStatesById[mediaStateId] = newMediaState;
+
+                newState = {
+                    mediaStatesById: newMediaStatesById
+                };
+                return newState;
+            }
+
+
+
         case DELETE_MEDIA_STATE:
 
             mediaStateId = action.mediaStateId;
@@ -80,7 +103,6 @@ export default function(state = initialState, action) {
                 const sourceMediaState = action.sourceMediaState;
                 transitionId = action.transitionId;
 
-                emptyMediaState = new MediaState(null, -1, -1);
                 newMediaState = Object.assign(emptyMediaState, sourceMediaState);
                 newMediaState.transitionOutIds.push(transitionId);
 
@@ -99,7 +121,6 @@ export default function(state = initialState, action) {
                 const targetMediaState = action.targetMediaState;
                 transitionId = action.transitionId;
 
-                emptyMediaState = new MediaState(null, -1, -1);
                 newMediaState = Object.assign(emptyMediaState, targetMediaState);
                 newMediaState.transitionInIds.push(transitionId);
 
@@ -118,7 +139,6 @@ export default function(state = initialState, action) {
             mediaState = action.mediaState;
             transitionId = action.transitionId;
 
-            emptyMediaState = new MediaState(null, -1, -1);
             newMediaState = Object.assign(emptyMediaState, mediaState);
             newMediaState.transitionOutIds = newMediaState.transitionOutIds.filter(function(ele) { return ele != transitionId; });
 
@@ -135,7 +155,6 @@ export default function(state = initialState, action) {
             mediaState = action.mediaState;
             transitionId = action.transitionId;
 
-            emptyMediaState = new MediaState(null, -1, -1);
             newMediaState = Object.assign(emptyMediaState, mediaState);
             newMediaState.transitionInIds = newMediaState.transitionInIds.filter(function(ele) { return ele != transitionId; });
 
