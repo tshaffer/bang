@@ -58,8 +58,6 @@ class MediaLibrary extends Component {
         if (this.props.mediaLibraryPlaylistItems && this.props.mediaLibraryPlaylistItems.length > 0) {
 
             let mediaLibraryPlaylistItems = this.props.mediaLibraryPlaylistItems.map(function (mediaLibraryPlaylistItem) {
-                // console.log("ph1");
-                // console.log("ph2");
 
                 const id = mediaLibraryPlaylistItem.getId();
                 const fileName = mediaLibraryPlaylistItem.getFileName();

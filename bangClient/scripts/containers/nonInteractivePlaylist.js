@@ -98,7 +98,7 @@ class NonInteractivePlaylist extends Component {
         }
 
         // get dropped playlist item
-        const stateName = event.dataTransfer.getData("name");
+        let stateName = event.dataTransfer.getData("name");
         const path = event.dataTransfer.getData("path");
         const type = event.dataTransfer.getData("type");
 
@@ -129,10 +129,24 @@ class NonInteractivePlaylist extends Component {
 
         // specify playlist item to drop
         let playlistItem = null;
+        const selectedZonePlaylist = this.getSelectedZonePlaylist();
         if (type === "image") {
-            const selectedZonePlaylist = this.getSelectedZonePlaylist();
             this.props.addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, operation, type, stateName, path, startIndex, index);
             // playlistItem = this.addMediaStateToNonInteractivePlaylist(operation, type, stateName, path, startIndex, index);
+        }
+        else if (type == "html5") {
+            debugger;
+            // TODO - for now, set the state name and site name to the first site in the sign (if it exists)
+            if (this.props.sign.htmlSiteIds.length > 0) {
+                const htmlSiteId = this.props.sign.htmlSiteIds[0];
+                const htmlSite = this.props.htmlSites.htmlSitesById[htmlSiteId];
+                stateName = htmlSite.name;
+            }
+            else {
+                stateName = "html5";
+            }
+            this.props.addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, operation, type, stateName, path, startIndex, index);
+            // playlistItem = this.props.onDropPlaylistItem(operation, type, defaultName, defaultName, startIndex, index);
         }
     }
 
@@ -273,6 +287,7 @@ NonInteractivePlaylist.propTypes = {
     mediaThumbs: React.PropTypes.object.isRequired,
     transitions: React.PropTypes.object.isRequired,
     mediaStates: React.PropTypes.object.isRequired,
+    htmlSites: React.PropTypes.object.isRequired,
     onSelectMediaState: React.PropTypes.func.isRequired,
     addMediaStateToNonInteractivePlaylist: React.PropTypes.func.isRequired,
     deleteMediaStateFromNonInteractivePlaylist: React.PropTypes.func.isRequired,
@@ -287,7 +302,8 @@ function mapStateToProps(state) {
         zones: state.zones,
         zonePlaylists: state.zonePlaylists,
         transitions: state.transitions,
-        mediaStates: state.mediaStates
+        mediaStates: state.mediaStates,
+        htmlSites: state.htmlSites
     };
 }
 

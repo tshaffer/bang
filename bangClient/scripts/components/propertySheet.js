@@ -81,7 +81,7 @@ class PropertySheet extends Component {
         }
 
         const htmlSite = {
-            htmlSiteName,
+            name: htmlSiteName,
             siteSpec,
             type
         };
