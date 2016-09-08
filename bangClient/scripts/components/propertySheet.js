@@ -87,8 +87,6 @@ class PropertySheet extends Component {
         };
         this.props.addHtmlSiteToPresentation(htmlSite);
 
-        // this.props.onAddHtmlSite(htmlSiteName, siteSpec, type);
-
         this.refs.htmlLocalSitePath.value = "";
         this.refs.htmlSiteUrl.value = "";
         this.refs.htmlSiteName.value = "";

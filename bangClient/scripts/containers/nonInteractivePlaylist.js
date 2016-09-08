@@ -6,6 +6,7 @@ import $ from 'jquery';
 import { guid } from '../utilities/utils';
 
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
+import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
 import { addMediaStateToNonInteractivePlaylist, deleteMediaStateFromNonInteractivePlaylist } from '../actions/index';
 import { getThumb } from '../platform/actions';
@@ -134,9 +135,8 @@ class NonInteractivePlaylist extends Component {
             this.props.addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, operation, type, stateName, path, startIndex, index);
             // playlistItem = this.addMediaStateToNonInteractivePlaylist(operation, type, stateName, path, startIndex, index);
         }
-        else if (type == "html5") {
-            debugger;
-            // TODO - for now, set the state name and site name to the first site in the sign (if it exists)
+        else if (type === "html5") {
+            // for now, set the state name and site name to the first site in the sign (if it exists)
             if (this.props.sign.htmlSiteIds.length > 0) {
                 const htmlSiteId = this.props.sign.htmlSiteIds[0];
                 const htmlSite = this.props.htmlSites.htmlSitesById[htmlSiteId];
@@ -146,7 +146,6 @@ class NonInteractivePlaylist extends Component {
                 stateName = "html5";
             }
             this.props.addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, operation, type, stateName, path, startIndex, index);
-            // playlistItem = this.props.onDropPlaylistItem(operation, type, defaultName, defaultName, startIndex, index);
         }
     }
 
@@ -182,6 +181,8 @@ class NonInteractivePlaylist extends Component {
         let dataIndex = -1;
 
         let mediaStatesJSX = mediaStates.map(function (mediaState, index) {
+
+            debugger;
 
             dataIndex++;
 
@@ -232,7 +233,28 @@ class NonInteractivePlaylist extends Component {
                         </li>
                     );
                 }
+            }
+            else if (mediaPlaylistItem instanceof HTML5PlaylistItem) {
+                className += "otherThumbImg";
 
+                // draggable={true}
+                // onDragStart={self.playlistDragStartHandler}
+                // data-name={fileName}
+                // data-path={filePath}
+                // data-type="html5"
+
+                return (
+                    <li className="flex-item mediaLibraryThumbDiv" key={id} data-index={index} id={"mediaThumb" + dataIndex.toString()}>
+                        <img
+                            id={id}
+                            src="images/html.png"
+                            className={className}
+                            data-index={dataIndex}
+                            onClick={() => self.onSelectMediaState(mediaState)}
+                        />
+                        <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>HTML5</p>
+                    </li>
+                );
             }
         });
 

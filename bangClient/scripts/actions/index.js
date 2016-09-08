@@ -7,6 +7,7 @@ import axios from 'axios';
 
 import ImageMediaItem from '../entities/imageMediaItem';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
+import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 import MediaState from '../badm/mediaState';
 import UserEvent from '../badm/userEvent';
 import Transition from '../badm/transition';
@@ -550,7 +551,24 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
 
     return function(dispatch, getState) {
 
-        const playlistItem = new ImagePlaylistItem (stateName, path, 6, 0, 2, false);
+        let playlistItem = null;
+
+        if (type === "image") {
+            playlistItem = new ImagePlaylistItem (stateName, path, 6, 0, 2, false);
+        }
+        else if (type == "html5") {
+            playlistItem = new HTML5PlaylistItem(
+                stateName, //name,
+                path, //htmlSiteName,
+                true, //enableExternalData,
+                true, //enableMouseEvents,
+                true, //displayCursor,
+                true, //hwzOn,
+                false, //useUserStylesheet,
+                null //userStyleSheet
+            );
+        }
+
         const mediaState = new MediaState (playlistItem, 0, 0);
         const newMediaStateId = mediaState.getId();
 
