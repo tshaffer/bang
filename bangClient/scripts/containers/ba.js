@@ -14,7 +14,7 @@ import MediaLibrary from '../components/mediaLibrary';
 import PropertySheet from '../components/propertySheet';
 import NonInteractivePlaylist from './nonInteractivePlaylist';
 
-import { createDefaultPresentation, updateSign, loadAppData, updateImageTimeOnScreen,
+import { createDefaultPresentation, updateSign, loadAppData,
     newHtmlSite, addHtmlSiteToPresentation, selectMediaFolder } from '../actions/index';
 
 class BA extends Component {
@@ -88,15 +88,6 @@ class BA extends Component {
 
     handleToggleOpenClosePropertySheet() {
         this.setState({propertySheetOpen: !this.state.propertySheetOpen});
-    }
-
-    handleUpdateImageTimeOnScreen(selectedMediaStateId, timeOnScreen) {
-
-        this.props.updateImageTimeOnScreen(selectedMediaStateId, timeOnScreen);
-
-        // let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedMediaStateId);
-        // updatedPlaylistItem.timeOnScreen = timeOnScreen;
-        // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
     }
 
     handleUpdateImageTransition(selectedPlaylistItemId, transition) {
@@ -258,7 +249,6 @@ class BA extends Component {
                     onUpdateHTML5DisplayCursor = {this.handleUpdateHTML5DisplayCursor.bind(this) }
                     onUpdateHTML5HWZOn = {this.handleUpdateHTML5HWZOn.bind(this) }
 
-                    onUpdateImageTimeOnScreen = {this.handleUpdateImageTimeOnScreen.bind(this) }
                     onUpdateImageTransition = {this.handleUpdateImageTransition.bind(this) }
                     onUpdateImageTransitionDuration = {this.handleUpdateImageTransitionDuration.bind(this) }
 
@@ -319,10 +309,9 @@ function mapStateToProps(state) {
     };
 }
 
-// updateMediaState
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, newHtmlSite, addHtmlSiteToPresentation,
-        selectMediaFolder, updateImageTimeOnScreen},
+        selectMediaFolder},
         dispatch);
 }
 
@@ -342,7 +331,6 @@ BA.propTypes = {
     mediaLibraryPlaylistItems: React.PropTypes.array.isRequired,
     htmlSites: React.PropTypes.object.isRequired,
     transitions: React.PropTypes.object.isRequired,
-    updateImageTimeOnScreen: React.PropTypes.func.isRequired
 };
 
 

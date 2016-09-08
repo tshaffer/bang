@@ -2,12 +2,16 @@
  * Created by tedshaffer on 6/19/16.
  */
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import { getShortenedFilePath } from '../utilities/utils';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
 import { getMediaPlaylistItem } from '../badm/mediaState';
+
+import { updateImageTimeOnScreen} from '../actions/index';
 
 import ReactTabs from 'react-tabs';
 var Tab = ReactTabs.Tab;
@@ -93,11 +97,11 @@ class PropertySheet extends Component {
         }
     }
 
-    onUpdateImageTimeOnScreen(event) {
+    handleUpdateImageTimeOnScreen(event) {
 
         if (event != undefined) {
             const timeOnScreen = Number(event.target.value);
-            this.props.onUpdateImageTimeOnScreen(this.props.selectedMediaStateId, timeOnScreen);
+            this.props.updateImageTimeOnScreen(this.props.selectedMediaStateId, timeOnScreen);
         }
     }
 
@@ -404,7 +408,7 @@ class PropertySheet extends Component {
                         <p>{fileName}</p>
                         <p>
                             Time on screen:
-                            <input type="text" value={imagePlaylistItem.timeOnScreen} onChange={this.onUpdateImageTimeOnScreen.bind(this)}/>
+                            <input type="text" value={imagePlaylistItem.timeOnScreen} onChange={this.handleUpdateImageTimeOnScreen.bind(this)}/>
                         </p>
                         <div>
                             Transition:
@@ -503,7 +507,7 @@ PropertySheet.propTypes = {
     onUpdateHTML5EnableMouseEvents: React.PropTypes.func.isRequired,
     onUpdateHTML5DisplayCursor: React.PropTypes.func.isRequired,
     onUpdateHTML5HWZOn: React.PropTypes.func.isRequired,
-    onUpdateImageTimeOnScreen: React.PropTypes.func.isRequired,
+    updateImageTimeOnScreen: React.PropTypes.func.isRequired,
     onUpdateImageTransition: React.PropTypes.func.isRequired,
     onUpdateImageTransitionDuration: React.PropTypes.func.isRequired,
     getCurrentZonePlaylist: React.PropTypes.func.isRequired,
@@ -511,7 +515,12 @@ PropertySheet.propTypes = {
     htmlSites: React.PropTypes.object.isRequired,
     sign: React.PropTypes.object.isRequired,
     mediaStates: React.PropTypes.object.isRequired,
+
 };
 
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({updateImageTimeOnScreen},
+        dispatch);
+}
 
-export default PropertySheet;
+export default connect(null, mapDispatchToProps)(PropertySheet);

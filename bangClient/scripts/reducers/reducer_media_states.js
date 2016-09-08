@@ -58,8 +58,6 @@ export default function(state = initialState, action) {
 
         case UPDATE_IMAGE_TIME_ON_SCREEN:
             {
-                debugger;
-
                 mediaStateId = action.mediaStateId;
                 mediaState = state.mediaStatesById[mediaStateId];
 
@@ -75,8 +73,6 @@ export default function(state = initialState, action) {
                 };
                 return newState;
             }
-
-
 
         case DELETE_MEDIA_STATE:
 
