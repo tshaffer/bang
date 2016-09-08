@@ -90,20 +90,6 @@ class BA extends Component {
         this.setState({propertySheetOpen: !this.state.propertySheetOpen});
     }
 
-    handleUpdateImageTransition(selectedPlaylistItemId, transition) {
-
-        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
-        updatedPlaylistItem.transition = transition;
-        // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
-    }
-
-    handleUpdateImageTransitionDuration(selectedPlaylistItemId, transitionDuration) {
-
-        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
-        updatedPlaylistItem.transitionDuration = transitionDuration;
-        // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
-    }
-
     getEmptyPlaylistItem(existingPlaylistItem) {
 
         let emptyPlaylistItem = null;
@@ -248,10 +234,6 @@ class BA extends Component {
                     onUpdateHTML5EnableMouseEvents = {this.handleUpdateHTML5EnableMouseEvents.bind(this) }
                     onUpdateHTML5DisplayCursor = {this.handleUpdateHTML5DisplayCursor.bind(this) }
                     onUpdateHTML5HWZOn = {this.handleUpdateHTML5HWZOn.bind(this) }
-
-                    onUpdateImageTransition = {this.handleUpdateImageTransition.bind(this) }
-                    onUpdateImageTransitionDuration = {this.handleUpdateImageTransitionDuration.bind(this) }
-
         />;
         }
 
@@ -278,7 +260,6 @@ class BA extends Component {
                         zones={this.props.zones}
                         zonePlaylists={this.props.zonePlaylists}
                         mediaThumbs={this.props.mediaThumbs}
-                        transitions={this.props.transitions}
                         onSelectMediaState={this.handleSelectMediaState.bind(this)}
                         selectedMediaStateId={this.state.selectedMediaStateId}
                     />
@@ -301,7 +282,6 @@ function mapStateToProps(state) {
         mediaStates: state.mediaStates,
         playlistItems: state.playlistItems,
         htmlSites: state.htmlSites,
-        transitions: state.transitions,
 
         mediaLibraryPlaylistItems: state.mediaLibraryPlaylistItems,
         mediaFolder: state.mediaFolder,
@@ -330,7 +310,6 @@ BA.propTypes = {
     mediaThumbs: React.PropTypes.object.isRequired,
     mediaLibraryPlaylistItems: React.PropTypes.array.isRequired,
     htmlSites: React.PropTypes.object.isRequired,
-    transitions: React.PropTypes.object.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);
