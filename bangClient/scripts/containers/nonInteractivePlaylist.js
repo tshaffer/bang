@@ -182,8 +182,6 @@ class NonInteractivePlaylist extends Component {
 
         let mediaStatesJSX = mediaStates.map(function (mediaState, index) {
 
-            debugger;
-
             dataIndex++;
 
             const id = mediaState.getId();

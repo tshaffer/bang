@@ -688,3 +688,66 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
     };
 
 }
+
+export const UPDATE_HTML5_STATE_NAME = 'UPDATE_HTML5_STATE_NAME';
+export function updateHTML5StateName(mediaStateId, html5StateName) {
+
+    return {
+        type: UPDATE_HTML5_STATE_NAME,
+        mediaStateId,
+        html5StateName
+    };
+}
+
+export const UPDATE_HTML5_SITE_NAME = 'UPDATE_HTML5_SITE_NAME';
+export function updateHTML5SiteName(mediaStateId, html5SiteName) {
+
+    return {
+        type: UPDATE_HTML5_SITE_NAME,
+        mediaStateId,
+        html5SiteName
+    };
+}
+
+export const UPDATE_HTML5_ENABLE_EXTERNAL_DATA = 'UPDATE_HTML5_ENABLE_EXTERNAL_DATA';
+export function updateHTML5EnableExternalData(mediaStateId, enableExternalData) {
+
+    return {
+        type: UPDATE_HTML5_ENABLE_EXTERNAL_DATA,
+        mediaStateId,
+        enableExternalData
+    };
+}
+
+export const UPDATE_HTML5_ENABLE_MOUSE_EVENTS = 'UPDATE_HTML5_ENABLE_MOUSE_EVENTS';
+export function updateHTML5EnableMouseEvents(mediaStateId, enableMouseEvents) {
+
+    return {
+        type: UPDATE_HTML5_ENABLE_MOUSE_EVENTS,
+        mediaStateId,
+        enableMouseEvents
+    };
+}
+
+export const UPDATE_HTML5_DISPLAY_CURSOR = 'UPDATE_HTML5_DISPLAY_CURSOR';
+export function updateHTML5DisplayCursor(mediaStateId, displayCursor) {
+
+    return {
+        type: UPDATE_HTML5_DISPLAY_CURSOR,
+        mediaStateId,
+        displayCursor
+    };
+}
+
+export const UPDATE_HTML5_HWZ_ON = 'UPDATE_HTML5_HWZ_ON';
+export function updateHTML5HWZOn(mediaStateId, hwzOn) {
+
+    return {
+        type: UPDATE_HTML5_HWZ_ON,
+        mediaStateId,
+        hwzOn
+    };
+}
+
+
+
