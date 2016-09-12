@@ -320,48 +320,23 @@ function buildThumb(mediaFile) {
 
     return new Promise(function(resolve, reject) {
 
-        let sourceFilePath = mediaFile.filePath;
-        let ext = path.extname(sourceFilePath);
-        const sourceFileName = path.basename(sourceFilePath);
-        const sourceFileNameWithoutExtension = path.basename(sourceFilePath, ext);
 
-        const destinationFolder = "thumbs";
+        const dirName = path.dirname(mediaFile.filePath);
+        const fileName = path.basename(mediaFile.filePath);
+        const ext = path.extname(mediaFile.filePath);
 
+        const thumbFileName = fileName.substring(0,fileName.length - ext.length) + "_thumb" + ext;
 
-
-
-        var targetHeight = 100;
-        var targetWidth = mediaFile.imageWidth / (mediaFile.imageHeight / targetHeight);
-
-        var dirName = path.dirname(mediaFile.filePath);
-        var fileName = path.basename(mediaFile.filePath);
-        // ext = path.extname(mediaFile.filePath);
-
-        var thumbFileName = fileName.substring(0,fileName.length - ext.length) + "_thumb" + ext;
-
+        const sourceFilePath = mediaFile.filePath;
         mediaFile.thumbPath = path.join('thumbs', thumbFileName);
 
-        // var createThumbPromise = easyImage.resize({
-        //     src: mediaFile.filePath,
-        //     dst: mediaFile.thumbPath,
-        //     width: targetWidth,
-        //     height: targetHeight,
-        //     quality: 75
-        // });
-        // createThumbPromise.then(function (thumbImage) {
-        //     resolve(mediaFile);
-        // });
-
-
-        sourceFilePath = mediaFile.filePath;
-
-        // mediaFile.thumbPath = path.join(dirName, "thumbs", thumbFileName);
-
-        debugger;
+        const targetHeight = 100;
+        const targetWidth = mediaFile.imageWidth / (mediaFile.imageHeight / targetHeight);
+        const targetSize = Math.trunc(targetWidth).toString() + 'x' + Math.trunc(targetHeight).toString();
 
         try {
             ffmpeg(sourceFilePath)
-                .size('?x120')
+                .size(targetSize)
                 .output(mediaFile.thumbPath)
                 .on('end', function() {
                     console.log('Finished resizing image file');
@@ -373,38 +348,6 @@ function buildThumb(mediaFile) {
             debugger;
             reject(e);
         }
-
-        // ffmpeg(sourceFilePath)
-        //         .on('filenames', function (filenames) {
-        //             console.log('Generate thumbnail ' + filenames[0]);
-        //         })
-        //         .on('end', function () {
-        //             console.log('Thumbnail generated for: ' + sourceFilePath);
-        //             videoFile.dateTaken = Date.now();
-        //             videoFile.fileName = sourceFileName;
-        //             videoFile.orientation = 1;
-        //             videoFile.thumbFileName = sourceFileNameWithoutExtension + "_thumb.png";
-        //             videoFile.thumbUrl = "thumbs/" + videoFile.thumbFileName;
-        //             videoFile.thumbPath = videoFile.thumbUrl;
-        //
-        //             const dimensions = sizeOf(videoFile.thumbUrl);
-        //             videoFile.imageHeight = dimensions.height;
-        //             videoFile.imageWidth = dimensions.width;
-        //
-        //             resolve(videoFile);
-        //         })
-        //         .screenshots({
-        //             filename: sourceFileNameWithoutExtension + "_thumb",
-        //             timestamps: [2],
-        //             folder: destinationFolder,
-        //             size: '?x120'
-        //         });
-        // }
-        // catch (e) {
-        //     debugger;
-        //     reject();
-        // }
-
     });
 }
 
