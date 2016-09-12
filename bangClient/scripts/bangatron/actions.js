@@ -1,8 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const exifReader = require('./nodeExif');
-const easyImage = require("easyimage");
-// const ffmpeg = require('ffmpeg');
 const ffmpeg = require('fluent-ffmpeg');
 
 var util = require("util");
