@@ -70,7 +70,7 @@ function getExifData(photo) {
 
                     var dateTaken;
                     if (typeof exifData.exif.DateTimeOriginal == 'undefined') {
-                        dateTaken = Date.now();
+                        dateTaken = Date();
                     }
                     else
                     {
