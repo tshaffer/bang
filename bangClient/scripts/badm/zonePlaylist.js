@@ -3,7 +3,6 @@
  */
 export default class ZonePlaylist   {
     constructor() {
-        debugger;       // am i used?
         this.playlistItems = [];
     }
 }

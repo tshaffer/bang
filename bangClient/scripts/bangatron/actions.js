@@ -431,33 +431,49 @@ export function executeSaveSign(filePath) {
 
         state.sign.zoneIds.forEach( zoneId => {
 
+            // existing norm_zone
             const zone = state.zones.zonesById[zoneId];
+
+            // create empty badm_zone
             let badmZone = new Zone(zone.name, zone.type);
+
             badmSign.addZone(badmZone);
 
-            const badmZonePlaylist = badmZone.zonePlaylist;
 
             const zonePlaylist = state.zonePlaylists.zonePlaylistsById[zone.zonePlaylistId];
-            zonePlaylist.playlistItemIds.forEach(playlistItemId => {
-                let badmPlaylistItem = null;
-                const playlistItem = state.playlistItems.playlistItemsById[playlistItemId];
-                if (playlistItem instanceof ImagePlaylistItem) {
-                    badmPlaylistItem = new ImagePlaylistItem(playlistItem.fileName, playlistItem.filePath, playlistItem.timeOnScreen, playlistItem.transition, playlistItem.transitionDuration, "false");
+
+            const mediaStatesById = state.mediaStates.mediaStatesById;
+            for (let mediaStateId in mediaStatesById) {
+                if (mediaStatesById.hasOwnProperty(mediaStateId)) {
+                    const mediaState = mediaStatesById[mediaStateId];
+                    badmZone.zonePlaylist.playlistItems.push(mediaState);
                 }
-                else if (playlistItem instanceof HTML5PlaylistItem) {
-                    badmPlaylistItem = new HTML5PlaylistItem(playlistItem.fileName, playlistItem.htmlSiteName, playlistItem.enableExternalData, playlistItem.enableMouseEvents, playlistItem.displayCursor, playlistItem.hwzOn, playlistItem.useUserStylesheet, playlistItem.userStyleSheet);
-                }
-                badmZonePlaylist.playlistItems.push(badmPlaylistItem);
-            });
+            }
         });
 
-        state.sign.htmlSiteIds.forEach( htmlSiteId => {
-
-            const htmlSite = state.htmlSites.htmlSitesById[htmlSiteId];
-            let badmHtmlSite = new HtmlSite(htmlSite.name, htmlSite.type, htmlSite.siteSpec);
-            badmSign.addHtmlSite(htmlSite);
-        });
-
+        // state.sign.zoneIds.forEach( zoneId => {
+        //
+        //     const zonePlaylist = state.zonePlaylists.zonePlaylistsById[zone.zonePlaylistId];
+        //     zonePlaylist.playlistItemIds.forEach(playlistItemId => {
+        //         let badmPlaylistItem = null;
+        //         const playlistItem = state.playlistItems.playlistItemsById[playlistItemId];
+        //         if (playlistItem instanceof ImagePlaylistItem) {
+        //             badmPlaylistItem = new ImagePlaylistItem(playlistItem.fileName, playlistItem.filePath, playlistItem.timeOnScreen, playlistItem.transition, playlistItem.transitionDuration, "false");
+        //         }
+        //         else if (playlistItem instanceof HTML5PlaylistItem) {
+        //             badmPlaylistItem = new HTML5PlaylistItem(playlistItem.fileName, playlistItem.htmlSiteName, playlistItem.enableExternalData, playlistItem.enableMouseEvents, playlistItem.displayCursor, playlistItem.hwzOn, playlistItem.useUserStylesheet, playlistItem.userStyleSheet);
+        //         }
+        //         badmZonePlaylist.playlistItems.push(badmPlaylistItem);
+        //     });
+        // });
+        //
+        // state.sign.htmlSiteIds.forEach( htmlSiteId => {
+        //
+        //     const htmlSite = state.htmlSites.htmlSitesById[htmlSiteId];
+        //     let badmHtmlSite = new HtmlSite(htmlSite.name, htmlSite.type, htmlSite.siteSpec);
+        //     badmSign.addHtmlSite(htmlSite);
+        // });
+        //
         const presentation = JSON.stringify(badmSign, null, 2);
 
         fs.writeFile(filePath, presentation, () => {

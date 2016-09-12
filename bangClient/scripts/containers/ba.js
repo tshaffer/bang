@@ -14,7 +14,7 @@ import MediaLibrary from '../components/mediaLibrary';
 import PropertySheet from '../components/propertySheet';
 import NonInteractivePlaylist from './nonInteractivePlaylist';
 
-import { createDefaultPresentation, updateSign, loadAppData, selectMediaFolder } from '../actions/index';
+import { loadAppData, selectMediaFolder, createDefaultPresentation, updateSign, saveSign  } from '../actions/index';
 
 class BA extends Component {
 
@@ -276,7 +276,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, selectMediaFolder},
+    return bindActionCreators({loadAppData, selectMediaFolder, createDefaultPresentation, updateSign, saveSign },
         dispatch);
 }
 
@@ -285,6 +285,7 @@ BA.propTypes = {
     createDefaultPresentation: React.PropTypes.func.isRequired,
     loadAppData: React.PropTypes.func.isRequired,
     updateSign: React.PropTypes.func.isRequired,
+    saveSign: React.PropTypes.func.isRequired,
     sign: React.PropTypes.object.isRequired,
     zones: React.PropTypes.object.isRequired,
     zonePlaylists: React.PropTypes.object.isRequired,
