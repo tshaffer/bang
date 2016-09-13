@@ -4,8 +4,6 @@ import { NEW_ZONE_PLAYLIST, CLEAR_ZONE_PLAYLISTS,
 
 import Norm_ZonePlaylist from '../normalizedBADM/norm_zonePlaylist';
 
-// var deepEqual = require('deep-equal');
-
 const initialState =
     {
         zonePlaylistsById: {},
