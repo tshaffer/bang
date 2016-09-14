@@ -14,7 +14,7 @@ import MediaLibrary from '../components/mediaLibrary';
 import PropertySheet from '../components/propertySheet';
 import NonInteractivePlaylist from './nonInteractivePlaylist';
 
-import { createDefaultPresentation, updateSign, loadAppData, selectMediaFolder } from '../actions/index';
+import { makeGetBSNOAuthToken, createDefaultPresentation, updateSign, loadAppData, selectMediaFolder } from '../actions/index';
 
 class BA extends Component {
 
@@ -34,6 +34,8 @@ class BA extends Component {
     }
 
     componentWillMount() {
+
+        this.props.makeGetBSNOAuthToken();
 
         this.props.createDefaultPresentation("Project 1");
 
@@ -276,7 +278,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, selectMediaFolder},
+    return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, selectMediaFolder, makeGetBSNOAuthToken},
         dispatch);
 }
 
@@ -294,6 +296,7 @@ BA.propTypes = {
     mediaThumbs: React.PropTypes.object.isRequired,
     mediaLibraryPlaylistItems: React.PropTypes.array.isRequired,
     htmlSites: React.PropTypes.object.isRequired,
+    makeGetBSNOAuthToken: React.PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);

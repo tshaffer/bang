@@ -3,6 +3,8 @@
  */
 import { getLastKey } from '../utilities/utils';
 
+const https = require('https');
+
 import axios from 'axios';
 
 import ImageMediaItem from '../entities/imageMediaItem';
@@ -298,6 +300,72 @@ export function updateImageTransitionDuration(mediaStateId, transitionDuration) 
         mediaStateId,
         transitionDuration
     };
+}
+
+export function makeGetBSNOAuthToken() {
+
+    return function(dispatch, getState) {
+
+        debugger;
+
+        let postData = {};
+
+        postData.username = "ted/ted@roku.com";
+        postData.scope = "full";
+        postData.client_secret = "no";
+        postData.grant_type = "password";
+        postData.password = "ted";
+
+
+        var postDataStr = JSON.stringify(postData);
+
+        // headers: {
+        //     'Content-Type': 'application/x-www-form-urlencoded'
+        // }
+
+        // headers: {
+        //     'Content-Type': 'application/x-www-form-urlencoded',
+        //         'Content-Length': postDataStr.length
+        // }
+
+        // headers: {
+        //     'Content-Type': 'application/json; charset=utf-8',
+        //         'Content-Length': postDataStr.length
+        // }
+
+        var options = {
+            hostname: 'ast.brightsignnetwork.com',
+            port: 443,
+            path: '/2017/01/REST/Token',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                    'Content-Length': postDataStr.length
+            }
+        };
+
+        var str = "";
+
+        var req = https.request(options, function (res) {
+            res.setEncoding('utf8');
+            res.on('data', function (chunk) {
+                str += chunk;
+            });
+            res.on('end', function () {
+                debugger;
+                let data = JSON.parse(str);
+            });
+        });
+
+        req.on('error', function (e) {
+            console.log('problem with request: ' + e.message);
+        });
+
+        // write data to request body
+        req.write(postDataStr);
+        req.end();
+    };
+
 }
 
 export const DELETE_MEDIA_STATE = 'DELETE_MEDIA_STATE';
