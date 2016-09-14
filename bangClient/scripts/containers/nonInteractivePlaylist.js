@@ -32,6 +32,19 @@ class NonInteractivePlaylist extends Component {
         }
     }
 
+    playlistDragStartHandler(ev) {
+
+        ev.dataTransfer.setData("path", ev.target.dataset.path);
+        ev.dataTransfer.setData("name", ev.target.dataset.name);
+        ev.dataTransfer.setData("type", ev.target.dataset.type);
+        ev.dataTransfer.setData("index", ev.target.dataset.index);
+
+        // I don't think the following statement is necessarily correct
+        ev.dataTransfer.dropEffect = "move";
+        ev.dataTransfer.effectAllowed = 'move';
+    }
+
+
     handlePlaylistDragOver (event) {
 
         event.preventDefault();
@@ -209,6 +222,9 @@ class NonInteractivePlaylist extends Component {
                     // {/*data-path={filePath}*/}
                     // {/*data-type="image"*/}
 
+                    const fileName = mediaPlaylistItem.getFileName();
+                    // filePath already set
+
                     // indicate media state is selected by marking the entire <li rather htan just the <img ?
                     return (
                         <li className="flex-item mediaLibraryThumbDiv" key={index} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
@@ -218,6 +234,11 @@ class NonInteractivePlaylist extends Component {
                                 className={className}
                                 data-index={dataIndex}
                                 onClick={() => self.onSelectMediaState(mediaState)}
+                                draggable={true}
+                                onDragStart={self.playlistDragStartHandler}
+                                data-name={fileName}
+                                data-path={filePath}
+                                data-type="image"
                             />
                             <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>{fileName}</p>
                         </li>
