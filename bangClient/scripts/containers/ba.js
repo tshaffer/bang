@@ -15,7 +15,7 @@ import PropertySheet from '../components/propertySheet';
 import NonInteractivePlaylist from './nonInteractivePlaylist';
 
 import { createDefaultPresentation, updateSign, loadAppData, selectMediaFolder } from '../actions/index';
-import { getBSNAuthToken, getBSNProfile } from '../actions/bsnActions';
+import { getBSNAuthToken, getBSNProfile, getBSNSelf, getBSNNetworks } from '../actions/bsnActions';
 
 class BA extends Component {
 
@@ -189,7 +189,9 @@ class BA extends Component {
     }
 
     getBSNJSX() {
-        this.props.getBSNProfile();
+        // this.props.getBSNProfile();
+        // this.props.getBSNSelf();
+        this.props.getBSNNetworks();
         return <div>pizza</div>;
     }
 
@@ -288,7 +290,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, selectMediaFolder, getBSNAuthToken, getBSNProfile},
+    return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, selectMediaFolder, getBSNAuthToken, getBSNProfile, getBSNSelf, getBSNNetworks},
         dispatch);
 }
 
@@ -306,8 +308,11 @@ BA.propTypes = {
     mediaThumbs: React.PropTypes.object.isRequired,
     mediaLibraryPlaylistItems: React.PropTypes.array.isRequired,
     htmlSites: React.PropTypes.object.isRequired,
+
     getBSNAuthToken: React.PropTypes.func.isRequired,
-    getBSNProfile: React.PropTypes.func.isRequired
+    getBSNProfile: React.PropTypes.func.isRequired,
+    getBSNSelf: React.PropTypes.func.isRequired,
+    getBSNNetworks: React.PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);

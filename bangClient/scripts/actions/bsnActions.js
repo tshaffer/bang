@@ -109,6 +109,26 @@ function invokeBSNGet(endPoint, bsnAuthData) {
 }
 
 
+export function getBSNSelf() {
+
+    return function(dispatch, getState) {
+
+        console.log("actions/bsnActions.js::getBSNSelf invoked");
+
+        let state = getState();
+
+        const bsnAuthData = state.bsnAuthData;
+
+        if (!bsnAuthData.userId) {
+            return;
+        }
+
+        invokeBSNGet('self/', bsnAuthData).then((selfData)=> {
+            debugger;
+        });
+    };
+}
+
 export function getBSNProfile() {
 
     return function(dispatch, getState) {
@@ -128,3 +148,24 @@ export function getBSNProfile() {
         });
     };
 }
+
+export function getBSNNetworks() {
+
+    return function(dispatch, getState) {
+
+        console.log("actions/bsnActions.js::getBSNNetworks invoked");
+
+        let state = getState();
+
+        const bsnAuthData = state.bsnAuthData;
+
+        if (!bsnAuthData.userId) {
+            return;
+        }
+
+        invokeBSNGet('self/networks/', bsnAuthData).then((bsnNetworks)=> {
+            debugger;
+        });
+    };
+}
+
