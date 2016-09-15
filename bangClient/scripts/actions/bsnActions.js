@@ -2,11 +2,20 @@ var https = require('https');
 
 function serialize(obj) {
     return Object.keys(obj).map(function(key) {
-        return key + '=' + encodeURIComponent(obj[key])
+        return key + '=' + encodeURIComponent(obj[key]);
     }).join('&');
 }
 
-export function getBSNAuthToken(zonePlaylistId, mediaState) {
+export const SET_BSN_AUTH_DATA = 'SET_BSN_AUTH_DATA';
+export function setBSNAuthData(bsnAuthData) {
+    return {
+        type: SET_BSN_AUTH_DATA,
+        payload: bsnAuthData
+    };
+}
+
+
+export function getBSNAuthToken() {
 
     return function (dispatch, getState) {
 
@@ -41,7 +50,10 @@ export function getBSNAuthToken(zonePlaylistId, mediaState) {
             });
             res.on('end', function () {
                 console.log(str);
-                // var data = JSON.parse(str);
+                const authData = JSON.parse(str);
+                dispatch(setBSNAuthData(authData));
+
+                const state = getState();
             });
         });
 
@@ -53,5 +65,43 @@ export function getBSNAuthToken(zonePlaylistId, mediaState) {
         req.write(postDataStr);
         req.end();
 
+    };
+}
+
+
+export function getBSNProfile() {
+
+    return function (dispatch, getState) {
+
+        let state = getState();
+
+        const bsnAuthData = state.bsnAuthData;
+
+        if (!bsnAuthData.userId) {
+            return;
+        }
+
+        var options = {
+            hostname: 'ast.brightsignnetwork.com',
+            port: 443,
+            path: '/2017/01/REST/self/Users/' + bsnAuthData.userId.toString() + '/Profile',
+            headers: {
+                'Authorization': 'Bearer ' + bsnAuthData.access_token
+            }
+        };
+
+        var str = "";
+
+        https.get(options, function (res) {
+            res.on('data', function (d) {
+                str += d;
+            });
+            res.on('end', function () {
+                var data = JSON.parse(str);
+            });
+
+        }).on('error', function (err) {
+            console.log('Caught exception: ' + err);
+        });
     };
 }

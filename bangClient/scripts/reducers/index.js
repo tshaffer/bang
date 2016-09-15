@@ -15,6 +15,8 @@ import HtmlSitesReducer from './reducer_html_sites';
 
 import TransitionsReducer from './reducer_transitions';
 
+import BSNAuthDataReducer from './reducer_bsn_auth_data';
+
 const rootReducer = combineReducers({
     mediaThumbs: MediaThumbsReducer,
     mediaFolder: MediaFolderReducer,
@@ -27,7 +29,9 @@ const rootReducer = combineReducers({
     playlistItems: PlaylistItemsReducer,
     htmlSites: HtmlSitesReducer,
 
-    transitions: TransitionsReducer
+    transitions: TransitionsReducer,
+
+    bsnAuthData: BSNAuthDataReducer
 });
 
 export default rootReducer;

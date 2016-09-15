@@ -15,7 +15,7 @@ import PropertySheet from '../components/propertySheet';
 import NonInteractivePlaylist from './nonInteractivePlaylist';
 
 import { createDefaultPresentation, updateSign, loadAppData, selectMediaFolder } from '../actions/index';
-import { getBSNAuthToken } from '../actions/bsnActions';
+import { getBSNAuthToken, getBSNProfile } from '../actions/bsnActions';
 
 class BA extends Component {
 
@@ -188,6 +188,11 @@ class BA extends Component {
         this.setState({open: false});
     }
 
+    getBSNJSX() {
+        this.props.getBSNProfile();
+        return <div>pizza</div>;
+    }
+
     render () {
         
         let signName = <span>No sign yet</span>;
@@ -196,7 +201,8 @@ class BA extends Component {
             signName = this.props.sign.name;
             signVideoMode = this.props.sign.videoMode;
         }
-        
+
+        const bsnJSX = this.getBSNJSX();
         const openSavePresentationJSX = this.baUI.getOpenSavePresentationJSX(this.state.bsnPresentations);
 
         let propertySheetTag = <div></div>;
@@ -228,6 +234,8 @@ class BA extends Component {
         return (
 
             <div>
+                {bsnJSX}
+
                 <div>
                     <span>{signName}</span>
                     :
@@ -274,11 +282,13 @@ function mapStateToProps(state) {
         mediaLibraryPlaylistItems: state.mediaLibraryPlaylistItems,
         mediaFolder: state.mediaFolder,
         mediaThumbs: state.mediaThumbs,
+
+        bsnAuthData: state.bsnAuthData
     };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, selectMediaFolder, getBSNAuthToken},
+    return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, selectMediaFolder, getBSNAuthToken, getBSNProfile},
         dispatch);
 }
 
@@ -296,7 +306,8 @@ BA.propTypes = {
     mediaThumbs: React.PropTypes.object.isRequired,
     mediaLibraryPlaylistItems: React.PropTypes.array.isRequired,
     htmlSites: React.PropTypes.object.isRequired,
-    getBSNAuthToken: React.PropTypes.func.isRequired
+    getBSNAuthToken: React.PropTypes.func.isRequired,
+    getBSNProfile: React.PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);
