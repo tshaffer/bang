@@ -69,22 +69,22 @@ export function getBSNAuthToken() {
 }
 
 
-export function getBSNProfile() {
+function invokeBSNGet(endPoint, bsnAuthData) {
 
-    return function (dispatch, getState) {
+    return new Promise( (resolve, reject) => {
 
-        let state = getState();
-
-        const bsnAuthData = state.bsnAuthData;
-
-        if (!bsnAuthData.userId) {
-            return;
-        }
+        // let state = getState();
+        //
+        // const bsnAuthData = state.bsnAuthData;
+        //
+        // if (!bsnAuthData.userId) {
+        //     return;
+        // }
 
         var options = {
             hostname: 'ast.brightsignnetwork.com',
             port: 443,
-            path: '/2017/01/REST/self/Users/' + bsnAuthData.userId.toString() + '/Profile',
+            path: '/2017/01/REST/' + endPoint,
             headers: {
                 'Authorization': 'Bearer ' + bsnAuthData.access_token
             }
@@ -97,11 +97,34 @@ export function getBSNProfile() {
                 str += d;
             });
             res.on('end', function () {
-                var data = JSON.parse(str);
+                const data = JSON.parse(str);
+                resolve(data);
             });
 
         }).on('error', function (err) {
             console.log('Caught exception: ' + err);
+            reject(err);
+        });
+    });
+}
+
+
+export function getBSNProfile() {
+
+    return function(dispatch, getState) {
+
+        console.log("actions/bsnActions.js::getBSNProfile invoked");
+
+        let state = getState();
+
+        const bsnAuthData = state.bsnAuthData;
+
+        if (!bsnAuthData.userId) {
+            return;
+        }
+
+        invokeBSNGet('self/Users/' + bsnAuthData.userId.toString() + '/Profile', bsnAuthData).then((bsnProfileData)=> {
+            debugger;
         });
     };
 }
