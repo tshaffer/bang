@@ -15,6 +15,7 @@ import PropertySheet from '../components/propertySheet';
 import NonInteractivePlaylist from './nonInteractivePlaylist';
 
 import { createDefaultPresentation, updateSign, loadAppData, selectMediaFolder } from '../actions/index';
+import { getBSNAuthToken } from '../actions/bsnActions';
 
 class BA extends Component {
 
@@ -46,6 +47,7 @@ class BA extends Component {
 
         this.baUI.init();
 
+        this.props.getBSNAuthToken();
     }
 
     handleSelectMediaState(mediaState) {
@@ -276,7 +278,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, selectMediaFolder},
+    return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, selectMediaFolder, getBSNAuthToken},
         dispatch);
 }
 
@@ -294,6 +296,7 @@ BA.propTypes = {
     mediaThumbs: React.PropTypes.object.isRequired,
     mediaLibraryPlaylistItems: React.PropTypes.array.isRequired,
     htmlSites: React.PropTypes.object.isRequired,
+    getBSNAuthToken: React.PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);
