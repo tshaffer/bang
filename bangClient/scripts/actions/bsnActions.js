@@ -1,4 +1,5 @@
 var https = require('https');
+var request = require('request');
 
 function serialize(obj) {
     return Object.keys(obj).map(function(key) {
@@ -81,30 +82,63 @@ function invokeBSNGet(endPoint, bsnAuthData) {
         //     return;
         // }
 
+        // var options = {
+        //     hostname: 'ast.brightsignnetwork.com',
+        //     port: 443,
+        //     path: '/2017/01/REST/' + endPoint,
+        //     headers: {
+        //         'Authorization': 'Bearer ' + bsnAuthData.access_token
+        //     }
+        // };
+        //
+        // var str = "";
+        //
+        // https.get(options, function (res) {
+        //     res.on('data', function (d) {
+        //         str += d;
+        //     });
+        //     res.on('end', function () {
+        //         const data = JSON.parse(str);
+        //         resolve(data);
+        //     });
+        //
+        // }).on('error', function (err) {
+        //     console.log('Caught exception: ' + err);
+        //     reject(err);
+        // });
+
+
+        // var request = require('request');
+        // var propertiesObject = { field1:'test1', field2:'test2' };
+        //
+        // request({url:url, qs:propertiesObject}, function(err, response, body) {
+        //     if(err) { console.log(err); return; }
+        //     console.log("Get response: " + response.statusCode);
+        // });
+
+
+        // var propertiesObject = { field1:'test1', field2:'test2' };
+        var propertiesObject = { marker: '' };
+
         var options = {
-            hostname: 'ast.brightsignnetwork.com',
-            port: 443,
-            path: '/2017/01/REST/' + endPoint,
+            url: 'https://ast.brightsignnetwork.com/2017/01/REST/' + endPoint,
+            qs: propertiesObject,
             headers: {
                 'Authorization': 'Bearer ' + bsnAuthData.access_token
             }
         };
 
-        var str = "";
+        function callback(error, response, body) {
+            if (!error && response.statusCode == 200) {
+                var info = JSON.parse(body);
+                resolve(info);
+            }
+            if (error) {
+                reject(error);
+            }
+        }
 
-        https.get(options, function (res) {
-            res.on('data', function (d) {
-                str += d;
-            });
-            res.on('end', function () {
-                const data = JSON.parse(str);
-                resolve(data);
-            });
-
-        }).on('error', function (err) {
-            console.log('Caught exception: ' + err);
-            reject(err);
-        });
+        request(options, callback);
     });
 }
 
@@ -169,11 +203,11 @@ export function getBSNNetworks() {
     };
 }
 
-export function getBSNUsers() {
+export function getMyBSNUsers() {
 
     return function(dispatch, getState) {
 
-        console.log("actions/bsnActions.js::getBSNUsers invoked");
+        console.log("actions/bsnActions.js::getMyBSNUsers invoked");
 
         let state = getState();
 
@@ -210,11 +244,32 @@ export function getBSNUser(userId) {
     };
 }
 
+export function getBSNAccountUsers() {
+
+    return function(dispatch, getState) {
+
+        console.log("actions/bsnActions.js::getAccountBSNUsers invoked");
+
+        let state = getState();
+
+        const bsnAuthData = state.bsnAuthData;
+
+        if (!bsnAuthData.userId) {
+            return;
+        }
+
+        invokeBSNGet('users/', bsnAuthData).then((bsnUsers)=> {
+            debugger;
+        });
+    };
+}
+
+
 export function getBSNContent() {
 
     // {marker | pageIndex}, [pageSize], [filter], [sort]
 
-    return function(dispatch, getState) {
+    return function (dispatch, getState) {
 
         console.log("actions/bsnActions.js::getBSNContent invoked");
 
@@ -226,7 +281,9 @@ export function getBSNContent() {
             return;
         }
 
-        invokeBSNGet('content/', bsnAuthData).then((bsnContent)=> {
+        const marker = '';
+        invokeBSNGet("content?marker=" + marker, bsnAuthData).then((bsnContent)=> {
+        // invokeBSNGet("content/", bsnAuthData).then((bsnContent)=> {
             debugger;
         });
     };
@@ -249,7 +306,10 @@ export function getBSNGroups() {
         }
 
         // invokeBSNGet('groups?marker=0', bsnAuthData).then((bsnGroups)=> {
-        invokeBSNGet('groups/', bsnAuthData).then((bsnGroups)=> {
+        // invokeBSNGet("content/?marker=" + marker, bsnAuthData).then((bsnContent)=> {
+        // const marker = '';
+        // invokeBSNGet("groups/?marker=" + marker, bsnAuthData).then((bsnGroups)=> {
+        invokeBSNGet("groups/", bsnAuthData).then((bsnGroups)=> {
             debugger;
         });
     };
@@ -272,6 +332,30 @@ export function getBSNDevices() {
         }
 
         invokeBSNGet('devices/', bsnAuthData).then((bsnDevices)=> {
+            debugger;
+        });
+    };
+}
+
+export function getBSNPresentations() {
+
+    // {marker | pageIndex}, [pageSize], [filter], [sort]
+
+    return function (dispatch, getState) {
+
+        console.log("actions/bsnActions.js::getBSNPresentations invoked");
+
+        let state = getState();
+
+        const bsnAuthData = state.bsnAuthData;
+
+        if (!bsnAuthData.userId) {
+            return;
+        }
+
+        // const marker = '';
+        // invokeBSNGet("presentations?marker=" + marker, bsnAuthData).then((bsnContent)=> {
+        invokeBSNGet("presentations/", bsnAuthData).then((bsnContent)=> {
             debugger;
         });
     };
