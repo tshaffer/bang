@@ -17,6 +17,7 @@ import NonInteractivePlaylist from './nonInteractivePlaylist';
 import { createDefaultPresentation, updateSign, loadAppData, selectMediaFolder } from '../actions/index';
 import { getBSNAuthToken, getBSNProfile, getBSNSelf, getBSNNetworks, getBSNContent, getBSNGroups, getBSNDevices,
          getMyBSNUsers, getBSNUser, getBSNAccountUsers, getBSNPresentations } from '../actions/bsnActions';
+import { getCurrentBrightSignStatus, getBrightSignId } from '../actions/lfnActions';
 
 class BA extends Component {
 
@@ -199,7 +200,9 @@ class BA extends Component {
         // this.props.getBSNUsers();
         // this.props.getBSNUser("12650");
         // this.props.getBSNAccountUsers();
-        this.props.getBSNPresentations();
+        // this.props.getBSNPresentations();
+        // this.props.getCurrentBrightSignStatus();
+        this.props.getBrightSignId();
         return <div>pizza</div>;
     }
 
@@ -300,7 +303,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, selectMediaFolder,
             getBSNAuthToken, getBSNProfile, getBSNSelf, getBSNNetworks, getBSNContent, getBSNGroups, getBSNDevices,
-            getMyBSNUsers, getBSNUser, getBSNAccountUsers, getBSNPresentations
+            getMyBSNUsers, getBSNUser, getBSNAccountUsers, getBSNPresentations,
+            getCurrentBrightSignStatus, getBrightSignId,
             },
         dispatch);
 }
@@ -331,6 +335,9 @@ BA.propTypes = {
     getBSNUser: React.PropTypes.func.isRequired,
     getBSNAccountUsers: React.PropTypes.func.isRequired,
     getBSNPresentations: React.PropTypes.func.isRequired,
+
+    getCurrentBrightSignStatus: React.PropTypes.func.isRequired,
+    getBrightSignId: React.PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);

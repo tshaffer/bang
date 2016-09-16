@@ -118,7 +118,7 @@ function invokeBSNGet(endPoint, bsnAuthData) {
 
 
         // var propertiesObject = { field1:'test1', field2:'test2' };
-        var propertiesObject = { marker: '' };
+        var propertiesObject = { };
 
         var options = {
             url: 'https://ast.brightsignnetwork.com/2017/01/REST/' + endPoint,
