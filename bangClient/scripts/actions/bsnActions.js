@@ -169,3 +169,111 @@ export function getBSNNetworks() {
     };
 }
 
+export function getBSNUsers() {
+
+    return function(dispatch, getState) {
+
+        console.log("actions/bsnActions.js::getBSNUsers invoked");
+
+        let state = getState();
+
+        const bsnAuthData = state.bsnAuthData;
+
+        if (!bsnAuthData.userId) {
+            return;
+        }
+
+        invokeBSNGet('self/users/', bsnAuthData).then((bsnUsers)=> {
+            debugger;
+        });
+    };
+}
+
+// id = 12650 or 1540
+export function getBSNUser(userId) {
+
+    return function(dispatch, getState) {
+
+        console.log("actions/bsnActions.js::getBSNUser invoked");
+
+        let state = getState();
+
+        const bsnAuthData = state.bsnAuthData;
+
+        if (!bsnAuthData.userId) {
+            return;
+        }
+
+        invokeBSNGet('self/users/' + userId.toString() + '/', bsnAuthData).then((bsnUser)=> {
+            debugger;
+        });
+    };
+}
+
+export function getBSNContent() {
+
+    // {marker | pageIndex}, [pageSize], [filter], [sort]
+
+    return function(dispatch, getState) {
+
+        console.log("actions/bsnActions.js::getBSNContent invoked");
+
+        let state = getState();
+
+        const bsnAuthData = state.bsnAuthData;
+
+        if (!bsnAuthData.userId) {
+            return;
+        }
+
+        invokeBSNGet('content/', bsnAuthData).then((bsnContent)=> {
+            debugger;
+        });
+    };
+}
+
+export function getBSNGroups() {
+
+    // {marker | pageIndex}, [pageSize], [filter], [sort]
+
+    return function(dispatch, getState) {
+
+        console.log("actions/bsnActions.js::getBSNGroups invoked");
+
+        let state = getState();
+
+        const bsnAuthData = state.bsnAuthData;
+
+        if (!bsnAuthData.userId) {
+            return;
+        }
+
+        // invokeBSNGet('groups?marker=0', bsnAuthData).then((bsnGroups)=> {
+        invokeBSNGet('groups/', bsnAuthData).then((bsnGroups)=> {
+            debugger;
+        });
+    };
+}
+
+export function getBSNDevices() {
+
+    // {marker | pageIndex}, [pageSize], [filter], [sort]
+
+    return function(dispatch, getState) {
+
+        console.log("actions/bsnActions.js::getBSNDevices invoked");
+
+        let state = getState();
+
+        const bsnAuthData = state.bsnAuthData;
+
+        if (!bsnAuthData.userId) {
+            return;
+        }
+
+        invokeBSNGet('devices/', bsnAuthData).then((bsnDevices)=> {
+            debugger;
+        });
+    };
+}
+

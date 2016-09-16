@@ -15,7 +15,8 @@ import PropertySheet from '../components/propertySheet';
 import NonInteractivePlaylist from './nonInteractivePlaylist';
 
 import { createDefaultPresentation, updateSign, loadAppData, selectMediaFolder } from '../actions/index';
-import { getBSNAuthToken, getBSNProfile, getBSNSelf, getBSNNetworks } from '../actions/bsnActions';
+import { getBSNAuthToken, getBSNProfile, getBSNSelf, getBSNNetworks, getBSNContent, getBSNGroups, getBSNDevices,
+         getBSNUsers, getBSNUser } from '../actions/bsnActions';
 
 class BA extends Component {
 
@@ -191,7 +192,12 @@ class BA extends Component {
     getBSNJSX() {
         // this.props.getBSNProfile();
         // this.props.getBSNSelf();
-        this.props.getBSNNetworks();
+        // this.props.getBSNNetworks();
+        // this.props.getBSNContent();
+        // this.props.getBSNGroups();
+        // this.props.getBSNDevices();
+        // this.props.getBSNUsers();
+        this.props.getBSNUser("12650");
         return <div>pizza</div>;
     }
 
@@ -290,7 +296,9 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, selectMediaFolder, getBSNAuthToken, getBSNProfile, getBSNSelf, getBSNNetworks},
+    return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, selectMediaFolder,
+            getBSNAuthToken, getBSNProfile, getBSNSelf, getBSNNetworks, getBSNContent, getBSNGroups, getBSNDevices,
+            getBSNUsers, getBSNUser},
         dispatch);
 }
 
@@ -313,6 +321,11 @@ BA.propTypes = {
     getBSNProfile: React.PropTypes.func.isRequired,
     getBSNSelf: React.PropTypes.func.isRequired,
     getBSNNetworks: React.PropTypes.func.isRequired,
+    getBSNContent: React.PropTypes.func.isRequired,
+    getBSNGroups: React.PropTypes.func.isRequired,
+    getBSNDevices: React.PropTypes.func.isRequired,
+    getBSNUsers: React.PropTypes.func.isRequired,
+    getBSNUser: React.PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);
