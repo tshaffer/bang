@@ -4,19 +4,39 @@ const crypto = require('crypto');
 
 import FileSpec from '../entities/fileSpec';
 import FileToPublish from '../entities/fileToPublish';
+import BrightSignDownloadItem from '../entities/brightSignDownloadItem';
+
+// List<FileSpec> filesToTransferViaLWS;
+// protected Dictionary<string, Dictionary<string, BrightSignDownloadItem>> PublishFilesInSyncSpec { get; set; }
 
 export default class LWSPublisher {
 
     constructor() {
+        this.filesToTransferViaLWS = [];
+        this.publishFileInSyncSpec = {};
     }
 
     publishToLWS() {
 
         const mediaDir = "/Users/tedshaffer/Documents/bang/media";
+        let filePath = "";
 
-        let filePath = path.join(mediaDir, "Colorado.jpg");
+        this.filesToTransferViaLWS = [];
+        this.publishFileInSyncSpec = {};
 
-        this.AddFileToLWSPublishList(null, "Colorado.jpg", filePath, "");
+        // media files
+        filePath = path.join(mediaDir, "Colorado.jpg");
+        this.addFileToLWSPublishList("Colorado.jpg", filePath, "");
+
+        filePath = path.join(mediaDir, "GlacierNationalPark.jpg");
+        this.addFileToLWSPublishList("GlacierNationalPark.jpg", filePath, "");
+
+        filePath = path.join(mediaDir, "BryceCanyonUtah.jpg");
+        this.addFileToLWSPublishList("BryceCanyonUtah.jpg", filePath, "");
+
+        debugger;
+        // ok = WriteLocalSyncSpec(PublishFolder, "new-local-sync.xml", false, false);
+
     }
 
 // various sha1 packages
@@ -56,8 +76,7 @@ export default class LWSPublisher {
         return fileSizeInBytes;
     }
 
-// List<FileSpec> filesToTransferViaLWS, string fileName, string filePath, string groupName
-    AddFileToLWSPublishList(filesToTransferViaLWS, fileName, filePath, groupName) {
+    addFileToLWSPublishList(fileName, filePath, groupName) {
 
         // console.log("basename:", path.basename(filePath));
         // console.log("dirname:", path.dirname(filePath));
@@ -80,20 +99,27 @@ export default class LWSPublisher {
 
             const fileToPublish = new FileToPublish(filePath);
             const fileSpec = new FileSpec(fileName, fileToPublish, sha1, fileSizeInBytes);
+
+            this.filesToTransferViaLWS.push(fileSpec);
+            this.addToLocalSyncSpecList(fileName, filePath, fileSizeInBytes, sha1, groupName);
         });
+    }
 
+    addToLocalSyncSpecList(fileName, filePath, fileSize, sha1, groupName) {
 
-        //     filesToTransferViaLWS.Add(
-        //         new FileSpec
-        //         {
-        //             FileName = fileName,
-        //                 FileToPublish = new SimpleFileToPublish { FilePath = filePath },
-        //             HashValue = sha1,
-        //                 FileSize = fileSize
-        //         }
-        //     );
-        //     AddToLocalSyncSpecList(fileName, filePath, sha1, groupName);
+        const brightSignDownloadItem = new BrightSignDownloadItem(fileName, filePath, fileSize, sha1, groupName);
 
+        if (!(filePath in this.publishFileInSyncSpec)) {
+            let filePathSyncSpecEntries = {};
+            filePathSyncSpecEntries[fileName] = brightSignDownloadItem;
+            this.publishFileInSyncSpec[filePath] = filePathSyncSpecEntries;
+        }
+        else {
+            let filePathSyncSpecEntries = this.publishFileInSyncSpec[filePath];
+            if (!(fileName in filePathSyncSpecEntries)) {
+                filePathSyncSpecEntries[fileName] = brightSignDownloadItem;
+            }
+        }
     }
 }
 
