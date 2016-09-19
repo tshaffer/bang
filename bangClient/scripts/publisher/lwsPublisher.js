@@ -6,14 +6,19 @@ import FileSpec from '../entities/fileSpec';
 import FileToPublish from '../entities/fileToPublish';
 import BrightSignDownloadItem from '../entities/brightSignDownloadItem';
 
+import LocalStoragePublisherUtils from '../publisher/localStoragePublisherUtils';
+
 // List<FileSpec> filesToTransferViaLWS;
 // protected Dictionary<string, Dictionary<string, BrightSignDownloadItem>> PublishFilesInSyncSpec { get; set; }
 
 export default class LWSPublisher {
 
     constructor() {
+
+        this.localStoragePublisherUtils = new LocalStoragePublisherUtils();
+
         this.filesToTransferViaLWS = [];
-        this.publishFileInSyncSpec = {};
+        this.publishFilesInSyncSpec = {};
     }
 
     publishToLWS() {
@@ -22,7 +27,7 @@ export default class LWSPublisher {
         let filePath = "";
 
         this.filesToTransferViaLWS = [];
-        this.publishFileInSyncSpec = {};
+        this.publishFilesInSyncSpec = {};
 
         // media files
         filePath = path.join(mediaDir, "Colorado.jpg");
@@ -34,8 +39,9 @@ export default class LWSPublisher {
         filePath = path.join(mediaDir, "BryceCanyonUtah.jpg");
         this.addFileToLWSPublishList("BryceCanyonUtah.jpg", filePath, "");
 
-        debugger;
         // ok = WriteLocalSyncSpec(PublishFolder, "new-local-sync.xml", false, false);
+
+        this.localStoragePublisherUtils.writeLocalSyncSpec(this.publishFilesInSyncSpec);
 
     }
 
@@ -95,8 +101,6 @@ export default class LWSPublisher {
         const getSHA1Promise = this.getSHA1OfFile(filePath);
         getSHA1Promise.then(sha1 => {
 
-            debugger;
-
             const fileToPublish = new FileToPublish(filePath);
             const fileSpec = new FileSpec(fileName, fileToPublish, sha1, fileSizeInBytes);
 
@@ -109,13 +113,13 @@ export default class LWSPublisher {
 
         const brightSignDownloadItem = new BrightSignDownloadItem(fileName, filePath, fileSize, sha1, groupName);
 
-        if (!(filePath in this.publishFileInSyncSpec)) {
+        if (!(filePath in this.publishFilesInSyncSpec)) {
             let filePathSyncSpecEntries = {};
             filePathSyncSpecEntries[fileName] = brightSignDownloadItem;
-            this.publishFileInSyncSpec[filePath] = filePathSyncSpecEntries;
+            this.publishFilesInSyncSpec[filePath] = filePathSyncSpecEntries;
         }
         else {
-            let filePathSyncSpecEntries = this.publishFileInSyncSpec[filePath];
+            let filePathSyncSpecEntries = this.publishFilesInSyncSpec[filePath];
             if (!(fileName in filePathSyncSpecEntries)) {
                 filePathSyncSpecEntries[fileName] = brightSignDownloadItem;
             }

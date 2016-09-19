@@ -19,8 +19,8 @@ import { getBSNAuthToken, getBSNProfile, getBSNSelf, getBSNNetworks, getBSNConte
          getMyBSNUsers, getBSNUser, getBSNAccountUsers, getBSNPresentations } from '../actions/bsnActions';
 import { getCurrentBrightSignStatus, getBrightSignId } from '../actions/lfnActions';
 
-import { publishToLWS } from '../publish/lwsPublisher';
-import LWSPublisher from '../publish/lwsPublisher';
+import LWSPublisher from '../publisher/lwsPublisher';
+import { publishToLWS } from '../publisher/lwsPublisher';
 
 class BA extends Component {
 
