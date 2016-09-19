@@ -20,6 +20,7 @@ import { getBSNAuthToken, getBSNProfile, getBSNSelf, getBSNNetworks, getBSNConte
 import { getCurrentBrightSignStatus, getBrightSignId } from '../actions/lfnActions';
 
 import { publishToLWS } from '../publish/lwsPublisher';
+import LWSPublisher from '../publish/lwsPublisher';
 
 class BA extends Component {
 
@@ -51,7 +52,8 @@ class BA extends Component {
 
         this.baUI.init();
 
-        publishToLWS();
+        const lwsPublisher = new LWSPublisher();
+        lwsPublisher.publishToLWS();
 
         // this.props.getBSNAuthToken();
     }
