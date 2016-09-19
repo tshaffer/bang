@@ -19,6 +19,8 @@ import { getBSNAuthToken, getBSNProfile, getBSNSelf, getBSNNetworks, getBSNConte
          getMyBSNUsers, getBSNUser, getBSNAccountUsers, getBSNPresentations } from '../actions/bsnActions';
 import { getCurrentBrightSignStatus, getBrightSignId } from '../actions/lfnActions';
 
+import { publishToLWS } from '../publish/lwsPublisher';
+
 class BA extends Component {
 
     constructor(props) {
@@ -49,7 +51,9 @@ class BA extends Component {
 
         this.baUI.init();
 
-        this.props.getBSNAuthToken();
+        publishToLWS();
+
+        // this.props.getBSNAuthToken();
     }
 
     handleSelectMediaState(mediaState) {
@@ -194,7 +198,7 @@ class BA extends Component {
         // this.props.getBSNProfile();
         // this.props.getBSNSelf();
         // this.props.getBSNNetworks();
-        // this.props.getBSNContent();
+        this.props.getBSNContent();
         // this.props.getBSNGroups();
         // this.props.getBSNDevices();
         // this.props.getBSNUsers();
@@ -202,7 +206,7 @@ class BA extends Component {
         // this.props.getBSNAccountUsers();
         // this.props.getBSNPresentations();
         // this.props.getCurrentBrightSignStatus();
-        this.props.getBrightSignId();
+        // this.props.getBrightSignId();
         return <div>pizza</div>;
     }
 
@@ -215,7 +219,7 @@ class BA extends Component {
             signVideoMode = this.props.sign.videoMode;
         }
 
-        const bsnJSX = this.getBSNJSX();
+        // const bsnJSX = this.getBSNJSX();
         const openSavePresentationJSX = this.baUI.getOpenSavePresentationJSX(this.state.bsnPresentations);
 
         let propertySheetTag = <div></div>;
@@ -244,10 +248,11 @@ class BA extends Component {
         />;
         }
 
+        // {bsnJSX}
+
         return (
 
             <div>
-                {bsnJSX}
 
                 <div>
                     <span>{signName}</span>

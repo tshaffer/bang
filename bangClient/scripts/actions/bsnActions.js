@@ -1,6 +1,8 @@
 var https = require('https');
 var request = require('request');
 
+import { fetch } from '../helpers/fetch';
+
 function serialize(obj) {
     return Object.keys(obj).map(function(key) {
         return key + '=' + encodeURIComponent(obj[key]);
@@ -122,7 +124,7 @@ function invokeBSNGet(endPoint, bsnAuthData) {
 
         var options = {
             url: 'https://ast.brightsignnetwork.com/2017/01/REST/' + endPoint,
-            qs: propertiesObject,
+            // qs: propertiesObject,
             headers: {
                 'Authorization': 'Bearer ' + bsnAuthData.access_token
             }
@@ -138,7 +140,12 @@ function invokeBSNGet(endPoint, bsnAuthData) {
             }
         }
 
-        request(options, callback);
+        console.log(options);
+
+        // request(options, callback);
+
+        request.get(options, callback);
+
     });
 }
 
@@ -330,6 +337,17 @@ export function getBSNDevices() {
         if (!bsnAuthData.userId) {
             return;
         }
+
+        // debugger;
+        // fetch('https://ast.brightsignnetwork.com/2017/01/REST/devices', {
+        //     method: 'get'
+        // }, dispatch, getState)
+        //     .then(json => {
+        //         debugger;
+        //         // if(json.error) return dispatch(failLoadDevices(json.error_description))
+        //         // dispatch(successLoadDevices(json))
+        //     }, (statusText) => console.log(statusText))
+
 
         invokeBSNGet('devices/', bsnAuthData).then((bsnDevices)=> {
             debugger;
