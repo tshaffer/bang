@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const http = require('http');
 
 const js2xmlparser = require("js2xmlparser");
+const xml2js = require('xml2js');
 
 import FileSpec from '../entities/fileSpec';
 import FileToPublish from '../entities/fileToPublish';
@@ -49,14 +50,22 @@ export default class LWSPublisher {
         filePath = path.join(this.mediaDir, "BryceCanyonUtah.jpg");
         let promise2 = this.addFileToLWSPublishList("BryceCanyonUtah.jpg", filePath, "");
 
+        filePath = path.join(this.mediaDir, "GrandTeton2.jpg");
+        let promise3 = this.addFileToLWSPublishList("GrandTeton2.jpg", filePath, "");
+
+        filePath = path.join(this.mediaDir, "GrandTeton3.jpg");
+        let promise4 = this.addFileToLWSPublishList("GrandTeton3.jpg", filePath, "");
+
         promises.push(promise0);
         promises.push(promise1);
         promises.push(promise2);
+        promises.push(promise3);
+        promises.push(promise4);
 
         Promise.all(promises).then(function(values) {
             self.localStoragePublisherUtils.writeLocalSyncSpec(self.publishFilesInSyncSpec);
 
-            var promise = self.writeListOfFilesForLWS();
+            let promise = self.writeListOfFilesForLWS();
             promise.then(response => {
 
                 // publish to each unit
@@ -82,16 +91,33 @@ export default class LWSPublisher {
                     console.log(`Got error: ${e.message}`);
                 });
 
-// upload filesToPublish.xml
-//         NameValueCollection nvc = new NameValueCollection();
-//         filesToCopyXML = HTTPPost.HttpUploadFile(_publishLWSURL + "PrepareForTransfer", filesToPublishPath, "filesToPublish.xml", nvc, lbs.UserName, lbs.Password, this);
+// invoke PrepareForTransfer, providing filesToPublish.xml
 
                 const hostname = "10.1.0.155";
                 const endpoint = "/PrepareForTransfer";
                 // duplicate code
                 const filesToPublishPath = path.join(self.tmpDir, "filesToPublish.xml");
 
-                self.httpUploadFile(hostname, endpoint, filesToPublishPath, "filesToPublish.xml");
+                promise = self.httpUploadFile(hostname, endpoint, filesToPublishPath, "filesToPublish.xml");
+                promise.then(rawFilesToCopy => {
+                    console.log(rawFilesToCopy);
+// create list of files to copy to the BrightSign
+                    // appears as though family, model, fwVersion, fwVersionNumber are unused
+
+                    // let filesToCopy = rawFilesToCopy.filesToCopy.$;
+
+                    // List<FileSpec> filesToCopy = GetFilesToCopy(filesToCopyXML, out family, out model, out fwVersion, out fwVersionNumber);
+
+                    let filesToCopy = [];
+
+                    rawFilesToCopy.filesToCopy.file.forEach(file => {
+                        let fileName = file.fileName[0];
+                        let filePath = file.filePath[0];
+                        let hashValue = file.hashValue[0];
+                        let fileSize = file.fileSize[0];
+                    });
+                    // let fileSpec = new FileSpec(fileName, fileToPublish, hashValue, fileSize);
+                });
             });
         });
     }
@@ -135,36 +161,34 @@ export default class LWSPublisher {
             }
         };
 
-        var req = http.request(options, (res) => {
-            console.log(`STATUS: ${res.statusCode}`);
-            console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
-            res.setEncoding('utf8');
-            res.on('data', (chunk) => {
-                console.log(`BODY: ${chunk}`);
+        return new Promise( (resolve, reject) => {
+
+            let str = "";
+
+            let req = http.request(options, (res) => {
+                console.log(`STATUS: ${res.statusCode}`);
+                console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
+                res.setEncoding('utf8');
+                res.on('data', (chunk) => {
+                    str += chunk;
+                });
+                res.on('end', () => {
+                    console.log('No more data in response.');
+                    var parser = new xml2js.Parser();
+                    parser.parseString(str, function (err, jsonResponse) {
+                        resolve(jsonResponse);
+                    });
+                });
             });
-            res.on('end', () => {
-                console.log('No more data in response.');
+
+            req.on('error', (e) => {
+                console.log(`problem with request: ${e.message}`);
+                reject(e);
             });
+
+            req.write(data);
+            req.end();
         });
-
-        req.on('error', (e) => {
-            console.log(`problem with request: ${e.message}`);
-        });
-
-// write data to request body
-        req.write(data);
-        req.end();
-
-        // We setup our request
-        // XHR.open('POST', 'http://ucommbieber.unl.edu/CORS/cors.php');
-        //
-        // // We add the required HTTP header to handle a multipart form data POST request
-        // XHR.setRequestHeader('Content-Type','multipart/form-data; boundary=' + boundary);
-        // XHR.setRequestHeader('Content-Length', data.length);
-        //
-        // // And finally, We send our data.
-        // // Due to Firefox's bug 416178, it's required to use sendAsBinary() instead of send()
-        // XHR.sendAsBinary(data);
 
     }
 
@@ -174,7 +198,7 @@ export default class LWSPublisher {
         return new Promise( (resolve, reject) => {
 
             let listOfFiles = {};
-            listOfFiles.files = [];
+            listOfFiles.file = [];
 
             console.log("filesToTransferViaLWS", this.filesToTransferViaLWS.length.toString());
 
@@ -189,10 +213,10 @@ export default class LWSPublisher {
                 file.hashValue = fileToPublish.hashValue;
                 file.fileSize = fileToPublish.fileSize.toString();
 
-                listOfFiles.files.push(file);
+                listOfFiles.file.push(file);
             });
 
-            console.log("number of files:", listOfFiles.files.length);
+            console.log("number of files:", listOfFiles.file.length);
 
             const listOfFilesXml = js2xmlparser.parse("files", listOfFiles);
 
