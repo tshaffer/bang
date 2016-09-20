@@ -9,6 +9,8 @@ export default class LocalStoragePublisherUtils {
 // public bool WriteLocalSyncSpec(string publishFolder, string xmlFileName, bool specifyLogging, bool specifyUSBContentUpdatePassword)
     writeLocalSyncSpec(publishFilesInSyncSpec, publishFolder, outputFileName, specifyLogging, specifyUSBContentUpdatePassword) {
 
+        // Publisher/LocalStoragePublisherUtils.cs
+
         // set metadata, etc
 
         let syncSpec = {};
@@ -26,7 +28,8 @@ export default class LocalStoragePublisherUtils {
             );
         });
 
-        let poo = js2xmlparser.parse("sync", syncSpec);
+        // convert json to xml if needed
+        // let poo = js2xmlparser.parse("sync", syncSpec);
     }
 
     writeSyncSpecFilesSection(publishFilesInSyncSpec) {
@@ -53,9 +56,9 @@ export default class LocalStoragePublisherUtils {
 
 
                 const hashMethod =
-                {
-                    "method": "SHA1"
-                };
+                    {
+                        "method": "SHA1"
+                    };
                 hash["@"] = hashMethod;
                 hash["#"] = sha1;
                 download.hash = hash;
@@ -116,6 +119,8 @@ export default class LocalStoragePublisherUtils {
 
         return relativeFilePath;
     }
+
+
 }
 
 

@@ -1,6 +1,9 @@
 const fs = require("fs");
 const path = require("path");
 const crypto = require('crypto');
+const http = require('http');
+
+const js2xmlparser = require("js2xmlparser");
 
 import FileSpec from '../entities/fileSpec';
 import FileToPublish from '../entities/fileToPublish';
@@ -39,10 +42,58 @@ export default class LWSPublisher {
         filePath = path.join(mediaDir, "BryceCanyonUtah.jpg");
         this.addFileToLWSPublishList("BryceCanyonUtah.jpg", filePath, "");
 
-        // ok = WriteLocalSyncSpec(PublishFolder, "new-local-sync.xml", false, false);
-
         this.localStoragePublisherUtils.writeLocalSyncSpec(this.publishFilesInSyncSpec);
 
+        this.writeListOfFilesForLWS();
+
+        // publish to each unit
+        // for now, just publish to one fixed unit
+        const ipAddress = "10.1.0.155";
+
+        const publishLWSURL = "http://" + ipAddress + ":8080/";
+
+        let queryString = "";
+        // check limitStorageSpace
+        queryString += "?limitStorageSpace=" + "false";
+
+        // Invoke SpecifyCardSizeLimits
+        // const url = "http://" + ipAddress +  ":8080/SpecifyCardSizeLimits" + queryString;
+        const url = "http://".concat(ipAddress, ":8080/SpecifyCardSizeLimits", queryString);
+        // set username / password
+
+        http.get(url, (res) => {
+            console.log(`Got response: ${res.statusCode}`);
+            // consume response body
+            res.resume();
+        }).on('error', (e) => {
+            console.log(`Got error: ${e.message}`);
+        });
+    }
+
+    // private void WriteListOfFilesForLWS(string xmlFileName, List<FileSpec> filesToTransferViaLWS)
+    writeListOfFilesForLWS() {
+
+        let listOfFiles = {};
+
+        let files = [];
+
+        this.filesToTransferViaLWS.forEach( fileToPublish => {
+
+            const fileName = "sha1-" + fileToPublish.hashValue;
+
+            let file = {};
+            file.fullFileName = fileName;
+            file.fileName = fileToPublish.fileName;
+            file.filePath = fileToPublish.fileToPublish.filePath;
+            file.hashValue = fileToPublish.hashValue;
+            file.fileSize = fileToPublish.fileSize.toString();
+
+            files.push(file);
+        });
+
+        listOfFiles.files = files;
+        let poo = js2xmlparser.parse("files", listOfFiles);
+        console.log(poo);
     }
 
 // various sha1 packages
