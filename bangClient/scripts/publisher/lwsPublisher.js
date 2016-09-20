@@ -22,78 +22,191 @@ export default class LWSPublisher {
 
         this.filesToTransferViaLWS = [];
         this.publishFilesInSyncSpec = {};
+
+        this.mediaDir = "/Users/tedshaffer/Documents/bang/media";
+        this.tmpDir = "/Users/tedshaffer/Documents/bang/tmp";
+
     }
 
     publishToLWS() {
 
-        const mediaDir = "/Users/tedshaffer/Documents/bang/media";
+        let self = this;
+
         let filePath = "";
 
         this.filesToTransferViaLWS = [];
         this.publishFilesInSyncSpec = {};
 
+        let promises = [];
+
         // media files
-        filePath = path.join(mediaDir, "Colorado.jpg");
-        this.addFileToLWSPublishList("Colorado.jpg", filePath, "");
+        filePath = path.join(this.mediaDir, "Colorado.jpg");
+        let promise0 = this.addFileToLWSPublishList("Colorado.jpg", filePath, "");
 
-        filePath = path.join(mediaDir, "GlacierNationalPark.jpg");
-        this.addFileToLWSPublishList("GlacierNationalPark.jpg", filePath, "");
+        filePath = path.join(this.mediaDir, "GlacierNationalPark.jpg");
+        let promise1 = this.addFileToLWSPublishList("GlacierNationalPark.jpg", filePath, "");
 
-        filePath = path.join(mediaDir, "BryceCanyonUtah.jpg");
-        this.addFileToLWSPublishList("BryceCanyonUtah.jpg", filePath, "");
+        filePath = path.join(this.mediaDir, "BryceCanyonUtah.jpg");
+        let promise2 = this.addFileToLWSPublishList("BryceCanyonUtah.jpg", filePath, "");
 
-        this.localStoragePublisherUtils.writeLocalSyncSpec(this.publishFilesInSyncSpec);
+        promises.push(promise0);
+        promises.push(promise1);
+        promises.push(promise2);
 
-        this.writeListOfFilesForLWS();
+        Promise.all(promises).then(function(values) {
+            self.localStoragePublisherUtils.writeLocalSyncSpec(self.publishFilesInSyncSpec);
 
-        // publish to each unit
-        // for now, just publish to one fixed unit
-        const ipAddress = "10.1.0.155";
+            var promise = self.writeListOfFilesForLWS();
+            promise.then(response => {
 
-        const publishLWSURL = "http://" + ipAddress + ":8080/";
+                // publish to each unit
+                // for now, just publish to one fixed unit
+                const ipAddress = "10.1.0.155";
 
-        let queryString = "";
-        // check limitStorageSpace
-        queryString += "?limitStorageSpace=" + "false";
+                const publishLWSURL = "http://" + ipAddress + ":8080/";
 
-        // Invoke SpecifyCardSizeLimits
-        // const url = "http://" + ipAddress +  ":8080/SpecifyCardSizeLimits" + queryString;
-        const url = "http://".concat(ipAddress, ":8080/SpecifyCardSizeLimits", queryString);
-        // set username / password
+                let queryString = "";
+                // check limitStorageSpace
+                queryString += "?limitStorageSpace=" + "false";
 
-        http.get(url, (res) => {
-            console.log(`Got response: ${res.statusCode}`);
-            // consume response body
-            res.resume();
-        }).on('error', (e) => {
-            console.log(`Got error: ${e.message}`);
+// Invoke SpecifyCardSizeLimits
+                // does the code need to wait for a response?
+                const url = "http://".concat(ipAddress, ":8080/SpecifyCardSizeLimits", queryString);
+                // set username / password
+
+                http.get(url, (res) => {
+                    console.log(`Got response: ${res.statusCode}`);
+                    // consume response body
+                    res.resume();
+                }).on('error', (e) => {
+                    console.log(`Got error: ${e.message}`);
+                });
+
+// upload filesToPublish.xml
+//         NameValueCollection nvc = new NameValueCollection();
+//         filesToCopyXML = HTTPPost.HttpUploadFile(_publishLWSURL + "PrepareForTransfer", filesToPublishPath, "filesToPublish.xml", nvc, lbs.UserName, lbs.Password, this);
+
+                const hostname = "10.1.0.155";
+                const endpoint = "/PrepareForTransfer";
+                // duplicate code
+                const filesToPublishPath = path.join(self.tmpDir, "filesToPublish.xml");
+
+                self.httpUploadFile(hostname, endpoint, filesToPublishPath, "filesToPublish.xml");
+            });
         });
+    }
+
+    httpUploadFile(hostname, endpoint, filePath, fileName) {
+
+        const buffer = fs.readFileSync(filePath);
+
+        // const boundary = "---------------------" + DateTime.Now.Ticks.ToString("x");
+        // byte[] boundarybytes = System.Text.Encoding.ASCII.GetBytes("--" + boundary + "\r\n");
+        const boundary = "---------------------8d3e1335c7c9543";
+
+
+        var data     = "";
+
+        data += "--" + boundary + "\r\n";
+
+        data += 'Content-Disposition: form-data; '
+            // We define the name of the form data
+            + 'name="'         + "file"          + '"; '
+            // We provide the real name of the file
+            + 'filename="'     + fileName + '"\r\n';
+
+        data += 'Content-Type: application/octet-stream' + '\r\n';
+
+        data += '\r\n';
+
+        data += buffer;
+        data += "\r\n--" + boundary + "--\r\n";
+
+        const options = {
+            hostname: hostname,
+            port: 8080,
+            path: endpoint,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'multipart/form-data; boundary=' + boundary,
+                'Transfer-Encoding': 'chunked',
+                'Expect': '100-continue',
+                // 'Connection': 'Keep-Alive'
+            }
+        };
+
+        var req = http.request(options, (res) => {
+            console.log(`STATUS: ${res.statusCode}`);
+            console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
+            res.setEncoding('utf8');
+            res.on('data', (chunk) => {
+                console.log(`BODY: ${chunk}`);
+            });
+            res.on('end', () => {
+                console.log('No more data in response.');
+            });
+        });
+
+        req.on('error', (e) => {
+            console.log(`problem with request: ${e.message}`);
+        });
+
+// write data to request body
+        req.write(data);
+        req.end();
+
+        // We setup our request
+        // XHR.open('POST', 'http://ucommbieber.unl.edu/CORS/cors.php');
+        //
+        // // We add the required HTTP header to handle a multipart form data POST request
+        // XHR.setRequestHeader('Content-Type','multipart/form-data; boundary=' + boundary);
+        // XHR.setRequestHeader('Content-Length', data.length);
+        //
+        // // And finally, We send our data.
+        // // Due to Firefox's bug 416178, it's required to use sendAsBinary() instead of send()
+        // XHR.sendAsBinary(data);
+
     }
 
     // private void WriteListOfFilesForLWS(string xmlFileName, List<FileSpec> filesToTransferViaLWS)
     writeListOfFilesForLWS() {
 
-        let listOfFiles = {};
+        return new Promise( (resolve, reject) => {
 
-        let files = [];
+            let listOfFiles = {};
+            listOfFiles.files = [];
 
-        this.filesToTransferViaLWS.forEach( fileToPublish => {
+            console.log("filesToTransferViaLWS", this.filesToTransferViaLWS.length.toString());
 
-            const fileName = "sha1-" + fileToPublish.hashValue;
+            this.filesToTransferViaLWS.forEach( fileToPublish => {
 
-            let file = {};
-            file.fullFileName = fileName;
-            file.fileName = fileToPublish.fileName;
-            file.filePath = fileToPublish.fileToPublish.filePath;
-            file.hashValue = fileToPublish.hashValue;
-            file.fileSize = fileToPublish.fileSize.toString();
+                const fileName = "sha1-" + fileToPublish.hashValue;
 
-            files.push(file);
+                let file = {};
+                file.fullFileName = fileName;
+                file.fileName = fileToPublish.fileName;
+                file.filePath = fileToPublish.fileToPublish.filePath;
+                file.hashValue = fileToPublish.hashValue;
+                file.fileSize = fileToPublish.fileSize.toString();
+
+                listOfFiles.files.push(file);
+            });
+
+            console.log("number of files:", listOfFiles.files.length);
+
+            const listOfFilesXml = js2xmlparser.parse("files", listOfFiles);
+
+            // write to filesToPublish.xml in tmp dir
+            const filePath = path.join(this.tmpDir, "filesToPublish.xml");
+            fs.writeFile(filePath, listOfFilesXml, (err) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                console.log("filesToPublish.xml successfully written");
+                resolve("ok");
+            });
         });
-
-        listOfFiles.files = files;
-        let poo = js2xmlparser.parse("files", listOfFiles);
-        console.log(poo);
     }
 
 // various sha1 packages
@@ -146,17 +259,22 @@ export default class LWSPublisher {
         //     });
         // console.log("formattedPath:", formattedPath);
 
-        const fileSizeInBytes = this.getFileSizeInBytes(filePath);
-        console.log("fileSize:", fileSizeInBytes);
+        return new Promise ((resolve, reject) => {
 
-        const getSHA1Promise = this.getSHA1OfFile(filePath);
-        getSHA1Promise.then(sha1 => {
+            const fileSizeInBytes = this.getFileSizeInBytes(filePath);
+            console.log("fileSize:", fileSizeInBytes);
 
-            const fileToPublish = new FileToPublish(filePath);
-            const fileSpec = new FileSpec(fileName, fileToPublish, sha1, fileSizeInBytes);
+            const getSHA1Promise = this.getSHA1OfFile(filePath);
+            getSHA1Promise.then(sha1 => {
 
-            this.filesToTransferViaLWS.push(fileSpec);
-            this.addToLocalSyncSpecList(fileName, filePath, fileSizeInBytes, sha1, groupName);
+                const fileToPublish = new FileToPublish(filePath);
+                const fileSpec = new FileSpec(fileName, fileToPublish, sha1, fileSizeInBytes);
+
+                this.filesToTransferViaLWS.push(fileSpec);
+                this.addToLocalSyncSpecList(fileName, filePath, fileSizeInBytes, sha1, groupName);
+
+                resolve();
+            });
         });
     }
 
