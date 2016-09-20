@@ -1,4 +1,5 @@
 const path = require("path");
+const js2xmlparser = require("js2xmlparser");
 
 export default class LocalStoragePublisherUtils {
 
@@ -10,14 +11,27 @@ export default class LocalStoragePublisherUtils {
 
         // set metadata, etc
 
-        this.writeSyncSpecFilesSection(publishFilesInSyncSpec);
+        let syncSpec = {};
+        syncSpec.meta = {};
+        syncSpec.meta.enableSerialDebugging = true;
+        syncSpec.files = [];
 
+        let files = this.writeSyncSpecFilesSection(publishFilesInSyncSpec);
+        files.forEach(file => {
+            let downloadItem = {};
+            syncSpec.files.push(
+                {
+                    download: file
+                }
+            );
+        });
 
+        let poo = js2xmlparser.parse("sync", syncSpec);
     }
 
     writeSyncSpecFilesSection(publishFilesInSyncSpec) {
 
-        let syncSpecFiles = [];
+        let files = [];
 
         for (let filePath in publishFilesInSyncSpec) {
 
@@ -36,20 +50,43 @@ export default class LocalStoragePublisherUtils {
                 download.name = fileName;
 
                 let hash = {};
-                hash.method = "SHA1";
-                hash.value = sha1;
+
+
+                const hashMethod =
+                {
+                    "method": "SHA1"
+                };
+                hash["@"] = hashMethod;
+                hash["#"] = sha1;
                 download.hash = hash;
 
+                download.size = fileSize;
+
                 let link = "";
-
-                // if sfn
-
-                debugger;
-
+                // if sfn, blah blah blah
                 link = "pool/" + this.GetPoolFilePath(String.Empty, sha1, false) + "sha1-" + sha1;
                 download.link = link;
+
+                if (groupName != "") {
+                    download.groupName = groupName;
+                }
+
+                // if (BrightAuthorUtils.IsVideoFile(bsdi.FilePath) || BrightAuthorUtils.IsAudioFile(bsdi.FilePath))
+                // {
+                //     string probeData = ProbeWrapper.GetProbeData(bsdi.FilePath);
+                //     writer.WriteElementString("probe", probeData);
+                //     Trace.WriteLine("Probe data for " + bsdi.FilePath + " is " + probeData);
+                // }
+
+                // if (sfn) {
+                //     blah blah blah
+                // }
+
+                files.push(download);
             }
         }
+
+        return files;
     }
 
     GetPoolFilePath(startDir, sha1, createDirectories) {
