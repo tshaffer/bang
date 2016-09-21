@@ -38,38 +38,16 @@ export default class LWSPublisher {
 
         let self = this;
 
-        this.getBASFiles();
+        var retrievePresentationsPromise = this.retrievePresentations();
+        var getBasFilesPromise = this.getBASFiles();
 
-        let filePath = "";
+        Promise.all( [retrievePresentationsPromise, getBasFilesPromise] ).then(values => {
 
-        this.filesToTransferViaLWS = [];
-        this.publishFilesInSyncSpec = {};
+            debugger;
 
-        let promises = [];
+            this.filesToTransferViaLWS = [];
+            this.publishFilesInSyncSpec = {};
 
-        // media files
-        filePath = path.join(this.mediaDir, "Colorado.jpg");
-        let promise0 = this.addFileToLWSPublishList("Colorado.jpg", filePath, "");
-
-        filePath = path.join(this.mediaDir, "GlacierNationalPark.jpg");
-        let promise1 = this.addFileToLWSPublishList("GlacierNationalPark.jpg", filePath, "");
-
-        filePath = path.join(this.mediaDir, "BryceCanyonUtah.jpg");
-        let promise2 = this.addFileToLWSPublishList("BryceCanyonUtah.jpg", filePath, "");
-
-        filePath = path.join(this.mediaDir, "GrandTeton2.jpg");
-        let promise3 = this.addFileToLWSPublishList("GrandTeton2.jpg", filePath, "");
-
-        filePath = path.join(this.mediaDir, "GrandTeton3.jpg");
-        let promise4 = this.addFileToLWSPublishList("GrandTeton3.jpg", filePath, "");
-
-        promises.push(promise0);
-        promises.push(promise1);
-        promises.push(promise2);
-        promises.push(promise3);
-        promises.push(promise4);
-
-        Promise.all(promises).then(function(values) {
             // generate and write sync spec
             let promise = self.localStoragePublisherUtils.writeLocalSyncSpec(self.publishFilesInSyncSpec, self.tmpDir, "new-local-sync.xml");
             promise.then(response => {
@@ -129,21 +107,58 @@ export default class LWSPublisher {
         });
     }
 
+    retrievePresentations() {
+        // totally phony version for now
+
+        let filePath = "";
+
+        return new Promise( (resolve, reject) => {
+
+            let promises = [];
+
+            // media files
+            filePath = path.join(this.mediaDir, "Colorado.jpg");
+            let promise0 = this.addFileToLWSPublishList("Colorado.jpg", filePath, "");
+
+            filePath = path.join(this.mediaDir, "GlacierNationalPark.jpg");
+            let promise1 = this.addFileToLWSPublishList("GlacierNationalPark.jpg", filePath, "");
+
+            filePath = path.join(this.mediaDir, "BryceCanyonUtah.jpg");
+            let promise2 = this.addFileToLWSPublishList("BryceCanyonUtah.jpg", filePath, "");
+
+            filePath = path.join(this.mediaDir, "GrandTeton2.jpg");
+            let promise3 = this.addFileToLWSPublishList("GrandTeton2.jpg", filePath, "");
+
+            filePath = path.join(this.mediaDir, "GrandTeton3.jpg");
+            let promise4 = this.addFileToLWSPublishList("GrandTeton3.jpg", filePath, "");
+
+            promises.push(promise0);
+            promises.push(promise1);
+            promises.push(promise2);
+            promises.push(promise3);
+            promises.push(promise4);
+
+            Promise.all(promises).then((values) => {
+                resolve(values);
+            });
+        });
+    }
+
     getBASFiles() {
 
-        var self = this;
-        const basDir = path.join(this.baDir, "www", "BrightSignApplicationServer");
-        const basPath = path.join(basDir, "index.html");
+        return new Promise( (resolve, reject) => {
+            var self = this;
+            const basDir = path.join(this.baDir, "www", "BrightSignApplicationServer");
+            const basPath = path.join(basDir, "index.html");
 
-        const queryStringParam = "";
-        const brightSignApplicationServerSite = new LocalHTMLSite("BrightSignApplicationServer", basPath, queryStringParam);
-        const htmlPublishSite = new HTMLPublishSite(brightSignApplicationServerSite.name, brightSignApplicationServerSite.filePath);
+            const queryStringParam = "";
+            const brightSignApplicationServerSite = new LocalHTMLSite("BrightSignApplicationServer", basPath, queryStringParam);
+            const htmlPublishSite = new HTMLPublishSite(brightSignApplicationServerSite.name, brightSignApplicationServerSite.filePath);
 
-        const promise = this.getHTMLContent(htmlPublishSite, false);
-        promise.then( response => {
-            debugger;
-            console.log("retrieved html content");
-            console.log(self.publishFilesInSyncSpec);
+            const promise = this.getHTMLContent(htmlPublishSite, false);
+            promise.then( response => {
+                resolve(self.publishFilesInSyncSpec);
+            });
         });
     }
 
