@@ -273,7 +273,7 @@ export default class LWSPublisher {
 
             console.log("number of files:", listOfFiles.file.length);
 
-            const listOfFilesXml = js2xmlparser.parse("files", listOfFiles);
+            const listOfFilesXml = js2xmlparser("files", listOfFiles);
 
             // write to filesToPublish.xml in tmp dir
             const filePath = path.join(this.tmpDir, "filesToPublish.xml");

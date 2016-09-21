@@ -36,8 +36,6 @@ export default class LocalStoragePublisherUtils {
                 syncSpec.files.push(file);
             });
 
-            debugger;
-
             // let entries = this.buildDeleteIgnoreSections();
             // entries.forEach( entry => {
             //    if ("delete" in entry) {
@@ -64,7 +62,6 @@ export default class LocalStoragePublisherUtils {
             // </ignore>
 
             // convert json to xml if needed
-            // const xmlAsStr = js2xmlparser.parse("sync", syncSpec);
             var options = {
                 wrapArray: {
                     enabled: true,
