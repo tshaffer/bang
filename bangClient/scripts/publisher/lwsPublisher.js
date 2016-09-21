@@ -91,7 +91,7 @@ export default class LWSPublisher {
                     console.log(`Got error: ${e.message}`);
                 });
 
-// invoke PrepareForTransfer, providing filesToPublish.xml
+// invoke PrepareForTransfer, providing filesToPublish.xml to BrightSign
 
                 const hostname = "10.1.0.155";
                 const endpoint = "/PrepareForTransfer";
@@ -101,36 +101,79 @@ export default class LWSPublisher {
                 promise = self.httpUploadFile(hostname, endpoint, filesToPublishPath, "filesToPublish.xml");
                 promise.then(rawFilesToCopy => {
                     console.log(rawFilesToCopy);
-// create list of files to copy to the BrightSign
+// based on response from BrightSign, create list of files to copy to the BrightSign
                     let filesToCopy = self.getFilesToCopy(rawFilesToCopy);
+
+// ensure that if the family and fwVersions were set, that they are sufficiently new
+
+// upload the files to the BrightSign
+                    promises = [];
+                    filesToCopy.forEach( fileSpec => {
+                        const promise = self.uploadFileToBrightSign(fileSpec.fileToPublish.filePath, fileSpec.fileName, fileSpec.hashValue);
+                        promises.push(promise);
+                    });
+                    Promise.all(promises).then((values) => {
+                        console.log("all files uploaded to BrightSign");
+                    });
                 });
             });
         });
+    }
+
+    // private  bool UploadFileToBrightSign(string filePath, string fileName, string sha1, LocalBrightSign lbs)
+    // returns promise
+    uploadFileToBrightSign(filePath, fileName, sha1) {
+
+        const encodedFileName = encodeURIComponent(fileName);
+
+        const hostname = "10.1.0.155";
+        const endpoint = "/UploadFile";
+
+        let headers = [];
+        let header = {};
+
+        header = {};
+        header.key = "Destination-Filename";
+        header.value = "pool/sha1-" + sha1;
+        headers.push(header);
+
+        header = {};
+        header.key = "Friendly-Filename";
+        header.value = encodedFileName;
+        headers.push(header);
+
+        return this.httpUploadFile(hostname, endpoint, filePath, fileName, headers);
     }
 
     getFilesToCopy(rawFilesToCopy) {
 
         let filesToCopy = [];
 
-        rawFilesToCopy.filesToCopy.file.forEach(file => {
-            const fileName = file.fileName[0];
-            const hashValue = file.hashValue[0];
-            const fileSize = file.fileSize[0];
+        if (rawFilesToCopy && rawFilesToCopy.filesToCopy && rawFilesToCopy.filesToCopy.file) {
+            rawFilesToCopy.filesToCopy.file.forEach(file => {
+                const fileName = file.fileName[0];
+                const hashValue = file.hashValue[0];
+                const fileSize = file.fileSize[0];
 
-            const fileToPublish = new FileToPublish(file.filePath[0]);
+                const fileToPublish = new FileToPublish(file.filePath[0]);
 
-            const fileSpec = new FileSpec(fileName, fileToPublish, hashValue, fileSize);
+                const fileSpec = new FileSpec(fileName, fileToPublish, hashValue, fileSize);
 
-            filesToCopy.push(fileSpec);
-        });
+                filesToCopy.push(fileSpec);
+            });
+        }
+        else {
+            console.log("getFilesToCopy: no files to copy");
+        }
 
         return filesToCopy;
     }
 
-    httpUploadFile(hostname, endpoint, filePath, fileName) {
+    httpUploadFile(hostname, endpoint, filePath, fileName, headers=[]) {
 
         const buffer = fs.readFileSync(filePath);
 
+        // Mike??
         // const boundary = "---------------------" + DateTime.Now.Ticks.ToString("x");
         // byte[] boundarybytes = System.Text.Encoding.ASCII.GetBytes("--" + boundary + "\r\n");
         const boundary = "---------------------8d3e1335c7c9543";
@@ -165,6 +208,11 @@ export default class LWSPublisher {
                 // 'Connection': 'Keep-Alive'
             }
         };
+
+        headers.forEach( header => {
+            options.headers[header.key] = header.value;
+        });
+
 
         return new Promise( (resolve, reject) => {
 
