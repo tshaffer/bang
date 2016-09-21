@@ -31,6 +31,7 @@
     "react-tabs": "^0.5.3",
     "react-tap-event-plugin": "^1.0.0",
     "react-treeview": "^0.4.5",
+    "recursive-readdir": "^2.1.0",
     "redux": "^3.5.2",
     "redux-promise": "^0.5.3",
     "redux-thunk": "^2.1.0",

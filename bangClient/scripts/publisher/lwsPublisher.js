@@ -12,6 +12,10 @@ import BrightSignDownloadItem from '../entities/brightSignDownloadItem';
 
 import LocalStoragePublisherUtils from '../publisher/localStoragePublisherUtils';
 
+import LocalHTMLSite from '../entities/localHTMLSite';
+import HTMLPublishSite from '../entities/htmlPublishSite';
+import HtmlFileToPublish from '../entities/htmlFileToPublish';
+
 // List<FileSpec> filesToTransferViaLWS;
 // protected Dictionary<string, Dictionary<string, BrightSignDownloadItem>> PublishFilesInSyncSpec { get; set; }
 
@@ -26,12 +30,15 @@ export default class LWSPublisher {
 
         this.mediaDir = "/Users/tedshaffer/Documents/bang/media";
         this.tmpDir = "/Users/tedshaffer/Documents/bang/tmp";
+        this.baDir = "/Users/tedshaffer/Documents/Projects/BA/BrightAuthor/bin/Debug";
 
     }
 
     publishToLWS() {
 
         let self = this;
+
+        this.getBASFiles();
 
         let filePath = "";
 
@@ -118,6 +125,80 @@ export default class LWSPublisher {
                         });
                     });
                 });
+            });
+        });
+    }
+
+    getBASFiles() {
+
+        var self = this;
+        const basDir = path.join(this.baDir, "www", "BrightSignApplicationServer");
+        const basPath = path.join(basDir, "index.html");
+
+        const queryStringParam = "";
+        const brightSignApplicationServerSite = new LocalHTMLSite("BrightSignApplicationServer", basPath, queryStringParam);
+        const htmlPublishSite = new HTMLPublishSite(brightSignApplicationServerSite.name, brightSignApplicationServerSite.filePath);
+
+        const promise = this.getHTMLContent(htmlPublishSite, false);
+        promise.then( response => {
+            debugger;
+            console.log("retrieved html content");
+            console.log(self.publishFilesInSyncSpec);
+        });
+    }
+
+    getHTMLContent(htmlSite, checkFileCount) {
+
+        let self = this;
+
+        return new Promise( (resolve, reject) => {
+
+            let numberOfFilesInSite = 0;
+
+            let pseudoFileName = "";
+
+            const filePath = htmlSite.filePath; // this is the main web page - need to keep track of it for BSN uploads
+            const siteDirectory = path.dirname(filePath);
+
+            debugger;
+
+            const readDir = require('recursive-readdir');
+            readDir(siteDirectory, (err, siteFiles) => {
+                // siteFiles is an array of filenames
+
+                siteFiles.forEach( siteFile => {
+                    const fileSize = this.getFileSizeInBytes(siteFile);
+                    if (fileSize > 0) { // strip zero length files
+
+                        // get relative url
+                        let relativeUrl = siteFile;
+
+                        if (siteFile.startsWith(siteDirectory))
+                        {
+                            relativeUrl = siteFile.substring(siteDirectory.length);
+                            while (relativeUrl.startsWith("/"))
+                            {
+                                relativeUrl = relativeUrl.substring(1);
+                            }
+                        }
+
+                        // file prefix is "<site name>--". If it changes here, it must also change in HTMLSite
+                        pseudoFileName = htmlSite.siteName + "-" + relativeUrl;
+
+                        numberOfFilesInSite++;
+
+                        const htmlFileToPublish = new HtmlFileToPublish(
+                            siteFile, "", false, siteFile == filePath, htmlSite.siteName, path.basename(siteFile), relativeUrl
+                        );
+
+                        if (!(pseudoFileName in self.publishFilesInSyncSpec)) {
+                            this.publishFilesInSyncSpec[pseudoFileName] = htmlFileToPublish;
+                        }
+                    }
+                });
+
+                // if the number of files in the site exceeds 200, put up a warning as the user may have included files in the site unintentionally
+                resolve(self.publishFilesInSyncSpec);
             });
         });
     }
