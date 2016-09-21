@@ -3,7 +3,7 @@ const path = require("path");
 const crypto = require('crypto');
 const http = require('http');
 
-const js2xmlparser = require("js2xmlparser");
+const js2xmlparser = require("js2xmlparser2");
 const xml2js = require('xml2js');
 
 import FileSpec from '../entities/fileSpec';
@@ -63,57 +63,59 @@ export default class LWSPublisher {
         promises.push(promise4);
 
         Promise.all(promises).then(function(values) {
-            self.localStoragePublisherUtils.writeLocalSyncSpec(self.publishFilesInSyncSpec);
-
-            let promise = self.writeListOfFilesForLWS();
+            // generate and write sync spec
+            let promise = self.localStoragePublisherUtils.writeLocalSyncSpec(self.publishFilesInSyncSpec, self.tmpDir, "new-local-sync.xml");
             promise.then(response => {
+                promise = self.writeListOfFilesForLWS();
+                promise.then(response => {
 
-                // publish to each unit
-                // for now, just publish to one fixed unit
-                const ipAddress = "10.1.0.155";
+                    // publish to each unit
+                    // for now, just publish to one fixed unit
+                    const ipAddress = "10.1.0.155";
 
-                const publishLWSURL = "http://" + ipAddress + ":8080/";
+                    const publishLWSURL = "http://" + ipAddress + ":8080/";
 
-                let queryString = "";
-                // check limitStorageSpace
-                queryString += "?limitStorageSpace=" + "false";
+                    let queryString = "";
+                    // check limitStorageSpace
+                    queryString += "?limitStorageSpace=" + "false";
 
 // Invoke SpecifyCardSizeLimits
-                // does the code need to wait for a response?
-                const url = "http://".concat(ipAddress, ":8080/SpecifyCardSizeLimits", queryString);
-                // set username / password
+                    // does the code need to wait for a response?
+                    const url = "http://".concat(ipAddress, ":8080/SpecifyCardSizeLimits", queryString);
+                    // set username / password
 
-                http.get(url, (res) => {
-                    console.log(`Got response: ${res.statusCode}`);
-                    // consume response body
-                    res.resume();
-                }).on('error', (e) => {
-                    console.log(`Got error: ${e.message}`);
-                });
+                    http.get(url, (res) => {
+                        console.log(`Got response: ${res.statusCode}`);
+                        // consume response body
+                        res.resume();
+                    }).on('error', (e) => {
+                        console.log(`Got error: ${e.message}`);
+                    });
 
 // invoke PrepareForTransfer, providing filesToPublish.xml to BrightSign
 
-                const hostname = "10.1.0.155";
-                const endpoint = "/PrepareForTransfer";
-                // duplicate code
-                const filesToPublishPath = path.join(self.tmpDir, "filesToPublish.xml");
+                    const hostname = "10.1.0.155";
+                    const endpoint = "/PrepareForTransfer";
+                    // duplicate code
+                    const filesToPublishPath = path.join(self.tmpDir, "filesToPublish.xml");
 
-                promise = self.httpUploadFile(hostname, endpoint, filesToPublishPath, "filesToPublish.xml");
-                promise.then(rawFilesToCopy => {
-                    console.log(rawFilesToCopy);
+                    promise = self.httpUploadFile(hostname, endpoint, filesToPublishPath, "filesToPublish.xml");
+                    promise.then(rawFilesToCopy => {
+                        console.log(rawFilesToCopy);
 // based on response from BrightSign, create list of files to copy to the BrightSign
-                    let filesToCopy = self.getFilesToCopy(rawFilesToCopy);
+                        let filesToCopy = self.getFilesToCopy(rawFilesToCopy);
 
 // ensure that if the family and fwVersions were set, that they are sufficiently new
 
 // upload the files to the BrightSign
-                    promises = [];
-                    filesToCopy.forEach( fileSpec => {
-                        const promise = self.uploadFileToBrightSign(fileSpec.fileToPublish.filePath, fileSpec.fileName, fileSpec.hashValue);
-                        promises.push(promise);
-                    });
-                    Promise.all(promises).then((values) => {
-                        console.log("all files uploaded to BrightSign");
+                        promises = [];
+                        filesToCopy.forEach( fileSpec => {
+                            const promise = self.uploadFileToBrightSign(fileSpec.fileToPublish.filePath, fileSpec.fileName, fileSpec.hashValue);
+                            promises.push(promise);
+                        });
+                        Promise.all(promises).then((values) => {
+                            console.log("all files uploaded to BrightSign");
+                        });
                     });
                 });
             });

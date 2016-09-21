@@ -1,5 +1,6 @@
+const fs = require("fs");
 const path = require("path");
-const js2xmlparser = require("js2xmlparser");
+const js2xmlparser = require("js2xmlparser2");
 
 export default class LocalStoragePublisherUtils {
 
@@ -7,32 +8,83 @@ export default class LocalStoragePublisherUtils {
     }
 
 // public bool WriteLocalSyncSpec(string publishFolder, string xmlFileName, bool specifyLogging, bool specifyUSBContentUpdatePassword)
-    writeLocalSyncSpec(publishFilesInSyncSpec, publishFolder, outputFileName, specifyLogging, specifyUSBContentUpdatePassword) {
+    writeLocalSyncSpec(publishFilesInSyncSpec, publishFolder, xmlFileName, specifyLogging = false, specifyUSBContentUpdatePassword = false) {
 
         // Publisher/LocalStoragePublisherUtils.cs
 
         // set metadata, etc
 
-        let syncSpec = {};
-        syncSpec.meta = {};
-        syncSpec.meta.enableSerialDebugging = true;
-        syncSpec.files = [];
+        return new Promise( (resolve, reject) => {
+            let syncSpec = {};
 
-        let files = this.writeSyncSpecFilesSection(publishFilesInSyncSpec);
-        files.forEach(file => {
-            let downloadItem = {};
-            syncSpec.files.push(
-                {
-                    download: file
+            syncSpec.meta = {};
+            syncSpec.meta.client = {};
+            syncSpec.meta.client.enableSerialDebugging = true;
+            syncSpec.meta.client.enableSystemLogDebugging = false;
+            syncSpec.meta.client.limitStorageSpace = false;
+
+            syncSpec.files = [];
+
+
+            let files = this.buildSyncSpecFilesSection(publishFilesInSyncSpec);
+            files.forEach(file => {
+                // syncSpec.files.push(
+                //     {
+                //         download: file
+                //     }
+                // );
+                syncSpec.files.push(file);
+            });
+
+            debugger;
+
+            // let entries = this.buildDeleteIgnoreSections();
+            // entries.forEach( entry => {
+            //    if ("delete" in entry) {
+            //        syncSpec.files.push(
+            //            {
+            //                delete: entry["delete"]
+            //            }
+            //        )
+            //
+            //    }
+            //    else if ("ignore" in entry) {
+            //        syncSpec.files.push(
+            //            {
+            //                ignore: entry["ignore"]
+            //            }
+            //        )
+            //    };
+            // });
+
+
+            // also in files
+            // <ignore>
+            //     <pattern>*</pattern>
+            // </ignore>
+
+            // convert json to xml if needed
+            // const xmlAsStr = js2xmlparser.parse("sync", syncSpec);
+            var options = {
+                wrapArray: {
+                    enabled: true,
+                    elementName: "download"
                 }
-            );
+            };
+            const xmlAsStr = js2xmlparser("sync", syncSpec, options);
+            const filePath = path.join(publishFolder, xmlFileName);
+            fs.writeFile(filePath, xmlAsStr, (err) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                console.log(xmlFileName, " successfully written");
+                resolve("ok");
+            });
         });
-
-        // convert json to xml if needed
-        // let poo = js2xmlparser.parse("sync", syncSpec);
     }
 
-    writeSyncSpecFilesSection(publishFilesInSyncSpec) {
+    buildSyncSpecFilesSection(publishFilesInSyncSpec) {
 
         let files = [];
 
@@ -90,6 +142,18 @@ export default class LocalStoragePublisherUtils {
         }
 
         return files;
+    }
+
+    buildDeleteIgnoreSections(files) {
+
+        let entries = [];
+
+        entries.push( { delete: { pattern: "*.brs" }});
+        entries.push( { delete: { pattern: "*.rok" }});
+        entries.push( { delete: { pattern: "*.bsfw" }});
+        entries.push( { ignore: { pattern: "*" }});
+
+        return entries;
     }
 
     GetPoolFilePath(startDir, sha1, createDirectories) {
