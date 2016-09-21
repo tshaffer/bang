@@ -12,8 +12,6 @@ export default class LocalStoragePublisherUtils {
 
         // Publisher/LocalStoragePublisherUtils.cs
 
-        // set metadata, etc
-
         return new Promise( (resolve, reject) => {
             let syncSpec = {};
 
@@ -28,14 +26,13 @@ export default class LocalStoragePublisherUtils {
 
             let files = this.buildSyncSpecFilesSection(publishFilesInSyncSpec);
             files.forEach(file => {
-                // syncSpec.files.push(
-                //     {
-                //         download: file
-                //     }
-                // );
                 syncSpec.files.push(file);
             });
 
+// WriteIgnoreSections
+            // issue with delete, ignore in xml
+            // json -> xml converter: when it converts an array, it needs each item in the array to have the same label (download, not download or delete or ignore)
+            //
             // let entries = this.buildDeleteIgnoreSections();
             // entries.forEach( entry => {
             //    if ("delete" in entry) {
@@ -54,14 +51,10 @@ export default class LocalStoragePublisherUtils {
             //        )
             //    };
             // });
+            // could write these entries in manually if needed - blech!
 
 
-            // also in files
-            // <ignore>
-            //     <pattern>*</pattern>
-            // </ignore>
-
-            // convert json to xml if needed
+            // convert json to xml
             var options = {
                 wrapArray: {
                     enabled: true,
