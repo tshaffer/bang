@@ -102,24 +102,29 @@ export default class LWSPublisher {
                 promise.then(rawFilesToCopy => {
                     console.log(rawFilesToCopy);
 // create list of files to copy to the BrightSign
-                    // appears as though family, model, fwVersion, fwVersionNumber are unused
-
-                    // let filesToCopy = rawFilesToCopy.filesToCopy.$;
-
-                    // List<FileSpec> filesToCopy = GetFilesToCopy(filesToCopyXML, out family, out model, out fwVersion, out fwVersionNumber);
-
-                    let filesToCopy = [];
-
-                    rawFilesToCopy.filesToCopy.file.forEach(file => {
-                        let fileName = file.fileName[0];
-                        let filePath = file.filePath[0];
-                        let hashValue = file.hashValue[0];
-                        let fileSize = file.fileSize[0];
-                    });
-                    // let fileSpec = new FileSpec(fileName, fileToPublish, hashValue, fileSize);
+                    let filesToCopy = self.getFilesToCopy(rawFilesToCopy);
                 });
             });
         });
+    }
+
+    getFilesToCopy(rawFilesToCopy) {
+
+        let filesToCopy = [];
+
+        rawFilesToCopy.filesToCopy.file.forEach(file => {
+            const fileName = file.fileName[0];
+            const hashValue = file.hashValue[0];
+            const fileSize = file.fileSize[0];
+
+            const fileToPublish = new FileToPublish(file.filePath[0]);
+
+            const fileSpec = new FileSpec(fileName, fileToPublish, hashValue, fileSize);
+
+            filesToCopy.push(fileSpec);
+        });
+
+        return filesToCopy;
     }
 
     httpUploadFile(hostname, endpoint, filePath, fileName) {
