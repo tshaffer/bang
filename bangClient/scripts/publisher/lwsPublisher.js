@@ -16,6 +16,7 @@ import LocalHTMLSite from '../entities/localHTMLSite';
 import HTMLPublishSite from '../entities/htmlPublishSite';
 import HtmlFileToPublish from '../entities/htmlFileToPublish';
 
+// protected Dictionary<string, FileToPublish> PublishAllFilesToCopy { get; set; }
 // List<FileSpec> filesToTransferViaLWS;
 // protected Dictionary<string, Dictionary<string, BrightSignDownloadItem>> PublishFilesInSyncSpec { get; set; }
 
@@ -25,8 +26,9 @@ export default class LWSPublisher {
 
         this.localStoragePublisherUtils = new LocalStoragePublisherUtils();
 
-        this.filesToTransferViaLWS = [];
-        this.publishFilesInSyncSpec = {};
+        this.publishAllFilesToCopy = {};            // dictionary that maps fileName to fileToPublish
+        this.filesToTransferViaLWS = [];            // List<fileSpec>
+        this.publishFilesInSyncSpec = {};           // Dictionary<string, Dictionary<string, BrightSignDownloadItem>>
 
         this.mediaDir = "/Users/tedshaffer/Documents/bang/media";
         this.tmpDir = "/Users/tedshaffer/Documents/bang/tmp";
@@ -38,110 +40,108 @@ export default class LWSPublisher {
 
         let self = this;
 
-        var retrievePresentationsPromise = this.retrievePresentations();
-        var getBasFilesPromise = this.getBASFiles();
+        // initialize data structures used in publish
+        this.publishAllFilesToCopy = {};
+        this.filesToTransferViaLWS = [];
+        this.publishFilesInSyncSpec = {};
 
-        Promise.all( [retrievePresentationsPromise, getBasFilesPromise] ).then(values => {
+        this.retrievePresentations();
+        let getBasFilesPromise = this.getBASFiles();
+
+        getBasFilesPromise.then(response => {
 
             debugger;
 
-            this.filesToTransferViaLWS = [];
-            this.publishFilesInSyncSpec = {};
+            // call this now for all files in publishAllFilesToCopy
 
-            // generate and write sync spec
-            let promise = self.localStoragePublisherUtils.writeLocalSyncSpec(self.publishFilesInSyncSpec, self.tmpDir, "new-local-sync.xml");
-            promise.then(response => {
-                promise = self.writeListOfFilesForLWS();
+            // media files
+            let promises = [];
+            for (let fileName in self.publishAllFilesToCopy) {
+                if (self.publishAllFilesToCopy.hasOwnProperty(fileName)) {
+                    const fileToPublish = self.publishAllFilesToCopy[fileName];
+                    const filePath = fileToPublish.filePath;
+                    promises.push(self.addFileToLWSPublishList(fileName, filePath, ""));
+                }
+            }
+
+            Promise.all( promises ).then(values => {
+
+                debugger;
+
+                // generate and write sync spec
+                let promise = self.localStoragePublisherUtils.writeLocalSyncSpec(self.publishFilesInSyncSpec, self.tmpDir, "new-local-sync.xml");
                 promise.then(response => {
+                    promise = self.writeListOfFilesForLWS();
+                    promise.then(response => {
 
-                    // publish to each unit
-                    // for now, just publish to one fixed unit
-                    const ipAddress = "10.1.0.155";
+                        // publish to each unit
+                        // for now, just publish to one fixed unit
+                        const ipAddress = "10.1.0.155";
 
-                    const publishLWSURL = "http://" + ipAddress + ":8080/";
+                        const publishLWSURL = "http://" + ipAddress + ":8080/";
 
-                    let queryString = "";
-                    // check limitStorageSpace
-                    queryString += "?limitStorageSpace=" + "false";
+                        let queryString = "";
+                        // check limitStorageSpace
+                        queryString += "?limitStorageSpace=" + "false";
 
 // Invoke SpecifyCardSizeLimits
-                    // does the code need to wait for a response?
-                    const url = "http://".concat(ipAddress, ":8080/SpecifyCardSizeLimits", queryString);
-                    // set username / password
+                        // does the code need to wait for a response?
+                        const url = "http://".concat(ipAddress, ":8080/SpecifyCardSizeLimits", queryString);
+                        // set username / password
 
-                    http.get(url, (res) => {
-                        console.log(`Got response: ${res.statusCode}`);
-                        // consume response body
-                        res.resume();
-                    }).on('error', (e) => {
-                        console.log(`Got error: ${e.message}`);
-                    });
+                        http.get(url, (res) => {
+                            console.log(`Got response: ${res.statusCode}`);
+                            // consume response body
+                            res.resume();
+                        }).on('error', (e) => {
+                            console.log(`Got error: ${e.message}`);
+                        });
 
 // invoke PrepareForTransfer, providing filesToPublish.xml to BrightSign
 
-                    const hostname = "10.1.0.155";
-                    const endpoint = "/PrepareForTransfer";
-                    // duplicate code
-                    const filesToPublishPath = path.join(self.tmpDir, "filesToPublish.xml");
+                        const hostname = "10.1.0.155";
+                        const endpoint = "/PrepareForTransfer";
+                        // duplicate code
+                        const filesToPublishPath = path.join(self.tmpDir, "filesToPublish.xml");
 
-                    promise = self.httpUploadFile(hostname, endpoint, filesToPublishPath, "filesToPublish.xml");
-                    promise.then(rawFilesToCopy => {
-                        console.log(rawFilesToCopy);
+                        promise = self.httpUploadFile(hostname, endpoint, filesToPublishPath, "filesToPublish.xml");
+                        promise.then(rawFilesToCopy => {
+                            console.log(rawFilesToCopy);
 // based on response from BrightSign, create list of files to copy to the BrightSign
-                        let filesToCopy = self.getFilesToCopy(rawFilesToCopy);
+                            let filesToCopy = self.getFilesToCopy(rawFilesToCopy);
 
 // ensure that if the family and fwVersions were set, that they are sufficiently new
 
 // upload the files to the BrightSign
-                        promises = [];
-                        filesToCopy.forEach( fileSpec => {
-                            const promise = self.uploadFileToBrightSign(fileSpec.fileToPublish.filePath, fileSpec.fileName, fileSpec.hashValue);
-                            promises.push(promise);
-                        });
-                        Promise.all(promises).then((values) => {
-                            console.log("all files uploaded to BrightSign");
+                            promises = [];
+                            filesToCopy.forEach( fileSpec => {
+                                const promise = self.uploadFileToBrightSign(fileSpec.fileToPublish.filePath, fileSpec.fileName, fileSpec.hashValue);
+                                promises.push(promise);
+                            });
+                            Promise.all(promises).then((values) => {
+                                console.log("all files uploaded to BrightSign");
+                            });
                         });
                     });
                 });
             });
+
         });
+    }
+
+    addToPublishAllFilesToCopy(filePath, fileName) {
+        let fileToPublish = new FileToPublish(filePath);
+        this.publishAllFilesToCopy[fileName] = fileToPublish;
     }
 
     retrievePresentations() {
         // totally phony version for now
 
-        let filePath = "";
-
-        return new Promise( (resolve, reject) => {
-
-            let promises = [];
-
-            // media files
-            filePath = path.join(this.mediaDir, "Colorado.jpg");
-            let promise0 = this.addFileToLWSPublishList("Colorado.jpg", filePath, "");
-
-            filePath = path.join(this.mediaDir, "GlacierNationalPark.jpg");
-            let promise1 = this.addFileToLWSPublishList("GlacierNationalPark.jpg", filePath, "");
-
-            filePath = path.join(this.mediaDir, "BryceCanyonUtah.jpg");
-            let promise2 = this.addFileToLWSPublishList("BryceCanyonUtah.jpg", filePath, "");
-
-            filePath = path.join(this.mediaDir, "GrandTeton2.jpg");
-            let promise3 = this.addFileToLWSPublishList("GrandTeton2.jpg", filePath, "");
-
-            filePath = path.join(this.mediaDir, "GrandTeton3.jpg");
-            let promise4 = this.addFileToLWSPublishList("GrandTeton3.jpg", filePath, "");
-
-            promises.push(promise0);
-            promises.push(promise1);
-            promises.push(promise2);
-            promises.push(promise3);
-            promises.push(promise4);
-
-            Promise.all(promises).then((values) => {
-                resolve(values);
-            });
-        });
+        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "Colorado.jpg"), "Colorado.jpg");
+        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "GlacierNationalPark.jpg"), "GlacierNationalPark.jpg");
+        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "BryceCanyonUtah.jpg"), "BryceCanyonUtah.jpg");
+        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "GrandTeton2.jpg"), "GrandTeton2.jpg");
+        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "GrandTeton3.jpg"), "GrandTeton3.jpg");
     }
 
     getBASFiles() {
@@ -162,6 +162,15 @@ export default class LWSPublisher {
         });
     }
 
+    getSupportingFiles() {
+        // tmpMcBang
+        // "C:\\Users\\tedshaffer\\AppData\\Local\\BrightSign\\BrightAuthor\\4.7.0.1\\tmp\\resources.txt"
+        // "C:\\Users\\tedshaffer\\AppData\\Local\\BrightSign\\BrightAuthor\\4.7.0.1\\tmp\\autoplugins.brs"
+        // "C:\\Users\\tedshaffer\\AppData\\Local\\BrightSign\\BrightAuthor\\4.7.0.1\\tmp\\autoschedule.xml"
+
+        // PublishPresentationScheduler.WriteAutoscheduleFile
+    }
+
     getHTMLContent(htmlSite, checkFileCount) {
 
         let self = this;
@@ -174,8 +183,6 @@ export default class LWSPublisher {
 
             const filePath = htmlSite.filePath; // this is the main web page - need to keep track of it for BSN uploads
             const siteDirectory = path.dirname(filePath);
-
-            debugger;
 
             const readDir = require('recursive-readdir');
             readDir(siteDirectory, (err, siteFiles) => {
@@ -207,7 +214,9 @@ export default class LWSPublisher {
                         );
 
                         if (!(pseudoFileName in self.publishFilesInSyncSpec)) {
-                            this.publishFilesInSyncSpec[pseudoFileName] = htmlFileToPublish;
+                            // this.publishFilesInSyncSpec[pseudoFileName] = htmlFileToPublish;
+                            // self.addToPublishAllFilesToCopy(pseudoFileName, filePath)
+                            self.publishAllFilesToCopy[pseudoFileName] = htmlFileToPublish;
                         }
                     }
                 });
@@ -422,17 +431,6 @@ export default class LWSPublisher {
     }
 
     addFileToLWSPublishList(fileName, filePath, groupName) {
-
-        // console.log("basename:", path.basename(filePath));
-        // console.log("dirname:", path.dirname(filePath));
-        // console.log("extname:", path.extname(filePath));
-        //
-        // const formattedPath =
-        //     path.format({
-        //         dir: mediaDir,
-        //         base: 'Colorado.jpg'
-        //     });
-        // console.log("formattedPath:", formattedPath);
 
         return new Promise ((resolve, reject) => {
 
