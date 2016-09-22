@@ -66,13 +66,13 @@ export default class LWSPublisher {
 
             Promise.all( promises ).then(values => {
 
-                debugger;
-
                 // generate and write sync spec
                 let promise = self.localStoragePublisherUtils.writeLocalSyncSpec(self.publishFilesInSyncSpec, self.tmpDir, "new-local-sync.xml");
                 promise.then(response => {
                     promise = self.writeListOfFilesForLWS();
                     promise.then(response => {
+
+                        debugger;
 
                         // publish to each unit
                         // for now, just publish to one fixed unit
@@ -100,7 +100,7 @@ export default class LWSPublisher {
 // invoke PrepareForTransfer, providing filesToPublish.xml to BrightSign
 
                         const hostname = "10.1.0.155";
-                        const endpoint = "/PrepareForTransfer";
+                        let endpoint = "/PrepareForTransfer";
                         // duplicate code
                         const filesToPublishPath = path.join(self.tmpDir, "filesToPublish.xml");
 
@@ -120,12 +120,22 @@ export default class LWSPublisher {
                             });
                             Promise.all(promises).then((values) => {
                                 console.log("all files uploaded to BrightSign");
+                                // HTTPPost.HttpUploadFile(_publishLWSURL + "UploadSyncSpec", filePath, "new-local-sync.xml", nvc, lbs.UserName, lbs.Password, this);
+
+                                // uploadSyncSpec
+                                endpoint = "/UploadSyncSpec";
+                                let filePath = path.join(self.tmpDir, "new-local-sync.xml");
+                                promise = self.httpUploadFile(hostname, endpoint, filePath, "new-local-sync.xml");
                             });
                         });
                     });
                 });
+            }, function(err) {
+                debugger;
             });
 
+        }, function(err) {
+            debugger;
         });
     }
 
@@ -137,11 +147,11 @@ export default class LWSPublisher {
     retrievePresentations() {
         // totally phony version for now
 
-        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "Colorado.jpg"), "Colorado.jpg");
-        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "GlacierNationalPark.jpg"), "GlacierNationalPark.jpg");
-        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "BryceCanyonUtah.jpg"), "BryceCanyonUtah.jpg");
-        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "GrandTeton2.jpg"), "GrandTeton2.jpg");
-        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "GrandTeton3.jpg"), "GrandTeton3.jpg");
+        // this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "Colorado.jpg"), "Colorado.jpg");
+        // this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "GlacierNationalPark.jpg"), "GlacierNationalPark.jpg");
+        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "ZoneAfrica_00.png"), "BryceCanyonUtah.jpg");
+        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "GrandTeton2.jpg"), "ZoneAfrica_06.png");
+        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "GrandTeton3.jpg"), "ZoneAfrica_05.png");
     }
 
     getBASFiles() {
@@ -158,6 +168,8 @@ export default class LWSPublisher {
             const promise = this.getHTMLContent(htmlPublishSite, false);
             promise.then( response => {
                 resolve(self.publishFilesInSyncSpec);
+            }, function (err) {
+                debugger;
             });
         });
     }
@@ -326,6 +338,8 @@ export default class LWSPublisher {
 
     httpUploadFile(hostname, endpoint, filePath, fileName, headers=[]) {
 
+        console.log("httpUploadFile: ", hostname, " ", endpoint, " ", filePath, " ", fileName, " ", headers);
+
         const buffer = fs.readFileSync(filePath);
 
         // Mike??
@@ -390,6 +404,7 @@ export default class LWSPublisher {
             });
 
             req.on('error', (e) => {
+                debugger;
                 console.log(`problem with request: ${e.message}`);
                 reject(e);
             });
@@ -432,6 +447,7 @@ export default class LWSPublisher {
             const filePath = path.join(this.tmpDir, "filesToPublish.xml");
             fs.writeFile(filePath, listOfFilesXml, (err) => {
                 if (err) {
+                    debugger;
                     reject(err);
                     return;
                 }
@@ -495,6 +511,8 @@ export default class LWSPublisher {
                 this.addToLocalSyncSpecList(fileName, filePath, fileSizeInBytes, sha1, groupName);
 
                 resolve();
+            }, function(err) {
+                debugger;
             });
         });
     }
