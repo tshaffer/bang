@@ -72,8 +72,6 @@ export default class LWSPublisher {
                     promise = self.writeListOfFilesForLWS();
                     promise.then(response => {
 
-                        debugger;
-
                         // publish to each unit
                         // for now, just publish to one fixed unit
                         const ipAddress = "10.1.0.155";

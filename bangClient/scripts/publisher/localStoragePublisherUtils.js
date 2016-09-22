@@ -61,7 +61,41 @@ export default class LocalStoragePublisherUtils {
                     elementName: "download"
                 }
             };
-            const xmlAsStr = js2xmlparser("sync", syncSpec, options);
+            let xmlAsStr = js2xmlparser('sync', syncSpec, options);
+
+            // hacks go here
+            xmlAsStr = xmlAsStr.replace(/<sync>/i, '<sync version="1.0">');
+
+            // add the following
+            // <delete>
+            //     <pattern>*.brs</pattern>
+            // </delete>
+            // <delete>
+            // <pattern>*.rok</pattern>
+            // </delete>
+            // <delete>
+            // <pattern>*.bsfw</pattern>
+            // </delete>
+            // <ignore>
+            // <pattern>*</pattern>
+            // </ignore>
+            const newLine = "\r\n";
+
+            let deleteIgnore = "";
+            deleteIgnore += "<files>" + newLine;
+            deleteIgnore += "\t\t<delete>" + newLine;
+            deleteIgnore += "\t\t\t<pattern>*.brs</pattern>" + newLine;
+            deleteIgnore += "\t\t</delete>" + newLine;
+            deleteIgnore += "\t\t<delete>" + newLine;
+            deleteIgnore += "\t\t\t<pattern>*.bsfw</pattern>" + newLine;
+            deleteIgnore += "\t\t</delete>" + newLine;
+            deleteIgnore += "\t\t<ignore>" + newLine;
+            deleteIgnore += "\t\t\t<pattern>*</pattern>" + newLine;
+            deleteIgnore += "\t\t</ignore>";
+            xmlAsStr = xmlAsStr.replace(/<files>/i, deleteIgnore);
+
+            debugger;
+
             const filePath = path.join(publishFolder, xmlFileName);
             fs.writeFile(filePath, xmlAsStr, (err) => {
                 if (err) {
