@@ -172,6 +172,8 @@ export default class LWSPublisher {
             miscellaneousFiles["deviceIdWebPage.html"] = path.join(this.baDirTemplates, "deviceIdWebPage.html");
             miscellaneousFiles["featureMinRevs.xml"] = path.join(this.baDirTemplates, "featureMinRevs.xml");
             miscellaneousFiles["BoseProducts.xml"] = path.join(this.baDirTemplates, "BoseProducts.xml");
+            miscellaneousFiles["autorun.brs"] = path.join(this.baDirTemplates, "autoxml.brs");
+            miscellaneousFiles["autoplay-mcBangLWS-0.xml"] = path.join(this.appData, "autoplay-mcBangLWS-0.xml");
 
             let miscellaneousFile = null;
             for (miscellaneousFile in miscellaneousFiles) {
@@ -189,12 +191,6 @@ export default class LWSPublisher {
     }
 
     getSystemFiles() {
-
-        // tmpMcBang
-        // firmware files
-        // autorun.brs (standard or custom)
-        // autoplay files
-        //
 
         return new Promise ( (resolve, reject) => {
 
