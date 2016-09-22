@@ -34,7 +34,7 @@ export default class LWSPublisher {
         this.tmpDir = "/Users/tedshaffer/Documents/bang/tmp";
         this.appData = "/Users/tedshaffer/Documents/bang/appDataTmp";
         this.baDir = "/Users/tedshaffer/Documents/Projects/BA/BrightAuthor/bin/Debug";
-
+        this.baDirTemplates = "/Users/tedshaffer/Documents/Projects/BA/BrightAuthor/bin/Debug/templates";
     }
 
     publishToLWS() {
@@ -48,7 +48,6 @@ export default class LWSPublisher {
 
         this.retrievePresentations();
         let getBasFilesPromise = this.getBASFiles();
-        let getSystemFilePromise = this.getSystemFiles();
 
         getBasFilesPromise.then(response => {
 
@@ -61,6 +60,9 @@ export default class LWSPublisher {
                     promises.push(self.addFileToLWSPublishList(fileName, filePath, ""));
                 }
             }
+
+            promises.push(this.getSystemFiles());
+            promises.push(this.getMiscellaneousFiles());
 
             Promise.all( promises ).then(values => {
 
@@ -156,6 +158,32 @@ export default class LWSPublisher {
             const promise = this.getHTMLContent(htmlPublishSite, false);
             promise.then( response => {
                 resolve(self.publishFilesInSyncSpec);
+            });
+        });
+    }
+
+    getMiscellaneousFiles() {
+        return new Promise ( (resolve, reject) => {
+
+            let promises = [];
+
+            let miscellaneousFiles = {};
+            miscellaneousFiles["deviceWebPage.html"] = path.join(this.baDirTemplates, "deviceWebPage.html");
+            miscellaneousFiles["deviceIdWebPage.html"] = path.join(this.baDirTemplates, "deviceIdWebPage.html");
+            miscellaneousFiles["featureMinRevs.xml"] = path.join(this.baDirTemplates, "featureMinRevs.xml");
+            miscellaneousFiles["BoseProducts.xml"] = path.join(this.baDirTemplates, "BoseProducts.xml");
+
+            let miscellaneousFile = null;
+            for (miscellaneousFile in miscellaneousFiles) {
+
+                let fileName = miscellaneousFile;
+                let filePath = miscellaneousFiles[fileName];
+
+                promises.push(this.addFileToLWSPublishList(fileName, filePath, ""));
+            }
+
+            Promise.all( promises ).then(values => {
+                resolve("ok");
             });
         });
     }
