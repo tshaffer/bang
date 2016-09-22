@@ -32,6 +32,7 @@ export default class LWSPublisher {
 
         this.mediaDir = "/Users/tedshaffer/Documents/bang/media";
         this.tmpDir = "/Users/tedshaffer/Documents/bang/tmp";
+        this.appData = "/Users/tedshaffer/Documents/bang/appDataTmp";
         this.baDir = "/Users/tedshaffer/Documents/Projects/BA/BrightAuthor/bin/Debug";
 
     }
@@ -47,12 +48,9 @@ export default class LWSPublisher {
 
         this.retrievePresentations();
         let getBasFilesPromise = this.getBASFiles();
+        let getSystemFilePromise = this.getSystemFiles();
 
         getBasFilesPromise.then(response => {
-
-            debugger;
-
-            // call this now for all files in publishAllFilesToCopy
 
             // media files
             let promises = [];
@@ -162,13 +160,39 @@ export default class LWSPublisher {
         });
     }
 
-    getSupportingFiles() {
-        // tmpMcBang
-        // "C:\\Users\\tedshaffer\\AppData\\Local\\BrightSign\\BrightAuthor\\4.7.0.1\\tmp\\resources.txt"
-        // "C:\\Users\\tedshaffer\\AppData\\Local\\BrightSign\\BrightAuthor\\4.7.0.1\\tmp\\autoplugins.brs"
-        // "C:\\Users\\tedshaffer\\AppData\\Local\\BrightSign\\BrightAuthor\\4.7.0.1\\tmp\\autoschedule.xml"
+    getSystemFiles() {
 
-        // PublishPresentationScheduler.WriteAutoscheduleFile
+        // tmpMcBang
+        // firmware files
+        // autorun.brs (standard or custom)
+        // autoplay files
+        //
+
+        return new Promise ( (resolve, reject) => {
+
+            let promises = [];
+
+            let systemFiles = {};
+            systemFiles["resources.txt"] = path.join(this.appData, "resources.txt");
+            systemFiles["autoplugins.brs"] = path.join(this.appData, "autoplugins.brs");
+            systemFiles["autoschedule.xml"] = path.join(this.appData, "autoschedule.xml");
+
+            let systemFile = null;
+            for (systemFile in systemFiles) {
+
+                let fileName = systemFile;
+                let filePath = systemFiles[fileName];
+
+                let groupName = "";
+                if (fileName.endsWith(".brs")) groupName = "script";
+
+                promises.push(this.addFileToLWSPublishList(fileName, filePath, groupName));
+            }
+
+            Promise.all( promises ).then(values => {
+                resolve("ok");
+            });
+        });
     }
 
     getHTMLContent(htmlSite, checkFileCount) {
