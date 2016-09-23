@@ -39,6 +39,14 @@ export default class LWSPublisher {
         this.baDirTemplates = "/Users/tedshaffer/Documents/Projects/BA/BrightAuthor/bin/Debug/templates";
     }
 
+    retrievePresentations() {
+        // totally phony version for now
+        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "spiralY.ts"), "spiralY.ts");
+        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "0artbeats_red_m1080p.ts"), "0artbeats_red_m1080p.ts");
+        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "0arc.mp4"), "0arc.mp4");
+        this.addToPublishAllFilesToCopy(path.join(this.appData, "autoplay-mcBangLWS-1.xml"), "autoplay-mcBangLWS-1.xml");
+    }
+
     publishToLWS() {
 
         let self = this;
@@ -155,15 +163,6 @@ export default class LWSPublisher {
         this.publishAllFilesToCopy[fileName] = fileToPublish;
     }
 
-    retrievePresentations() {
-
-        // totally phony version for now
-
-        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "Colorado.jpg"), "Colorado.jpg");
-        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "GlacierNationalPark.jpg"), "GlacierNationalPark.jpg");
-        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "BryceCanyonUtah.jpg"), "BryceCanyonUtah.jpg");
-    }
-
     getBASFiles() {
 
         return new Promise( (resolve, reject) => {
@@ -194,7 +193,7 @@ export default class LWSPublisher {
             miscellaneousFiles["deviceIdWebPage.html"] = path.join(this.baDirTemplates, "deviceIdWebPage.html");
             miscellaneousFiles["featureMinRevs.xml"] = path.join(this.baDirTemplates, "featureMinRevs.xml");
             miscellaneousFiles["BoseProducts.xml"] = path.join(this.baDirTemplates, "BoseProducts.xml");
-            miscellaneousFiles["autoplay-mcBangLWS-0.xml"] = path.join(this.appData, "autoplay-mcBangLWS-0.xml");
+            // miscellaneousFiles["autoplay-mcBangLWS-0.xml"] = path.join(this.appData, "autoplay-mcBangLWS-0.xml");
 
             let miscellaneousFile = null;
             for (miscellaneousFile in miscellaneousFiles) {
