@@ -3,6 +3,8 @@ const path = require("path");
 const crypto = require('crypto');
 const http = require('http');
 
+const request = require('request');
+
 const js2xmlparser = require("js2xmlparser2");
 const xml2js = require('xml2js');
 
@@ -154,13 +156,12 @@ export default class LWSPublisher {
     }
 
     retrievePresentations() {
+
         // totally phony version for now
 
-        // this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "Colorado.jpg"), "Colorado.jpg");
-        // this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "GlacierNationalPark.jpg"), "GlacierNationalPark.jpg");
-        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "ZoneAfrica_00.png"), "BryceCanyonUtah.jpg");
-        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "GrandTeton2.jpg"), "ZoneAfrica_06.png");
-        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "GrandTeton3.jpg"), "ZoneAfrica_05.png");
+        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "Colorado.jpg"), "Colorado.jpg");
+        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "GlacierNationalPark.jpg"), "GlacierNationalPark.jpg");
+        this.addToPublishAllFilesToCopy(path.join(this.mediaDir, "BryceCanyonUtah.jpg"), "BryceCanyonUtah.jpg");
     }
 
     getBASFiles() {
@@ -351,82 +352,50 @@ export default class LWSPublisher {
         return filesToCopy;
     }
 
+    // https://www.npmjs.com/package/request#multipartform-data-multipart-form-uploads
     httpUploadFile(hostname, endpoint, filePath, fileName, headers=[]) {
 
-        console.log("httpUploadFile: ", hostname, " ", endpoint, " ", filePath, " ", fileName, " ", headers);
+        var formData = {
+            // Pass data via Streams
+            file: fs.createReadStream(filePath),
 
-        const buffer = fs.readFileSync(filePath);
+            // Pass optional meta-data with an 'options' object with style: {value: DATA, options: OPTIONS}
+            // Use case: for some types of streams, you'll need to provide "file"-related information manually.
+            // See the `form-data` README for more information about options: https://github.com/form-data/form-data
+        };
 
-        // Mike??
-        // const boundary = "---------------------" + DateTime.Now.Ticks.ToString("x");
-        // byte[] boundarybytes = System.Text.Encoding.ASCII.GetBytes("--" + boundary + "\r\n");
-        const boundary = "---------------------8d3e1335c7c9543";
+        let url = "http://10.1.0.155:8080" + endpoint;
 
-        var data     = "";
-
-        data += "--" + boundary + "\r\n";
-
-        data += 'Content-Disposition: form-data; '
-            // We define the name of the form data
-            + 'name="'         + "file"          + '"; '
-            // We provide the real name of the file
-            + 'filename="'     + fileName + '"\r\n';
-
-        data += 'Content-Type: application/octet-stream' + '\r\n';
-
-        data += '\r\n';
-
-        data += buffer;
-        data += "\r\n--" + boundary + "--\r\n";
-
-        const options = {
-            hostname: hostname,
-            port: 8080,
-            path: endpoint,
-            method: 'POST',
-            headers: {
-                'Content-Type': 'multipart/form-data; boundary=' + boundary,
-                'Transfer-Encoding': 'chunked',
-                'Expect': '100-continue',
-                'Connection': 'Keep-Alive'
-            }
+        const myHeaders = {
         };
 
         headers.forEach( header => {
-            options.headers[header.key] = header.value;
+            myHeaders[header.key] = header.value;
         });
 
         return new Promise( (resolve, reject) => {
+            request.post(
+                {
+                    url: url,
+                    formData: formData,
+                    headers: myHeaders
+                },
+                function optionalCallback(err, httpResponse, body) {
+                    if (err) {
+                        console.error('upload failed:', err);
+                        reject(err);
 
-            let str = "";
-
-            let req = http.request(options, (res) => {
-                console.log(`STATUS: ${res.statusCode}`);
-                console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
-                res.setEncoding('utf8');
-                res.on('data', (chunk) => {
-                    str += chunk;
-                });
-                res.on('end', () => {
-                    console.log('No more data in response.');
+                    }
+                    console.log('Upload successful!  Server responded with:', body);
                     var parser = new xml2js.Parser();
-                    parser.parseString(str, function (err, jsonResponse) {
+                    parser.parseString(body, function (err, jsonResponse) {
                         resolve(jsonResponse);
                     });
+
                 });
-            });
-
-            req.on('error', (e) => {
-                debugger;
-                console.log(`problem with request: ${e.message}`);
-                reject(e);
-            });
-
-            req.write(data);
-            req.end();
         });
-
     }
+
 
     // private void WriteListOfFilesForLWS(string xmlFileName, List<FileSpec> filesToTransferViaLWS)
     writeListOfFilesForLWS() {
