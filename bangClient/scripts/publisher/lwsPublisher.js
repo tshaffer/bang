@@ -124,6 +124,17 @@ export default class LWSPublisher {
                                 endpoint = "/UploadSyncSpec";
                                 let filePath = path.join(self.tmpDir, "new-local-sync.xml");
                                 promise = self.httpUploadFile(hostname, endpoint, filePath, "new-local-sync.xml");
+                            }, err => {
+                                debugger;
+
+                                // hack for now - assume all files exist on BS
+                                console.log("error uploading all files to BrightSign, proceed for now");
+
+                                // uploadSyncSpec
+                                endpoint = "/UploadSyncSpec";
+                                let filePath = path.join(self.tmpDir, "new-local-sync.xml");
+                                promise = self.httpUploadFile(hostname, endpoint, filePath, "new-local-sync.xml");
+
                             });
                         });
                     });
@@ -182,7 +193,6 @@ export default class LWSPublisher {
             miscellaneousFiles["deviceIdWebPage.html"] = path.join(this.baDirTemplates, "deviceIdWebPage.html");
             miscellaneousFiles["featureMinRevs.xml"] = path.join(this.baDirTemplates, "featureMinRevs.xml");
             miscellaneousFiles["BoseProducts.xml"] = path.join(this.baDirTemplates, "BoseProducts.xml");
-            miscellaneousFiles["autorun.brs"] = path.join(this.baDirTemplates, "autoxml.brs");
             miscellaneousFiles["autoplay-mcBangLWS-0.xml"] = path.join(this.appData, "autoplay-mcBangLWS-0.xml");
 
             let miscellaneousFile = null;
@@ -196,6 +206,9 @@ export default class LWSPublisher {
 
             Promise.all( promises ).then(values => {
                 resolve("ok");
+            }, err => {
+                debugger;
+
             });
         });
     }
@@ -210,6 +223,7 @@ export default class LWSPublisher {
             systemFiles["resources.txt"] = path.join(this.appData, "resources.txt");
             systemFiles["autoplugins.brs"] = path.join(this.appData, "autoplugins.brs");
             systemFiles["autoschedule.xml"] = path.join(this.appData, "autoschedule.xml");
+            systemFiles["autorun.brs"] = path.join(this.baDirTemplates, "autoxml.brs");
 
             let systemFile = null;
             for (systemFile in systemFiles) {
@@ -225,6 +239,9 @@ export default class LWSPublisher {
 
             Promise.all( promises ).then(values => {
                 resolve("ok");
+            }, err => {
+                debugger;
+
             });
         });
     }
@@ -345,7 +362,6 @@ export default class LWSPublisher {
         // byte[] boundarybytes = System.Text.Encoding.ASCII.GetBytes("--" + boundary + "\r\n");
         const boundary = "---------------------8d3e1335c7c9543";
 
-
         var data     = "";
 
         data += "--" + boundary + "\r\n";
@@ -372,14 +388,13 @@ export default class LWSPublisher {
                 'Content-Type': 'multipart/form-data; boundary=' + boundary,
                 'Transfer-Encoding': 'chunked',
                 'Expect': '100-continue',
-                // 'Connection': 'Keep-Alive'
+                'Connection': 'Keep-Alive'
             }
         };
 
         headers.forEach( header => {
             options.headers[header.key] = header.value;
         });
-
 
         return new Promise( (resolve, reject) => {
 

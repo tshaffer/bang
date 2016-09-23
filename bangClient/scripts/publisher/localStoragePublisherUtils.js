@@ -82,8 +82,7 @@ export default class LocalStoragePublisherUtils {
             const newLine = "\r\n";
 
             let deleteIgnore = "";
-            deleteIgnore += "<files>" + newLine;
-            deleteIgnore += "\t\t<delete>" + newLine;
+            deleteIgnore += "\t<delete>" + newLine;
             deleteIgnore += "\t\t\t<pattern>*.brs</pattern>" + newLine;
             deleteIgnore += "\t\t</delete>" + newLine;
             deleteIgnore += "\t\t<delete>" + newLine;
@@ -91,10 +90,9 @@ export default class LocalStoragePublisherUtils {
             deleteIgnore += "\t\t</delete>" + newLine;
             deleteIgnore += "\t\t<ignore>" + newLine;
             deleteIgnore += "\t\t\t<pattern>*</pattern>" + newLine;
-            deleteIgnore += "\t\t</ignore>";
-            xmlAsStr = xmlAsStr.replace(/<files>/i, deleteIgnore);
-
-            debugger;
+            deleteIgnore += "\t\t</ignore>" + newLine;
+            deleteIgnore += "\t</files>";
+            xmlAsStr = xmlAsStr.replace(/<\/files>/i, deleteIgnore);
 
             const filePath = path.join(publishFolder, xmlFileName);
             fs.writeFile(filePath, xmlAsStr, (err) => {
@@ -147,7 +145,7 @@ export default class LocalStoragePublisherUtils {
                 download.link = link;
 
                 if (groupName != "") {
-                    download.groupName = groupName;
+                    download.group = groupName;
                 }
 
                 // if (BrightAuthorUtils.IsVideoFile(bsdi.FilePath) || BrightAuthorUtils.IsAudioFile(bsdi.FilePath))
