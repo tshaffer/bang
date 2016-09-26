@@ -15,6 +15,7 @@ import PropertySheet from '../components/propertySheet';
 import NonInteractivePlaylist from './nonInteractivePlaylist';
 
 import { createDefaultPresentation, updateSign, loadAppData, selectMediaFolder } from '../actions/index';
+import { fetchFWManifest } from '../actions/index';
 import { getBSNAuthToken, getBSNProfile, getBSNSelf, getBSNNetworks, getBSNContent, getBSNGroups, getBSNDevices,
          getMyBSNUsers, getBSNUser, getBSNAccountUsers, getBSNPresentations } from '../actions/bsnActions';
 import { getCurrentBrightSignStatus, getBrightSignId } from '../actions/lfnActions';
@@ -41,6 +42,9 @@ class BA extends Component {
 
     componentWillMount() {
 
+        const fwURL = "http://bsnm.s3.amazonaws.com/public/FirmwareCompatibilityFile.xml";
+        this.props.fetchFWManifest(fwURL);
+
         this.props.createDefaultPresentation("Project 1");
 
         this.props.loadAppData();
@@ -52,9 +56,11 @@ class BA extends Component {
 
         this.baUI.init();
 
-        const lwsPublisher = new LWSPublisher();
-        lwsPublisher.publishToLWS();
+        // tmp code to test publishing to LWS
+        // const lwsPublisher = new LWSPublisher();
+        // lwsPublisher.publishToLWS();
 
+        // tmp code to test BSN rest API interactions
         // this.props.getBSNAuthToken();
     }
 
@@ -212,6 +218,14 @@ class BA extends Component {
         return <div>pizza</div>;
     }
 
+    lwsPublish() {
+        const lwsPublisher = new LWSPublisher();
+        lwsPublisher.publishToLWS();
+
+        // PublishFirmware.FirmwareUpdateType
+        // PublishFirmware xxxxPublishFirmware
+    }
+
     render () {
         
         let signName = <span>No sign yet</span>;
@@ -255,6 +269,10 @@ class BA extends Component {
         return (
 
             <div>
+
+                <div>
+                    <button type="button" onClick={this.lwsPublish.bind(this)}>LWS Publish</button>
+                </div>
 
                 <div>
                     <span>{signName}</span>
@@ -312,6 +330,7 @@ function mapDispatchToProps(dispatch) {
             getBSNAuthToken, getBSNProfile, getBSNSelf, getBSNNetworks, getBSNContent, getBSNGroups, getBSNDevices,
             getMyBSNUsers, getBSNUser, getBSNAccountUsers, getBSNPresentations,
             getCurrentBrightSignStatus, getBrightSignId,
+            fetchFWManifest
             },
         dispatch);
 }
@@ -345,6 +364,8 @@ BA.propTypes = {
 
     getCurrentBrightSignStatus: React.PropTypes.func.isRequired,
     getBrightSignId: React.PropTypes.func.isRequired,
+
+    fetchFWManifest: React.PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);

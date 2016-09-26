@@ -4,6 +4,8 @@
 import { getLastKey } from '../utilities/utils';
 
 import axios from 'axios';
+const request = require('request');
+const xml2js = require('xml2js');
 
 import ImageMediaItem from '../entities/imageMediaItem';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
@@ -732,5 +734,78 @@ export function updateHTML5HWZOn(mediaStateId, hwzOn) {
     };
 }
 
+export function getXMLFile(endPoint) {
+
+    return new Promise( (resolve, reject) => {
+
+        var parser = new xml2js.Parser();
+
+        var propertiesObject = { };
+
+        var options = {
+            url: endPoint,
+            qs: propertiesObject,
+        };
+
+        function callback(error, bsResponse, data) {
+            if (!error && bsResponse.statusCode == 200) {
+
+                parser.parseString(data, function (err, result) {
+                    resolve(result);
+                });
+            }
+            if (error) {
+                reject(error);
+            }
+            else if (bsResponse.statusCode != 200) {
+                reject(bsResponse.statusCode);
+            }
+        }
+
+        request(options, callback);
+    });
+}
+
+function getValueFromMangledSpec(obj, key) {
+    // console.log("key is:", key);
+    // debugger;
+    return obj[key][0];
+}
+
+export const FETCH_FW_MANIFEST = 'FETCH_FW_MANIFEST';
+export function fetchFWManifest(fwURL) {
+    return function (dispatch, getState) {
+        let promise = getXMLFile(fwURL).then( (fwReleases) => {
+
+            // parse data structure returned (and mangled) then store in redux
+            let firmwareFiles = [];
+            fwReleases.BrightSignFirmware.FirmwareFile.forEach( firmwareFileSpec => {
+
+                const family = getValueFromMangledSpec(firmwareFileSpec, "family");
+                const fileLength = Number(getValueFromMangledSpec(firmwareFileSpec, "fileLength"));
+                const link = getValueFromMangledSpec(firmwareFileSpec, "link");
+                const sha1 = getValueFromMangledSpec(firmwareFileSpec, "sha1");
+                const type = getValueFromMangledSpec(firmwareFileSpec, "type");
+                const version = getValueFromMangledSpec(firmwareFileSpec, "version");
+                const versionNumber = getValueFromMangledSpec(firmwareFileSpec, "versionNumber");
+
+                const firmwareFile = {
+                    family,
+                    fileLength,
+                    link,
+                    sha1,
+                    type,
+                    version,
+                    versionNumber
+                };
+
+                firmwareFiles.push(firmwareFile);
+            });
+
+            debugger;
+
+        });
+    };
+}
 
 
