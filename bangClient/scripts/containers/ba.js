@@ -15,7 +15,7 @@ import PropertySheet from '../components/propertySheet';
 import NonInteractivePlaylist from './nonInteractivePlaylist';
 
 import { createDefaultPresentation, updateSign, loadAppData, selectMediaFolder } from '../actions/index';
-import { fetchFWManifest } from '../actions/index';
+import { loadFWManifest } from '../actions/index';
 import { getBSNAuthToken, getBSNProfile, getBSNSelf, getBSNNetworks, getBSNContent, getBSNGroups, getBSNDevices,
          getMyBSNUsers, getBSNUser, getBSNAccountUsers, getBSNPresentations } from '../actions/bsnActions';
 import { getCurrentBrightSignStatus, getBrightSignId } from '../actions/lfnActions';
@@ -43,7 +43,7 @@ class BA extends Component {
     componentWillMount() {
 
         const fwURL = "http://bsnm.s3.amazonaws.com/public/FirmwareCompatibilityFile.xml";
-        this.props.fetchFWManifest(fwURL);
+        this.props.loadFWManifest(fwURL);
 
         this.props.createDefaultPresentation("Project 1");
 
@@ -330,7 +330,7 @@ function mapDispatchToProps(dispatch) {
             getBSNAuthToken, getBSNProfile, getBSNSelf, getBSNNetworks, getBSNContent, getBSNGroups, getBSNDevices,
             getMyBSNUsers, getBSNUser, getBSNAccountUsers, getBSNPresentations,
             getCurrentBrightSignStatus, getBrightSignId,
-            fetchFWManifest
+            loadFWManifest
             },
         dispatch);
 }
@@ -365,7 +365,7 @@ BA.propTypes = {
     getCurrentBrightSignStatus: React.PropTypes.func.isRequired,
     getBrightSignId: React.PropTypes.func.isRequired,
 
-    fetchFWManifest: React.PropTypes.func.isRequired
+    loadFWManifest: React.PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);

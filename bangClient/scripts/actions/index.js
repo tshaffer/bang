@@ -767,43 +767,51 @@ export function getXMLFile(endPoint) {
 }
 
 function getValueFromMangledSpec(obj, key) {
-    // console.log("key is:", key);
-    // debugger;
     return obj[key][0];
 }
 
-export const FETCH_FW_MANIFEST = 'FETCH_FW_MANIFEST';
-export function fetchFWManifest(fwURL) {
+
+export const SET_FIRMWARE_SPECS = 'SET_FIRMWARE_SPECS';
+function setFirmwareSpecs(firmwareSpecsByFamily) {
+    return {
+        type: SET_FIRMWARE_SPECS,
+        firmwareSpecsByFamily
+    };
+}
+
+export function loadFWManifest(fwURL) {
     return function (dispatch, getState) {
         let promise = getXMLFile(fwURL).then( (fwReleases) => {
 
             // parse data structure returned (and mangled) then store in redux
-            let firmwareFiles = [];
+            let firmwareByFamily = {};
+
             fwReleases.BrightSignFirmware.FirmwareFile.forEach( firmwareFileSpec => {
+
+                const type = getValueFromMangledSpec(firmwareFileSpec, "type");
 
                 const family = getValueFromMangledSpec(firmwareFileSpec, "family");
                 const fileLength = Number(getValueFromMangledSpec(firmwareFileSpec, "fileLength"));
                 const link = getValueFromMangledSpec(firmwareFileSpec, "link");
                 const sha1 = getValueFromMangledSpec(firmwareFileSpec, "sha1");
-                const type = getValueFromMangledSpec(firmwareFileSpec, "type");
                 const version = getValueFromMangledSpec(firmwareFileSpec, "version");
                 const versionNumber = getValueFromMangledSpec(firmwareFileSpec, "versionNumber");
 
                 const firmwareFile = {
-                    family,
                     fileLength,
                     link,
                     sha1,
-                    type,
                     version,
                     versionNumber
                 };
 
-                firmwareFiles.push(firmwareFile);
+                if (!firmwareByFamily[family]) {
+                    firmwareByFamily[family] = {};
+                }
+                firmwareByFamily[family][type] = firmwareFile;
             });
 
-            debugger;
-
+            dispatch(setFirmwareSpecs(firmwareByFamily));
         });
     };
 }
