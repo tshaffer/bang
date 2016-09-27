@@ -182,6 +182,72 @@ export default class LWSPublisher {
                             console.log(`Got error: ${e.message}`);
                         });
 
+                        // various failed attempts to use authentication - this is still pending
+                        // const url = "http://".concat(ipAddress, ":8080/SpecifyCardSizeLimits", queryString);
+                        // const username = "ted";
+                        // const password = "bang";
+                        // const auth = "Basic " + new Buffer(username + ":" + password).toString("base64");
+
+                        // request(
+                        //     {
+                        //         url : url,
+                        //         headers : {
+                        //             "Authorization" : auth
+                        //         }
+                        //     },
+                        //     function (error, response, body) {
+                        //         debugger;
+                        //     }
+                        // );
+
+                        // var options = {
+                        //     uri: url,
+                        //     auth: {
+                        //         user: 'ted',
+                        //         pass: 'bang',
+                        //         sendImmediately: false
+                        //     }
+                        // };
+                        // request(options, function(error, response, body){
+                        //     if (!error && response.statusCode == 200){
+                        //         console.log('body : ' + body)
+                        //     }
+                        //     else{
+                        //         console.log('Code : ' + response.statusCode)
+                        //         console.log('error : ' + error)
+                        //         console.log('body : ' + body)
+                        //     }
+                        // });
+
+                        // const url = "http://".concat(ipAddress, ":8080/SpecifyCardSizeLimits", queryString);
+                        //
+                        // var propertiesObject = {};
+                        //
+                        // var options = {
+                        //     url: url,
+                        //     qs: propertiesObject,
+                        //     auth:
+                        //         {
+                        //             'user': 'ted',
+                        //             'pass': 'bang',
+                        //             'sendImmediately': false
+                        //         }
+                        // };
+                        //
+                        // function callback(error, bsResponse, data) {
+                        //     if (!error && bsResponse.statusCode == 200) {
+                        //         debugger;
+                        //     }
+                        //     if (error) {
+                        //         reject(error);
+                        //     }
+                        //     else if (bsResponse.statusCode != 200) {
+                        //         reject(bsResponse.statusCode);
+                        //     }
+                        // }
+                        //
+                        // request(options, callback);
+
 // invoke PrepareForTransfer, providing filesToPublish.xml to BrightSign
 
                         const hostname = "10.1.0.155";

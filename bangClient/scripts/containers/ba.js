@@ -116,7 +116,7 @@ class BA extends Component {
         this.cheetahPublishFirmware = new PublishFirmware;
         this.cheetahPublishFirmware.firmwareUpdateSource = "none";
         this.tigerPublishFirmware = new PublishFirmware();
-        this.tigerPublishFirmware.firmwareUpdateSource = "specific";
+        this.tigerPublishFirmware.firmwareUpdateSource = "none";
         this.tigerPublishFirmware.firmwareUpdateSourceFilePath = "/Users/tedshaffer/Documents/BSReleases/Tiger/tiger-6.2.48-update.bsfw";
         this.tigerPublishFirmware.firmwareUpdateStandardTargetFileName = "tiger-update.bsfw";
         this.tigerPublishFirmware.firmwareUpdateDifferentTargetFileName = "tiger-update_different.bsfw";
