@@ -8,7 +8,6 @@ export default class PublishFirmware   {
 
     constructor() {
         this.firmwareUpdateSource = null;
-        this.firmwareUpdateSource = null;
         this.firmwareUpdateSourceFilePath = null;
         this.firmwareUpdateStandardTargetFileName = null;
         this.firmwareUpdateDifferentTargetFileName = null;
@@ -34,12 +33,12 @@ export default class PublishFirmware   {
             Different : "Different",
             Newer : "Newer",
             Save: "Save"
-        }
+        };
 
     }
 
 
-    InitializeUpdateSource(networkedFW)
+    initializeUpdateSource(networkedFW)
     {
         if (networkedFW)
         {
@@ -47,7 +46,7 @@ export default class PublishFirmware   {
         }
     }
 
-    GetFirmwareUpdateTargetFileName(firmwareUpdateType)
+    getFirmwareUpdateTargetFileName(firmwareUpdateType)
     {
         switch (firmwareUpdateType)
         {

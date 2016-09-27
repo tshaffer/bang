@@ -14,6 +14,7 @@ import MediaLibrary from '../components/mediaLibrary';
 import PropertySheet from '../components/propertySheet';
 import NonInteractivePlaylist from './nonInteractivePlaylist';
 
+
 import { createDefaultPresentation, updateSign, loadAppData, selectMediaFolder } from '../actions/index';
 import { loadFWManifest } from '../actions/index';
 import { getBSNAuthToken, getBSNProfile, getBSNSelf, getBSNNetworks, getBSNContent, getBSNGroups, getBSNDevices,
@@ -22,6 +23,7 @@ import { getCurrentBrightSignStatus, getBrightSignId } from '../actions/lfnActio
 
 import LWSPublisher from '../publisher/lwsPublisher';
 import { publishToLWS } from '../publisher/lwsPublisher';
+import PublishFirmware from '../entities/publishFirmware';
 
 class BA extends Component {
 
@@ -63,6 +65,77 @@ class BA extends Component {
         // tmp code to test BSN rest API interactions
         // this.props.getBSNAuthToken();
     }
+
+    getFamilyFWVersionInfo(firmwareSpecsByFamily, publishFirmware)
+    {
+        publishFirmware.productionVersion = firmwareSpecsByFamily.Production.version;
+        publishFirmware.betaVersion = firmwareSpecsByFamily.Beta.version;
+        publishFirmware.compatibleVersion = firmwareSpecsByFamily.MinimumCompatible.version;
+        publishFirmware.productionReleaseURL = firmwareSpecsByFamily.Production.link;
+        publishFirmware.betaReleaseURL = firmwareSpecsByFamily.Beta.link;
+        publishFirmware.compatibleReleaseURL = firmwareSpecsByFamily.MinimumCompatible.link;
+        publishFirmware.productionReleaseSHA1 = firmwareSpecsByFamily.Production.sha1;
+        publishFirmware.betaReleaseSHA1 = firmwareSpecsByFamily.Beta.sha1;
+        publishFirmware.compatibleReleaseSHA1 = firmwareSpecsByFamily.MinimumCompatible.sha1;
+        publishFirmware.productionReleaseFileLength = firmwareSpecsByFamily.Production.fileLength;
+        publishFirmware.betaReleaseFileLength = firmwareSpecsByFamily.Beta.fileLength;
+        publishFirmware.compatibleReleaseFileLength = firmwareSpecsByFamily.MinimumCompatible.fileLength;
+    }
+
+
+    getFWVersionInfo() {
+
+        const firmwareSpecsByFamily = this.props.firmwareSpecs.firmwareSpecsByFamily;
+
+        this.getFamilyFWVersionInfo(firmwareSpecsByFamily["Puma"], this.pumaPublishFirmware);
+        this.getFamilyFWVersionInfo(firmwareSpecsByFamily["Pantera"], this.panteraPublishFirmware);
+        this.getFamilyFWVersionInfo(firmwareSpecsByFamily["Impala"], this.impalaPublishFirmware);
+        this.getFamilyFWVersionInfo(firmwareSpecsByFamily["Panther"], this.pantherPublishFirmware);
+        this.getFamilyFWVersionInfo(firmwareSpecsByFamily["Cheetah"], this.cheetahPublishFirmware);
+        this.getFamilyFWVersionInfo(firmwareSpecsByFamily["Tiger"], this.tigerPublishFirmware);
+        this.getFamilyFWVersionInfo(firmwareSpecsByFamily["Bobcat"], this.bobcatPublishFirmware);
+        this.getFamilyFWVersionInfo(firmwareSpecsByFamily["Lynx"], this.lynxPublishFirmware);
+    }
+
+    lwsPublish() {
+        const lwsPublisher = new LWSPublisher();
+
+        this.pumaPublishFirmware = new PublishFirmware();
+        this.pumaPublishFirmware.firmwareUpdateSource = "none";
+        this.pumaPublishFirmware.firmwareUpdateStandardTargetFileName = "puma-update.bsfw",
+        this.pumaPublishFirmware.firmwareUpdateDifferentTargetFileName = "puma-update_different.bsfw",
+        this.pumaPublishFirmware.firmwareUpdateNewerTargetFileName = "puma-update_newer.bsfw",
+        this.pumaPublishFirmware.firmwareUpdateSaveTargetFileName = "puma-update_save.bsfw"
+
+        this.panteraPublishFirmware = new PublishFirmware;
+        this.panteraPublishFirmware.firmwareUpdateSource = "none";
+        this.impalaPublishFirmware = new PublishFirmware;
+        this.impalaPublishFirmware.firmwareUpdateSource = "none";
+        this.pantherPublishFirmware = new PublishFirmware;
+        this.pantherPublishFirmware.firmwareUpdateSource = "none";
+        this.cheetahPublishFirmware = new PublishFirmware;
+        this.cheetahPublishFirmware.firmwareUpdateSource = "none";
+        this.tigerPublishFirmware = new PublishFirmware();
+        this.tigerPublishFirmware.firmwareUpdateSource = "beta";
+        this.tigerPublishFirmware.firmwareUpdateStandardTargetFileName = "tiger-update.bsfw";
+        this.tigerPublishFirmware.firmwareUpdateDifferentTargetFileName = "tiger-update_different.bsfw";
+        this.tigerPublishFirmware.firmwareUpdateNewerTargetFileName = "tiger-update_newer.bsfw";
+        this.tigerPublishFirmware.firmwareUpdateSaveTargetFileName = "tiger-update_save.bsfw";
+
+        this.bobcatPublishFirmware = new PublishFirmware;
+        this.bobcatPublishFirmware.firmwareUpdateSource = "none";
+        this.lynxPublishFirmware = new PublishFirmware;
+        this.lynxPublishFirmware.firmwareUpdateSource = "none";
+
+        debugger;
+        this.getFWVersionInfo();
+        
+        lwsPublisher.publishToLWS("Standard", this.pumaPublishFirmware,
+            this.panteraPublishFirmware, this.impalaPublishFirmware,
+            this.pantherPublishFirmware, this.cheetahPublishFirmware,
+            this.tigerPublishFirmware, this.bobcatPublishFirmware, this.lynxPublishFirmware);
+    }
+
 
     handleSelectMediaState(mediaState) {
         this.setState({ selectedMediaStateId: mediaState.getId() });
@@ -218,14 +291,6 @@ class BA extends Component {
         return <div>pizza</div>;
     }
 
-    lwsPublish() {
-        const lwsPublisher = new LWSPublisher();
-        lwsPublisher.publishToLWS();
-
-        // PublishFirmware.FirmwareUpdateType
-        // PublishFirmware xxxxPublishFirmware
-    }
-
     render () {
         
         let signName = <span>No sign yet</span>;
@@ -321,7 +386,9 @@ function mapStateToProps(state) {
         mediaFolder: state.mediaFolder,
         mediaThumbs: state.mediaThumbs,
 
-        bsnAuthData: state.bsnAuthData
+        bsnAuthData: state.bsnAuthData,
+
+        firmwareSpecs: state.firmwareSpecs
     };
 }
 
@@ -365,7 +432,8 @@ BA.propTypes = {
     getCurrentBrightSignStatus: React.PropTypes.func.isRequired,
     getBrightSignId: React.PropTypes.func.isRequired,
 
-    loadFWManifest: React.PropTypes.func.isRequired
+    loadFWManifest: React.PropTypes.func.isRequired,
+    firmwareSpecs: React.PropTypes.object.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);

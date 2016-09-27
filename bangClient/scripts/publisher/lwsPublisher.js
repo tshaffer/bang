@@ -47,7 +47,61 @@ export default class LWSPublisher {
         this.addToPublishAllFilesToCopy(path.join(this.appData, "autoplay-mcBangLWS-1.xml"), "autoplay-mcBangLWS-1.xml");
     }
 
-    publishToLWS() {
+    publishFirmwareFileForLWS(publishFirmware) {
+
+        var self = this;
+
+        let ok = true;
+        let promise = null;
+
+        let filePath = "";
+        let fileName = "";
+
+        return new Promise( (resolve, reject) => {
+            if (publishFirmware.firmwareUpdateSource == "specific")
+            {
+                filePath = publishFirmware.firmwareUpdateSourceFilePath;
+                fileName = publishFirmware.getFirmwareUpdateTargetFileName(this.publishFirmwareType);
+                resolve(self.addFileToLWSPublishList(fileName, filePath, "script"));
+            }
+            else if ((publishFirmware.firmwareUpdateSource == "production") || (publishFirmware.firmwareUpdateSource == "beta") || (publishFirmware.firmwareUpdateSource == "compatible"))
+            {
+                let fileUrl = "";
+
+                if (publishFirmware.firmwareUpdateSource == "production")
+                {
+                    fileUrl = publishFirmware.productionReleaseURL;
+                }
+                else if (publishFirmware.firmwareUpdateSource == "beta")
+                {
+                    fileUrl = publishFirmware.betaReleaseURL;
+                }
+                else
+                {
+                    fileUrl = publishFirmware.compatibleReleaseURL;
+                }
+
+                const tmpFolder = self.tmpDir;
+                let targetFWFile = path.join(tmpFolder, publishFirmware.getFirmwareUpdateTargetFileName(self.publishFirmwareType));
+
+                request({uri: fileUrl})
+                    .pipe(fs.createWriteStream(targetFWFile))
+                    .on('close', function() {
+                        console.log("write complete to:", targetFWFile);
+                        fileName = publishFirmware.getFirmwareUpdateTargetFileName(self.publishFirmwareType);
+                        resolve(self.addFileToLWSPublishList(fileName, targetFWFile, "script"));
+                    });
+            }
+            else {
+                resolve(null);
+            }
+        });
+    }
+
+    publishToLWS(firmwareUpdateType, pumaPublishFirmware,
+                 panteraPublishFirmware, impalaPublishFirmware,
+                 pantherPublishFirmware, cheetahPublishFirmware,
+                 tigerPublishFirmware, bobcatPublishFirmware, lynxPublishFirmware) {
 
         let self = this;
 
@@ -56,13 +110,36 @@ export default class LWSPublisher {
         this.filesToTransferViaLWS = [];
         this.publishFilesInSyncSpec = {};
 
+        this.publishFirmwareType = firmwareUpdateType;
+        this.publishFirmwareDictionary = {};
+        this.publishFirmwareDictionary["PumaPublishFirmware"] = pumaPublishFirmware;
+        this.publishFirmwareDictionary["PanteraPublishFirmware"] = panteraPublishFirmware;
+        this.publishFirmwareDictionary["ImpalaPublishFirmware"] = impalaPublishFirmware;
+        this.publishFirmwareDictionary["PantherPublishFirmware"] = pantherPublishFirmware;
+        this.publishFirmwareDictionary["CheetahPublishFirmware"] = cheetahPublishFirmware;
+        this.publishFirmwareDictionary["TigerPublishFirmware"] = tigerPublishFirmware;
+        this.publishFirmwareDictionary["BobcatPublishFirmware"] = bobcatPublishFirmware;
+        this.publishFirmwareDictionary["LynxPublishFirmware"] = lynxPublishFirmware;
+
         this.retrievePresentations();
         let getBasFilesPromise = this.getBASFiles();
 
         getBasFilesPromise.then(response => {
 
-            // media files
             let promises = [];
+
+            debugger;
+            for (let family in self.publishFirmwareDictionary) {
+                const publishFamilyFirmware = self.publishFirmwareDictionary[family];
+                if (publishFamilyFirmware) {
+                    let fwPromise = self.publishFirmwareFileForLWS(publishFamilyFirmware);
+                    if (fwPromise) {
+                        promises.push(fwPromise);
+                    }
+                }
+            }
+
+            // media files
             for (let fileName in self.publishAllFilesToCopy) {
                 if (self.publishAllFilesToCopy.hasOwnProperty(fileName)) {
                     const fileToPublish = self.publishAllFilesToCopy[fileName];
