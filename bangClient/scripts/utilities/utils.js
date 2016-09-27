@@ -1,3 +1,6 @@
+const request = require('request');
+const xml2js = require('xml2js');
+
 /**
  * Created by tedshaffer on 6/10/16.
  */
@@ -49,5 +52,37 @@ export function getShortenedFilePath(filePath, maxLength) {
         }
     }
     return shortenedFilePath;
+}
+
+export function getXMLFile(endPoint) {
+
+    return new Promise((resolve, reject) => {
+
+        var parser = new xml2js.Parser();
+
+        var propertiesObject = {};
+
+        var options = {
+            url: endPoint,
+            qs: propertiesObject,
+        };
+
+        function callback(error, bsResponse, data) {
+            if (!error && bsResponse.statusCode == 200) {
+
+                parser.parseString(data, function (err, result) {
+                    resolve(result);
+                });
+            }
+            if (error) {
+                reject(error);
+            }
+            else if (bsResponse.statusCode != 200) {
+                reject(bsResponse.statusCode);
+            }
+        }
+
+        request(options, callback);
+    });
 }
 

@@ -1,4 +1,4 @@
-import { SET_FIRMWARE_SPECS } from '../actions/index';
+import { SET_FIRMWARE_SPECS } from '../actions/fwActions';
 
 const initialState =
     {

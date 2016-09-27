@@ -16,10 +16,11 @@ import NonInteractivePlaylist from './nonInteractivePlaylist';
 
 
 import { createDefaultPresentation, updateSign, loadAppData, selectMediaFolder } from '../actions/index';
-import { loadFWManifest } from '../actions/index';
 import { getBSNAuthToken, getBSNProfile, getBSNSelf, getBSNNetworks, getBSNContent, getBSNGroups, getBSNDevices,
          getMyBSNUsers, getBSNUser, getBSNAccountUsers, getBSNPresentations } from '../actions/bsnActions';
 import { getCurrentBrightSignStatus, getBrightSignId } from '../actions/lfnActions';
+
+import { initializeCloudFirmwareSpecs } from '../actions/fwActions';
 
 import LWSPublisher from '../publisher/lwsPublisher';
 import { publishToLWS } from '../publisher/lwsPublisher';
@@ -44,8 +45,7 @@ class BA extends Component {
 
     componentWillMount() {
 
-        const fwURL = "http://bsnm.s3.amazonaws.com/public/FirmwareCompatibilityFile.xml";
-        this.props.loadFWManifest(fwURL);
+        this.props.initializeCloudFirmwareSpecs();
 
         this.props.createDefaultPresentation("Project 1");
 
@@ -71,15 +71,15 @@ class BA extends Component {
         publishFirmware.productionVersion = firmwareSpecsByFamily.Production.version;
         publishFirmware.betaVersion = firmwareSpecsByFamily.Beta.version;
         publishFirmware.compatibleVersion = firmwareSpecsByFamily.MinimumCompatible.version;
-        publishFirmware.productionReleaseURL = firmwareSpecsByFamily.Production.link;
-        publishFirmware.betaReleaseURL = firmwareSpecsByFamily.Beta.link;
-        publishFirmware.compatibleReleaseURL = firmwareSpecsByFamily.MinimumCompatible.link;
+        publishFirmware.productionReleaseURL = firmwareSpecsByFamily.Production.url;
+        publishFirmware.betaReleaseURL = firmwareSpecsByFamily.Beta.url;
+        publishFirmware.compatibleReleaseURL = firmwareSpecsByFamily.MinimumCompatible.url;
         publishFirmware.productionReleaseSHA1 = firmwareSpecsByFamily.Production.sha1;
         publishFirmware.betaReleaseSHA1 = firmwareSpecsByFamily.Beta.sha1;
         publishFirmware.compatibleReleaseSHA1 = firmwareSpecsByFamily.MinimumCompatible.sha1;
-        publishFirmware.productionReleaseFileLength = firmwareSpecsByFamily.Production.fileLength;
-        publishFirmware.betaReleaseFileLength = firmwareSpecsByFamily.Beta.fileLength;
-        publishFirmware.compatibleReleaseFileLength = firmwareSpecsByFamily.MinimumCompatible.fileLength;
+        publishFirmware.productionReleaseFileLength = firmwareSpecsByFamily.Production.length;
+        publishFirmware.betaReleaseFileLength = firmwareSpecsByFamily.Beta.length;
+        publishFirmware.compatibleReleaseFileLength = firmwareSpecsByFamily.MinimumCompatible.length;
     }
 
 
@@ -102,10 +102,10 @@ class BA extends Component {
 
         this.pumaPublishFirmware = new PublishFirmware();
         this.pumaPublishFirmware.firmwareUpdateSource = "none";
-        this.pumaPublishFirmware.firmwareUpdateStandardTargetFileName = "puma-update.bsfw",
-        this.pumaPublishFirmware.firmwareUpdateDifferentTargetFileName = "puma-update_different.bsfw",
-        this.pumaPublishFirmware.firmwareUpdateNewerTargetFileName = "puma-update_newer.bsfw",
-        this.pumaPublishFirmware.firmwareUpdateSaveTargetFileName = "puma-update_save.bsfw"
+        this.pumaPublishFirmware.firmwareUpdateStandardTargetFileName = "puma-update.bsfw";
+        this.pumaPublishFirmware.firmwareUpdateDifferentTargetFileName = "puma-update_different.bsfw";
+        this.pumaPublishFirmware.firmwareUpdateNewerTargetFileName = "puma-update_newer.bsfw";
+        this.pumaPublishFirmware.firmwareUpdateSaveTargetFileName = "puma-update_save.bsfw";
 
         this.panteraPublishFirmware = new PublishFirmware;
         this.panteraPublishFirmware.firmwareUpdateSource = "none";
@@ -128,7 +128,6 @@ class BA extends Component {
         this.lynxPublishFirmware = new PublishFirmware;
         this.lynxPublishFirmware.firmwareUpdateSource = "none";
 
-        debugger;
         this.getFWVersionInfo();
         
         lwsPublisher.publishToLWS("Standard", this.pumaPublishFirmware,
@@ -398,7 +397,7 @@ function mapDispatchToProps(dispatch) {
             getBSNAuthToken, getBSNProfile, getBSNSelf, getBSNNetworks, getBSNContent, getBSNGroups, getBSNDevices,
             getMyBSNUsers, getBSNUser, getBSNAccountUsers, getBSNPresentations,
             getCurrentBrightSignStatus, getBrightSignId,
-            loadFWManifest
+            initializeCloudFirmwareSpecs
             },
         dispatch);
 }
@@ -433,7 +432,7 @@ BA.propTypes = {
     getCurrentBrightSignStatus: React.PropTypes.func.isRequired,
     getBrightSignId: React.PropTypes.func.isRequired,
 
-    loadFWManifest: React.PropTypes.func.isRequired,
+    initializeCloudFirmwareSpecs: React.PropTypes.func.isRequired,
     firmwareSpecs: React.PropTypes.object.isRequired
 };
 

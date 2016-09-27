@@ -458,6 +458,7 @@ export default class LWSPublisher {
                 },
                 function optionalCallback(err, httpResponse, body) {
                     if (err) {
+                        debugger;
                         console.error('upload failed:', err);
                         reject(err);
 
