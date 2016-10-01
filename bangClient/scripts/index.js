@@ -11,6 +11,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
+import {combineReducers} from 'redux';
 import ReduxPromise from 'redux-promise';
 import { Router, browserHistory, hashHistory } from 'react-router';
 import reducers from './reducers';
@@ -21,6 +22,13 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 // const createStoreWithMiddleware = applyMiddleware(ReduxPromise)(createStore);
 
 import App from './components/app';
+
+const badm = require('baDataModel');
+
+const myReducers = combineReducers({
+    reducers,
+    badmReducer: badm.baDmReducer.baDmReducer
+});
 
 
 // const store = createStore(
@@ -37,7 +45,7 @@ import App from './components/app';
 // )
 
 const store = createStore(
-    reducers,
+    myReducers,
     applyMiddleware(
         thunkMiddleware, // lets us dispatch() functions
         ReduxPromise
