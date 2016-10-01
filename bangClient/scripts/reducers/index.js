@@ -15,9 +15,6 @@ import HtmlSitesReducer from './reducer_html_sites';
 
 import TransitionsReducer from './reducer_transitions';
 
-import BSNAuthDataReducer from './reducer_bsn_auth_data';
-
-import FirmwareSpecsReducer from './reducer_firmware_specs';
 
 const rootReducer = combineReducers({
     mediaThumbs: MediaThumbsReducer,
@@ -32,10 +29,6 @@ const rootReducer = combineReducers({
     htmlSites: HtmlSitesReducer,
 
     transitions: TransitionsReducer,
-
-    bsnAuthData: BSNAuthDataReducer,
-
-    firmwareSpecs: FirmwareSpecsReducer
 });
 
 export default rootReducer;
