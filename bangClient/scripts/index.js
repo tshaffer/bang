@@ -23,11 +23,11 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import App from './components/app';
 
-const badm = require('baDataModel');
+import bsdmReducer from 'bsdm/dist/reducers/index';
 
 const myReducers = combineReducers({
     reducers,
-    badmReducer: badm.baDmReducer.baDmReducer
+    bsdmReducer
 });
 
 
