@@ -13,10 +13,12 @@ import BAUI from '../platform/baUI';
 //
 // import ImagePlaylistItem from '../badm/imagePlaylistItem';
 // import HTML5PlaylistItem from '../badm/html5PlaylistItem';
-// import MediaLibrary from '../components/mediaLibrary';
+import MediaLibrary from '../components/mediaLibrary';
 // import PropertySheet from '../components/propertySheet';
 // import NonInteractivePlaylist from './nonInteractivePlaylist';
 
+
+import { loadAppData } from '../actions/index';
 
 // import { createDefaultPresentation, updateSign, loadAppData, selectMediaFolder } from '../actions/index';
 // import { getBSNAuthToken, getBSNProfile, getBSNSelf, getBSNNetworks, getBSNContent, getBSNGroups, getBSNDevices,
@@ -328,6 +330,12 @@ class BA extends Component {
 
                 {openSavePresentationJSX}
 
+                <div className="bangPageContainer">
+                    <MediaLibrary
+                        mediaFolder={this.props.mediaFolder}
+                    />
+                </div>
+
             </div>
         );
     }
@@ -355,6 +363,14 @@ function mapStateToProps(baState) {
     };
 }
 
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({
+        loadAppData
+    },
+    dispatch);
+}
+
+
 // function mapDispatchToProps(dispatch) {
 //     return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, selectMediaFolder,
 //             getBSNAuthToken, getBSNProfile, getBSNSelf, getBSNNetworks, getBSNContent, getBSNGroups, getBSNDevices,
@@ -368,14 +384,14 @@ function mapStateToProps(baState) {
 // updateMediaState
 BA.propTypes = {
     // createDefaultPresentation: React.PropTypes.func.isRequired,
-    // loadAppData: React.PropTypes.func.isRequired,
+    loadAppData: React.PropTypes.func.isRequired,
     // updateSign: React.PropTypes.func.isRequired,
     sign: React.PropTypes.object.isRequired,
     // zones: React.PropTypes.object.isRequired,
     // zonePlaylists: React.PropTypes.object.isRequired,
     // mediaStates: React.PropTypes.object.isRequired,
     // playlistItems: React.PropTypes.object.isRequired,
-    // mediaFolder: React.PropTypes.string.isRequired,
+    mediaFolder: React.PropTypes.string.isRequired,
     // mediaThumbs: React.PropTypes.object.isRequired,
     // mediaLibraryPlaylistItems: React.PropTypes.array.isRequired,
     // htmlSites: React.PropTypes.object.isRequired,
@@ -399,5 +415,4 @@ BA.propTypes = {
     // firmwareSpecs: React.PropTypes.object.isRequired
 };
 
-// export default connect(mapStateToProps, mapDispatchToProps)(BA);
-export default connect(mapStateToProps)(BA);
+export default connect(mapStateToProps, mapDispatchToProps)(BA);
