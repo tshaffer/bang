@@ -11,7 +11,7 @@ import EditPreferencesDlg from '../components/Dialogs/editPreferencesDlg';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 import MediaLibrary from '../components/mediaLibrary';
-// import PropertySheet from '../components/propertySheet';
+import PropertySheet from '../components/propertySheet';
 import NonInteractivePlaylist from './nonInteractivePlaylist';
 
 
@@ -154,17 +154,17 @@ class BA extends Component {
     }
 
     // instead of using action creators, just dispatch the action directly?
-    // handleUpdateVideoMode(videoMode) {
-    //     // in reducer?
-    //     const sign = Object.assign({}, this.props.sign, {videoMode: videoMode });
-    //     console.log("updateVideoMode:", videoMode);
-    //     this.props.updateSign(sign);
-    // }
+    handleUpdateVideoMode(videoMode) {
+        // in reducer?
+        const sign = Object.assign({}, this.props.sign, {videoMode: videoMode });
+        console.log("updateVideoMode:", videoMode);
+        this.props.updateSign(sign);
+    }
 
 
-    // handleToggleOpenClosePropertySheet() {
-    //     this.setState({propertySheetOpen: !this.state.propertySheetOpen});
-    // }
+    handleToggleOpenClosePropertySheet() {
+        this.setState({propertySheetOpen: !this.state.propertySheetOpen});
+    }
 
     getEmptyPlaylistItem(existingPlaylistItem) {
 
@@ -194,47 +194,47 @@ class BA extends Component {
 
     }
 
-    // handleUpdateHTML5StateName(selectedPlaylistItemId, html5StateName) {
-    //
-    //     let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
-    //     updatedPlaylistItem.setFileName(html5StateName);
-    //     // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
-    // }
+    handleUpdateHTML5StateName(selectedPlaylistItemId, html5StateName) {
 
-    // handleUpdateHTML5SiteName(selectedPlaylistItemId, html5SiteName) {
-    //
-    //     let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
-    //     updatedPlaylistItem.htmlSiteName = html5SiteName;
-    //     // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
-    // }
+        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
+        updatedPlaylistItem.setFileName(html5StateName);
+        // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+    }
 
-    // handleUpdateHTML5EnableExternalData(selectedPlaylistItemId, enableExternalData) {
-    //
-    //     let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
-    //     updatedPlaylistItem.enableExternalData = enableExternalData;
-    //     // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
-    // }
+    handleUpdateHTML5SiteName(selectedPlaylistItemId, html5SiteName) {
 
-    // handleUpdateHTML5EnableMouseEvents(selectedPlaylistItemId, enableMouseEvents) {
-    //
-    //     let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
-    //     updatedPlaylistItem.enableMouseEvents = enableMouseEvents;
-    //     // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
-    // }
+        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
+        updatedPlaylistItem.htmlSiteName = html5SiteName;
+        // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+    }
 
-    // handleUpdateHTML5DisplayCursor(selectedPlaylistItemId, displayCursor) {
-    //
-    //     let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
-    //     updatedPlaylistItem.displayCursor = displayCursor;
-    //     // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
-    // }
+    handleUpdateHTML5EnableExternalData(selectedPlaylistItemId, enableExternalData) {
 
-    // handleUpdateHTML5HWZOn(selectedPlaylistItemId, hwzOn) {
-    //
-    //     let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
-    //     updatedPlaylistItem.hwzOn = hwzOn;
-    //     // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
-    // }
+        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
+        updatedPlaylistItem.enableExternalData = enableExternalData;
+        // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+    }
+
+    handleUpdateHTML5EnableMouseEvents(selectedPlaylistItemId, enableMouseEvents) {
+
+        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
+        updatedPlaylistItem.enableMouseEvents = enableMouseEvents;
+        // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+    }
+
+    handleUpdateHTML5DisplayCursor(selectedPlaylistItemId, displayCursor) {
+
+        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
+        updatedPlaylistItem.displayCursor = displayCursor;
+        // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+    }
+
+    handleUpdateHTML5HWZOn(selectedPlaylistItemId, hwzOn) {
+
+        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
+        updatedPlaylistItem.hwzOn = hwzOn;
+        // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
+    }
 
 
     getCurrentZone() {
@@ -304,9 +304,30 @@ class BA extends Component {
         // const openSavePresentationJSX = this.baUI.getOpenSavePresentationJSX(this.state.bsnPresentations);
         const openSavePresentationJSX = <div>pizza!!!</div>;
 
-        let propertySheetTag = <div/>;
+        let propertySheetTag = <div></div>;
         if (this.state.propertySheetOpen) {
-            console.log("propertySheet shouldn't be open");
+            propertySheetTag =
+                <PropertySheet
+                    onBrowseForHTMLSite={this.baUI.handleBrowseForHTMLSite.bind(this.baUI)}
+                    onUpdateVideoMode = {this.handleUpdateVideoMode.bind(this)}
+                    getCurrentZone = {this.getCurrentZone.bind(this)}
+                    getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
+                    selectedMediaStateId={this.state.selectedMediaStateId}
+                    selectedPlaylistItemId={this.state.selectedPlaylistItemId}
+                    sign={this.props.sign}
+                    zones= {this.props.zones}
+                    zonePlaylists= {this.props.zonePlaylists}
+                    playlistItems= {this.props.playlistItems}
+                    mediaStates= {this.props.mediaStates}
+
+                    htmlSites= {this.props.htmlSites}
+                    onUpdateHTML5StateName = {this.handleUpdateHTML5StateName.bind(this)}
+                    onUpdateHTML5SiteName = {this.handleUpdateHTML5SiteName.bind(this)}
+                    onUpdateHTML5EnableExternalData = {this.handleUpdateHTML5EnableExternalData.bind(this) }
+                    onUpdateHTML5EnableMouseEvents = {this.handleUpdateHTML5EnableMouseEvents.bind(this) }
+                    onUpdateHTML5DisplayCursor = {this.handleUpdateHTML5DisplayCursor.bind(this) }
+                    onUpdateHTML5HWZOn = {this.handleUpdateHTML5HWZOn.bind(this) }
+                />;
         }
 
         return (
@@ -394,7 +415,7 @@ function mapDispatchToProps(dispatch) {
 BA.propTypes = {
     createDefaultPresentation: React.PropTypes.func.isRequired,
     loadAppData: React.PropTypes.func.isRequired,
-    // updateSign: React.PropTypes.func.isRequired,
+    updateSign: React.PropTypes.func.isRequired,
     sign: React.PropTypes.object.isRequired,
     zones: React.PropTypes.object.isRequired,
     zonePlaylists: React.PropTypes.object.isRequired,
