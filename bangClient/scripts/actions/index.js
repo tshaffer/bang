@@ -1,7 +1,8 @@
 /**
  * Created by tedshaffer on 6/3/16.
  */
-import { baNewSign, baAddZone } from 'bsdm/dist/bsDmActions';
+import { baNewSign, baAddZone, baAddMediaState } from 'bsdm/dist/bsDmActions';
+import { getZoneById } from 'bsdm/dist/reducers/reducerZone';
 
 import { getLastKey } from '../utilities/utils';
 
@@ -457,12 +458,15 @@ export function createDefaultPresentation(presentationName) {
 
     return function (dispatch, getState) {
 
-        // working with bsdm store
+        debugger;
+
+        // bsdm store
         dispatch(baNewSign(presentationName, "v1920x1080x60p"));
         store = getState();
 
         let zoneAction = dispatch(baAddZone('Zone1', "images"));
         store = getState();
+        // bsdm store
 
 
         dispatch(newSign(presentationName, "1920x1080x60p"));
@@ -547,6 +551,29 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
     // initial implementation  - ignore move, implement copy from media library
 
     return function(dispatch, getState) {
+
+        let store = null;
+
+        // bsdm store
+        debugger;
+        store = getState().bsdmReducer;
+
+        // how to get zone?
+        // the following is a hack way to do it
+        const zones = store.zones;
+        const zoneId = zones.allZones[0];
+        const currentZone = getZoneById(store, {id: zoneId});
+        const zoneContainer = currentZone.containerObject;
+
+        const mediaObject = { path , mediaType: type };
+        const contentItem = { id: "", name: stateName, type: "media", media: mediaObject };
+        const msAction = dispatch(baAddMediaState(stateName, zoneContainer, contentItem));
+        // bsdm store
+
+
+
+
+
 
         let playlistItem = null;
 
