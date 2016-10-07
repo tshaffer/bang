@@ -18,7 +18,7 @@ import MediaLibrary from '../components/mediaLibrary';
 // import NonInteractivePlaylist from './nonInteractivePlaylist';
 
 
-import { loadAppData } from '../actions/index';
+import { loadAppData, selectMediaFolder } from '../actions/index';
 
 // import { createDefaultPresentation, updateSign, loadAppData, selectMediaFolder } from '../actions/index';
 // import { getBSNAuthToken, getBSNProfile, getBSNSelf, getBSNNetworks, getBSNContent, getBSNGroups, getBSNDevices,
@@ -54,7 +54,7 @@ class BA extends Component {
         //
         // this.props.createDefaultPresentation("Project 1");
         //
-        // this.props.loadAppData();
+        this.props.loadAppData();
     }
 
     componentDidMount() {
@@ -333,7 +333,9 @@ class BA extends Component {
                 <div className="bangPageContainer">
                     <MediaLibrary
                         onBrowseForMediaLibrary={this.baUI.handleBrowseForMediaLibrary.bind(this.baUI)}
+                        mediaLibraryPlaylistItems={this.props.mediaLibraryPlaylistItems}
                         mediaFolder={this.props.mediaFolder}
+                        mediaThumbs={this.props.mediaThumbs}
                     />
                 </div>
 
@@ -366,7 +368,7 @@ function mapStateToProps(baState) {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        loadAppData
+        loadAppData, selectMediaFolder
     },
     dispatch);
 }
@@ -393,8 +395,8 @@ BA.propTypes = {
     // mediaStates: React.PropTypes.object.isRequired,
     // playlistItems: React.PropTypes.object.isRequired,
     mediaFolder: React.PropTypes.string.isRequired,
-    // mediaThumbs: React.PropTypes.object.isRequired,
-    // mediaLibraryPlaylistItems: React.PropTypes.array.isRequired,
+    mediaThumbs: React.PropTypes.object.isRequired,
+    mediaLibraryPlaylistItems: React.PropTypes.array.isRequired,
     // htmlSites: React.PropTypes.object.isRequired,
     //
     // getBSNAuthToken: React.PropTypes.func.isRequired,
