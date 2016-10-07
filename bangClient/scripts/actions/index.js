@@ -1,6 +1,8 @@
 /**
  * Created by tedshaffer on 6/3/16.
  */
+import { baNewSign, baAddZone } from 'bsdm/dist/bsDmActions';
+
 import { getLastKey } from '../utilities/utils';
 
 import axios from 'axios';
@@ -451,13 +453,22 @@ export function addTransition(sourceMediaState, transition, targetMediaState) {
 
 export function createDefaultPresentation(presentationName) {
 
+    let store = null;
+
     return function (dispatch, getState) {
+
+        // working with bsdm store
+        dispatch(baNewSign(presentationName, "v1920x1080x60p"));
+        store = getState();
+
+        let zoneAction = dispatch(baAddZone('Zone1', "images"));
+        store = getState();
+
 
         dispatch(newSign(presentationName, "1920x1080x60p"));
         dispatch(newZone("Images", "images"));
 
         let nextState = getState().reducers;
-        debugger;
         const zoneId = getLastKey(nextState.zones.zonesById);
         dispatch(addZone(zoneId));
 
