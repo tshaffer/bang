@@ -293,6 +293,11 @@ class NonInteractivePlaylist extends Component {
             }
         }
 
+        let openCloseLabel = "=>";
+        if (!this.props.propertySheetOpen) {
+            openCloseLabel = "<=";
+        }
+
         if (numberOfMediaStates > 0) {
             mediaStatesJSX = this.getMediaStatesJSX(selectedZonePlaylist);
         }
@@ -311,6 +316,11 @@ class NonInteractivePlaylist extends Component {
                 className="playlistDiv"
                 id="playlistDiv"
             >
+                <div className="playlistHeaderDiv">
+                    <button id="openCloseIcon" className="plainButton" type="button" onClick={this.props.onToggleOpenClosePropertySheet.bind(this)}>{openCloseLabel}</button>
+                    <input step="1" id="zoomSlider" type="range" min="0" max="100" defaultValue="100"></input>
+                </div>
+
                 <ul id="playlistItemsUl" className="playlist-flex-container wrap" onDrop={this.handlePlaylistDrop.bind(this)} onDragOver={this.handlePlaylistDragOver.bind(this)}>
                     {mediaStatesJSX}
                 </ul>
@@ -332,7 +342,9 @@ NonInteractivePlaylist.propTypes = {
     onSelectMediaState: React.PropTypes.func.isRequired,
     addMediaStateToNonInteractivePlaylist: React.PropTypes.func.isRequired,
     deleteMediaStateFromNonInteractivePlaylist: React.PropTypes.func.isRequired,
-    selectedMediaStateId: React.PropTypes.string.isRequired
+    selectedMediaStateId: React.PropTypes.string.isRequired,
+    onToggleOpenClosePropertySheet: React.PropTypes.func.isRequired,
+    propertySheetOpen : React.PropTypes.bool.isRequired
 };
 
 

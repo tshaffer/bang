@@ -360,7 +360,10 @@ class BA extends Component {
                         mediaThumbs={this.props.mediaThumbs}
                         onSelectMediaState={this.handleSelectMediaState.bind(this)}
                         selectedMediaStateId={this.state.selectedMediaStateId}
+                        onToggleOpenClosePropertySheet={this.handleToggleOpenClosePropertySheet.bind(this)}
+                        propertySheetOpen={this.state.propertySheetOpen}
                     />
+                    {propertySheetTag}
                     <EditPreferencesDlg
                         ref="editPreferencesDlg"
                         onEditPreferencesOK={this.handleEditPreferencesOK.bind(this)}
