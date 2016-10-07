@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import BAUI from '../platform/baUI';
-// import EditPreferencesDlg from '../components/Dialogs/editPreferencesDlg';
+import EditPreferencesDlg from '../components/Dialogs/editPreferencesDlg';
 //
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
@@ -143,15 +143,15 @@ class BA extends Component {
 
 
 // edit preferences using material ui
-//     handleEditPreferences() {
-//         console.log("handleEditPreferences in ba");
-//         this.refs.editPreferencesDlg.handleOpen();
-//     }
+    handleEditPreferences() {
+        console.log("handleEditPreferences in ba");
+        this.refs.editPreferencesDlg.handleOpen();
+    }
 
-    // handleEditPreferencesOK(preferences) {
-    //     console.log("handleEditPreferencesOK invoked");
-    //     console.log(preferences);
-    // }
+    handleEditPreferencesOK(preferences) {
+        console.log("handleEditPreferencesOK invoked");
+        console.log(preferences);
+    }
 
     // instead of using action creators, just dispatch the action directly?
     // handleUpdateVideoMode(videoMode) {
@@ -339,6 +339,10 @@ class BA extends Component {
                         mediaThumbs={this.props.mediaThumbs}
                         onSelectMediaState={this.handleSelectMediaState.bind(this)}
                         selectedMediaStateId={this.state.selectedMediaStateId}
+                    />
+                    <EditPreferencesDlg
+                        ref="editPreferencesDlg"
+                        onEditPreferencesOK={this.handleEditPreferencesOK.bind(this)}
                     />
                 </div>
 
