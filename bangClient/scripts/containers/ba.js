@@ -1,7 +1,4 @@
 /**
- * Created by tedshaffer on 10/6/16.
- */
-/**
  * Created by tedshaffer on 5/2/16.
  */
 import React, { Component } from 'react';
@@ -11,16 +8,14 @@ import { bindActionCreators } from 'redux';
 import BAUI from '../platform/baUI';
 // import EditPreferencesDlg from '../components/Dialogs/editPreferencesDlg';
 //
-// import ImagePlaylistItem from '../badm/imagePlaylistItem';
-// import HTML5PlaylistItem from '../badm/html5PlaylistItem';
+import ImagePlaylistItem from '../badm/imagePlaylistItem';
+import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 import MediaLibrary from '../components/mediaLibrary';
 // import PropertySheet from '../components/propertySheet';
-// import NonInteractivePlaylist from './nonInteractivePlaylist';
+import NonInteractivePlaylist from './nonInteractivePlaylist';
 
 
-import { loadAppData, selectMediaFolder } from '../actions/index';
-
-// import { createDefaultPresentation, updateSign, loadAppData, selectMediaFolder } from '../actions/index';
+import { createDefaultPresentation, updateSign, loadAppData, selectMediaFolder } from '../actions/index';
 // import { getBSNAuthToken, getBSNProfile, getBSNSelf, getBSNNetworks, getBSNContent, getBSNGroups, getBSNDevices,
 //     getMyBSNUsers, getBSNUser, getBSNAccountUsers, getBSNPresentations } from '../actions/bsnActions';
 // import { getCurrentBrightSignStatus, getBrightSignId } from '../actions/lfnActions';
@@ -52,8 +47,8 @@ class BA extends Component {
 
         // this.props.initializeCloudFirmwareSpecs();
         //
-        // this.props.createDefaultPresentation("Project 1");
-        //
+        this.props.createDefaultPresentation("Project 1");
+
         this.props.loadAppData();
     }
 
@@ -142,9 +137,9 @@ class BA extends Component {
     }
 
 
-    // handleSelectMediaState(mediaState) {
-    //     this.setState({ selectedMediaStateId: mediaState.getId() });
-    // }
+    handleSelectMediaState(mediaState) {
+        this.setState({ selectedMediaStateId: mediaState.getId() });
+    }
 
 
 // edit preferences using material ui
@@ -171,33 +166,33 @@ class BA extends Component {
     //     this.setState({propertySheetOpen: !this.state.propertySheetOpen});
     // }
 
-    // getEmptyPlaylistItem(existingPlaylistItem) {
-    //
-    //     let emptyPlaylistItem = null;
-    //     const emptyImagePlaylistItem = new ImagePlaylistItem();
-    //     const emptyHTML5PlaylistItem = new HTML5PlaylistItem();
-    //     if (existingPlaylistItem instanceof ImagePlaylistItem) {
-    //         emptyPlaylistItem = emptyImagePlaylistItem;
-    //     }
-    //     else if (existingPlaylistItem instanceof HTML5PlaylistItem) {
-    //         emptyPlaylistItem = emptyHTML5PlaylistItem;
-    //     }
-    //     else {
-    //         console.log("existingPlaylistItem: unknown playlistItem type");
-    //     }
-    //     return emptyPlaylistItem;
-    // }
+    getEmptyPlaylistItem(existingPlaylistItem) {
+
+        let emptyPlaylistItem = null;
+        const emptyImagePlaylistItem = new ImagePlaylistItem();
+        const emptyHTML5PlaylistItem = new HTML5PlaylistItem();
+        if (existingPlaylistItem instanceof ImagePlaylistItem) {
+            emptyPlaylistItem = emptyImagePlaylistItem;
+        }
+        else if (existingPlaylistItem instanceof HTML5PlaylistItem) {
+            emptyPlaylistItem = emptyHTML5PlaylistItem;
+        }
+        else {
+            console.log("existingPlaylistItem: unknown playlistItem type");
+        }
+        return emptyPlaylistItem;
+    }
 
 
-    // copyExistingPlaylistItem(selectedPlaylistItemId) {
-    //
-    //     const existingPlaylistItem = this.props.playlistItems.playlistItemsById[selectedPlaylistItemId];
-    //     let emptyPlaylistItem = this.getEmptyPlaylistItem(existingPlaylistItem);
-    //     if (!emptyPlaylistItem) return null;
-    //
-    //     return Object.assign(emptyPlaylistItem, existingPlaylistItem);
-    //
-    // }
+    copyExistingPlaylistItem(selectedPlaylistItemId) {
+
+        const existingPlaylistItem = this.props.playlistItems.playlistItemsById[selectedPlaylistItemId];
+        let emptyPlaylistItem = this.getEmptyPlaylistItem(existingPlaylistItem);
+        if (!emptyPlaylistItem) return null;
+
+        return Object.assign(emptyPlaylistItem, existingPlaylistItem);
+
+    }
 
     // handleUpdateHTML5StateName(selectedPlaylistItemId, html5StateName) {
     //
@@ -242,43 +237,43 @@ class BA extends Component {
     // }
 
 
-    // getCurrentZone() {
-    //
-    //     let selectedZone = null;
-    //     if (this.props.sign && this.props.sign.zoneIds.length > 0 && this.props.zones && this.props.zones.zonesById) {
-    //
-    //         if (!this.state.selectedZone) {
-    //             selectedZone = this.props.zones.zonesById[this.props.sign.zoneIds[0]];
-    //         }
-    //         else {
-    //             selectedZone = this.state.selectedZone;
-    //         }
-    //
-    //         if (!selectedZone) {
-    //             selectedZone = null;
-    //         }
-    //     }
-    //     return selectedZone;
-    // }
+    getCurrentZone() {
 
-    // getCurrentZonePlaylist() {
-    //
-    //     let currentZonePlaylist = null;
-    //
-    //     let selectedZone = this.getCurrentZone();
-    //     if (selectedZone) {
-    //         currentZonePlaylist = this.props.zonePlaylists.zonePlaylistsById[selectedZone.zonePlaylistId];
-    //     }
-    //     return currentZonePlaylist;
-    // }
+        let selectedZone = null;
+        if (this.props.sign && this.props.sign.zoneIds.length > 0 && this.props.zones && this.props.zones.zonesById) {
 
-    // handleOpen() {
-    //     this.setState({open: true});
-    // }
+            if (!this.state.selectedZone) {
+                selectedZone = this.props.zones.zonesById[this.props.sign.zoneIds[0]];
+            }
+            else {
+                selectedZone = this.state.selectedZone;
+            }
 
-    // handleClose() {
-    //     this.setState({open: false});
-    // }
+            if (!selectedZone) {
+                selectedZone = null;
+            }
+        }
+        return selectedZone;
+    }
+
+    getCurrentZonePlaylist() {
+
+        let currentZonePlaylist = null;
+
+        let selectedZone = this.getCurrentZone();
+        if (selectedZone) {
+            currentZonePlaylist = this.props.zonePlaylists.zonePlaylistsById[selectedZone.zonePlaylistId];
+        }
+        return currentZonePlaylist;
+    }
+
+    handleOpen() {
+        this.setState({open: true});
+    }
+
+    handleClose() {
+        this.setState({open: false});
+    }
 
     // getBSNJSX()
     //     // this.props.getBSNProfile();
@@ -337,6 +332,14 @@ class BA extends Component {
                         mediaFolder={this.props.mediaFolder}
                         mediaThumbs={this.props.mediaThumbs}
                     />
+                    <NonInteractivePlaylist
+                        sign={this.props.sign}
+                        zones={this.props.zones}
+                        zonePlaylists={this.props.zonePlaylists}
+                        mediaThumbs={this.props.mediaThumbs}
+                        onSelectMediaState={this.handleSelectMediaState.bind(this)}
+                        selectedMediaStateId={this.state.selectedMediaStateId}
+                    />
                 </div>
 
             </div>
@@ -367,10 +370,9 @@ function mapStateToProps(baState) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
-        loadAppData, selectMediaFolder
-    },
-    dispatch);
+    return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, selectMediaFolder
+        },
+        dispatch);
 }
 
 
@@ -386,18 +388,18 @@ function mapDispatchToProps(dispatch) {
 
 // updateMediaState
 BA.propTypes = {
-    // createDefaultPresentation: React.PropTypes.func.isRequired,
+    createDefaultPresentation: React.PropTypes.func.isRequired,
     loadAppData: React.PropTypes.func.isRequired,
     // updateSign: React.PropTypes.func.isRequired,
     sign: React.PropTypes.object.isRequired,
-    // zones: React.PropTypes.object.isRequired,
-    // zonePlaylists: React.PropTypes.object.isRequired,
-    // mediaStates: React.PropTypes.object.isRequired,
-    // playlistItems: React.PropTypes.object.isRequired,
+    zones: React.PropTypes.object.isRequired,
+    zonePlaylists: React.PropTypes.object.isRequired,
+    mediaStates: React.PropTypes.object.isRequired,
+    playlistItems: React.PropTypes.object.isRequired,
     mediaFolder: React.PropTypes.string.isRequired,
     mediaThumbs: React.PropTypes.object.isRequired,
     mediaLibraryPlaylistItems: React.PropTypes.array.isRequired,
-    // htmlSites: React.PropTypes.object.isRequired,
+    htmlSites: React.PropTypes.object.isRequired,
     //
     // getBSNAuthToken: React.PropTypes.func.isRequired,
     // getBSNProfile: React.PropTypes.func.isRequired,

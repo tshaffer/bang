@@ -313,7 +313,7 @@ export function deleteMediaStateFromNonInteractivePlaylist(zonePlaylistId, media
 
     return function (dispatch, getState) {
 
-        let state = getState();
+        let state = getState().reducers;
 
         let transitionInId = null;
         let transitionOutId = null;
@@ -343,7 +343,7 @@ export function deleteMediaStateFromNonInteractivePlaylist(zonePlaylistId, media
             const transition = new Transition(sourceMediaState, userEvent, targetMediaState);
             dispatch(addTransition(sourceMediaState, transition, targetMediaState));
 
-            state = getState();
+            state = getState().reducers;
         }
         else if (!transitionInId && transitionOutId) {
             // deleting first state
@@ -456,16 +456,17 @@ export function createDefaultPresentation(presentationName) {
         dispatch(newSign(presentationName, "1920x1080x60p"));
         dispatch(newZone("Images", "images"));
 
-        let nextState = getState();
+        let nextState = getState().reducers;
+        debugger;
         const zoneId = getLastKey(nextState.zones.zonesById);
         dispatch(addZone(zoneId));
 
-        nextState = getState();
+        nextState = getState().reducers;
         const zone = nextState.zones.zonesById[zoneId];
 
         dispatch(newZonePlaylist());
 
-        nextState = getState();
+        nextState = getState().reducers;
         const zonePlaylistId = getLastKey(nextState.zonePlaylists.zonePlaylistsById);
 
         dispatch(setZonePlaylist(zoneId, zonePlaylistId));
@@ -482,11 +483,11 @@ export function addHtmlSiteToPresentation(htmlSite) {
 
         dispatch(newHtmlSite(htmlSite));
 
-        let nextState = getState();
+        let nextState = getState().reducers;
         const htmlSiteId = getLastKey(nextState.htmlSites.htmlSitesById);
         dispatch(addHtmlSite(htmlSiteId));
 
-        nextState = getState();
+        nextState = getState().reducers;
     };
 }
 
@@ -557,7 +558,7 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
         const mediaState = new MediaState (playlistItem, 0, 0);
         const newMediaStateId = mediaState.getId();
 
-        let state = getState();
+        let state = getState().reducers;
 
         // get number of media states before adding new media state
         const mediaStatesById = state.mediaStates.mediaStatesById;
@@ -654,7 +655,7 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
                 dispatch(deleteTransitionIn(existingTargetMediaState, existingTransitionInId));
                 dispatch(deleteTransition(existingTransitionOutId));
 
-                state = getState();
+                state = getState().reducers;
                 
                 // next, create new transition and add it to the three media states
                 const userEvent = new UserEvent("timeout");
