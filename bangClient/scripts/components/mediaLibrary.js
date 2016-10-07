@@ -189,7 +189,7 @@ class MediaLibrary extends Component {
 MediaLibrary.propTypes = {
     onBrowseForMediaLibrary: React.PropTypes.func.isRequired,
     mediaFolder: React.PropTypes.string.isRequired,
-    mediaLibraryPlaylistItems: React.PropTypes.array.isRequired
+    // mediaLibraryPlaylistItems: React.PropTypes.array.isRequired
 };
 
 

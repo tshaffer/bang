@@ -332,6 +332,7 @@ class BA extends Component {
 
                 <div className="bangPageContainer">
                     <MediaLibrary
+                        onBrowseForMediaLibrary={this.baUI.handleBrowseForMediaLibrary.bind(this.baUI)}
                         mediaFolder={this.props.mediaFolder}
                     />
                 </div>
