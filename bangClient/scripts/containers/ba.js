@@ -362,6 +362,8 @@ class BA extends Component {
                         selectedMediaStateId={this.state.selectedMediaStateId}
                         onToggleOpenClosePropertySheet={this.handleToggleOpenClosePropertySheet.bind(this)}
                         propertySheetOpen={this.state.propertySheetOpen}
+                        bsdmSign={this.props.sign}
+                        bsdmZones={this.props.zones}
                     />
                     {propertySheetTag}
                     <EditPreferencesDlg

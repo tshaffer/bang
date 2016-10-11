@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import $ from 'jquery';
 
+import { getZoneById } from 'bsdm/dist/reducers/reducerZone';
+
 import { guid } from '../utilities/utils';
 
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
@@ -10,6 +12,7 @@ import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
 import { addMediaStateToNonInteractivePlaylist, deleteMediaStateFromNonInteractivePlaylist } from '../actions/index';
 import { getThumb } from '../platform/actions';
+
 
 class NonInteractivePlaylist extends Component {
 
@@ -168,123 +171,156 @@ class NonInteractivePlaylist extends Component {
     }
 
 
-    getMediaStatesJSX(selectedZonePlaylist) {
+    getMediaStatesJSX() {
 
         const self = this;
 
-        const transitionsById = this.props.transitions.transitionsById;
+        if (self.props && self.props.bsdmZones && self.props.bsdmZones.allZones && self.props.bsdmZones.allZones.length > 0) {
 
-        let mediaStates = [];
+            const currentZone = self.props.currentZone;
 
-        let mediaStateId = selectedZonePlaylist.initialMediaStateId;
-        while (mediaStateId) {
-            // let mediaState = selectedZonePlaylist.mediaStatesById[mediaStateId];
-            let mediaState = this.props.mediaStates.mediaStatesById[mediaStateId];
-            mediaStates.push(mediaState);
-            if (mediaState.transitionOutIds.length === 1) {
-                const transitionOutId = mediaState.transitionOutIds[0];
-                const transition = transitionsById[transitionOutId];
-                mediaStateId = transition.targetMediaStateId;
-            }
-            else {
-                mediaStateId = null;
+            if (currentZone) {
+                let mediaStateId = currentZone.initialMediaStateId;
+
+                // const zoneId = self.props.bsdmZones.allZones[0];
+                // use a selector to get self information??
+                // const zone = self.props.bsdmZones.zonesById[zoneId];
+                // const zone = getZoneById(getState(), {id: zone1Id});
+
+                // let mediaStateId = self.props.initialMediaStateId;
+                while (mediaStateId) {
+
+                    // get media state given mediaStateId
+
+                    // getEventsForMediaState(events, eventId) - why eventId?
+                    // let mediaState = ??
+                }
             }
         }
 
-        let dataIndex = -1;
+        return null;
 
-        let mediaStatesJSX = mediaStates.map(function (mediaState, index) {
 
-            dataIndex++;
 
-            const id = mediaState.getId();
-            const fileName = mediaState.getFileName();
-            let filePath = "";
 
-            let className = "";
-            if (self.props.selectedMediaStateId && self.props.selectedMediaStateId === id) {
-                className = "selectedImage ";
-            }
 
-            const mediaPlaylistItem = mediaState.getMediaPlaylistItem();
 
-            if (mediaPlaylistItem instanceof ImagePlaylistItem) {
-                filePath = mediaPlaylistItem.getFilePath();
-                if (self.props.mediaThumbs.hasOwnProperty(filePath)) {
 
-                    const mediaItem = self.props.mediaThumbs[filePath];
-                    const thumb = getThumb(mediaItem);
-                    className += "mediaLibraryThumbImg";
-
-                    // {/*draggable={true}*/}
-                    // {/*onDragStart={self.playlistDragStartHandler}*/}
-                    // {/*data-name={fileName}*/}
-                    // {/*data-path={filePath}*/}
-                    // {/*data-type="image"*/}
-
-                    const fileName = mediaPlaylistItem.getFileName();
-                    // filePath already set
-
-                    // indicate media state is selected by marking the entire <li rather htan just the <img ?
-                    return (
-                        <li className="flex-item mediaLibraryThumbDiv" key={index} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
-                            <img
-                                id={id}
-                                src={thumb}
-                                className={className}
-                                data-index={dataIndex}
-                                onClick={() => self.onSelectMediaState(mediaState)}
-                                draggable={true}
-                                onDragStart={self.playlistDragStartHandler}
-                                data-name={fileName}
-                                data-path={filePath}
-                                data-type="image"
-                            />
-                            <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>{fileName}</p>
-                        </li>
-                    );
-
-                }
-                else {
-                    return (
-                        <li key={id} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
-                            <p className="mediaLibraryThumbLbl">{fileName}</p>
-                        </li>
-                    );
-                }
-            }
-            else if (mediaPlaylistItem instanceof HTML5PlaylistItem) {
-                className += "otherThumbImg";
-
-                // draggable={true}
-                // onDragStart={self.playlistDragStartHandler}
-                // data-name={fileName}
-                // data-path={filePath}
-                // data-type="html5"
-
-                return (
-                    <li className="flex-item mediaLibraryThumbDiv" key={id} data-index={index} id={"mediaThumb" + dataIndex.toString()}>
-                        <img
-                            id={id}
-                            src="images/html.png"
-                            className={className}
-                            data-index={dataIndex}
-                            onClick={() => self.onSelectMediaState(mediaState)}
-                        />
-                        <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>HTML5</p>
-                    </li>
-                );
-            }
-        });
-
-        return mediaStatesJSX;
+        // const transitionsById = this.props.transitions.transitionsById;
+        //
+        // let mediaStates = [];
+        //
+        // let mediaStateId = selectedZonePlaylist.initialMediaStateId;
+        // while (mediaStateId) {
+        //     // let mediaState = selectedZonePlaylist.mediaStatesById[mediaStateId];
+        //     let mediaState = this.props.mediaStates.mediaStatesById[mediaStateId];
+        //     mediaStates.push(mediaState);
+        //     if (mediaState.transitionOutIds.length === 1) {
+        //         const transitionOutId = mediaState.transitionOutIds[0];
+        //         const transition = transitionsById[transitionOutId];
+        //         mediaStateId = transition.targetMediaStateId;
+        //     }
+        //     else {
+        //         mediaStateId = null;
+        //     }
+        // }
+        //
+        // let dataIndex = -1;
+        //
+        // let mediaStatesJSX = mediaStates.map(function (mediaState, index) {
+        //
+        //     dataIndex++;
+        //
+        //     const id = mediaState.getId();
+        //     const fileName = mediaState.getFileName();
+        //     let filePath = "";
+        //
+        //     let className = "";
+        //     if (self.props.selectedMediaStateId && self.props.selectedMediaStateId === id) {
+        //         className = "selectedImage ";
+        //     }
+        //
+        //     const mediaPlaylistItem = mediaState.getMediaPlaylistItem();
+        //
+        //     if (mediaPlaylistItem instanceof ImagePlaylistItem) {
+        //         filePath = mediaPlaylistItem.getFilePath();
+        //         if (self.props.mediaThumbs.hasOwnProperty(filePath)) {
+        //
+        //             const mediaItem = self.props.mediaThumbs[filePath];
+        //             const thumb = getThumb(mediaItem);
+        //             className += "mediaLibraryThumbImg";
+        //
+        //             // {/*draggable={true}*/}
+        //             // {/*onDragStart={self.playlistDragStartHandler}*/}
+        //             // {/*data-name={fileName}*/}
+        //             // {/*data-path={filePath}*/}
+        //             // {/*data-type="image"*/}
+        //
+        //             const fileName = mediaPlaylistItem.getFileName();
+        //             // filePath already set
+        //
+        //             // indicate media state is selected by marking the entire <li rather htan just the <img ?
+        //             return (
+        //                 <li className="flex-item mediaLibraryThumbDiv" key={index} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
+        //                     <img
+        //                         id={id}
+        //                         src={thumb}
+        //                         className={className}
+        //                         data-index={dataIndex}
+        //                         onClick={() => self.onSelectMediaState(mediaState)}
+        //                         draggable={true}
+        //                         onDragStart={self.playlistDragStartHandler}
+        //                         data-name={fileName}
+        //                         data-path={filePath}
+        //                         data-type="image"
+        //                     />
+        //                     <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>{fileName}</p>
+        //                 </li>
+        //             );
+        //
+        //         }
+        //         else {
+        //             return (
+        //                 <li key={id} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
+        //                     <p className="mediaLibraryThumbLbl">{fileName}</p>
+        //                 </li>
+        //             );
+        //         }
+        //     }
+        //     else if (mediaPlaylistItem instanceof HTML5PlaylistItem) {
+        //         className += "otherThumbImg";
+        //
+        //         // draggable={true}
+        //         // onDragStart={self.playlistDragStartHandler}
+        //         // data-name={fileName}
+        //         // data-path={filePath}
+        //         // data-type="html5"
+        //
+        //         return (
+        //             <li className="flex-item mediaLibraryThumbDiv" key={id} data-index={index} id={"mediaThumb" + dataIndex.toString()}>
+        //                 <img
+        //                     id={id}
+        //                     src="images/html.png"
+        //                     className={className}
+        //                     data-index={dataIndex}
+        //                     onClick={() => self.onSelectMediaState(mediaState)}
+        //                 />
+        //                 <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>HTML5</p>
+        //             </li>
+        //         );
+        //     }
+        // });
+        //
+        // return mediaStatesJSX;
     }
 
     render() {
 
+        let mediaStatesJSX = this.getMediaStatesJSX(null);
+
         let selectedZonePlaylist = null;
         let numberOfMediaStates = 0;
-        let mediaStatesJSX = null;
+        // let mediaStatesJSX = null;
 
         selectedZonePlaylist = this.getSelectedZonePlaylist();
         if (selectedZonePlaylist) {
@@ -344,26 +380,53 @@ NonInteractivePlaylist.propTypes = {
     deleteMediaStateFromNonInteractivePlaylist: React.PropTypes.func.isRequired,
     selectedMediaStateId: React.PropTypes.string.isRequired,
     onToggleOpenClosePropertySheet: React.PropTypes.func.isRequired,
-    propertySheetOpen : React.PropTypes.bool.isRequired
+    propertySheetOpen : React.PropTypes.bool.isRequired,
+    bsdmSign: React.PropTypes.object.isRequired,
+    bsdmZones: React.PropTypes.object.isRequired,
+};
+
+const getCurrentZone = (state) => {
+
+    debugger;
+
+    if (state && state.zones && state.zones.allZones && state.zones.allZones.length > 0) {
+        const zoneId = state.zones.allZones[0];
+        const zone = getZoneById(state, {id: zoneId});
+        return zone;
+    }
+
+    return null;
 };
 
 
 function mapStateToProps(baState) {
 
     const state = baState.reducers;
+    const bsdmState = baState.bsdmReducer;
 
     return {
+
+        currentZone: getCurrentZone(baState.bsdmReducer),
+
+        bsdmSign: bsdmState.sign,
+        bsdmZones: bsdmState.zones,
         sign: state.sign,
         zones: state.zones,
         zonePlaylists: state.zonePlaylists,
         transitions: state.transitions,
         mediaStates: state.mediaStates,
-        htmlSites: state.htmlSites
+        htmlSites: state.htmlSites,
+
+        // selectedZone: getZoneById(baState, {id: currentZoneId});
+        // sign: getSignMetadata(state),
+        // zoneCount: getZoneCount(state),
+        // zones: state.zones,
+
     };
 }
 
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
     return bindActionCreators(
         { addMediaStateToNonInteractivePlaylist, deleteMediaStateFromNonInteractivePlaylist },
         dispatch);
