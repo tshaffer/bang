@@ -1,8 +1,12 @@
 /**
  * Created by tedshaffer on 6/3/16.
  */
-import { baNewSign, baAddZone, baAddMediaState } from 'bsdm/dist/bsDmActions';
-import { getZoneById } from 'bsdm/dist/reducers/reducerZone';
+import { newSign, newZone, addMediaState } from 'bangDM/dist/actions/index';
+
+import MediaState from 'bangDM/dist/entities/mediaState';
+import ContentItem from 'bangDM/dist/entities/contentItem';
+
+// import { getZoneById } from 'bangDM/dist/reducers/reducerZone';
 
 import { getLastKey } from '../utilities/utils';
 
@@ -13,7 +17,7 @@ const xml2js = require('xml2js');
 import ImageMediaItem from '../entities/imageMediaItem';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
-import MediaState from '../badm/mediaState';
+// import MediaState from '../badm/mediaState';
 import UserEvent from '../badm/userEvent';
 import Transition from '../badm/transition';
 
@@ -74,21 +78,21 @@ export function mergeMediaThumbs(thumbsByPath) {
     };
 }
 
-export const NEW_SIGN = 'NEW_SIGN';
-export function newSign(name, videoMode) {
-
-    const signData =
-        {
-            name,
-            videoMode
-        };
-
-    return {
-        type: NEW_SIGN,
-        payload: signData
-    };
-}
-
+// export const NEW_SIGN = 'NEW_SIGN';
+// export function newSign(name, videoMode) {
+//
+//     const signData =
+//         {
+//             name,
+//             videoMode
+//         };
+//
+//     return {
+//         type: NEW_SIGN,
+//         payload: signData
+//     };
+// }
+//
 export const OPEN_SIGN = 'OPEN_SIGN';
 export function openSign(name, videoMode) {
 
@@ -133,21 +137,21 @@ export function addHtmlSite(htmlSiteId) {
     };
 }
 
-export const NEW_ZONE = 'NEW_ZONE';
-export function newZone(name, type) {
-
-    const zoneData =
-        {
-            name,
-            type
-        };
-
-    return {
-        type: NEW_ZONE,
-        payload: zoneData
-    };
-}
-
+// export const NEW_ZONE = 'NEW_ZONE';
+// export function newZone(name, type) {
+//
+//     const zoneData =
+//         {
+//             name,
+//             type
+//         };
+//
+//     return {
+//         type: NEW_ZONE,
+//         payload: zoneData
+//     };
+// }
+//
 // assumes there is a single, defined sign
 export const ADD_ZONE = 'ADD_ZONE';
 export function addZone(zoneId) {
@@ -458,10 +462,10 @@ export function createDefaultPresentation(presentationName) {
 
     return function (dispatch, getState) {
 
-        dispatch(baNewSign(presentationName, "v1920x1080x60p"));
+        dispatch(newSign(presentationName, "1920x1080x60p"));
         store = getState();
 
-        let zoneAction = dispatch(baAddZone('Zone1', "images"));
+        let zoneAction = dispatch(newZone('Zone1', "images", true));
         store = getState();
 
         // return;
@@ -552,20 +556,24 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
 
         let store = null;
 
-        store = getState().bsdmReducer;
+        store = getState().bangReducer;
+
+        debugger;
 
         // how to get zone?
         // the following is a hack way to do it
-        const zones = store.zones;
-        const zoneId = zones.allZones[0];
-        const currentZone = getZoneById(store, {id: zoneId});
-        const zoneContainer = currentZone.containerObject;
+        // const zones = store.zones;
 
-        const mediaObject = { path , mediaType: type };
-        const contentItem = { id: "", name: stateName, type: "media", media: mediaObject };
-        const msAction = dispatch(baAddMediaState(stateName, zoneContainer, contentItem));
+        // take first entry
+        const zoneId = store.sign.zoneIds[0];
+        // const currentZone = getZoneById(store, {id: zoneId});
 
-        store = getState().bsdmReducer;
+        const contentItem = new ContentItem(stateName, "media", path);
+        const mediaState = new MediaState(stateName, contentItem.id);
+        const msAction = dispatch(addMediaState(stateName, mediaState, zoneId));
+
+        store = getState().bangReducer;
+        debugger;
 
         // let playlistItem = null;
         //

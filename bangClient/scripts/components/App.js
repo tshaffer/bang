@@ -8,18 +8,6 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 export default class App extends Component {
 
-    componentDidMount() {
-        // console.log("app.js::componentDidMount invoked");
-    }
-
-//     render() {
-//
-//         return (
-//             <div>herro prease</div>
-//         );
-//     }
-
-
     render() {
 
         return (

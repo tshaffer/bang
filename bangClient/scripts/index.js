@@ -23,11 +23,11 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import App from './components/app';
 
-import bsdmReducer from 'bsdm/dist/reducers/index';
+import bangReducer from 'bangDM/dist/reducers/index';
 
 const myReducers = combineReducers({
     reducers,
-    bsdmReducer
+    bangReducer
 });
 
 

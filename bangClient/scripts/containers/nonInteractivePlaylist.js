@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import $ from 'jquery';
 
-import { getZoneById } from 'bsdm/dist/reducers/reducerZone';
+// import { getZoneById } from 'bang/dist/reducers/reducerZone';
 
 import { guid } from '../utilities/utils';
 
@@ -175,16 +175,16 @@ class NonInteractivePlaylist extends Component {
 
         const self = this;
 
-        if (self.props && self.props.bsdmZones && self.props.bsdmZones.allZones && self.props.bsdmZones.allZones.length > 0) {
+        if (self.props && self.props.bangZones && self.props.bangZones.allZones && self.props.bangZones.allZones.length > 0) {
 
             const currentZone = self.props.currentZone;
 
             if (currentZone) {
                 let mediaStateId = currentZone.initialMediaStateId;
 
-                // const zoneId = self.props.bsdmZones.allZones[0];
+                // const zoneId = self.props.bangZones.allZones[0];
                 // use a selector to get self information??
-                // const zone = self.props.bsdmZones.zonesById[zoneId];
+                // const zone = self.props.bangZones.zonesById[zoneId];
                 // const zone = getZoneById(getState(), {id: zone1Id});
 
                 // let mediaStateId = self.props.initialMediaStateId;
@@ -381,19 +381,19 @@ NonInteractivePlaylist.propTypes = {
     selectedMediaStateId: React.PropTypes.string.isRequired,
     onToggleOpenClosePropertySheet: React.PropTypes.func.isRequired,
     propertySheetOpen : React.PropTypes.bool.isRequired,
-    bsdmSign: React.PropTypes.object.isRequired,
-    bsdmZones: React.PropTypes.object.isRequired,
+    bangSign: React.PropTypes.object.isRequired,
+    bangZones: React.PropTypes.object.isRequired,
 };
 
 const getCurrentZone = (state) => {
 
-    debugger;
-
-    if (state && state.zones && state.zones.allZones && state.zones.allZones.length > 0) {
-        const zoneId = state.zones.allZones[0];
-        const zone = getZoneById(state, {id: zoneId});
-        return zone;
-    }
+    // debugger;
+    //
+    // if (state && state.zones && state.zones.allZones && state.zones.allZones.length > 0) {
+    //     const zoneId = state.zones.allZones[0];
+    //     const zone = getZoneById(state, {id: zoneId});
+    //     return zone;
+    // }
 
     return null;
 };
@@ -402,14 +402,14 @@ const getCurrentZone = (state) => {
 function mapStateToProps(baState) {
 
     const state = baState.reducers;
-    const bsdmState = baState.bsdmReducer;
+    const bangState = baState.bangReducer;
 
     return {
 
-        currentZone: getCurrentZone(baState.bsdmReducer),
+        currentZone: getCurrentZone(baState.bangReducer),
 
-        bsdmSign: bsdmState.sign,
-        bsdmZones: bsdmState.zones,
+        bangSign: bangState.sign,
+        bangZones: bangState.zones,
         sign: state.sign,
         zones: state.zones,
         zonePlaylists: state.zonePlaylists,
