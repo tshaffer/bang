@@ -7,6 +7,11 @@ import $ from 'jquery';
 
 import { guid } from '../utilities/utils';
 
+// import ContentItem from 'bangDM/dist/entities/contentItem';
+
+// import { getMediaStates } from 'bangDM/dist/reducers/reducerZone';
+import { getMediaStates } from 'bangDM/dist/reducers/reducerZone';
+
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
@@ -175,27 +180,69 @@ class NonInteractivePlaylist extends Component {
 
         const self = this;
 
-        if (self.props && self.props.bangZones && self.props.bangZones.allZones && self.props.bangZones.allZones.length > 0) {
+        if (self.props && self.props.allMediaStates && self.props.allMediaStates.length > 0) {
 
-            const currentZone = self.props.currentZone;
+            let dataIndex = -1;
 
-            if (currentZone) {
-                let mediaStateId = currentZone.initialMediaStateId;
+            let mediaStatesJSX = self.props.allMediaStates.map( (mediaState, index) => {
 
-                // const zoneId = self.props.bangZones.allZones[0];
-                // use a selector to get self information??
-                // const zone = self.props.bangZones.zonesById[zoneId];
-                // const zone = getZoneById(getState(), {id: zone1Id});
+                debugger;
 
-                // let mediaStateId = self.props.initialMediaStateId;
-                while (mediaStateId) {
+                dataIndex++;
 
-                    // get media state given mediaStateId
+                const id = mediaState.id;
+                const fileName = mediaState.name;
+                let filePath = "";
 
-                    // getEventsForMediaState(events, eventId) - why eventId?
-                    // let mediaState = ??
+                let className = "";
+                if (self.props.selectedMediaStateId && self.props.selectedMediaStateId === id) {
+                    className = "selectedImage ";
                 }
-            }
+
+                const contentItem = mediaState.contentItem;
+
+                // how do I determine whether or not this is an image or a video?
+                // why do I need to know?
+
+                filePath = contentItem.path;
+                if (self.props.mediaThumbs.hasOwnProperty(filePath)) {
+
+                    const mediaItem = self.props.mediaThumbs[filePath];
+                    const thumb = getThumb(mediaItem);
+                    className += "mediaLibraryThumbImg";
+
+                    const fileName = contentItem.name;
+
+                    return (
+                        <li className="flex-item mediaLibraryThumbDiv" key={index} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
+                            <img
+                                id={id}
+                                src={thumb}
+                                className={className}
+                                data-index={dataIndex}
+                                onClick={() => self.onSelectMediaState(mediaState)}
+                                draggable={true}
+                                onDragStart={self.playlistDragStartHandler}
+                                data-name={fileName}
+                                data-path={filePath}
+                                data-type="image"
+                            />
+                            <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>{fileName}</p>
+                        </li>
+                    );
+
+                }
+                else {
+                    return (
+                        <li key={id} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
+                            <p className="mediaLibraryThumbLbl">{fileName}</p>
+                        </li>
+                    );
+                }
+            });
+
+            return mediaStatesJSX;
+
         }
 
         return null;
@@ -383,6 +430,7 @@ NonInteractivePlaylist.propTypes = {
     propertySheetOpen : React.PropTypes.bool.isRequired,
     bangSign: React.PropTypes.object.isRequired,
     bangZones: React.PropTypes.object.isRequired,
+    allMediaStates: React.PropTypes.array.isRequired
 };
 
 const getCurrentZone = (state) => {
@@ -405,6 +453,8 @@ function mapStateToProps(baState) {
     const bangState = baState.bangReducer;
 
     return {
+
+        allMediaStates : getMediaStates(bangState),
 
         currentZone: getCurrentZone(baState.bangReducer),
 

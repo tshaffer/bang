@@ -1,7 +1,7 @@
 /**
  * Created by tedshaffer on 6/3/16.
  */
-import { newSign, newZone, addMediaState } from 'bangDM/dist/actions/index';
+import { newSign, newZone, addMediaState, addContentItem } from 'bangDM/dist/actions/index';
 
 import MediaState from 'bangDM/dist/entities/mediaState';
 import ContentItem from 'bangDM/dist/entities/contentItem';
@@ -558,8 +558,6 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
 
         store = getState().bangReducer;
 
-        debugger;
-
         // how to get zone?
         // the following is a hack way to do it
         // const zones = store.zones;
@@ -570,10 +568,10 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
 
         const contentItem = new ContentItem(stateName, "media", path);
         const mediaState = new MediaState(stateName, contentItem.id);
+        dispatch(addContentItem(contentItem));
         const msAction = dispatch(addMediaState(stateName, mediaState, zoneId));
 
         store = getState().bangReducer;
-        debugger;
 
         // let playlistItem = null;
         //
