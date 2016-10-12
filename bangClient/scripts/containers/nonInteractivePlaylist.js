@@ -186,8 +186,6 @@ class NonInteractivePlaylist extends Component {
 
             let mediaStatesJSX = self.props.allMediaStates.map( (mediaState, index) => {
 
-                debugger;
-
                 dataIndex++;
 
                 const id = mediaState.id;
@@ -363,18 +361,17 @@ class NonInteractivePlaylist extends Component {
 
     render() {
 
-        let mediaStatesJSX = this.getMediaStatesJSX(null);
-
         let selectedZonePlaylist = null;
         let numberOfMediaStates = 0;
-        // let mediaStatesJSX = null;
+        let mediaStatesJSX = null;
 
-        selectedZonePlaylist = this.getSelectedZonePlaylist();
-        if (selectedZonePlaylist) {
-            if (this.props.mediaStates) {
-                numberOfMediaStates = Object.keys(this.props.mediaStates.mediaStatesById).length;
-            }
-        }
+        // selectedZonePlaylist = this.getSelectedZonePlaylist();
+        // if (selectedZonePlaylist) {
+        //     if (this.props.mediaStates) {
+        //         numberOfMediaStates = Object.keys(this.props.mediaStates.mediaStatesById).length;
+        //     }
+        // }
+        numberOfMediaStates = this.props.allMediaStates.length;
 
         let openCloseLabel = "=>";
         if (!this.props.propertySheetOpen) {
@@ -382,7 +379,7 @@ class NonInteractivePlaylist extends Component {
         }
 
         if (numberOfMediaStates > 0) {
-            mediaStatesJSX = this.getMediaStatesJSX(selectedZonePlaylist);
+            mediaStatesJSX = this.getMediaStatesJSX();
         }
         else {
             mediaStatesJSX =
