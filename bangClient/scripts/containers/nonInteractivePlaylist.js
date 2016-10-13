@@ -11,33 +11,11 @@ import { guid } from '../utilities/utils';
 
 import { getMediaStates } from 'bangDM/dist/reducers/reducerZone';
 
-import ImagePlaylistItem from '../badm/imagePlaylistItem';
-import HTML5PlaylistItem from '../badm/html5PlaylistItem';
-
-import { addMediaStateToNonInteractivePlaylist, deleteMediaStateFromNonInteractivePlaylist } from '../actions/index';
+import { addMediaStateToNonInteractivePlaylist } from '../actions/index';
 import { getThumb } from '../platform/actions';
 
 
 class NonInteractivePlaylist extends Component {
-
-    componentDidMount() {
-
-        var self = this;
-        document.addEventListener('keydown', (event) => {
-            if (event.keyCode == 8 || event.keyCode == 46) {       // delete key or backspace key
-                this.handleDeleteSelectedMediaState();
-            }
-        });
-    }
-
-    handleDeleteSelectedMediaState() {
-        if (this.props.selectedMediaStateId && this.props.selectedMediaStateId != "") {
-            const mediaState = this.props.mediaStates.mediaStatesById[this.props.selectedMediaStateId];
-            if (mediaState) {
-                this.props.deleteMediaStateFromNonInteractivePlaylist(this.getSelectedZonePlaylist().id, mediaState);
-            }
-        }
-    }
 
     playlistDragStartHandler(ev) {
 
@@ -58,122 +36,16 @@ class NonInteractivePlaylist extends Component {
         event.dataTransfer.dropEffect = "move";
     }
 
-    getSelectedZonePlaylist() {
-
-        if (this.props.sign && this.props.sign.zoneIds.length > 0 && this.props.zones && this.props.zones.zonesById) {
-            const selectedZone = this.props.zones.zonesById[this.props.sign.zoneIds[0]];
-            if (selectedZone) {
-                const zonePlaylistId = selectedZone.zonePlaylistId;
-                const zonePlaylist = this.props.zonePlaylists.zonePlaylistsById[zonePlaylistId];
-                return zonePlaylist;
-            }
-        }
-        return null;
-    }
-
-    
-    getDropIndex(event) {
-
-        let numberOfMediaStates = 0;
-        const selectedZonePlaylist = this.getSelectedZonePlaylist();
-        if (selectedZonePlaylist) {
-            numberOfMediaStates = Object.keys(this.props.mediaStates.mediaStatesById).length;
-        }
-
-        let index = -1;
-        let indexOfDropTarget = -1;
-
-        const offset = $("#" + event.target.id).offset();
-        const left = event.pageX - offset.left;
-        let targetWidth = event.target.width;
-        if (targetWidth == undefined) {
-            targetWidth = $("#" + event.target.id).outerWidth();
-        }
-
-        indexOfDropTarget = Number(event.target.dataset.index);
-
-        if (left < (targetWidth / 2)) {
-            index = indexOfDropTarget;
-        }
-        else if (indexOfDropTarget <= (numberOfMediaStates - 1)) {
-            index = indexOfDropTarget + 1;
-        }
-
-        return index;
-    }
-
-
     handlePlaylistDrop (event) {
 
         event.preventDefault();
 
-        // copy or move?
-        let operation = "";
-        let startIndex = -1;
-        if (event.dataTransfer.effectAllowed === "move") {
-            operation = "move";
-            startIndex = Number(event.dataTransfer.getData("index"));
-        }
-        else {
-            operation = "copy";
-        }
-
         // get dropped playlist item
         let stateName = event.dataTransfer.getData("name");
         const path = event.dataTransfer.getData("path");
-        const type = event.dataTransfer.getData("type");
 
-        // determine where the drop occurred relative to the target element
-        console.log("event.target.id=", event.target.id);
-        let index = -1;
-        let indexOfDropTarget = -1;
-
-        // index == -1 => drop item at end of list
-        if (event.target.id === "playlistItemsUl") {
-            // drop item at end of list
-        }
-        else if (event.target.id === "lblDropItemHere" || event.target.id === "liDropItemHere") {
-            // drop item onto 'Drop Item Here'
-        }
-        else if (event.target.id.startsWith("mediaThumb") || event.target.id.startsWith("mediaLbl")) {
-            // drop target is in margin of media item
-            index = this.getDropIndex(event);
-        }
-        else if (event.target.id !== "") {
-            // drop target is media item
-            index = this.getDropIndex(event);
-        }
-        else {
-            console.log("don't know where to drop it");
-            return;
-        }
-
-        // specify playlist item to drop
-        let playlistItem = null;
-        const selectedZonePlaylist = this.getSelectedZonePlaylist();
-        if (type === "image") {
-            this.props.addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, operation, type, stateName, path, startIndex, index);
-            // playlistItem = this.addMediaStateToNonInteractivePlaylist(operation, type, stateName, path, startIndex, index);
-        }
-        else if (type === "html5") {
-            // for now, set the state name and site name to the first site in the sign (if it exists)
-            if (this.props.sign.htmlSiteIds.length > 0) {
-                const htmlSiteId = this.props.sign.htmlSiteIds[0];
-                const htmlSite = this.props.htmlSites.htmlSitesById[htmlSiteId];
-                stateName = htmlSite.name;
-            }
-            else {
-                stateName = "html5";
-            }
-            this.props.addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, operation, type, stateName, path, startIndex, index);
-        }
+        this.props.addMediaStateToNonInteractivePlaylist(stateName, path);
     }
-
-    onSelectMediaState(mediaState) {
-        console.log("mediaState ", mediaState.getFileName(), " selected");
-        this.props.onSelectMediaState(mediaState);
-    }
-
 
     getMediaStatesJSX() {
 
@@ -420,7 +292,6 @@ NonInteractivePlaylist.propTypes = {
     htmlSites: React.PropTypes.object.isRequired,
     onSelectMediaState: React.PropTypes.func.isRequired,
     addMediaStateToNonInteractivePlaylist: React.PropTypes.func.isRequired,
-    deleteMediaStateFromNonInteractivePlaylist: React.PropTypes.func.isRequired,
     selectedMediaStateId: React.PropTypes.string.isRequired,
     onToggleOpenClosePropertySheet: React.PropTypes.func.isRequired,
     propertySheetOpen : React.PropTypes.bool.isRequired,
@@ -474,7 +345,7 @@ function mapStateToProps(baState) {
 
 function mapDispatchToProps(dispatch, ownProps) {
     return bindActionCreators(
-        { addMediaStateToNonInteractivePlaylist, deleteMediaStateFromNonInteractivePlaylist },
+        { addMediaStateToNonInteractivePlaylist },
         dispatch);
 }
 

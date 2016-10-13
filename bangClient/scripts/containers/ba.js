@@ -15,16 +15,7 @@ import PropertySheet from '../components/propertySheet';
 import NonInteractivePlaylist from './nonInteractivePlaylist';
 
 
-import { createDefaultPresentation, updateSign, loadAppData, selectMediaFolder } from '../actions/index';
-// import { getBSNAuthToken, getBSNProfile, getBSNSelf, getBSNNetworks, getBSNContent, getBSNGroups, getBSNDevices,
-//     getMyBSNUsers, getBSNUser, getBSNAccountUsers, getBSNPresentations } from '../actions/bsnActions';
-// import { getCurrentBrightSignStatus, getBrightSignId } from '../actions/lfnActions';
-//
-// import { initializeCloudFirmwareSpecs } from '../actions/fwActions';
-//
-// import LWSPublisher from '../publisher/lwsPublisher';
-// import { publishToLWS } from '../publisher/lwsPublisher';
-// import PublishFirmware from '../entities/publishFirmware';
+import { createDefaultPresentation, loadAppData, selectMediaFolder } from '../actions/index';
 
 class BA extends Component {
 
@@ -152,15 +143,6 @@ class BA extends Component {
         console.log("handleEditPreferencesOK invoked");
         console.log(preferences);
     }
-
-    // instead of using action creators, just dispatch the action directly?
-    handleUpdateVideoMode(videoMode) {
-        // in reducer?
-        const sign = Object.assign({}, this.props.sign, {videoMode: videoMode });
-        console.log("updateVideoMode:", videoMode);
-        this.props.updateSign(sign);
-    }
-
 
     handleToggleOpenClosePropertySheet() {
         this.setState({propertySheetOpen: !this.state.propertySheetOpen});
@@ -400,7 +382,7 @@ function mapStateToProps(baState) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, selectMediaFolder
+    return bindActionCreators({createDefaultPresentation, loadAppData, selectMediaFolder
         },
         dispatch);
 }
@@ -420,7 +402,6 @@ function mapDispatchToProps(dispatch) {
 BA.propTypes = {
     createDefaultPresentation: React.PropTypes.func.isRequired,
     loadAppData: React.PropTypes.func.isRequired,
-    updateSign: React.PropTypes.func.isRequired,
     sign: React.PropTypes.object.isRequired,
     zones: React.PropTypes.object.isRequired,
     zonePlaylists: React.PropTypes.object.isRequired,
@@ -430,24 +411,6 @@ BA.propTypes = {
     mediaThumbs: React.PropTypes.object.isRequired,
     mediaLibraryPlaylistItems: React.PropTypes.array.isRequired,
     htmlSites: React.PropTypes.object.isRequired,
-    //
-    // getBSNAuthToken: React.PropTypes.func.isRequired,
-    // getBSNProfile: React.PropTypes.func.isRequired,
-    // getBSNSelf: React.PropTypes.func.isRequired,
-    // getBSNNetworks: React.PropTypes.func.isRequired,
-    // getBSNContent: React.PropTypes.func.isRequired,
-    // getBSNGroups: React.PropTypes.func.isRequired,
-    // getBSNDevices: React.PropTypes.func.isRequired,
-    // getMyBSNUsers: React.PropTypes.func.isRequired,
-    // getBSNUser: React.PropTypes.func.isRequired,
-    // getBSNAccountUsers: React.PropTypes.func.isRequired,
-    // getBSNPresentations: React.PropTypes.func.isRequired,
-    //
-    // getCurrentBrightSignStatus: React.PropTypes.func.isRequired,
-    // getBrightSignId: React.PropTypes.func.isRequired,
-    //
-    // initializeCloudFirmwareSpecs: React.PropTypes.func.isRequired,
-    // firmwareSpecs: React.PropTypes.object.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);
