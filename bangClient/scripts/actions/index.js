@@ -1,10 +1,14 @@
 /**
  * Created by tedshaffer on 6/3/16.
  */
-import { newSign, newZone, addMediaState, addContentItem } from 'bangDM/dist/actions/index';
+import { newSign, newZone, addMediaState, addContentItem, addTransition, deleteTransition, addEvent } from 'bangDM/dist/actions/index';
+import Event from 'bangDM/dist/entities/event';
+import Transition from 'bangDM/dist/entities/transition';
 
 import MediaState from 'bangDM/dist/entities/mediaState';
 import ContentItem from 'bangDM/dist/entities/contentItem';
+
+import { getMediaStates } from 'bangDM/dist/reducers/reducerZone';
 
 // import { getZoneById } from 'bangDM/dist/reducers/reducerZone';
 
@@ -18,8 +22,8 @@ import ImageMediaItem from '../entities/imageMediaItem';
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 // import MediaState from '../badm/mediaState';
-import UserEvent from '../badm/userEvent';
-import Transition from '../badm/transition';
+// import UserEvent from '../badm/userEvent';
+// import Transition from '../badm/transition';
 
 import { executeLoadAppData, executeFetchSign, executeSelectMediaFolder, getFileName, executeSaveSign } from '../platform/actions';
 
@@ -261,14 +265,14 @@ export function deleteTransitionOut(mediaState, transitionId) {
     };
 }
 
-export const DELETE_TRANSITION = 'DELETE_TRANSITION';
-export function deleteTransition(transitionId) {
-
-    return {
-        type: DELETE_TRANSITION,
-        transitionId
-    };
-}
+// export const DELETE_TRANSITION = 'DELETE_TRANSITION';
+// export function deleteTransition(transitionId) {
+//
+//     return {
+//         type: DELETE_TRANSITION,
+//         transitionId
+//     };
+// }
 
 function deleteAMediaState(zonePlaylistId, mediaStateId) {
 
@@ -344,11 +348,12 @@ export function deleteMediaStateFromNonInteractivePlaylist(zonePlaylistId, media
             const transitionOut = state.transitions.transitionsById[transitionOutId];
             const targetMediaState = state.mediaStates.mediaStatesById[transitionOut.targetMediaStateId];
 
-            const userEvent = new UserEvent("timeout");
+            // const userEvent = new UserEvent("timeout");
+            const userEvent = null;
             userEvent.setValue("5");
 
             const transition = new Transition(sourceMediaState, userEvent, targetMediaState);
-            dispatch(addTransition(sourceMediaState, transition, targetMediaState));
+            // dispatch(addTransition(sourceMediaState, transition, targetMediaState));
 
             state = getState().reducers;
         }
@@ -425,9 +430,9 @@ function deleteMediaState(dispatch, state, zonePlaylistId, mediaState) {
         dispatch(deleteTransitionIn(mediaState, transitionInId));
     });
 
-    transitionsToDelete.forEach(transitionToDelete => {
-        dispatch(deleteTransition(transitionToDelete));
-    });
+    // transitionsToDelete.forEach(transitionToDelete => {
+    //     dispatch(deleteTransition(transitionToDelete));
+    // });
 
     // end of new code
 
@@ -444,18 +449,18 @@ function deleteMediaState(dispatch, state, zonePlaylistId, mediaState) {
     dispatch(deleteAMediaState(zonePlaylistId, mediaState.getId()));
 }
 
-export function addTransition(sourceMediaState, transition, targetMediaState) {
-
-    return function (dispatch, getState) {
-
-        dispatch(newTransition(transition));
-
-        const transitionId = transition.id;
-        dispatch(addTransitionOut(sourceMediaState, transitionId));
-        dispatch(addTransitionIn(targetMediaState, transitionId));
-    };
-}
-
+// export function addTransition(sourceMediaState, transition, targetMediaState) {
+//
+//     return function (dispatch, getState) {
+//
+//         dispatch(newTransition(transition));
+//
+//         const transitionId = transition.id;
+//         dispatch(addTransitionOut(sourceMediaState, transitionId));
+//         dispatch(addTransitionIn(targetMediaState, transitionId));
+//     };
+// }
+//
 export function createDefaultPresentation(presentationName) {
 
     let store = null;
@@ -558,6 +563,10 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
 
         store = getState().bangReducer;
 
+        const allMediaStatesBefore = getMediaStates(store);
+        const allMediaStatesByIdBefore = store.mediaStates.mediaStatesById;
+        const allMediaStatesByIdBeforeCount = Object.keys(allMediaStatesByIdBefore).length;
+
         // how to get zone?
         // the following is a hack way to do it
         // const zones = store.zones;
@@ -571,7 +580,52 @@ export function addMediaStateToNonInteractivePlaylist(selectedZonePlaylist, oper
         dispatch(addContentItem(contentItem));
         const msAction = dispatch(addMediaState(stateName, mediaState, zoneId));
 
+        // need to deal with transitions
+        // since we're appending media states, the algorithm should be as follows
+        //  get media states from selector before doing anything.
+        //  after adding media state, get media states again. if count is 1, do nothing. if count is more, do something.
+
         store = getState().bangReducer;
+        // const allMediaStatesAfter = getMediaStates(store);      // not updated yet as transition hasn't been updated yet
+        const allMediaStatesByIdAfter = store.mediaStates.mediaStatesById;
+        const allMediaStatesByIdAfterCount = Object.keys(allMediaStatesByIdAfter).length;
+
+        if (allMediaStatesByIdAfterCount > 1) {
+
+            const indexOfLastMediaState = allMediaStatesBefore.length - 1;
+            // const indexOfNewMediaState = allMediaStatesAfter.length - 1;             // doesn't work
+
+            let sourceMediaState = allMediaStatesBefore[indexOfLastMediaState];         // should work
+
+            // delete existing transition if one exists
+            if (allMediaStatesByIdAfterCount > 2) {
+                if (sourceMediaState.transitionOutIds.length > 0) {
+                    let transitionId = sourceMediaState.transitionOutIds[0];                      // should work
+                    dispatch(deleteTransition(transitionId));                               // should work
+                }
+            }
+
+            // create new transition from last media state to this media state
+            // let destinationMediaState = allMediaStatesAfter[indexOfNewMediaState];      // won't work
+            let destinationMediaState = mediaState;
+            let timeoutEvent = new Event("timeout", "timeout", 5);                      // should work
+            dispatch(addEvent(timeoutEvent));
+            let transition = new Transition("mPriorToNew", sourceMediaState.id, timeoutEvent.id, destinationMediaState.id);
+
+            // transition
+            dispatch(addTransition(sourceMediaState, transition, destinationMediaState));
+
+            // add transition from indexOfNewMediaState to media state at index = 0
+            sourceMediaState = destinationMediaState;
+            destinationMediaState = allMediaStatesBefore[0];
+            timeoutEvent = new Event("timeout", "timeout", 5);
+            dispatch(addEvent(timeoutEvent));
+            transition = new Transition("mLastTo0", sourceMediaState.id, timeoutEvent.id, destinationMediaState.id);
+            dispatch(addTransition(sourceMediaState, transition, destinationMediaState));
+
+            store = getState().bangReducer;
+        }
+
 
         // let playlistItem = null;
         //

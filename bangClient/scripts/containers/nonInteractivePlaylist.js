@@ -9,7 +9,6 @@ import { guid } from '../utilities/utils';
 
 // import ContentItem from 'bangDM/dist/entities/contentItem';
 
-// import { getMediaStates } from 'bangDM/dist/reducers/reducerZone';
 import { getMediaStates } from 'bangDM/dist/reducers/reducerZone';
 
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
