@@ -6,12 +6,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import BAUI from '../platform/baUI';
-import EditPreferencesDlg from '../components/Dialogs/editPreferencesDlg';
-//
 import ImagePlaylistItem from '../badm/imagePlaylistItem';
 import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 import MediaLibrary from '../components/mediaLibrary';
-import PropertySheet from '../components/propertySheet';
 import NonInteractivePlaylist from './nonInteractivePlaylist';
 
 
