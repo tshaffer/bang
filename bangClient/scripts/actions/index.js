@@ -75,26 +75,6 @@ export function createDefaultPresentation(presentationName) {
 
         let zoneAction = dispatch(newZone('Zone1', "images", true));
         store = getState();
-
-        // return;
-        //
-        //
-        // dispatch(newSign(presentationName, "1920x1080x60p"));
-        // dispatch(newZone("Images", "images"));
-        //
-        // let nextState = getState().reducers;
-        // const zoneId = getLastKey(nextState.zones.zonesById);
-        // dispatch(addZone(zoneId));
-        //
-        // nextState = getState().reducers;
-        // const zone = nextState.zones.zonesById[zoneId];
-        //
-        // dispatch(newZonePlaylist());
-        //
-        // nextState = getState().reducers;
-        // const zonePlaylistId = getLastKey(nextState.zonePlaylists.zonePlaylistsById);
-        //
-        // dispatch(setZonePlaylist(zoneId, zonePlaylistId));
     };
 }
 

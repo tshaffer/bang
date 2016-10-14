@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "axios": "^0.12.0",
-    "bangDM": "0.0.11",
+    "bangDM": "0.0.19",
     "deep-equal": "^1.0.1",
     "exif": "^0.6.0",
     "fluent-ffmpeg": "^2.1.0",
