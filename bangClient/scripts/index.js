@@ -1,8 +1,6 @@
 /**
  * Created by tedshaffer on 6/3/16.
  */
-require('../less/main.less');
-
 'use strict';
 
 import thunkMiddleware from 'redux-thunk';
@@ -15,7 +13,6 @@ import {combineReducers} from 'redux';
 import ReduxPromise from 'redux-promise';
 import { Router, browserHistory, hashHistory } from 'react-router';
 import reducers from './reducers';
-// import routes from './routes';
 import { Route } from 'react-router';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
@@ -31,19 +28,6 @@ const myReducers = combineReducers({
 });
 
 
-// const store = createStore(
-//     rootReducer,
-//     applyMiddleware(
-//         thunkMiddleware, // lets us dispatch() functions
-//         loggerMiddleware // neat middleware that logs actions
-//     )
-// )
-//
-// store.dispatch(selectSubreddit('reactjs'))
-// store.dispatch(fetchPosts('reactjs')).then(() =>
-//     console.log(store.getState())
-// )
-
 const store = createStore(
     myReducers,
     applyMiddleware(
@@ -55,8 +39,6 @@ const store = createStore(
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
-
-// <Provider store={createStoreWithMiddleware(reducers)}>
 
 ReactDOM.render(
     <Provider store={store}>

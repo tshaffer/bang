@@ -175,11 +175,4 @@ export default class BAUI {
     handleEditPreferences() {
         this.ba.handleEditPreferences();
     }
-
-    getOpenSavePresentationJSX(bsnPresentations) {
-
-        return (
-            <div/>
-        );
-    }
 }

@@ -9,23 +9,13 @@ var mime = require("mime");
 // https://www.npmjs.com/package/image-size
 var sizeOf = require('image-size');
 
-import { getLastKey } from '../utilities/utils';
-
 import { setMediaThumbs, mergeMediaThumbs, setMediaFolder, openSign, setMediaLibraryFiles } from '../actions/index';
 
 import { openDB, addRecordToDB, dbGetThumbs, dbGetMediaLibraryFolder, dbSaveMediaFolder } from './db';
-import { newZone, addZone, clearZonePlaylists, newZonePlaylist, setZonePlaylist, clearPlaylistItems, newPlaylistItem, addPlaylistItem } from '../actions/index';
-
-import Sign from '../badm/sign';
-import Zone from '../badm/zone';
-import HtmlSite from '../badm/htmlSite';
-import ImagePlaylistItem from '../badm/imagePlaylistItem';
-import HTML5PlaylistItem from '../badm/html5PlaylistItem';
 
 const mediaFileSuffixes = ['jpg','mpg'];
 const imageFileSuffixes = ['jpg'];
 const videoFileSuffixes = ['mpg'];
-
 
 export function executeLoadAppData() {
 
@@ -349,121 +339,8 @@ function buildThumb(mediaFile) {
     });
 }
 
-export function executeFetchSign(filePath) {
-
-    return function (dispatch, getState) {
-
-        console.log("fetchSign, filePath=", filePath);
-
-        let nextState = null;
-
-        // get data in badm format
-        fs.readFile(filePath, 'utf8', (err, data) => {
-
-            // TODO - proper error handling?
-            if (err) {
-                throw err;
-            }
-            console.log("fs.ReadFile successful");
-
-            // NOT A REAL badmSIGN - just a json object
-            const jsonSign = JSON.parse(data);
-
-            // convert to real sign - better way?
-            let badmSign = new Sign(jsonSign.name);
-            badmSign.videoMode = jsonSign.videoMode;
-
-            jsonSign.zones.forEach( jsonZone => {
-                let badmZone = new Zone(jsonZone.name, jsonZone.type);
-                badmSign.zones.push(badmZone);
-
-                let badmZonePlaylist = badmZone.zonePlaylist;
-
-                jsonZone.zonePlaylist.playlistItems.forEach( jsonPlaylistItem => {
-                    const imagePlaylistItem = new ImagePlaylistItem(jsonPlaylistItem.fileName,jsonPlaylistItem.filePath,
-                        jsonPlaylistItem.timeOnScreen, jsonPlaylistItem.transition, jsonPlaylistItem.transitionDuration, jsonPlaylistItem.videoPlayerRequired);
-                    badmZonePlaylist.playlistItems.push(imagePlaylistItem);
-                });
-            });
-
-            // update redux with fetched sign
-            dispatch(clearZonePlaylists());
-            dispatch(clearPlaylistItems());
-
-            dispatch(openSign(badmSign.name, badmSign.videoMode));
-            badmSign.zones.forEach( badmZone => {
-
-                dispatch(newZone(badmZone.name, badmZone.type));
-
-                nextState = getState();
-                const zoneId = getLastKey(nextState.zones.zonesById);
-                dispatch(addZone(zoneId));
-
-                nextState = getState();
-                const zone = nextState.zones.zonesById[zoneId];
-
-                dispatch(newZonePlaylist());
-                nextState = getState();
-                const zonePlaylistId = getLastKey(nextState.zonePlaylists.zonePlaylistsById);
-
-                dispatch(setZonePlaylist(zoneId, zonePlaylistId));
-
-                badmZone.zonePlaylist.playlistItems.forEach( badmPlaylistItem => {
-                    dispatch(newPlaylistItem(badmPlaylistItem));
-                    dispatch(addPlaylistItem(zonePlaylistId, badmPlaylistItem.id));
-                });
-            } );
-        });
-    };
-}
-
 export function getFileName(filePath) {
     return path.basename(filePath);
-}
-
-export function executeSaveSign(filePath) {
-
-    return function (dispatch, getState) {
-        
-        const state = getState();
-
-        let badmSign = new Sign(state.sign.name, state.sign.videoMode);
-
-        state.sign.zoneIds.forEach( zoneId => {
-
-            const zone = state.zones.zonesById[zoneId];
-            let badmZone = new Zone(zone.name, zone.type);
-            badmSign.addZone(badmZone);
-
-            const badmZonePlaylist = badmZone.zonePlaylist;
-
-            const zonePlaylist = state.zonePlaylists.zonePlaylistsById[zone.zonePlaylistId];
-            zonePlaylist.playlistItemIds.forEach(playlistItemId => {
-                let badmPlaylistItem = null;
-                const playlistItem = state.playlistItems.playlistItemsById[playlistItemId];
-                if (playlistItem instanceof ImagePlaylistItem) {
-                    badmPlaylistItem = new ImagePlaylistItem(playlistItem.fileName, playlistItem.filePath, playlistItem.timeOnScreen, playlistItem.transition, playlistItem.transitionDuration, "false");
-                }
-                else if (playlistItem instanceof HTML5PlaylistItem) {
-                    badmPlaylistItem = new HTML5PlaylistItem(playlistItem.fileName, playlistItem.htmlSiteName, playlistItem.enableExternalData, playlistItem.enableMouseEvents, playlistItem.displayCursor, playlistItem.hwzOn, playlistItem.useUserStylesheet, playlistItem.userStyleSheet);
-                }
-                badmZonePlaylist.playlistItems.push(badmPlaylistItem);
-            });
-        });
-
-        state.sign.htmlSiteIds.forEach( htmlSiteId => {
-
-            const htmlSite = state.htmlSites.htmlSitesById[htmlSiteId];
-            let badmHtmlSite = new HtmlSite(htmlSite.name, htmlSite.type, htmlSite.siteSpec);
-            badmSign.addHtmlSite(htmlSite);
-        });
-
-        const presentation = JSON.stringify(badmSign, null, 2);
-
-        fs.writeFile(filePath, presentation, () => {
-            console.log("bpf writeFile successful");
-        });
-    };
 }
 
 
