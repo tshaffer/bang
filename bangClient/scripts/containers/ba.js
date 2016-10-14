@@ -36,8 +36,6 @@ class BA extends Component {
 
     componentWillMount() {
 
-        // this.props.initializeCloudFirmwareSpecs();
-        //
         this.props.createDefaultPresentation("Project 1");
 
         this.props.loadAppData();
@@ -48,104 +46,6 @@ class BA extends Component {
         var self = this;
 
         this.baUI.init();
-
-        // tmp code to test publishing to LWS
-        // const lwsPublisher = new LWSPublisher();
-        // lwsPublisher.publishToLWS();
-
-        // tmp code to test BSN rest API interactions
-        // this.props.getBSNAuthToken();
-    }
-
-    // getFamilyFWVersionInfo(firmwareSpecsByFamily, publishFirmware) {
-    //     publishFirmware.productionVersion = firmwareSpecsByFamily.Production.version;
-    //     publishFirmware.betaVersion = firmwareSpecsByFamily.Beta.version;
-    //     publishFirmware.compatibleVersion = firmwareSpecsByFamily.MinimumCompatible.version;
-    //     publishFirmware.productionReleaseURL = firmwareSpecsByFamily.Production.url;
-    //     publishFirmware.betaReleaseURL = firmwareSpecsByFamily.Beta.url;
-    //     publishFirmware.compatibleReleaseURL = firmwareSpecsByFamily.MinimumCompatible.url;
-    //     publishFirmware.productionReleaseSHA1 = firmwareSpecsByFamily.Production.sha1;
-    //     publishFirmware.betaReleaseSHA1 = firmwareSpecsByFamily.Beta.sha1;
-    //     publishFirmware.compatibleReleaseSHA1 = firmwareSpecsByFamily.MinimumCompatible.sha1;
-    //     publishFirmware.productionReleaseFileLength = firmwareSpecsByFamily.Production.length;
-    //     publishFirmware.betaReleaseFileLength = firmwareSpecsByFamily.Beta.length;
-    //     publishFirmware.compatibleReleaseFileLength = firmwareSpecsByFamily.MinimumCompatible.length;
-    // }
-
-
-    // getFWVersionInfo() {
-    //
-    //     const firmwareSpecsByFamily = this.props.firmwareSpecs.firmwareSpecsByFamily;
-    //
-    //     this.getFamilyFWVersionInfo(firmwareSpecsByFamily["Puma"], this.pumaPublishFirmware);
-    //     this.getFamilyFWVersionInfo(firmwareSpecsByFamily["Pantera"], this.panteraPublishFirmware);
-    //     this.getFamilyFWVersionInfo(firmwareSpecsByFamily["Impala"], this.impalaPublishFirmware);
-    //     this.getFamilyFWVersionInfo(firmwareSpecsByFamily["Panther"], this.pantherPublishFirmware);
-    //     this.getFamilyFWVersionInfo(firmwareSpecsByFamily["Cheetah"], this.cheetahPublishFirmware);
-    //     this.getFamilyFWVersionInfo(firmwareSpecsByFamily["Tiger"], this.tigerPublishFirmware);
-    //     this.getFamilyFWVersionInfo(firmwareSpecsByFamily["Bobcat"], this.bobcatPublishFirmware);
-    //     this.getFamilyFWVersionInfo(firmwareSpecsByFamily["Lynx"], this.lynxPublishFirmware);
-    // }
-
-    lwsPublish() {
-        console.log("lws publish invoked");
-    //     const lwsPublisher = new LWSPublisher();
-    //
-    //     this.pumaPublishFirmware = new PublishFirmware();
-    //     this.pumaPublishFirmware.firmwareUpdateSource = "none";
-    //     this.pumaPublishFirmware.firmwareUpdateStandardTargetFileName = "puma-update.bsfw";
-    //     this.pumaPublishFirmware.firmwareUpdateDifferentTargetFileName = "puma-update_different.bsfw";
-    //     this.pumaPublishFirmware.firmwareUpdateNewerTargetFileName = "puma-update_newer.bsfw";
-    //     this.pumaPublishFirmware.firmwareUpdateSaveTargetFileName = "puma-update_save.bsfw";
-    //
-    //     this.panteraPublishFirmware = new PublishFirmware;
-    //     this.panteraPublishFirmware.firmwareUpdateSource = "none";
-    //     this.impalaPublishFirmware = new PublishFirmware;
-    //     this.impalaPublishFirmware.firmwareUpdateSource = "none";
-    //     this.pantherPublishFirmware = new PublishFirmware;
-    //     this.pantherPublishFirmware.firmwareUpdateSource = "none";
-    //     this.cheetahPublishFirmware = new PublishFirmware;
-    //     this.cheetahPublishFirmware.firmwareUpdateSource = "none";
-    //     this.tigerPublishFirmware = new PublishFirmware();
-    //     this.tigerPublishFirmware.firmwareUpdateSource = "none";
-    //     this.tigerPublishFirmware.firmwareUpdateSourceFilePath = "/Users/tedshaffer/Documents/BSReleases/Tiger/tiger-6.2.48-update.bsfw";
-    //     this.tigerPublishFirmware.firmwareUpdateStandardTargetFileName = "tiger-update.bsfw";
-    //     this.tigerPublishFirmware.firmwareUpdateDifferentTargetFileName = "tiger-update_different.bsfw";
-    //     this.tigerPublishFirmware.firmwareUpdateNewerTargetFileName = "tiger-update_newer.bsfw";
-    //     this.tigerPublishFirmware.firmwareUpdateSaveTargetFileName = "tiger-update_save.bsfw";
-    //
-    //     this.bobcatPublishFirmware = new PublishFirmware;
-    //     this.bobcatPublishFirmware.firmwareUpdateSource = "none";
-    //     this.lynxPublishFirmware = new PublishFirmware;
-    //     this.lynxPublishFirmware.firmwareUpdateSource = "none";
-    //
-    //     this.getFWVersionInfo();
-    //
-    //     lwsPublisher.publishToLWS("Standard", this.pumaPublishFirmware,
-    //         this.panteraPublishFirmware, this.impalaPublishFirmware,
-    //         this.pantherPublishFirmware, this.cheetahPublishFirmware,
-    //         this.tigerPublishFirmware, this.bobcatPublishFirmware, this.lynxPublishFirmware);
-    }
-
-
-    handleSelectMediaState(mediaState) {
-        this.setState({ selectedMediaStateId: mediaState.getId() });
-    }
-
-
-// edit preferences using material ui
-    handleEditPreferences() {
-        console.log("handleEditPreferences in ba");
-        this.refs.editPreferencesDlg.handleOpen();
-    }
-
-    handleEditPreferencesOK(preferences) {
-        console.log("handleEditPreferencesOK invoked");
-        console.log(preferences);
-    }
-
-    handleToggleOpenClosePropertySheet() {
-        this.setState({propertySheetOpen: !this.state.propertySheetOpen});
     }
 
     getEmptyPlaylistItem(existingPlaylistItem) {
@@ -175,49 +75,6 @@ class BA extends Component {
         return Object.assign(emptyPlaylistItem, existingPlaylistItem);
 
     }
-
-    handleUpdateHTML5StateName(selectedPlaylistItemId, html5StateName) {
-
-        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
-        updatedPlaylistItem.setFileName(html5StateName);
-        // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
-    }
-
-    handleUpdateHTML5SiteName(selectedPlaylistItemId, html5SiteName) {
-
-        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
-        updatedPlaylistItem.htmlSiteName = html5SiteName;
-        // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
-    }
-
-    handleUpdateHTML5EnableExternalData(selectedPlaylistItemId, enableExternalData) {
-
-        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
-        updatedPlaylistItem.enableExternalData = enableExternalData;
-        // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
-    }
-
-    handleUpdateHTML5EnableMouseEvents(selectedPlaylistItemId, enableMouseEvents) {
-
-        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
-        updatedPlaylistItem.enableMouseEvents = enableMouseEvents;
-        // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
-    }
-
-    handleUpdateHTML5DisplayCursor(selectedPlaylistItemId, displayCursor) {
-
-        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
-        updatedPlaylistItem.displayCursor = displayCursor;
-        // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
-    }
-
-    handleUpdateHTML5HWZOn(selectedPlaylistItemId, hwzOn) {
-
-        let updatedPlaylistItem = this.copyExistingPlaylistItem(selectedPlaylistItemId);
-        updatedPlaylistItem.hwzOn = hwzOn;
-        // this.props.updatePlaylistItem(selectedPlaylistItemId, updatedPlaylistItem);
-    }
-
 
     getCurrentZone() {
 
@@ -249,30 +106,6 @@ class BA extends Component {
         return currentZonePlaylist;
     }
 
-    handleOpen() {
-        this.setState({open: true});
-    }
-
-    handleClose() {
-        this.setState({open: false});
-    }
-
-    // getBSNJSX()
-    //     // this.props.getBSNProfile();
-    //     // this.props.getBSNSelf();
-    //     // this.props.getBSNNetworks();
-    //     this.props.getBSNContent();
-    //     // this.props.getBSNGroups();
-    //     // this.props.getBSNDevices();
-    //     // this.props.getBSNUsers();
-    //     // this.props.getBSNUser("12650");
-    //     // this.props.getBSNAccountUsers();
-    //     // this.props.getBSNPresentations();
-    //     // this.props.getCurrentBrightSignStatus();
-    //     // this.props.getBrightSignId();
-    //     return <div>pizza</div>;
-    // }
-
     render () {
 
         let signName = <span>No sign yet</span>;
@@ -282,51 +115,17 @@ class BA extends Component {
             signVideoMode = this.props.sign.videoMode;
         }
 
-        // // const bsnJSX = this.getBSNJSX();
-        // const openSavePresentationJSX = this.baUI.getOpenSavePresentationJSX(this.state.bsnPresentations);
         const openSavePresentationJSX = <div>pizza!!!</div>;
-
-        let propertySheetTag = <div></div>;
-        if (this.state.propertySheetOpen) {
-            propertySheetTag =
-                <PropertySheet
-                    onBrowseForHTMLSite={this.baUI.handleBrowseForHTMLSite.bind(this.baUI)}
-                    onUpdateVideoMode = {this.handleUpdateVideoMode.bind(this)}
-                    getCurrentZone = {this.getCurrentZone.bind(this)}
-                    getCurrentZonePlaylist = {this.getCurrentZonePlaylist.bind(this)}
-                    selectedMediaStateId={this.state.selectedMediaStateId}
-                    selectedPlaylistItemId={this.state.selectedPlaylistItemId}
-                    sign={this.props.sign}
-                    zones= {this.props.zones}
-                    zonePlaylists= {this.props.zonePlaylists}
-                    playlistItems= {this.props.playlistItems}
-                    mediaStates= {this.props.mediaStates}
-
-                    htmlSites= {this.props.htmlSites}
-                    onUpdateHTML5StateName = {this.handleUpdateHTML5StateName.bind(this)}
-                    onUpdateHTML5SiteName = {this.handleUpdateHTML5SiteName.bind(this)}
-                    onUpdateHTML5EnableExternalData = {this.handleUpdateHTML5EnableExternalData.bind(this) }
-                    onUpdateHTML5EnableMouseEvents = {this.handleUpdateHTML5EnableMouseEvents.bind(this) }
-                    onUpdateHTML5DisplayCursor = {this.handleUpdateHTML5DisplayCursor.bind(this) }
-                    onUpdateHTML5HWZOn = {this.handleUpdateHTML5HWZOn.bind(this) }
-                />;
-        }
 
         return (
 
             <div>
 
                 <div>
-                    <button type="button" onClick={this.lwsPublish.bind(this)}>LWS Publish</button>
-                </div>
-
-                <div>
                     <span>{signName}</span>
                     :
                     <span>{signVideoMode}</span>
                 </div>
-
-                {openSavePresentationJSX}
 
                 <div className="bangPageContainer">
                     <MediaLibrary
@@ -340,20 +139,11 @@ class BA extends Component {
                         zones={this.props.zones}
                         zonePlaylists={this.props.zonePlaylists}
                         mediaThumbs={this.props.mediaThumbs}
-                        onSelectMediaState={this.handleSelectMediaState.bind(this)}
                         selectedMediaStateId={this.state.selectedMediaStateId}
-                        onToggleOpenClosePropertySheet={this.handleToggleOpenClosePropertySheet.bind(this)}
-                        propertySheetOpen={this.state.propertySheetOpen}
                         bangSign={this.props.sign}
                         bangZones={this.props.zones}
                     />
-                    {propertySheetTag}
-                    <EditPreferencesDlg
-                        ref="editPreferencesDlg"
-                        onEditPreferencesOK={this.handleEditPreferencesOK.bind(this)}
-                    />
                 </div>
-
             </div>
         );
     }
@@ -388,17 +178,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 
-// function mapDispatchToProps(dispatch) {
-//     return bindActionCreators({createDefaultPresentation, updateSign, loadAppData, selectMediaFolder,
-//             getBSNAuthToken, getBSNProfile, getBSNSelf, getBSNNetworks, getBSNContent, getBSNGroups, getBSNDevices,
-//             getMyBSNUsers, getBSNUser, getBSNAccountUsers, getBSNPresentations,
-//             getCurrentBrightSignStatus, getBrightSignId,
-//             initializeCloudFirmwareSpecs
-//         },
-//         dispatch);
-// }
-
-// updateMediaState
 BA.propTypes = {
     createDefaultPresentation: React.PropTypes.func.isRequired,
     loadAppData: React.PropTypes.func.isRequired,

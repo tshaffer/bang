@@ -1,19 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import $ from 'jquery';
-
-// import { getZoneById } from 'bang/dist/reducers/reducerZone';
 
 import { guid } from '../utilities/utils';
-
-// import ContentItem from 'bangDM/dist/entities/contentItem';
 
 import { getMediaStates } from 'bangDM/dist/reducers/reducerZone';
 
 import { addMediaStateToNonInteractivePlaylist } from '../actions/index';
 import { getThumb } from '../platform/actions';
-
 
 class NonInteractivePlaylist extends Component {
 
@@ -24,7 +18,6 @@ class NonInteractivePlaylist extends Component {
         ev.dataTransfer.setData("type", ev.target.dataset.type);
         ev.dataTransfer.setData("index", ev.target.dataset.index);
 
-        // I don't think the following statement is necessarily correct
         ev.dataTransfer.dropEffect = "move";
         ev.dataTransfer.effectAllowed = 'move';
     }
@@ -64,10 +57,6 @@ class NonInteractivePlaylist extends Component {
                 let filePath = "";
 
                 let className = "";
-                if (self.props.selectedMediaStateId && self.props.selectedMediaStateId === id) {
-                    className = "selectedImage ";
-                }
-
                 const contentItem = mediaState.contentItem;
 
                 // how do I determine whether or not this is an image or a video?
@@ -121,12 +110,7 @@ class NonInteractivePlaylist extends Component {
 
         let mediaStatesJSX = null;
 
-        numberOfMediaStates = this.props.allMediaStates.length;
-
-        let openCloseLabel = "=>";
-        if (!this.props.propertySheetOpen) {
-            openCloseLabel = "<=";
-        }
+        let numberOfMediaStates = this.props.allMediaStates.length;
 
         if (numberOfMediaStates > 0) {
             mediaStatesJSX = this.getMediaStatesJSX();
@@ -147,8 +131,6 @@ class NonInteractivePlaylist extends Component {
                 id="playlistDiv"
             >
                 <div className="playlistHeaderDiv">
-                    <button id="openCloseIcon" className="plainButton" type="button" onClick={this.props.onToggleOpenClosePropertySheet.bind(this)}>{openCloseLabel}</button>
-                    <input step="1" id="zoomSlider" type="range" min="0" max="100" defaultValue="100"></input>
                 </div>
 
                 <ul id="playlistItemsUl" className="playlist-flex-container wrap" onDrop={this.handlePlaylistDrop.bind(this)} onDragOver={this.handlePlaylistDragOver.bind(this)}>
@@ -162,62 +144,18 @@ class NonInteractivePlaylist extends Component {
 
 
 NonInteractivePlaylist.propTypes = {
-    sign: React.PropTypes.object.isRequired,
-    zones: React.PropTypes.object.isRequired,
-    zonePlaylists: React.PropTypes.object.isRequired,
     mediaThumbs: React.PropTypes.object.isRequired,
-    transitions: React.PropTypes.object.isRequired,
-    mediaStates: React.PropTypes.object.isRequired,
-    htmlSites: React.PropTypes.object.isRequired,
-    onSelectMediaState: React.PropTypes.func.isRequired,
     addMediaStateToNonInteractivePlaylist: React.PropTypes.func.isRequired,
-    selectedMediaStateId: React.PropTypes.string.isRequired,
-    onToggleOpenClosePropertySheet: React.PropTypes.func.isRequired,
-    propertySheetOpen : React.PropTypes.bool.isRequired,
-    bangSign: React.PropTypes.object.isRequired,
-    bangZones: React.PropTypes.object.isRequired,
     allMediaStates: React.PropTypes.array.isRequired
 };
 
-const getCurrentZone = (state) => {
-
-    // debugger;
-    //
-    // if (state && state.zones && state.zones.allZones && state.zones.allZones.length > 0) {
-    //     const zoneId = state.zones.allZones[0];
-    //     const zone = getZoneById(state, {id: zoneId});
-    //     return zone;
-    // }
-
-    return null;
-};
-
-
 function mapStateToProps(baState) {
 
-    const state = baState.reducers;
+    // const state = baState.reducers;
     const bangState = baState.bangReducer;
 
     return {
-
         allMediaStates : getMediaStates(bangState),
-
-        currentZone: getCurrentZone(baState.bangReducer),
-
-        bangSign: bangState.sign,
-        bangZones: bangState.zones,
-        sign: state.sign,
-        zones: state.zones,
-        zonePlaylists: state.zonePlaylists,
-        transitions: state.transitions,
-        mediaStates: state.mediaStates,
-        htmlSites: state.htmlSites,
-
-        // selectedZone: getZoneById(baState, {id: currentZoneId});
-        // sign: getSignMetadata(state),
-        // zoneCount: getZoneCount(state),
-        // zones: state.zones,
-
     };
 }
 
