@@ -9,6 +9,13 @@
 //
 // import { getMediaStates } from 'bangDM/dist/reducers/reducerZone';
 
+import {
+    DmState, DmDispatch, DmSign,
+    VideoMode, VideoModeName, ZoneType,
+    baNewSign, baAddZone,
+    baGetSignMetaData, baGetZoneCount, baGetZoneByName
+} from '@brightsign/badatamodel';
+
 import ImageMediaItem from '../entities/imageMediaItem';
 
 import { executeLoadAppData, executeSelectMediaFolder, getFileName } from '../platform/actions';
@@ -70,11 +77,23 @@ export function createDefaultPresentation(presentationName) {
 
     return function (dispatch, getState) {
 
-        // dispatch(newSign(presentationName, "1920x1080x60p"));
-        store = getState();
+        dispatch(baNewSign("New Sign", "v1920x1080x60p"));
 
-        // let zoneAction = dispatch(newZone('Zone1', "images", true));
-        store = getState();
+        store = getState().baDmReducer;
+
+        let zoneCount = baGetZoneCount(store);
+        let newZoneName = "Zone" + (zoneCount+1).toString();
+        dispatch(baAddZone(newZoneName,2));
+
+        zoneCount = baGetZoneCount(getState().baDmReducer);
+        console.log("number of zones is:", zoneCount);
+
+        let zone = baGetZoneByName(getState().baDmReducer, {name: newZoneName});
+        if (zone) {
+            console.log("Found new zone: ", zone.name);
+        } else {
+            console.log("Could not add and find zone!");
+        }
     };
 }
 
