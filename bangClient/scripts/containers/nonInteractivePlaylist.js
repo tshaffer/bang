@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 
 import { guid } from '../utilities/utils';
 
-import { getMediaStates } from 'bangDM/dist/reducers/reducerZone';
+// import { getMediaStates } from 'bangDM/dist/reducers/reducerZone';
 
 import { addMediaStateToNonInteractivePlaylist } from '../actions/index';
 import { getThumb } from '../platform/actions';
@@ -155,7 +155,8 @@ function mapStateToProps(baState) {
     const bangState = baState.bangReducer;
 
     return {
-        allMediaStates : getMediaStates(bangState),
+        // allMediaStates : getMediaStates(bangState),
+        allMediaStates: [],
     };
 }
 

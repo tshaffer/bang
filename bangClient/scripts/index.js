@@ -16,15 +16,13 @@ import reducers from './reducers';
 import { Route } from 'react-router';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
-// const createStoreWithMiddleware = applyMiddleware(ReduxPromise)(createStore);
+import { baDmReducer, DmState} from '@brightsign/badatamodel';
 
 import App from './components/app';
 
-import bangReducer from 'bangDM/dist/reducers/index';
-
 const myReducers = combineReducers({
     reducers,
-    bangReducer
+    baDmReducer
 });
 
 
