@@ -68,7 +68,8 @@ function findFilesThenSetMediaLibraryFiles(dispatch, mediaFolder) {
 
     let mediaFiles = [];
     mediaFiles = findMediaFiles(mediaFolder, mediaFiles);
-    dispatch(setMediaLibraryFiles(mediaFiles));
+    // dispatch(setMediaLibraryFiles(mediaFiles));
+    dispatch(addMediaObjects(mediaFiles));
     return mediaFiles;
 }
 

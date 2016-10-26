@@ -1,28 +1,65 @@
-/**
- * Created by tedshaffer on 6/3/16.
- */
-// import { newSign, newZone, addMediaState, addContentItem, addTransition, deleteTransition, addEvent } from 'bangDM/dist/actions/index';
-// import Event from 'bangDM/dist/entities/event';
-// import Transition from 'bangDM/dist/entities/transition';
-// import MediaState from 'bangDM/dist/entities/mediaState';
-// import ContentItem from 'bangDM/dist/entities/contentItem';
-//
-// import { getMediaStates } from 'bangDM/dist/reducers/reducerZone';
-
-import {
-    DmState, DmDispatch, DmSign,
-    VideoMode, VideoModeName, ZoneType,
-    baNewSign, baAddZone,
-    baGetSignMetaData, baGetZoneCount, baGetZoneByName
-} from '@brightsign/badatamodel';
-
-import ImageMediaItem from '../entities/imageMediaItem';
+import { baNewSign, baAddZone, baGetZoneCount, baGetZoneByName } from '@brightsign/badatamodel';
+import { MediaType } from '@brightsign/badatamodel';
+import { MediaObject } from '@brightsign/badatamodel';
 
 import { executeLoadAppData, executeSelectMediaFolder, getFileName } from '../platform/actions';
+import ImageMediaItem from '../entities/imageMediaItem';
+
 
 export function loadAppData() {
     return executeLoadAppData();
 }
+
+
+// Media Library functionality
+// export function addMediaObject(mediaObject) {
+//     return {
+//         type: ADD_MEDIA_OBJECT,
+//         payload: mediaObject
+//     };
+// }
+
+export const ADD_MEDIA_OBJECTS = 'ADD_MEDIA_OBJECTS';
+export function addMediaObjects(mediaLibraryFiles) {
+
+    let mediaObjects = [];
+
+    mediaLibraryFiles.forEach(function(mediaFolderFile) {
+
+        // const dmMediaObjectState = { path: mediaFolderFile.filePath, mediaType: MediaType.Image };
+        const dmMediaObjectState = { path: mediaFolderFile.filePath, mediaType: 1 };
+        const mediaObject = new MediaObject(dmMediaObjectState);
+        mediaObjects.push(mediaObject);
+    });
+
+    return {
+        type: ADD_MEDIA_OBJECTS,
+        payload: mediaObjects
+    };
+}
+
+// export const SET_MEDIA_LIBRARY_FILES = 'SET_MEDIA_LIBRARY_FILES';
+// export function setMediaLibraryFiles(mediaLibraryFiles) {
+//
+//     let mediaLibraryPlaylistItems = [];
+//
+//     mediaLibraryFiles.forEach(function(mediaFolderFile) {
+//
+//         const fileName = getFileName(mediaFolderFile.filePath);
+//         const imageMediaItem = new ImageMediaItem(fileName, mediaFolderFile.filePath);
+//         mediaLibraryPlaylistItems.push(imageMediaItem);
+//     });
+//
+//     return {
+//         type: SET_MEDIA_LIBRARY_FILES,
+//         payload: mediaLibraryPlaylistItems
+//     };
+// }
+
+
+
+
+
 
 export function selectMediaFolder(mediaFolder, mediaThumbs) {
     return executeSelectMediaFolder(mediaFolder, mediaThumbs);
@@ -33,23 +70,6 @@ export function setMediaFolder(mediaFolder) {
     return {
         type: SET_MEDIA_FOLDER,
         payload: mediaFolder
-    };
-}
-
-export const SET_MEDIA_LIBRARY_FILES = 'SET_MEDIA_LIBRARY_FILES';
-export function setMediaLibraryFiles(mediaLibraryFiles) {
-
-    let mediaLibraryPlaylistItems = [];
-
-    mediaLibraryFiles.forEach(function(mediaFolderFile) {
-        const fileName = getFileName(mediaFolderFile.filePath);
-        const imageMediaItem = new ImageMediaItem(fileName, mediaFolderFile.filePath);
-        mediaLibraryPlaylistItems.push(imageMediaItem);
-    });
-
-    return {
-        type: SET_MEDIA_LIBRARY_FILES,
-        payload: mediaLibraryPlaylistItems
     };
 }
 
@@ -71,6 +91,8 @@ export function mergeMediaThumbs(thumbsByPath) {
     };
 }
 
+
+// Playlist / presentation functionality
 export function createDefaultPresentation(presentationName) {
 
     let store = null;
@@ -96,6 +118,7 @@ export function createDefaultPresentation(presentationName) {
         }
     };
 }
+
 
 // use selector instead
 function getMediaState(state, mediaStateId) {
