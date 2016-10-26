@@ -3,30 +3,32 @@
  */
 import { ADD_MEDIA_OBJECTS } from '../actions/index';
 
-const initialState =
-    {
-        mediaObjectByPath: {}
-    };
+// const initialState =
+//     {
+//         mediaObjectByPath: {}
+//     };
 
-export default function(state = initialState, action) {
+export default function(state = [], action) {
 
     switch (action.type) {
 
+        // case ADD_MEDIA_OBJECTS:
+        //     {
+        //         const mediaObjects = action.payload;
+        //
+        //         let newMediaObjectByPath = {};
+        //
+        //         mediaObjects.forEach( (mediaObject) => {
+        //             newMediaObjectByPath[mediaObject.path] = mediaObject;
+        //         });
+        //
+        //         let newState = {
+        //             mediaObjectByPath: newMediaObjectByPath
+        //         };
+        //         return newState;
+        //     }
         case ADD_MEDIA_OBJECTS:
-            {
-                const mediaObjects = action.payload;
-
-                let newMediaObjectByPath = {};
-
-                mediaObjects.forEach( (mediaObject) => {
-                    newMediaObjectByPath[mediaObject.path] = mediaObject;
-                });
-
-                let newState = {
-                    mediaObjectByPath: newMediaObjectByPath
-                };
-                return newState;
-            }
+            return action.payload;
     }
 
     return state;

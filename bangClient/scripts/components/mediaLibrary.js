@@ -55,19 +55,17 @@ class MediaLibrary extends Component {
 
         let mediaLibraryDiv = <div>No thumbs</div>;
 
-        if (this.props.mediaLibraryPlaylistItems && this.props.mediaLibraryPlaylistItems.length > 0) {
-
-            let mediaLibraryPlaylistItems = this.props.mediaLibraryPlaylistItems.map(function (mediaLibraryPlaylistItem) {
-
-                const id = mediaLibraryPlaylistItem.getId();
-                const fileName = mediaLibraryPlaylistItem.getFileName();
-                const filePath = mediaLibraryPlaylistItem.getFilePath();
+        if (this.props.mediaObjects && this.props.mediaObjects.length > 0) {
+            let mediaObjects = this.props.mediaObjects.map(function (mediaObject) {
+                const id = mediaObject.path;
+                const fileName = mediaObject.path;
+                const filePath = mediaObject.path;
 
                 if (self.props.mediaThumbs.hasOwnProperty(filePath)) {
 
                     const mediaItem = self.props.mediaThumbs[filePath];
                     const thumb = getThumb(mediaItem);
-                    
+
                     return (
                         <li
                             className="flex-item mediaLibraryThumbDiv"
@@ -96,13 +94,63 @@ class MediaLibrary extends Component {
                         </li>
                     );
                 }
+
             });
 
             mediaLibraryDiv =
                 (<ul className="flex-container wrap">
-                    {mediaLibraryPlaylistItems}
+                    {mediaObjects}
                 </ul>);
         }
+
+        // if (this.props.mediaLibraryPlaylistItems && this.props.mediaLibraryPlaylistItems.length > 0) {
+        //
+        //     let mediaLibraryPlaylistItems = this.props.mediaLibraryPlaylistItems.map(function (mediaLibraryPlaylistItem) {
+        //
+        //         const id = mediaLibraryPlaylistItem.getId();
+        //         const fileName = mediaLibraryPlaylistItem.getFileName();
+        //         const filePath = mediaLibraryPlaylistItem.getFilePath();
+        //
+        //         if (self.props.mediaThumbs.hasOwnProperty(filePath)) {
+        //
+        //             const mediaItem = self.props.mediaThumbs[filePath];
+        //             const thumb = getThumb(mediaItem);
+        //
+        //             return (
+        //                 <li
+        //                     className="flex-item mediaLibraryThumbDiv"
+        //                     draggable={true}
+        //                     onDragStart={self.handleMediaLibraryDragStart}
+        //                     data-name={fileName}
+        //                     data-path={filePath}
+        //                     data-type="image"
+        //                     key={id}
+        //                 >
+        //                     <img
+        //                         id={id}
+        //                         src={thumb}
+        //                         className="mediaLibraryThumbImg"
+        //                         draggable={false}
+        //                     />
+        //                     <p className="mediaLibraryThumbLbl">{fileName}</p>
+        //                 </li>
+        //             );
+        //         }
+        //         else {
+        //             // TODO - what is name??
+        //             return (
+        //                 <li key={id}>
+        //                     <p className="mediaLibraryThumbLbl">{name}</p>
+        //                 </li>
+        //             );
+        //         }
+        //     });
+        //
+        //     mediaLibraryDiv =
+        //         (<ul className="flex-container wrap">
+        //             {mediaLibraryPlaylistItems}
+        //         </ul>);
+        // }
 
         let theOtherPlaylistItems = [];
         theOtherPlaylistItems.push(
@@ -189,7 +237,8 @@ class MediaLibrary extends Component {
 MediaLibrary.propTypes = {
     onBrowseForMediaLibrary: React.PropTypes.func.isRequired,
     mediaFolder: React.PropTypes.string.isRequired,
-    mediaLibraryPlaylistItems: React.PropTypes.array.isRequired
+    // mediaLibraryPlaylistItems: React.PropTypes.array.isRequired,
+    mediaObjects: React.PropTypes.array.isRequired,
 };
 
 

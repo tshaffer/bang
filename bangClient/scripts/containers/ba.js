@@ -47,6 +47,8 @@ class BA extends Component {
 
         const openSavePresentationJSX = <div>pizza!!!</div>;
 
+        // {/*mediaLibraryPlaylistItems={this.props.mediaLibraryPlaylistItems}*/}
+
         return (
 
             <div>
@@ -54,7 +56,7 @@ class BA extends Component {
                 <div className="bangPageContainer">
                     <MediaLibrary
                         onBrowseForMediaLibrary={this.baUI.handleBrowseForMediaLibrary.bind(this.baUI)}
-                        mediaLibraryPlaylistItems={this.props.mediaLibraryPlaylistItems}
+                        mediaObjects={this.props.mediaObjects}
                         mediaFolder={this.props.mediaFolder}
                         mediaThumbs={this.props.mediaThumbs}
                     />
@@ -73,9 +75,10 @@ function mapStateToProps(baState) {
     const state = baState.reducers;
 
     return {
-        mediaLibraryPlaylistItems: state.mediaLibraryPlaylistItems,
+        // mediaLibraryPlaylistItems: state.mediaLibraryPlaylistItems,
         mediaFolder: state.mediaFolder,
         mediaThumbs: state.mediaThumbs,
+        mediaObjects: state.mediaObjects,
     };
 }
 
@@ -91,7 +94,8 @@ BA.propTypes = {
     loadAppData: React.PropTypes.func.isRequired,
     mediaFolder: React.PropTypes.string.isRequired,
     mediaThumbs: React.PropTypes.object.isRequired,
-    mediaLibraryPlaylistItems: React.PropTypes.array.isRequired,
+    // mediaLibraryPlaylistItems: React.PropTypes.array.isRequired,
+    mediaObjects: React.PropTypes.array.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(BA);
