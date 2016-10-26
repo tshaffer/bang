@@ -1,5 +1,7 @@
 import { baNewSign, baAddZone, baGetZoneCount, baGetZoneByName } from '@brightsign/badatamodel';
 import { MediaType } from '@brightsign/badatamodel';
+import { VideoMode } from '@brightsign/badatamodel';
+
 import { MediaObject } from '@brightsign/badatamodel';
 
 import { executeLoadAppData, executeSelectMediaFolder, getFileName } from '../platform/actions';
@@ -26,8 +28,9 @@ export function addMediaObjects(mediaLibraryFiles) {
 
     mediaLibraryFiles.forEach(function(mediaFolderFile) {
 
-        // const dmMediaObjectState = { path: mediaFolderFile.filePath, mediaType: MediaType.Image };
-        const dmMediaObjectState = { path: mediaFolderFile.filePath, mediaType: 1 };
+        console.log("MediaType.Image: ", MediaType.Image);
+        const dmMediaObjectState = { path: mediaFolderFile.filePath, mediaType: MediaType.Image };
+        // const dmMediaObjectState = { path: mediaFolderFile.filePath, mediaType: 1 };
         const mediaObject = new MediaObject(dmMediaObjectState);
         mediaObjects.push(mediaObject);
     });
@@ -99,7 +102,10 @@ export function createDefaultPresentation(presentationName) {
 
     return function (dispatch, getState) {
 
-        dispatch(baNewSign("New Sign", "v1920x1080x60p"));
+        // console.log("videoMode is: ", VideoMode.v1920x1080x60p);
+        // console.log("videoMode is: ", VideoMode.v1920x1080x60i);
+        dispatch(baNewSign("New Sign", VideoMode.v1920x1080x60p));
+        // dispatch(baNewSign("New Sign", "v1920x1080x60p"));
 
         store = getState().baDmReducer;
 
