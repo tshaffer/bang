@@ -6,8 +6,6 @@ import { connect } from 'react-redux';
 
 import { baGetMediaStateById} from '@brightsign/badatamodel';
 
-import { getThumbByFilePath } from '../platform/actions';
-
 import MediaObjectState from './mediaObjectState';
 
 class MediaObject extends Component {

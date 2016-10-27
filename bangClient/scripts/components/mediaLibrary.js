@@ -2,6 +2,8 @@ const path = require('path');
 
 import React, { Component } from 'react';
 
+import { MediaType } from '@brightsign/badatamodel';
+
 import ReactTabs from 'react-tabs';
 var Tab = ReactTabs.Tab;
 var Tabs = ReactTabs.Tabs;
@@ -9,6 +11,8 @@ var TabList = ReactTabs.TabList;
 var TabPanel = ReactTabs.TabPanel;
 
 import { getThumb } from '../platform/actions';
+
+import MediaObjectState from './mediaObjectState';
 
 class MediaLibrary extends Component {
 
@@ -55,7 +59,30 @@ class MediaLibrary extends Component {
 
         let mediaLibraryDiv = <div>No thumbs</div>;
 
+        let dataIndex = -1;
+
         if (this.props.mediaObjects && this.props.mediaObjects.length > 0) {
+
+            let mediaObjectsJSX = this.props.mediaObjects.map(function (mediaObject) {
+                console.log(mediaObject);
+
+                dataIndex++;
+
+                const fileName = mediaObject.fileName;
+                const mediaObjectState = { path: mediaObject.path, mediaType: MediaType.Image };
+
+                return (
+                    <MediaObjectState
+                        fileName={fileName}
+                        mediaObjectState={mediaObjectState}
+                        dataIndex={dataIndex}
+                        mediaThumbs={self.props.mediaThumbs}
+                        key={dataIndex}
+                    />
+                );
+
+            });
+
 
             // let mediaObjectsJSX = this.props.mediaObjects.map( (mediaObject, index) => {
             //
@@ -214,8 +241,8 @@ class MediaLibrary extends Component {
 MediaLibrary.propTypes = {
     onBrowseForMediaLibrary: React.PropTypes.func.isRequired,
     mediaFolder: React.PropTypes.string.isRequired,
-    // mediaLibraryPlaylistItems: React.PropTypes.array.isRequired,
     mediaObjects: React.PropTypes.array.isRequired,
+    mediaThumbs: React.PropTypes.object.isRequired,
 };
 
 
