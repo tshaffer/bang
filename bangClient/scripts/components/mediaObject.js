@@ -8,7 +8,9 @@ import { baGetMediaStateById} from '@brightsign/badatamodel';
 
 import { getThumbByFilePath } from '../platform/actions';
 
-export default class MediaObject extends Component {
+import MediaObjectState from './mediaObjectState';
+
+class MediaObject extends Component {
 
     render() {
 
@@ -17,48 +19,71 @@ export default class MediaObject extends Component {
                 <div/>
             );
         }
+
         const mediaState = this.props.mediaState;
-        const filePath = mediaState.contentItem.media.path;
         const fileName = mediaState.name;
-        let className = "";
 
-        // const contentItem = mediaState.contentItem;
-        if (this.props.mediaThumbs.hasOwnProperty(filePath)) {
-            const mediaItem = this.props.mediaThumbs[filePath];
-            const thumb = getThumbByFilePath(mediaItem.thumbPath);
-            className += "mediaLibraryThumbImg";
-
-//                     onClick={() => self.onSelectMediaState(mediaState)}
-//                     draggable={true}
-//                     onDragStart={self.playlistDragStartHandler}
-
-            return (
-                <li
-                    className="flex-item mediaLibraryThumbDiv"
-                    key={this.props.dataIndex}
-                    data-index={this.props.dataIndex}
-                    id={"mediaThumb" + this.props.dataIndex.toString()}>
-                    <img
-                        id={this.props.mediaStateId}
-                        src={thumb}
-                        className={className}
-                        data-index={this.props.dataIndex}
-                        draggable={true}
-                        data-name={fileName}
-                        data-path={filePath}
-                        data-type="image"
-                    />
-                    <p className="mediaLibraryThumbLbl" id={"mediaLbl" + this.props.dataIndex.toString()}>{fileName}</p>
-                </li>
-            );
-
-        }
+        const mediaObjectState = mediaState.contentItem.media;
 
         return (
-            <li key={this.props.dataIndex} data-index={this.props.dataIndex} id={"mediaThumb" + this.props.dataIndex.toString()}>
-                <p className="mediaLibraryThumbLbl">{fileName}</p>
-            </li>
+            <MediaObjectState
+                fileName={fileName}
+                mediaObjectState={mediaObjectState}
+                dataIndex={this.props.dataIndex}
+                mediaThumbs={this.props.mediaThumbs}
+            />
         );
+
+
+
+
+
+
+
+
+
+
+        // this is important!!
+        // mediaState.contentItem.media is a DmMediaObjectState
+
+//         const filePath = mediaState.contentItem.media.path;
+//
+//         if (this.props.mediaThumbs.hasOwnProperty(filePath)) {
+//             const mediaItem = this.props.mediaThumbs[filePath];
+//             const thumb = getThumbByFilePath(mediaItem.thumbPath);
+//             className += "mediaLibraryThumbImg";
+//
+// //                     onClick={() => self.onSelectMediaState(mediaState)}
+// //                     draggable={true}
+// //                     onDragStart={self.playlistDragStartHandler}
+//
+//             return (
+//                 <li
+//                     className="flex-item mediaLibraryThumbDiv"
+//                     key={this.props.dataIndex}
+//                     data-index={this.props.dataIndex}
+//                     id={"mediaThumb" + this.props.dataIndex.toString()}>
+//                     <img
+//                         id={this.props.mediaStateId}
+//                         src={thumb}
+//                         className={className}
+//                         data-index={this.props.dataIndex}
+//                         draggable={true}
+//                         data-name={fileName}
+//                         data-path={filePath}
+//                         data-type="image"
+//                     />
+//                     <p className="mediaLibraryThumbLbl" id={"mediaLbl" + this.props.dataIndex.toString()}>{fileName}</p>
+//                 </li>
+//             );
+//
+//         }
+//
+//         return (
+//             <li key={this.props.dataIndex} data-index={this.props.dataIndex} id={"mediaThumb" + this.props.dataIndex.toString()}>
+//                 <p className="mediaLibraryThumbLbl">{fileName}</p>
+//             </li>
+//         );
     }
 }
 

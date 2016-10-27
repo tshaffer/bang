@@ -14,19 +14,6 @@ export function guid() {
         s4() + '-' + s4() + s4() + s4();
 }
 
-function getKey(obj, keyIndex) {
-    return Object.keys(obj)[keyIndex];
-}
-
-export function getFirstKey(obj) {
-    return getKey(obj, 0);
-}
-
-export function getLastKey(obj) {
-    const numKeys = Object.keys(obj).length;
-    return getKey(obj, numKeys-1);
-}
-
 export function getShortenedFilePath(filePath, maxLength) {
 
     if (!filePath) return "";
