@@ -5,7 +5,6 @@ import { VideoMode } from '@brightsign/badatamodel';
 import { MediaObject } from '@brightsign/badatamodel';
 
 import { executeLoadAppData, executeSelectMediaFolder, getFileName } from '../platform/actions';
-import ImageMediaItem from '../entities/imageMediaItem';
 
 
 export function loadAppData() {
@@ -33,8 +32,6 @@ export function addMediaObjects(mediaLibraryFiles) {
         payload: mediaObjects
     };
 }
-
-
 
 
 
