@@ -9,6 +9,18 @@ export default class MediaObjectState extends Component {
     // not clear what the unique value is
     // id={this.props.mediaStateId}
 
+    // TODO - only applicable to mediaLibrary items at the moment
+    handleMediaLibraryDragStart(ev) {
+
+        console.log("handleMediaLibraryDragStart");
+
+        ev.dataTransfer.setData("path", ev.target.dataset.path);
+        ev.dataTransfer.setData("name", ev.target.dataset.name);
+        ev.dataTransfer.setData("type", ev.target.dataset.type);
+        ev.dataTransfer.dropEffect = "copy";
+        // ev.dataTransfer.effectAllowed = 'copy';
+    }
+
     render() {
 
         const fileName = this.props.fileName;
@@ -21,17 +33,18 @@ export default class MediaObjectState extends Component {
             <li
                 className="flex-item mediaLibraryThumbDiv"
                 key={this.props.dataIndex}
+                draggable={true}
                 data-index={this.props.dataIndex}
+                onDragStart={this.handleMediaLibraryDragStart}
+                data-name={fileName}
+                data-path={filePath}
+                data-type="image"
                 id={"mediaThumb" + this.props.dataIndex.toString()}>
                 <img
                     id={this.props.dataIndex}
                     src={thumb}
                     className={className}
-                    data-index={this.props.dataIndex}
-                    draggable={true}
-                    data-name={fileName}
-                    data-path={filePath}
-                    data-type="image"
+                    draggable={false}
                 />
                 <p className="mediaLibraryThumbLbl" id={"mediaLbl" + this.props.dataIndex.toString()}>{fileName}</p>
             </li>

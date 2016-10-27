@@ -80,80 +80,61 @@ class MediaLibrary extends Component {
                         key={dataIndex}
                     />
                 );
-
             });
 
 
-            // let mediaObjectsJSX = this.props.mediaObjects.map( (mediaObject, index) => {
+
+            // let mediaObjects = this.props.mediaObjects.map(function (mediaObject) {
+            //     const id = mediaObject.path;
+            //     const fileName = mediaObject.fileName;
+            //     const filePath = mediaObject.path;
             //
-            //     dataIndex++;
+            //     if (self.props.mediaThumbs.hasOwnProperty(filePath)) {
             //
-            //     return (
-            //         <MediaObject
-            //             mediaStateId={mediaStateId}
-            //             key={dataIndex}
-            //             dataIndex={dataIndex}
-            //             mediaThumbs={this.props.mediaThumbs}
-            //         />
-            //     );
+            //         const mediaItem = self.props.mediaThumbs[filePath];
+            //         const thumb = getThumb(mediaItem);
+            //
+            //         return (
+//                         {/*<li*/}
+//                             {/*className="flex-item mediaLibraryThumbDiv"*/}
+//                             {/*draggable={true}*/}
+// //****                            {/*onDragStart={self.handleMediaLibraryDragStart}*/}
+//                             {/*data-name={fileName}*/}
+//                             {/*data-path={filePath}*/}
+//                             {/*data-type="image"*/}
+//                             {/*key={id}*/}
+//                         {/*>*/}
+//                             {/*<img*/}
+//                                 {/*id={id}*/}
+//                                 {/*src={thumb}*/}
+//                                 {/*className="mediaLibraryThumbImg"*/}
+//                                 {/*draggable={false}*/}
+//                             {/*/>*/}
+//                             {/*<p className="mediaLibraryThumbLbl">{fileName}</p>*/}
+            //             </li>
+            //         );
+            //     }
+            //     else {
+            //         // TODO - what is name??
+            //         return (
+            //             <li key={id}>
+            //                 <p className="mediaLibraryThumbLbl">{name}</p>
+            //             </li>
+            //         );
+            //     }
+            //
             // });
-            //
-            // return mediaStatesJSX;
 
-
-
-
-
-
-
-
-
-
-            let mediaObjects = this.props.mediaObjects.map(function (mediaObject) {
-                const id = mediaObject.path;
-                const fileName = mediaObject.fileName;
-                const filePath = mediaObject.path;
-
-                if (self.props.mediaThumbs.hasOwnProperty(filePath)) {
-
-                    const mediaItem = self.props.mediaThumbs[filePath];
-                    const thumb = getThumb(mediaItem);
-
-                    return (
-                        <li
-                            className="flex-item mediaLibraryThumbDiv"
-                            draggable={true}
-                            onDragStart={self.handleMediaLibraryDragStart}
-                            data-name={fileName}
-                            data-path={filePath}
-                            data-type="image"
-                            key={id}
-                        >
-                            <img
-                                id={id}
-                                src={thumb}
-                                className="mediaLibraryThumbImg"
-                                draggable={false}
-                            />
-                            <p className="mediaLibraryThumbLbl">{fileName}</p>
-                        </li>
-                    );
-                }
-                else {
-                    // TODO - what is name??
-                    return (
-                        <li key={id}>
-                            <p className="mediaLibraryThumbLbl">{name}</p>
-                        </li>
-                    );
-                }
-
-            });
+            // mediaLibraryDiv =
+            //     (<ul className="flex-container wrap">
+            //         {mediaObjects}
+            //     </ul>);
 
             mediaLibraryDiv =
                 (<ul className="flex-container wrap">
-                    {mediaObjects}
+                    {mediaObjectsJSX}
                 </ul>);
+
         }
 
         let theOtherPlaylistItems = [];
