@@ -4,12 +4,13 @@ import { bindActionCreators } from 'redux';
 
 import { guid } from '../utilities/utils';
 
-// import { getMediaStates } from 'bangDM/dist/reducers/reducerZone';
-import { baGetMediaStateIdsForZone} from '@brightsign/badatamodel';
-import { baGetZoneCount, baGetZoneByName, baAddMediaState, baGetZonesForSign } from '@brightsign/badatamodel';
+import { baGetMediaStateIdsForZone, baGetMediaStateById} from '@brightsign/badatamodel';
+import { baGetZoneCount, baGetZonesForSign } from '@brightsign/badatamodel';
 
 import { addMediaStateToNonInteractivePlaylist } from '../actions/index';
 import { getThumb } from '../platform/actions';
+
+import MediaObject from '../components/mediaObject';
 
 class NonInteractivePlaylist extends Component {
 
@@ -46,60 +47,77 @@ class NonInteractivePlaylist extends Component {
 
         const self = this;
 
-        if (self.props && self.props.allMediaStates && self.props.allMediaStates.length > 0) {
+        if (self.props && self.props.allMediaStateIds && self.props.allMediaStateIds.length > 0) {
 
             let dataIndex = -1;
 
-            let mediaStatesJSX = self.props.allMediaStates.map( (mediaState, index) => {
+            let mediaStatesJSX = self.props.allMediaStateIds.map( (mediaStateId, index) => {
 
                 dataIndex++;
 
-                const id = mediaState.id;
-                const fileName = mediaState.name;
-                let filePath = "";
-
-                let className = "";
-                const contentItem = mediaState.contentItem;
-
-                // how do I determine whether or not this is an image or a video?
-                // why do I need to know?
-
-                filePath = contentItem.path;
-                if (self.props.mediaThumbs.hasOwnProperty(filePath)) {
-
-                    const mediaItem = self.props.mediaThumbs[filePath];
-                    const thumb = getThumb(mediaItem);
-                    className += "mediaLibraryThumbImg";
-
-                    const fileName = contentItem.name;
-
-                    return (
-                        <li className="flex-item mediaLibraryThumbDiv" key={index} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
-                            <img
-                                id={id}
-                                src={thumb}
-                                className={className}
-                                data-index={dataIndex}
-                                onClick={() => self.onSelectMediaState(mediaState)}
-                                draggable={true}
-                                onDragStart={self.playlistDragStartHandler}
-                                data-name={fileName}
-                                data-path={filePath}
-                                data-type="image"
-                            />
-                            <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>{fileName}</p>
-                        </li>
-                    );
-
-                }
-                else {
-                    return (
-                        <li key={id} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
-                            <p className="mediaLibraryThumbLbl">{fileName}</p>
-                        </li>
-                    );
-                }
+                // key as defined below won't work - there could be multiple instances of the same mediaStateId
+                return (
+                    <MediaObject
+                        mediaStateId={mediaStateId}
+                        key={mediaStateId}
+                        dataIndex={dataIndex}
+                        mediaThumbs={this.props.mediaThumbs}
+                    />
+                );
             });
+
+            // let dataIndex = -1;
+            //
+            // let mediaStatesJSX = self.props.allMediaStateIds.map( (mediaStateId, index) => {
+            //
+            //     dataIndex++;
+            //
+            //     const id = mediaState.id;
+            //     const fileName = mediaState.name;
+            //     let filePath = "";
+            //
+            //     let className = "";
+            //     const contentItem = mediaState.contentItem;
+            //
+            //     // how do I determine whether or not this is an image or a video?
+            //     // why do I need to know?
+            //
+            //     filePath = contentItem.path;
+            //     if (self.props.mediaThumbs.hasOwnProperty(filePath)) {
+            //
+            //         const mediaItem = self.props.mediaThumbs[filePath];
+            //         const thumb = getThumb(mediaItem);
+            //         className += "mediaLibraryThumbImg";
+            //
+            //         const fileName = contentItem.name;
+            //
+            //         return (
+            //             <li className="flex-item mediaLibraryThumbDiv" key={index} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
+            //                 <img
+            //                     id={id}
+            //                     src={thumb}
+            //                     className={className}
+            //                     data-index={dataIndex}
+            //                     onClick={() => self.onSelectMediaState(mediaState)}
+            //                     draggable={true}
+            //                     onDragStart={self.playlistDragStartHandler}
+            //                     data-name={fileName}
+            //                     data-path={filePath}
+            //                     data-type="image"
+            //                 />
+            //                 <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>{fileName}</p>
+            //             </li>
+            //         );
+            //
+            //     }
+            //     else {
+            //         return (
+            //             <li key={id} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
+            //                 <p className="mediaLibraryThumbLbl">{fileName}</p>
+            //             </li>
+            //         );
+            //     }
+            // });
 
             return mediaStatesJSX;
 
@@ -112,7 +130,7 @@ class NonInteractivePlaylist extends Component {
 
         let mediaStatesJSX = null;
 
-        let numberOfMediaStates = this.props.allMediaStates.length;
+        let numberOfMediaStates = this.props.allMediaStateIds.length;
 
         if (numberOfMediaStates > 0) {
             mediaStatesJSX = this.getMediaStatesJSX();
@@ -148,12 +166,24 @@ class NonInteractivePlaylist extends Component {
 NonInteractivePlaylist.propTypes = {
     mediaThumbs: React.PropTypes.object.isRequired,
     addMediaStateToNonInteractivePlaylist: React.PropTypes.func.isRequired,
-    allMediaStates: React.PropTypes.array.isRequired
+    allMediaStateIds: React.PropTypes.array.isRequired
 };
+
+
+// const mapStateToProps = (state, ownProps) => ({
+//     sign: baGetSignMetaData(state),
+//     zoneCount: baGetZoneCount(state),
+//     zones: state.zones,
+// });
 
 function mapStateToProps(reduxState) {
 
     const { app, badm } = reduxState;
+
+    // this needs fixing up: instead of what's written below, it should look something like:
+    // return {
+    //     allMediaStateIds: baGetMediaStateIdsForZone(badm, {id: app.currentZoneId})
+    // }
 
     let mediaStateIds = [];
 
@@ -166,7 +196,7 @@ function mapStateToProps(reduxState) {
     }
 
     return {
-        allMediaStates: mediaStateIds
+        allMediaStateIds: mediaStateIds
     };
 }
 

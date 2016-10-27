@@ -126,7 +126,6 @@ export function addMediaStateToNonInteractivePlaylist(stateName, path) {
 
         reduxState = getState();
         badm = reduxState.badm;
-        debugger;
 
         return;
 
