@@ -1,5 +1,5 @@
-import { baNewSign, baAddZone, baGetZoneCount, baGetZoneByName } from '@brightsign/badatamodel';
-import { MediaType } from '@brightsign/badatamodel';
+import { baNewSign, baAddZone, baGetZoneCount, baGetZoneByName, baAddMediaState } from '@brightsign/badatamodel';
+import { BaDmIdNone, ContentItemType, MediaStateContainerType, MediaType } from '@brightsign/badatamodel';
 import { VideoMode } from '@brightsign/badatamodel';
 
 import { MediaObject } from '@brightsign/badatamodel';
@@ -137,19 +137,37 @@ export function addMediaStateToNonInteractivePlaylist(stateName, path) {
     // TERRIBLE HACKS IN HERE
     return function(dispatch, getState) {
 
+
         let store = null;
+        let baDmReducer = null;
+        store = getState();
+        baDmReducer = store.baDmReducer;
 
-        store = getState().bangReducer;
+        // hack to get zone id
+        const zoneId = baDmReducer.zones.allZones[0];
 
-        // const allMediaStatesBefore = getMediaStates(store);
-        const allMediaStatesByIdBefore = store.mediaStates.mediaStatesById;
+        const mediaObject = {path: path, mediaType: MediaType.Image};
+        const contentItem = {id: BaDmIdNone, name: stateName, type: ContentItemType.Media, media: mediaObject};
+        const zoneContainer = {id: zoneId, type: MediaStateContainerType.Zone};
+        const msAction = dispatch(baAddMediaState(stateName, zoneContainer, contentItem));
+        const mediaStateId = msAction.id;
 
-        // how to get zone?
-        // the following is a hack way to do it
-        // const zones = store.zones;
+        store = getState().baDmReducer;
+        debugger;
 
-        // take first entry
-        const zoneId = store.sign.zoneIds[0];
+        return;
+
+        // store = getState().bangReducer;
+        //
+        // // const allMediaStatesBefore = getMediaStates(store);
+        // const allMediaStatesByIdBefore = store.mediaStates.mediaStatesById;
+        //
+        // // how to get zone?
+        // // the following is a hack way to do it
+        // // const zones = store.zones;
+        //
+        // // take first entry
+        // zoneId = store.sign.zoneIds[0];
         // const currentZone = getZoneById(store, {id: zoneId});
 
         // const contentItem = new ContentItem(stateName, "media", path);
