@@ -96,8 +96,7 @@ class NonInteractivePlaylist extends Component {
                 className="playlistDiv"
                 id="playlistDiv"
             >
-                <div className="playlistHeaderDiv">
-                </div>
+                <div className="playlistHeaderDiv"/>
 
                 <ul id="playlistItemsUl" className="playlist-flex-container wrap" onDrop={this.handlePlaylistDrop.bind(this)} onDragOver={this.handlePlaylistDragOver.bind(this)}>
                     {mediaStatesJSX}
