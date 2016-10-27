@@ -28,10 +28,11 @@ export function addMediaObjects(mediaLibraryFiles) {
 
     mediaLibraryFiles.forEach(function(mediaFolderFile) {
 
-        console.log("MediaType.Image: ", MediaType.Image);
         const dmMediaObjectState = { path: mediaFolderFile.filePath, mediaType: MediaType.Image };
-        // const dmMediaObjectState = { path: mediaFolderFile.filePath, mediaType: 1 };
-        const mediaObject = new MediaObject(dmMediaObjectState);
+        let mediaObject = new MediaObject(dmMediaObjectState);
+
+        // HACK
+        mediaObject.fileName = getFileName(mediaFolderFile.filePath);
         mediaObjects.push(mediaObject);
     });
 

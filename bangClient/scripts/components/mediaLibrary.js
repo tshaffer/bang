@@ -58,7 +58,7 @@ class MediaLibrary extends Component {
         if (this.props.mediaObjects && this.props.mediaObjects.length > 0) {
             let mediaObjects = this.props.mediaObjects.map(function (mediaObject) {
                 const id = mediaObject.path;
-                const fileName = mediaObject.path;
+                const fileName = mediaObject.fileName;
                 const filePath = mediaObject.path;
 
                 if (self.props.mediaThumbs.hasOwnProperty(filePath)) {
