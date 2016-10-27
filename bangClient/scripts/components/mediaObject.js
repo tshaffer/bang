@@ -59,25 +59,6 @@ export default class MediaObject extends Component {
                 <p className="mediaLibraryThumbLbl">{fileName}</p>
             </li>
         );
-
-
-        // return (
-        //     <li className="flex-item mediaLibraryThumbDiv" key={this.props.mediaStateId} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
-        //         <img
-        //             id={this.props.mediaStateId}
-        //             src={thumb}
-        //             className={className}
-        //             data-index={this.props.dataIndex}
-        //             onClick={() => self.onSelectMediaState(mediaState)}
-        //             draggable={true}
-        //             onDragStart={self.playlistDragStartHandler}
-        //             data-name={fileName}
-        //             data-path={filePath}
-        //             data-type="image"
-        //         />
-        //         <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>{fileName}</p>
-        //     </li>
-        // );
     }
 }
 
