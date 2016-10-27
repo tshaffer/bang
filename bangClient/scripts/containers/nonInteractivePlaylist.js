@@ -5,6 +5,8 @@ import { bindActionCreators } from 'redux';
 import { guid } from '../utilities/utils';
 
 // import { getMediaStates } from 'bangDM/dist/reducers/reducerZone';
+import { baGetMediaStateIdsForZone} from '@brightsign/badatamodel';
+import { baGetZoneCount, baGetZoneByName, baAddMediaState, baGetZonesForSign } from '@brightsign/badatamodel';
 
 import { addMediaStateToNonInteractivePlaylist } from '../actions/index';
 import { getThumb } from '../platform/actions';
@@ -149,14 +151,22 @@ NonInteractivePlaylist.propTypes = {
     allMediaStates: React.PropTypes.array.isRequired
 };
 
-function mapStateToProps(baState) {
+function mapStateToProps(reduxState) {
 
-    // const state = baState.reducers;
-    const bangState = baState.bangReducer;
+    const { app, badm } = reduxState;
+
+    let mediaStateIds = [];
+
+    const zoneCount = baGetZoneCount(badm);
+    if (zoneCount === 1) {
+        const zoneIds = baGetZonesForSign(badm);
+        // assert zoneIds.length === 1
+        const zoneId = zoneIds[0];
+        mediaStateIds = baGetMediaStateIdsForZone(badm, {id: zoneId});
+    }
 
     return {
-        // allMediaStates : getMediaStates(bangState),
-        allMediaStates: [],
+        allMediaStates: mediaStateIds
     };
 }
 
