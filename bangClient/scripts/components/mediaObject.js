@@ -28,10 +28,14 @@ export default class MediaObject extends Component {
             const thumb = getThumbByFilePath(mediaItem.thumbPath);
             className += "mediaLibraryThumbImg";
 
+//                     onClick={() => self.onSelectMediaState(mediaState)}
+//                     draggable={true}
+//                     onDragStart={self.playlistDragStartHandler}
+
             return (
                 <li
                     className="flex-item mediaLibraryThumbDiv"
-                    key={this.props.mediaStateId}
+                    key={this.props.dataIndex}
                     data-index={this.props.dataIndex}
                     id={"mediaThumb" + this.props.dataIndex.toString()}>
                     <img
@@ -51,7 +55,9 @@ export default class MediaObject extends Component {
         }
 
         return (
-            <div/>
+            <li key={this.props.dataIndex} data-index={this.props.dataIndex} id={"mediaThumb" + this.props.dataIndex.toString()}>
+                <p className="mediaLibraryThumbLbl">{fileName}</p>
+            </li>
         );
 
 

@@ -55,69 +55,15 @@ class NonInteractivePlaylist extends Component {
 
                 dataIndex++;
 
-                // key as defined below won't work - there could be multiple instances of the same mediaStateId
                 return (
                     <MediaObject
                         mediaStateId={mediaStateId}
-                        key={mediaStateId}
+                        key={dataIndex}
                         dataIndex={dataIndex}
                         mediaThumbs={this.props.mediaThumbs}
                     />
                 );
             });
-
-            // let dataIndex = -1;
-            //
-            // let mediaStatesJSX = self.props.allMediaStateIds.map( (mediaStateId, index) => {
-            //
-            //     dataIndex++;
-            //
-            //     const id = mediaState.id;
-            //     const fileName = mediaState.name;
-            //     let filePath = "";
-            //
-            //     let className = "";
-            //     const contentItem = mediaState.contentItem;
-            //
-            //     // how do I determine whether or not this is an image or a video?
-            //     // why do I need to know?
-            //
-            //     filePath = contentItem.path;
-            //     if (self.props.mediaThumbs.hasOwnProperty(filePath)) {
-            //
-            //         const mediaItem = self.props.mediaThumbs[filePath];
-            //         const thumb = getThumb(mediaItem);
-            //         className += "mediaLibraryThumbImg";
-            //
-            //         const fileName = contentItem.name;
-            //
-            //         return (
-            //             <li className="flex-item mediaLibraryThumbDiv" key={index} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
-            //                 <img
-            //                     id={id}
-            //                     src={thumb}
-            //                     className={className}
-            //                     data-index={dataIndex}
-            //                     onClick={() => self.onSelectMediaState(mediaState)}
-            //                     draggable={true}
-            //                     onDragStart={self.playlistDragStartHandler}
-            //                     data-name={fileName}
-            //                     data-path={filePath}
-            //                     data-type="image"
-            //                 />
-            //                 <p className="mediaLibraryThumbLbl" id={"mediaLbl" + dataIndex.toString()}>{fileName}</p>
-            //             </li>
-            //         );
-            //
-            //     }
-            //     else {
-            //         return (
-            //             <li key={id} data-index={dataIndex} id={"mediaThumb" + dataIndex.toString()}>
-            //                 <p className="mediaLibraryThumbLbl">{fileName}</p>
-            //             </li>
-            //         );
-            //     }
-            // });
 
             return mediaStatesJSX;
 
