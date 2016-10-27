@@ -12,11 +12,11 @@ import { createStore, applyMiddleware } from 'redux';
 import {combineReducers} from 'redux';
 import ReduxPromise from 'redux-promise';
 import { Router, browserHistory, hashHistory } from 'react-router';
-import appReducer from './reducers';
 import { Route } from 'react-router';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import { baDmReducer, DmState} from '@brightsign/badatamodel';
+import appReducer from './reducers';
 
 import App from './components/app';
 

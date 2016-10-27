@@ -1,5 +1,5 @@
-import { baNewSign, baAddZone, baGetZoneCount, baGetZoneByName, baAddMediaState } from '@brightsign/badatamodel';
-import { BaDmIdNone, ContentItemType, MediaStateContainerType, MediaType } from '@brightsign/badatamodel';
+import { baNewSign, baAddZone, baGetZonesForSign, baGetZoneCount, baGetZoneByName, baAddMediaState } from '@brightsign/badatamodel';
+import { BaDmIdNone, ZoneType, ContentItemType, MediaStateContainerType, MediaType } from '@brightsign/badatamodel';
 import { VideoMode } from '@brightsign/badatamodel';
 
 import { MediaObject } from '@brightsign/badatamodel';
@@ -13,14 +13,6 @@ export function loadAppData() {
 }
 
 
-// Media Library functionality
-// export function addMediaObject(mediaObject) {
-//     return {
-//         type: ADD_MEDIA_OBJECT,
-//         payload: mediaObject
-//     };
-// }
-
 export const ADD_MEDIA_OBJECTS = 'ADD_MEDIA_OBJECTS';
 export function addMediaObjects(mediaLibraryFiles) {
 
@@ -31,7 +23,7 @@ export function addMediaObjects(mediaLibraryFiles) {
         const dmMediaObjectState = { path: mediaFolderFile.filePath, mediaType: MediaType.Image };
         let mediaObject = new MediaObject(dmMediaObjectState);
 
-        // HACK
+        // HACK - should fileName get added to DmMediaObjectState
         mediaObject.fileName = getFileName(mediaFolderFile.filePath);
         mediaObjects.push(mediaObject);
     });
@@ -42,23 +34,6 @@ export function addMediaObjects(mediaLibraryFiles) {
     };
 }
 
-// export const SET_MEDIA_LIBRARY_FILES = 'SET_MEDIA_LIBRARY_FILES';
-// export function setMediaLibraryFiles(mediaLibraryFiles) {
-//
-//     let mediaLibraryPlaylistItems = [];
-//
-//     mediaLibraryFiles.forEach(function(mediaFolderFile) {
-//
-//         const fileName = getFileName(mediaFolderFile.filePath);
-//         const imageMediaItem = new ImageMediaItem(fileName, mediaFolderFile.filePath);
-//         mediaLibraryPlaylistItems.push(imageMediaItem);
-//     });
-//
-//     return {
-//         type: SET_MEDIA_LIBRARY_FILES,
-//         payload: mediaLibraryPlaylistItems
-//     };
-// }
 
 
 
@@ -108,7 +83,7 @@ export function createDefaultPresentation(presentationName) {
 
         let zoneCount = baGetZoneCount(badm);
         let newZoneName = "Zone" + (zoneCount+1).toString();
-        dispatch(baAddZone(newZoneName,2));
+        dispatch(baAddZone(newZoneName,ZoneType.Video_Or_Images));
 
         reduxState = getState();
         badm = reduxState.badm;
@@ -126,28 +101,22 @@ export function createDefaultPresentation(presentationName) {
 }
 
 
-// use selector instead
-function getMediaState(state, mediaStateId) {
-    return state.mediaStates.mediaStatesById[mediaStateId];
-}
-
 export function addMediaStateToNonInteractivePlaylist(stateName, path) {
 
     let reduxState = null;
     let badm = null;
 
-    // TERRIBLE HACKS IN HERE
     return function(dispatch, getState) {
 
-        // let store = null;
-        // let baDmReducer = null;
-        // store = getState();
-        // baDmReducer = store.baDmReducer;
         reduxState = getState();
         badm = reduxState.badm;
 
-        // hack to get zone id
-        const zoneId = badm.zones.allZones[0];
+        // this code assumes single zone
+        const zoneCount = baGetZoneCount(badm);
+        // assert zoneCount === 1
+        const zoneIds = baGetZonesForSign(badm);
+        // assert zoneIds.length === 1
+        const zoneId = zoneIds[0];
 
         const mediaObject = {path: path, mediaType: MediaType.Image};
         const contentItem = {id: BaDmIdNone, name: stateName, type: ContentItemType.Media, media: mediaObject};
@@ -224,3 +193,9 @@ export function addMediaStateToNonInteractivePlaylist(stateName, path) {
         // }
     };
 }
+
+// use selector instead
+// function getMediaState(state, mediaStateId) {
+//     return state.mediaStates.mediaStatesById[mediaStateId];
+// }
+
