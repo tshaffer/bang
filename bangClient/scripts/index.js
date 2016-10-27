@@ -12,7 +12,7 @@ import { createStore, applyMiddleware } from 'redux';
 import {combineReducers} from 'redux';
 import ReduxPromise from 'redux-promise';
 import { Router, browserHistory, hashHistory } from 'react-router';
-import reducers from './reducers';
+import appReducer from './reducers';
 import { Route } from 'react-router';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
@@ -20,14 +20,13 @@ import { baDmReducer, DmState} from '@brightsign/badatamodel';
 
 import App from './components/app';
 
-const myReducers = combineReducers({
-    reducers,
-    baDmReducer
+export const rootReducer = combineReducers({
+    badm : baDmReducer,
+    app : appReducer
 });
 
-
 const store = createStore(
-    myReducers,
+    rootReducer,
     applyMiddleware(
         thunkMiddleware, // lets us dispatch() functions
         ReduxPromise

@@ -99,25 +99,24 @@ export function mergeMediaThumbs(thumbsByPath) {
 // Playlist / presentation functionality
 export function createDefaultPresentation(presentationName) {
 
-    let store = null;
-
     return function (dispatch, getState) {
 
-        // console.log("videoMode is: ", VideoMode.v1920x1080x60p);
-        // console.log("videoMode is: ", VideoMode.v1920x1080x60i);
         dispatch(baNewSign("New Sign", VideoMode.v1920x1080x60p));
-        // dispatch(baNewSign("New Sign", "v1920x1080x60p"));
 
-        store = getState().baDmReducer;
+        let reduxState = getState();
+        let badm = reduxState.badm;
 
-        let zoneCount = baGetZoneCount(store);
+        let zoneCount = baGetZoneCount(badm);
         let newZoneName = "Zone" + (zoneCount+1).toString();
         dispatch(baAddZone(newZoneName,2));
 
-        zoneCount = baGetZoneCount(getState().baDmReducer);
+        reduxState = getState();
+        badm = reduxState.badm;
+
+        zoneCount = baGetZoneCount(badm);
         console.log("number of zones is:", zoneCount);
 
-        let zone = baGetZoneByName(getState().baDmReducer, {name: newZoneName});
+        let zone = baGetZoneByName(badm, {name: newZoneName});
         if (zone) {
             console.log("Found new zone: ", zone.name);
         } else {
@@ -134,17 +133,21 @@ function getMediaState(state, mediaStateId) {
 
 export function addMediaStateToNonInteractivePlaylist(stateName, path) {
 
+    let reduxState = null;
+    let badm = null;
+
     // TERRIBLE HACKS IN HERE
     return function(dispatch, getState) {
 
-
-        let store = null;
-        let baDmReducer = null;
-        store = getState();
-        baDmReducer = store.baDmReducer;
+        // let store = null;
+        // let baDmReducer = null;
+        // store = getState();
+        // baDmReducer = store.baDmReducer;
+        reduxState = getState();
+        badm = reduxState.badm;
 
         // hack to get zone id
-        const zoneId = baDmReducer.zones.allZones[0];
+        const zoneId = badm.zones.allZones[0];
 
         const mediaObject = {path: path, mediaType: MediaType.Image};
         const contentItem = {id: BaDmIdNone, name: stateName, type: ContentItemType.Media, media: mediaObject};
@@ -152,7 +155,8 @@ export function addMediaStateToNonInteractivePlaylist(stateName, path) {
         const msAction = dispatch(baAddMediaState(stateName, zoneContainer, contentItem));
         const mediaStateId = msAction.id;
 
-        store = getState().baDmReducer;
+        reduxState = getState();
+        badm = reduxState.badm;
         debugger;
 
         return;

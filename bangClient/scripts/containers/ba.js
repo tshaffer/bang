@@ -72,13 +72,12 @@ class BA extends Component {
 
 function mapStateToProps(baState) {
 
-    const state = baState.reducers;
+    const appState = baState.app;
 
     return {
-        // mediaLibraryPlaylistItems: state.mediaLibraryPlaylistItems,
-        mediaFolder: state.mediaFolder,
-        mediaThumbs: state.mediaThumbs,
-        mediaObjects: state.mediaObjects,
+        mediaFolder: appState.mediaFolder,
+        mediaThumbs: appState.mediaThumbs,
+        mediaObjects: appState.mediaObjects,
     };
 }
 
