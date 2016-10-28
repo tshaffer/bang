@@ -40,7 +40,7 @@ class MediaObject extends Component {
                 this.props.selectMediaState(mediaStateId);
             }
             else if (shiftDown) {
-                console.log("to be implemented");
+                this.props.onSelectMediaStateRange(mediaStateId);
             }
             else {
                 this.props.selectMediaState(mediaStateId);
@@ -100,6 +100,7 @@ MediaObject.propTypes = {
     selectMediaState: React.PropTypes.func.isRequired,
     deselectMediaState: React.PropTypes.func.isRequired,
     deselectAllMediaStates: React.PropTypes.func.isRequired,
+    onSelectMediaStateRange: React.PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MediaObject);

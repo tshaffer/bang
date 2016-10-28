@@ -6,9 +6,9 @@ import { guid } from '../utilities/utils';
 
 import { baGetMediaStateIdsForZone, baGetMediaStateById} from '@brightsign/badatamodel';
 import { baGetZoneCount, baGetZonesForSign } from '@brightsign/badatamodel';
-import { isMediaStateSelected } from '../reducers/reducerSelectedMediaStates';
+import { isMediaStateSelected, isLastSelectedMediaState } from '../reducers/reducerSelectedMediaStates';
 
-import { addMediaStateToNonInteractivePlaylist, deselectAllMediaStates } from '../actions/index';
+import { addMediaStateToNonInteractivePlaylist, selectMediaState, deselectAllMediaStates } from '../actions/index';
 
 import MediaObject from '../components/mediaObject';
 
@@ -47,6 +47,39 @@ class NonInteractivePlaylist extends Component {
         this.props.deselectAllMediaStates();
     }
 
+    handleSelectMediaStateRange(mediaStateId) {
+        console.log("handleSelectMediaStateRange:", mediaStateId);
+
+        // select all media states between the last selected media state and the specific media state
+        if (this.props.lastSelectedMediaStateId == "") {
+            // if no prior selected media state, just select this one
+            this.props.selectMediaState(mediaStateId);
+        }
+        else {
+            let indexOfAnchor = -1;
+            let indexOfSelected = -1;
+            this.props.allMediaStates.forEach( (mediaState, index) => {
+                if ( mediaState.id == this.props.lastSelectedMediaStateId ) {
+                    indexOfAnchor = index;
+                }
+                else if ( mediaState.id == mediaStateId ) {
+                    indexOfSelected = index;
+                }
+            });
+
+            if (indexOfAnchor < indexOfSelected) {
+                for (let i = indexOfAnchor; i <= indexOfSelected; i++ ) {
+                    this.props.selectMediaState(this.props.allMediaStateIds[i]);
+                }
+            }
+            else {
+                for (let i = indexOfAnchor; i >= indexOfSelected; i-- ) {
+                    this.props.selectMediaState(this.props.allMediaStateIds[i]);
+                }
+            }
+        }
+    }
+
     getMediaStatesJSX() {
 
         const self = this;
@@ -65,6 +98,7 @@ class NonInteractivePlaylist extends Component {
                         key={dataIndex}
                         dataIndex={dataIndex}
                         mediaThumbs={this.props.mediaThumbs}
+                        onSelectMediaStateRange={this.handleSelectMediaStateRange.bind(this)}
                     />
                 );
             });
@@ -103,7 +137,11 @@ class NonInteractivePlaylist extends Component {
                 onClick={(ev) => this.handleNoMediaStateSelected(ev)}
             >
                 <div className="playlistHeaderDiv" id="playlistHeaderDiv"/>
-                <ul id="playlistItemsUl" className="playlist-flex-container wrap" onDrop={this.handlePlaylistDrop.bind(this)} onDragOver={this.handlePlaylistDragOver.bind(this)}>
+                <ul
+                    id="playlistItemsUl"
+                    className="playlist-flex-container wrap"
+                    onDrop={this.handlePlaylistDrop.bind(this)}
+                    onDragOver={this.handlePlaylistDragOver.bind(this)}>
                     {mediaStatesJSX}
                 </ul>
             </div>
@@ -118,6 +156,7 @@ function mapStateToProps(reduxState) {
 
     let mediaStateIds = [];
     let mediaStates = [];
+    let lastSelectedMediaStateId = "";
 
     const zoneCount = baGetZoneCount(badm);
     if (zoneCount === 1) {
@@ -127,30 +166,45 @@ function mapStateToProps(reduxState) {
         mediaStateIds = baGetMediaStateIdsForZone(badm, {id: zoneId});
 
         mediaStateIds.forEach( (mediaStateId) => {
+
             let mediaState = baGetMediaStateById(badm, { id: mediaStateId} );
+
             mediaState.isSelected = isMediaStateSelected(app, mediaStateId);
+
+            const isLastSelected = isLastSelectedMediaState(app, mediaStateId);
+            if (isLastSelected) {
+                lastSelectedMediaStateId = mediaStateId;
+                mediaState.isLastSelected = true;
+            }
+            else {
+                mediaState.isLastSelected = false;
+            }
             mediaStates.push(mediaState);
+
         });
     }
 
     return {
         allMediaStateIds: mediaStateIds,
-        allMediaStates: mediaStates
+        allMediaStates: mediaStates,
+        lastSelectedMediaStateId
     };
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
     return bindActionCreators(
-        { addMediaStateToNonInteractivePlaylist, deselectAllMediaStates },
+        { addMediaStateToNonInteractivePlaylist, selectMediaState, deselectAllMediaStates },
         dispatch);
 }
 
 NonInteractivePlaylist.propTypes = {
     mediaThumbs: React.PropTypes.object.isRequired,
     addMediaStateToNonInteractivePlaylist: React.PropTypes.func.isRequired,
+    selectMediaState: React.PropTypes.func.isRequired,
     deselectAllMediaStates: React.PropTypes.func.isRequired,
     allMediaStateIds: React.PropTypes.array.isRequired,
-    allMediaStates: React.PropTypes.array.isRequired
+    allMediaStates: React.PropTypes.array.isRequired,
+    lastSelectedMediaStateId: React.PropTypes.string.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(NonInteractivePlaylist);

@@ -6,7 +6,8 @@ import { SELECT_MEDIA_STATE, DESELECT_MEDIA_STATE, DESELECT_ALL_MEDIA_STATES, SE
 
 const initialState =
     {
-        selectedMediaStateIds: []
+        selectedMediaStateIds: [],
+        lastSelectedMediaStateId: ""
     };
 
 export default function(state = initialState, action) {
@@ -16,7 +17,8 @@ export default function(state = initialState, action) {
             const newSelectedMediaStateIds = state.selectedMediaStateIds.concat([action.payload]);
             const newState =
                 {
-                    selectedMediaStateIds: newSelectedMediaStateIds
+                    selectedMediaStateIds: newSelectedMediaStateIds,
+                    lastSelectedMediaStateId: action.payload
                 };
             return newState;
         }
@@ -26,7 +28,8 @@ export default function(state = initialState, action) {
             });
             const newState =
                 {
-                    selectedMediaStateIds: newSelectedMediaStateIds
+                    selectedMediaStateIds: newSelectedMediaStateIds,
+                    lastSelectedMediaStateId: ""
                 };
             return newState;
         }
@@ -46,4 +49,9 @@ export const isMediaStateSelected = (state, mediaStateId) => {
     // return true if mediaStateId is in state.selectedMediaStateIds; false otherwise
     const index = state.selectedMediaStates.selectedMediaStateIds.indexOf(mediaStateId);
     return (index >= 0);
+};
+
+export const isLastSelectedMediaState = (state, mediaStateId) => {
+    // return true if mediaStateId == lastSelectedMediaStateId; false otherwise
+    return mediaStateId == state.selectedMediaStates.lastSelectedMediaStateId;
 };

@@ -15,9 +15,9 @@ export const SET_MEDIA_THUMBS = 'SET_MEDIA_THUMBS';
 export const MERGE_MEDIA_THUMBS = 'MERGE_MEDIA_THUMBS';
 
 export const SELECT_MEDIA_STATE = 'SELECT_MEDIA_STATE';
+// export const SELECT_MEDIA_STATE_RANGE = 'SELECT_MEDIA_STATE_RANGE';
 export const DESELECT_MEDIA_STATE = 'DESELECT_MEDIA_STATE';
 export const DESELECT_ALL_MEDIA_STATES= 'DESELECT_ALL_MEDIA_STATES';
-export const SELECT_MEDIA_STATE_RANGE = 'SELECT_MEDIA_STATE_RANGE';
 
 
 export function selectMediaState(mediaStateId) {
@@ -27,6 +27,13 @@ export function selectMediaState(mediaStateId) {
     };
 }
 
+// export function selectMediaStateRange(mediaStateId) {
+//     return {
+//         type: SELECT_MEDIA_STATE_RANGE,
+//         payload: mediaStateId
+//     };
+// }
+//
 export function deselectMediaState(mediaStateId) {
     return {
         type: DESELECT_MEDIA_STATE,
