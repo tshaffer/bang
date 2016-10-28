@@ -21,11 +21,31 @@ class MediaObject extends Component {
         const controlDown = event.getModifierState("Control");
         const metaDown = event.getModifierState("Meta");
 
-        console.log("shiftDown: ", shiftDown);
-        console.log("controlDown: ", controlDown);
-        console.log("commandDown: ", metaDown);
+        if (this.props.isSelected) {
+            if (metaDown) {
+                this.props.deselectMediaState(mediaStateId);
+            }
+            else if (shiftDown) {
+                console.log("to be implemented");
+            }
+        }
+        else {
+            if (!shiftDown && !metaDown) {
+                this.props.deselectAllMediaStates();
+            }
+            // combine as appropriate
 
-        this.props.selectMediaState(mediaStateId);
+            // what if metaDown and shiftDown??
+            if (metaDown) {
+                this.props.selectMediaState(mediaStateId);
+            }
+            else if (shiftDown) {
+                console.log("to be implemented");
+            }
+            else {
+                this.props.selectMediaState(mediaStateId);
+            }
+        }
     }
 
     render() {
@@ -67,7 +87,7 @@ function mapStateToProps(reduxState, ownProps) {
 
 function mapDispatchToProps(dispatch, ownProps) {
     return bindActionCreators(
-        { selectMediaState },
+        { selectMediaState, deselectMediaState, deselectAllMediaStates },
         dispatch);
 }
 
@@ -78,6 +98,8 @@ MediaObject.propTypes = {
     dataIndex: React.PropTypes.number.isRequired,
     isSelected: React.PropTypes.bool.isRequired,
     selectMediaState: React.PropTypes.func.isRequired,
+    deselectMediaState: React.PropTypes.func.isRequired,
+    deselectAllMediaStates: React.PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MediaObject);

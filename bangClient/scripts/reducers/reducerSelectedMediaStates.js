@@ -15,15 +15,19 @@ export default function(state = initialState, action) {
         case SELECT_MEDIA_STATE: {
             const newSelectedMediaStateIds = state.selectedMediaStateIds.concat([action.payload]);
             const newState =
-            {
-                selectedMediaStateIds: newSelectedMediaStateIds
-            };
+                {
+                    selectedMediaStateIds: newSelectedMediaStateIds
+                };
             return newState;
         }
         case DESELECT_MEDIA_STATE: {
-            const newState = state.selectedMediaStateIds.filter( (value) => {
+            const newSelectedMediaStateIds = state.selectedMediaStateIds.filter( (value) => {
                 return value != action.payload;
             });
+            const newState =
+                {
+                    selectedMediaStateIds: newSelectedMediaStateIds
+                };
             return newState;
         }
         case DESELECT_ALL_MEDIA_STATES: {
@@ -40,7 +44,6 @@ export default function(state = initialState, action) {
 // Selectors
 export const isMediaStateSelected = (state, mediaStateId) => {
     // return true if mediaStateId is in state.selectedMediaStateIds; false otherwise
-    console.log("poo");
     const index = state.selectedMediaStates.selectedMediaStateIds.indexOf(mediaStateId);
     return (index >= 0);
 };

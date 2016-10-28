@@ -25,7 +25,6 @@ export default class MediaObjectState extends Component {
     handleSelectMediaState(ev, mediaStateId) {
         console.log("MediaState ", mediaStateId, " selected");
         if (this.props.onSelectMediaState) {
-            console.log("invoke this.props.onSelectMediaState");
             this.props.onSelectMediaState(ev, mediaStateId);
         }
     }
