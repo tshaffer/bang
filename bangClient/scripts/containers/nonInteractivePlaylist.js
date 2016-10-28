@@ -6,9 +6,9 @@ import { guid } from '../utilities/utils';
 
 import { baGetMediaStateIdsForZone, baGetMediaStateById} from '@brightsign/badatamodel';
 import { baGetZoneCount, baGetZonesForSign } from '@brightsign/badatamodel';
+import { isMediaStateSelected } from '../reducers/reducerSelectedMediaStates';
 
 import { addMediaStateToNonInteractivePlaylist, deselectAllMediaStates } from '../actions/index';
-import { getThumb } from '../platform/actions';
 
 import MediaObject from '../components/mediaObject';
 
@@ -112,30 +112,12 @@ class NonInteractivePlaylist extends Component {
     }
 }
 
-
-NonInteractivePlaylist.propTypes = {
-    mediaThumbs: React.PropTypes.object.isRequired,
-    addMediaStateToNonInteractivePlaylist: React.PropTypes.func.isRequired,
-    allMediaStateIds: React.PropTypes.array.isRequired
-};
-
-
-// const mapStateToProps = (state, ownProps) => ({
-//     sign: baGetSignMetaData(state),
-//     zoneCount: baGetZoneCount(state),
-//     zones: state.zones,
-// });
-
 function mapStateToProps(reduxState) {
 
     const { app, badm } = reduxState;
 
-    // this needs fixing up: instead of what's written below, it should look something like:
-    // return {
-    //     allMediaStateIds: baGetMediaStateIdsForZone(badm, {id: app.currentZoneId})
-    // }
-
     let mediaStateIds = [];
+    let mediaStates = [];
 
     const zoneCount = baGetZoneCount(badm);
     if (zoneCount === 1) {
@@ -143,18 +125,32 @@ function mapStateToProps(reduxState) {
         // assert zoneIds.length === 1
         const zoneId = zoneIds[0];
         mediaStateIds = baGetMediaStateIdsForZone(badm, {id: zoneId});
+
+        mediaStateIds.forEach( (mediaStateId) => {
+            let mediaState = baGetMediaStateById(badm, { id: mediaStateId} );
+            mediaState.isSelected = isMediaStateSelected(app, mediaStateId);
+            mediaStates.push(mediaState);
+        });
     }
 
     return {
-        allMediaStateIds: mediaStateIds
+        allMediaStateIds: mediaStateIds,
+        allMediaStates: mediaStates
     };
 }
-
 
 function mapDispatchToProps(dispatch, ownProps) {
     return bindActionCreators(
         { addMediaStateToNonInteractivePlaylist, deselectAllMediaStates },
         dispatch);
 }
+
+NonInteractivePlaylist.propTypes = {
+    mediaThumbs: React.PropTypes.object.isRequired,
+    addMediaStateToNonInteractivePlaylist: React.PropTypes.func.isRequired,
+    deselectAllMediaStates: React.PropTypes.func.isRequired,
+    allMediaStateIds: React.PropTypes.array.isRequired,
+    allMediaStates: React.PropTypes.array.isRequired
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(NonInteractivePlaylist);
