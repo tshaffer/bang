@@ -9,12 +9,43 @@ import { MediaObject } from '@brightsign/badatamodel';
 import { executeLoadAppData, executeSelectMediaFolder, getFileName } from '../platform/actions';
 
 
+export const ADD_MEDIA_OBJECTS = 'ADD_MEDIA_OBJECTS';
+export const SET_MEDIA_FOLDER = 'SET_MEDIA_FOLDER';
+export const SET_MEDIA_THUMBS = 'SET_MEDIA_THUMBS';
+export const MERGE_MEDIA_THUMBS = 'MERGE_MEDIA_THUMBS';
+
+export const SELECT_MEDIA_STATE = 'SELECT_MEDIA_STATE';
+export const DESELECT_MEDIA_STATE = 'DESELECT_MEDIA_STATE';
+export const DESELECT_ALL_MEDIA_STATES= 'DESELECT_ALL_MEDIA_STATES';
+export const SELECT_MEDIA_STATE_RANGE = 'SELECT_MEDIA_STATE_RANGE';
+
+
+export function selectMediaState(mediaStateId) {
+    return {
+        type: SELECT_MEDIA_STATE,
+        payload: mediaStateId
+    };
+}
+
+export function deselectMediaState(mediaStateId) {
+    return {
+        type: DESELECT_MEDIA_STATE,
+        payload: mediaStateId
+    };
+}
+
+export function deselectAllMediaStates() {
+    return {
+        type: DESELECT_ALL_MEDIA_STATES
+    };
+}
+
+
 export function loadAppData() {
     return executeLoadAppData();
 }
 
 
-export const ADD_MEDIA_OBJECTS = 'ADD_MEDIA_OBJECTS';
 export function addMediaObjects(mediaLibraryFiles) {
 
     let mediaObjects = [];
@@ -36,14 +67,10 @@ export function addMediaObjects(mediaLibraryFiles) {
 }
 
 
-
-
-
 export function selectMediaFolder(mediaFolder, mediaThumbs) {
     return executeSelectMediaFolder(mediaFolder, mediaThumbs);
 }
 
-export const SET_MEDIA_FOLDER = 'SET_MEDIA_FOLDER';
 export function setMediaFolder(mediaFolder) {
     return {
         type: SET_MEDIA_FOLDER,
@@ -51,7 +78,6 @@ export function setMediaFolder(mediaFolder) {
     };
 }
 
-export const SET_MEDIA_THUMBS = 'SET_MEDIA_THUMBS';
 export function setMediaThumbs(thumbsByPath) {
 
     return {
@@ -60,7 +86,6 @@ export function setMediaThumbs(thumbsByPath) {
     };
 }
 
-export const MERGE_MEDIA_THUMBS = 'MERGE_MEDIA_THUMBS';
 export function mergeMediaThumbs(thumbsByPath) {
 
     return {

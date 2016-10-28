@@ -2,6 +2,7 @@
  * Created by tedshaffer on 10/27/16.
  */
 import React, { Component } from 'react';
+
 import { getThumbByFilePath } from '../platform/actions';
 
 export default class MediaObjectState extends Component {
@@ -36,8 +37,6 @@ export default class MediaObjectState extends Component {
         const mediaItem = this.props.mediaThumbs[filePath];
         const thumb = getThumbByFilePath(mediaItem.thumbPath);
         let className = "mediaLibraryThumbImg";
-
-        // onClick={() => this.onSelectMediaState(fileName)}
 
         if (this.props.selected) {
             className += " selectedImage ";
