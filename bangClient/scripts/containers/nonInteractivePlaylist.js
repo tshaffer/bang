@@ -7,7 +7,7 @@ import { guid } from '../utilities/utils';
 import { baGetMediaStateIdsForZone, baGetMediaStateById} from '@brightsign/badatamodel';
 import { baGetZoneCount, baGetZonesForSign } from '@brightsign/badatamodel';
 
-import { addMediaStateToNonInteractivePlaylist } from '../actions/index';
+import { addMediaStateToNonInteractivePlaylist, deselectAllMediaStates } from '../actions/index';
 import { getThumb } from '../platform/actions';
 
 import MediaObject from '../components/mediaObject';
@@ -43,6 +43,10 @@ class NonInteractivePlaylist extends Component {
         this.props.addMediaStateToNonInteractivePlaylist(stateName, path);
     }
 
+    handleNoMediaStateSelected(event) {
+        this.props.deselectAllMediaStates();
+    }
+
     getMediaStatesJSX() {
 
         const self = this;
@@ -72,6 +76,7 @@ class NonInteractivePlaylist extends Component {
         return null;
     }
 
+
     render() {
 
         let mediaStatesJSX = null;
@@ -95,9 +100,9 @@ class NonInteractivePlaylist extends Component {
             <div
                 className="playlistDiv"
                 id="playlistDiv"
+                onClick={(ev) => this.handleNoMediaStateSelected(ev)}
             >
-                <div className="playlistHeaderDiv"/>
-
+                <div className="playlistHeaderDiv" id="playlistHeaderDiv"/>
                 <ul id="playlistItemsUl" className="playlist-flex-container wrap" onDrop={this.handlePlaylistDrop.bind(this)} onDragOver={this.handlePlaylistDragOver.bind(this)}>
                     {mediaStatesJSX}
                 </ul>
@@ -148,7 +153,7 @@ function mapStateToProps(reduxState) {
 
 function mapDispatchToProps(dispatch, ownProps) {
     return bindActionCreators(
-        { addMediaStateToNonInteractivePlaylist },
+        { addMediaStateToNonInteractivePlaylist, deselectAllMediaStates },
         dispatch);
 }
 

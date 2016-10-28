@@ -22,11 +22,12 @@ export default class MediaObjectState extends Component {
         // ev.dataTransfer.effectAllowed = 'copy';
     }
 
-    handleSelectMediaState(ev, mediaStateId) {
+    handleSelectMediaState(event, mediaStateId) {
         console.log("MediaState ", mediaStateId, " selected");
         if (this.props.onSelectMediaState) {
-            this.props.onSelectMediaState(ev, mediaStateId);
+            this.props.onSelectMediaState(event, mediaStateId);
         }
+        event.stopPropagation();
     }
 
     render() {
