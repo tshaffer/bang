@@ -33,9 +33,13 @@ export default class MediaObjectState extends Component {
         const filePath = this.props.mediaObjectState.path;
         const mediaItem = this.props.mediaThumbs[filePath];
         const thumb = getThumbByFilePath(mediaItem.thumbPath);
-        const className = "mediaLibraryThumbImg";
+        let className = "mediaLibraryThumbImg";
 
         // onClick={() => this.onSelectMediaState(fileName)}
+
+        if (this.props.selected) {
+            className += " selectedImage ";
+        }
 
         return (
             <li
@@ -66,5 +70,6 @@ MediaObjectState.propTypes = {
     mediaObjectState: React.PropTypes.object.isRequired,
     dataIndex: React.PropTypes.number.isRequired,
     mediaThumbs: React.PropTypes.object.isRequired,
+    selected: React.PropTypes.bool.isRequired,
 };
 

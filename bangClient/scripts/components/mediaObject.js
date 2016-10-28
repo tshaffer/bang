@@ -29,6 +29,7 @@ class MediaObject extends Component {
                 mediaObjectState={mediaObjectState}
                 dataIndex={this.props.dataIndex}
                 mediaThumbs={this.props.mediaThumbs}
+                selected={true}
             />
         );
     }

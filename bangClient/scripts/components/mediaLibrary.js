@@ -78,6 +78,7 @@ class MediaLibrary extends Component {
                         dataIndex={dataIndex}
                         mediaThumbs={self.props.mediaThumbs}
                         key={dataIndex}
+                        selected={false}
                     />
                 );
             });
