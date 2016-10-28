@@ -31,57 +31,6 @@ class MediaObject extends Component {
                 mediaThumbs={this.props.mediaThumbs}
             />
         );
-
-
-
-
-
-
-
-
-
-
-        // this is important!!
-        // mediaState.contentItem.media is a DmMediaObjectState
-
-//         const filePath = mediaState.contentItem.media.path;
-//
-//         if (this.props.mediaThumbs.hasOwnProperty(filePath)) {
-//             const mediaItem = this.props.mediaThumbs[filePath];
-//             const thumb = getThumbByFilePath(mediaItem.thumbPath);
-//             className += "mediaLibraryThumbImg";
-//
-// //                     onClick={() => self.onSelectMediaState(mediaState)}
-// //                     draggable={true}
-// //                     onDragStart={self.playlistDragStartHandler}
-//
-//             return (
-//                 <li
-//                     className="flex-item mediaLibraryThumbDiv"
-//                     key={this.props.dataIndex}
-//                     data-index={this.props.dataIndex}
-//                     id={"mediaThumb" + this.props.dataIndex.toString()}>
-//                     <img
-//                         id={this.props.mediaStateId}
-//                         src={thumb}
-//                         className={className}
-//                         data-index={this.props.dataIndex}
-//                         draggable={true}
-//                         data-name={fileName}
-//                         data-path={filePath}
-//                         data-type="image"
-//                     />
-//                     <p className="mediaLibraryThumbLbl" id={"mediaLbl" + this.props.dataIndex.toString()}>{fileName}</p>
-//                 </li>
-//             );
-//
-//         }
-//
-//         return (
-//             <li key={this.props.dataIndex} data-index={this.props.dataIndex} id={"mediaThumb" + this.props.dataIndex.toString()}>
-//                 <p className="mediaLibraryThumbLbl">{fileName}</p>
-//             </li>
-//         );
     }
 }
 
