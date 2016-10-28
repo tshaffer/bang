@@ -10,6 +10,10 @@ import MediaObjectState from './mediaObjectState';
 
 class MediaObject extends Component {
 
+    handleSelectMediaState(mediaStateId) {
+        console.log("mediaObject.js::handleSelectMediaState invoked:", mediaStateId);
+    }
+
     render() {
 
         if (!this.props.mediaState) {
@@ -30,6 +34,8 @@ class MediaObject extends Component {
                 dataIndex={this.props.dataIndex}
                 mediaThumbs={this.props.mediaThumbs}
                 selected={true}
+                mediaStateId={mediaState.id}
+                onSelectMediaState={this.handleSelectMediaState.bind(this)}
             />
         );
     }
