@@ -23,7 +23,10 @@ export default class MediaObjectState extends Component {
 
     handleSelectMediaState(ev, mediaStateId) {
         console.log("MediaState ", mediaStateId, " selected");
-        this.props.onSelectMediaState(ev, mediaStateId);
+        if (this.props.onSelectMediaState) {
+            console.log("invoke this.props.onSelectMediaState");
+            this.props.onSelectMediaState(ev, mediaStateId);
+        }
     }
 
     render() {
@@ -64,13 +67,17 @@ export default class MediaObjectState extends Component {
     }
 }
 
+MediaObjectState.defaultProps = {
+    mediaStateId: ''
+};
+
 MediaObjectState.propTypes = {
     fileName: React.PropTypes.string.isRequired,
     mediaObjectState: React.PropTypes.object.isRequired,
     dataIndex: React.PropTypes.number.isRequired,
     mediaThumbs: React.PropTypes.object.isRequired,
     selected: React.PropTypes.bool.isRequired,
+    mediaStateId: React.PropTypes.string.isRequired,
     onSelectMediaState: React.PropTypes.func,
-    mediaStateId: React.PropTypes.string,
 };
 
