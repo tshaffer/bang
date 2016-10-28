@@ -21,9 +21,10 @@ export default class MediaObjectState extends Component {
         // ev.dataTransfer.effectAllowed = 'copy';
     }
 
-    onSelectMediaState(fileName) {
+    onSelectMediaState(ev, fileName) {
         console.log(fileName, " selected");
         // this.props.onSelectMediaState(mediaState);
+        console.log(ev);
     }
 
     render() {
@@ -34,13 +35,15 @@ export default class MediaObjectState extends Component {
         const thumb = getThumbByFilePath(mediaItem.thumbPath);
         const className = "mediaLibraryThumbImg";
 
+        // onClick={() => this.onSelectMediaState(fileName)}
+
         return (
             <li
                 className="flex-item mediaLibraryThumbDiv"
                 key={this.props.dataIndex}
                 draggable={true}
                 data-index={this.props.dataIndex}
-                onClick={() => this.onSelectMediaState(fileName)}
+                onClick={(ev) => this.onSelectMediaState(ev, fileName)}
                 onDragStart={this.handleMediaLibraryDragStart}
                 data-name={fileName}
                 data-path={filePath}
