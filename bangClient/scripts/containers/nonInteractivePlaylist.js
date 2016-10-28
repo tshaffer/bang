@@ -173,11 +173,11 @@ function mapStateToProps(reduxState) {
 
             const isLastSelected = isLastSelectedMediaState(app, mediaStateId);
             if (isLastSelected) {
-                lastSelectedMediaStateId = mediaStateId;
-                mediaState.isLastSelected = true;
+                lastSelectedMediaStateId = mediaStateId;    // used this one, so the others are unnecessary
+                mediaState.isLastSelected = true;           // unnecessary I think
             }
             else {
-                mediaState.isLastSelected = false;
+                mediaState.isLastSelected = false;          // unnecessary I think
             }
             mediaStates.push(mediaState);
 
