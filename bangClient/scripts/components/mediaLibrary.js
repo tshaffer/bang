@@ -53,10 +53,6 @@ class MediaLibrary extends Component {
     handleChange() {
     }
 
-    handleSelectMediaState(event, mediaStateId) {
-        console.log("mediaLibrary.js::handleSelectMediaState invoked - NOOP");
-    }
-
     render() {
 
         var self = this;
@@ -83,8 +79,6 @@ class MediaLibrary extends Component {
                         mediaThumbs={self.props.mediaThumbs}
                         key={dataIndex}
                         selected={false}
-                        mediaStateId={""}
-                        onSelectMediaState={self.handleSelectMediaState.bind(self)}
                     />
                 );
             });

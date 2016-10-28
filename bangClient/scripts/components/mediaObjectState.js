@@ -70,7 +70,7 @@ MediaObjectState.propTypes = {
     dataIndex: React.PropTypes.number.isRequired,
     mediaThumbs: React.PropTypes.object.isRequired,
     selected: React.PropTypes.bool.isRequired,
-    onSelectMediaState: React.PropTypes.func.isRequired,
-    mediaStateId: React.PropTypes.string.isRequired,
+    onSelectMediaState: React.PropTypes.func,
+    mediaStateId: React.PropTypes.string,
 };
 
