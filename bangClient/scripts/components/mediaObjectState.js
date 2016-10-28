@@ -23,15 +23,7 @@ export default class MediaObjectState extends Component {
 
     handleSelectMediaState(ev, mediaStateId) {
         console.log("MediaState ", mediaStateId, " selected");
-        this.props.onSelectMediaState(mediaStateId);
-
-        const shiftDown = ev.getModifierState("Shift");
-        const controlDown = ev.getModifierState("Control");
-        const metaDown = ev.getModifierState("Meta");
-
-        console.log("shiftDown: ", shiftDown);
-        console.log("controlDown: ", controlDown);
-        console.log("commandDown: ", metaDown);
+        this.props.onSelectMediaState(ev, mediaStateId);
     }
 
     render() {

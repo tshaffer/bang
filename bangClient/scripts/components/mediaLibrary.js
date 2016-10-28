@@ -53,7 +53,7 @@ class MediaLibrary extends Component {
     handleChange() {
     }
 
-    handleSelectMediaState(mediaStateId) {
+    handleSelectMediaState(event, mediaStateId) {
         console.log("mediaLibrary.js::handleSelectMediaState invoked - NOOP");
     }
 

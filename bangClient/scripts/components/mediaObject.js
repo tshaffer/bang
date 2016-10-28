@@ -10,8 +10,16 @@ import MediaObjectState from './mediaObjectState';
 
 class MediaObject extends Component {
 
-    handleSelectMediaState(mediaStateId) {
+    handleSelectMediaState(event, mediaStateId) {
         console.log("mediaObject.js::handleSelectMediaState invoked:", mediaStateId);
+
+        const shiftDown = event.getModifierState("Shift");
+        const controlDown = event.getModifierState("Control");
+        const metaDown = event.getModifierState("Meta");
+
+        console.log("shiftDown: ", shiftDown);
+        console.log("controlDown: ", controlDown);
+        console.log("commandDown: ", metaDown);
     }
 
     render() {
