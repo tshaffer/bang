@@ -9,7 +9,7 @@ var mime = require("mime");
 // https://www.npmjs.com/package/image-size
 var sizeOf = require('image-size');
 
-import { setMediaThumbs, mergeMediaThumbs, setMediaFolder, openSign, setMediaLibraryFiles } from '../actions/index';
+import { addMediaObjects, setMediaThumbs, mergeMediaThumbs, setMediaFolder, openSign, setMediaLibraryFiles } from '../actions/index';
 
 import { openDB, addRecordToDB, dbGetThumbs, dbGetMediaLibraryFolder, dbSaveMediaFolder } from './db';
 
@@ -74,8 +74,11 @@ function findFilesThenSetMediaLibraryFiles(dispatch, mediaFolder) {
 }
 
 export function getThumb(mediaItem) {
-
     const filePath = mediaItem.thumbPath;
+    return getThumbByFilePath(filePath);
+}
+
+export function getThumbByFilePath(filePath) {
     const data = fs.readFileSync(filePath).toString("base64");
     const base64Format = util.format("data:%s;base64,%s", mime.lookup(filePath), data);
     // console.log("length of base64 string is: ", base64Format.length);

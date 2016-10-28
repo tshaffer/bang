@@ -21,6 +21,11 @@ export default class MediaObjectState extends Component {
         // ev.dataTransfer.effectAllowed = 'copy';
     }
 
+    onSelectMediaState(fileName) {
+        console.log(fileName, " selected");
+        // this.props.onSelectMediaState(mediaState);
+    }
+
     render() {
 
         const fileName = this.props.fileName;
@@ -35,6 +40,7 @@ export default class MediaObjectState extends Component {
                 key={this.props.dataIndex}
                 draggable={true}
                 data-index={this.props.dataIndex}
+                onClick={() => this.onSelectMediaState(fileName)}
                 onDragStart={this.handleMediaLibraryDragStart}
                 data-name={fileName}
                 data-path={filePath}
