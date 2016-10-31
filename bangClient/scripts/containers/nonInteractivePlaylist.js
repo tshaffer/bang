@@ -5,6 +5,7 @@ import $ from 'jquery';
 
 import { guid } from '../utilities/utils';
 
+import { baGetZoneSimplePlaylist } from '@brightsign/badatamodel';
 import { baGetMediaStateIdsForZone, baGetMediaStateById} from '@brightsign/badatamodel';
 import { baGetZoneCount, baGetZonesForSign } from '@brightsign/badatamodel';
 import { isMediaStateSelected, isLastSelectedMediaState } from '../reducers/reducerSelectedMediaStates';
@@ -268,7 +269,9 @@ function mapStateToProps(reduxState) {
         const zoneIds = baGetZonesForSign(badm);
         // assert zoneIds.length === 1
         const zoneId = zoneIds[0];
-        mediaStateIds = baGetMediaStateIdsForZone(badm, {id: zoneId});
+
+        // mediaStateIds = baGetMediaStateIdsForZone(badm, {id: zoneId});
+        mediaStateIds = baGetZoneSimplePlaylist(badm, {id: zoneId});
 
         mediaStateIds.forEach( (mediaStateId) => {
 
