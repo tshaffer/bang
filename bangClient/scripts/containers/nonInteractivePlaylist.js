@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import $ from 'jquery';
 
 import { guid } from '../utilities/utils';
 
@@ -26,6 +27,39 @@ class NonInteractivePlaylist extends Component {
     }
 
 
+// NEW CODE
+    getDropIndex(event) {
+
+        let index = -1;
+        let indexOfDropTarget = -1;
+
+        // let numberOfMediaStates = 0;
+        // const selectedZonePlaylist = this.getSelectedZonePlaylist();
+        // if (selectedZonePlaylist) {
+        //     numberOfMediaStates = Object.keys(this.props.mediaStates.mediaStatesById).length;
+        // }
+        //
+        const offset = $("#" + event.target.id).offset();
+        const left = event.pageX - offset.left;
+        let targetWidth = event.target.width;
+        if (targetWidth == undefined) {
+            targetWidth = $("#" + event.target.id).outerWidth();
+        }
+
+        indexOfDropTarget = Number(event.target.dataset.index);
+
+        if (left < (targetWidth / 2)) {
+            index = indexOfDropTarget;
+        }
+        // else if (indexOfDropTarget <= (numberOfMediaStates - 1)) {
+        //     index = indexOfDropTarget + 1;
+        // }
+
+        return index;
+    }
+// END OF NEW CODE
+
+
     handlePlaylistDragOver (event) {
 
         event.preventDefault();
@@ -36,9 +70,50 @@ class NonInteractivePlaylist extends Component {
 
         event.preventDefault();
 
+// NEW CODE
+        // copy or move?
+        let operation = "";
+        let startIndex = -1;
+        if (event.dataTransfer.effectAllowed === "move") {
+            operation = "move";
+            startIndex = Number(event.dataTransfer.getData("index"));
+        }
+        else {
+            operation = "copy";
+        }
+// END OF NEW CODE
+
         // get dropped playlist item
         let stateName = event.dataTransfer.getData("name");
         const path = event.dataTransfer.getData("path");
+// NEW CODE
+        const type = event.dataTransfer.getData("type");
+
+        // determine where the drop occurred relative to the target element
+        console.log("event.target.id=", event.target.id);
+        let index = -1;
+        let indexOfDropTarget = -1;
+
+        // index == -1 => drop item at end of list
+        if (event.target.id === "playlistItemsUl") {
+            // drop item at end of list
+        }
+        else if (event.target.id === "lblDropItemHere" || event.target.id === "liDropItemHere") {
+            // drop item onto 'Drop Item Here'
+        }
+        else if (event.target.id.startsWith("mediaThumb") || event.target.id.startsWith("mediaLbl")) {
+            // drop target is in margin of media item
+            index = this.getDropIndex(event);
+        }
+        else if (event.target.id !== "") {
+            // drop target is media item
+            index = this.getDropIndex(event);
+        }
+        else {
+            console.log("don't know where to drop it");
+            return;
+        }
+// END OF NEW CODE
 
         this.props.addMediaStateToNonInteractivePlaylist(stateName, path);
     }

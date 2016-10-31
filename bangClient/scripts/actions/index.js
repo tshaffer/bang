@@ -1,5 +1,5 @@
-import { baNewSign, baAddZone, baGetZonesForSign, baGetZoneCount, baGetZoneByName, baAddMediaState } from '@brightsign/badatamodel';
-import { baPlaylistAppendMediaState } from '@brightsign/badatamodel';
+import { baNewSign, baAddZone, baGetZonesForSign, baGetZoneCount, baGetZoneByName } from '@brightsign/badatamodel';
+import { baPlaylistAddMediaState, baPlaylistAppendMediaState } from '@brightsign/badatamodel';
 
 import { BaDmIdNone, ZoneType, ContentItemType, MediaStateContainerType, MediaType } from '@brightsign/badatamodel';
 import { VideoMode } from '@brightsign/badatamodel';
@@ -159,6 +159,33 @@ export function addMediaStateToNonInteractivePlaylist(stateName, path) {
         // const mediaStateId = msAction.id;
 
         // code using new badm functionality - doesn't work yet
+
+        // * @param index - zero based index at which to add new MediaState.
+        // *   If out of range, MediaState will be appended to the end.
+        // * @param name - Desired mediaState name
+        // * @param container - MediaState container, interface: DmMediaStateContainer
+        // * @param contentItemState - ContentItem, interface: DmDerivedContentItemState
+        // * @param volume - optional, numeric volume in range (0..100) - only pertinent for media content. Default: 0
+        // * @param transitionType - optional, type of Transition to next state. Type: TransitionType. Default: No_effect
+        // * @param eventType - optional, type of event that triggers the transition. Type: EventType.
+        // *   Default: MediaEnd for video/audio, Timer for images
+        //                                                  * @param eventData - optional, data for event. For timer events, this be be a DmTimer object
+        // * @returns BaDmThunkAction - thunk function. When dispatched, the thunk function will return a promise that will
+        // *   resolve with a PlaylistAddMediaStateAction.
+        // *   Success: The action properties returned will be the ones used, including substitutions made for optional input.
+        // *   Failure: Action is returned with error property set to true, and reason property holding error description.
+        // */
+        // export function baPlaylistAddMediaState(
+        //     index : number,
+        //     name: string,
+        //     container: DmMediaStateContainer,
+        //     contentItemState: DmContentItemState,
+        //     volume?,
+        //     transitionType?: TransitionType,
+        //     eventType?: EventType,
+        //     eventData?: any
+        // ) : BaDmThunkAction<PlaylistAddMediaStateAction>;
+
         // export function baPlaylistAppendMediaState(
         //     name: string,
         //     container: DmMediaStateContainer,
