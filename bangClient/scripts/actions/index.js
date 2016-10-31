@@ -132,7 +132,38 @@ export function createDefaultPresentation(presentationName) {
 }
 
 
-export function addMediaStateToNonInteractivePlaylist(stateName, path) {
+// not currently in use
+export function appendMediaStateToNonInteractivePlaylist(stateName, path) {
+    let reduxState = null;
+    let badm = null;
+
+    return function (dispatch, getState) {
+
+        reduxState = getState();
+        badm = reduxState.badm;
+
+        // this code assumes single zone
+        const zoneCount = baGetZoneCount(badm);
+        // assert zoneCount === 1
+        const zoneIds = baGetZonesForSign(badm);
+        // assert zoneIds.length === 1
+        const zoneId = zoneIds[0];
+
+        const mediaObject = {path: path, mediaType: MediaType.Image};
+        const contentItem = {id: BaDmIdNone, name: stateName, type: ContentItemType.Media, media: mediaObject};
+        const zoneContainer = {id: zoneId, type: MediaStateContainerType.Zone};
+
+        let thunkAction = dispatch(baPlaylistAppendMediaState(stateName, zoneContainer, contentItem));
+        thunkAction.then((mediaStateAction) => {
+            console.log("addMediaStateToNonInteractivePlaylist, return from dispatch");
+
+            reduxState = getState();
+            badm = reduxState.badm;
+        });
+    };
+}
+
+export function addMediaStateToNonInteractivePlaylist(index, stateName, path) {
 
     let reduxState = null;
     let badm = null;
@@ -154,12 +185,9 @@ export function addMediaStateToNonInteractivePlaylist(stateName, path) {
         const zoneContainer = {id: zoneId, type: MediaStateContainerType.Zone};
 
 
-        // soon to be obsolete code
-        // const msAction = dispatch(baAddMediaState(stateName, zoneContainer, contentItem));
-        // const mediaStateId = msAction.id;
-
-        // code using new badm functionality - doesn't work yet
-
+        // * Add a new MediaState to the playlist at a given index.
+        // * This function will fail if the MediaState container does not contain a valid simple playlist.
+        // *
         // * @param index - zero based index at which to add new MediaState.
         // *   If out of range, MediaState will be appended to the end.
         // * @param name - Desired mediaState name
@@ -186,16 +214,9 @@ export function addMediaStateToNonInteractivePlaylist(stateName, path) {
         //     eventData?: any
         // ) : BaDmThunkAction<PlaylistAddMediaStateAction>;
 
-        // export function baPlaylistAppendMediaState(
-        //     name: string,
-        //     container: DmMediaStateContainer,
-        //     contentItemState: DmContentItemState,
-        //     volume?,
-        //     transitionType?: TransitionType,
-        //     eventType?: EventType,
-        //     eventData?: any
-        // ) : BaDmThunkAction<PlaylistAddMediaStateAction>;
-        let thunkAction = dispatch(baPlaylistAppendMediaState (stateName, zoneContainer, contentItem));
+
+
+        let thunkAction = dispatch(baPlaylistAddMediaState (index, stateName, zoneContainer, contentItem));
         thunkAction.then( (mediaStateAction) => {
             console.log("addMediaStateToNonInteractivePlaylist, return from dispatch");
 

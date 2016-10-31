@@ -30,7 +30,13 @@ class NonInteractivePlaylist extends Component {
 // NEW CODE
     getDropIndex(event) {
 
+        // the following works under some circumstances. does not necessarily work
+        //          all the time
+        //          when clicking on something other than a media state thumb
+        //          which also includes when clicking beyond the end of the thumbs
+
         const playlistItemsUl = document.getElementById("playlistItemsUl");
+        const targetElement = document.getElementById(event.target.id);
 
         // console.log(event);
         // console.log("event.target.id = ", event.target.id);
@@ -43,7 +49,8 @@ class NonInteractivePlaylist extends Component {
         // console.log(playlistItemsUl.getBoundingClientRect());
         // console.log("getClientRects:");
         // console.log(playlistItemsUl.getClientRects());
-        const left = event.pageX - playlistItemsUl.getBoundingClientRect().left;
+        // const left = event.pageX - playlistItemsUl.getBoundingClientRect().left;
+        const left = event.pageX - targetElement.getBoundingClientRect().left;
         console.log("left=",left);
 
         let index = -1;
@@ -138,7 +145,7 @@ class NonInteractivePlaylist extends Component {
         }
 // END OF NEW CODE
 
-        this.props.addMediaStateToNonInteractivePlaylist(stateName, path);
+        this.props.addMediaStateToNonInteractivePlaylist(index, stateName, path);
     }
 
     handleNoMediaStateSelected(event) {
