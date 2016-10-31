@@ -47,9 +47,9 @@ export default class MediaObjectState extends Component {
                 className="flex-item mediaLibraryThumbDiv"
                 key={this.props.dataIndex}
                 draggable={true}
-                data-index={this.props.dataIndex}
                 onClick={(ev) => this.handleSelectMediaState(ev, this.props.mediaStateId)}
                 onDragStart={this.handleMediaLibraryDragStart}
+                data-index={this.props.dataIndex}
                 data-name={fileName}
                 data-path={filePath}
                 data-type="image"
@@ -59,6 +59,11 @@ export default class MediaObjectState extends Component {
                     src={thumb}
                     className={className}
                     draggable={false}
+
+                    data-index={this.props.dataIndex}
+                    data-name={fileName}
+                    data-path={filePath}
+                    data-type="image"
                 />
                 <p className="mediaLibraryThumbLbl" id={"mediaLbl" + this.props.dataIndex.toString()}>{fileName}</p>
             </li>
