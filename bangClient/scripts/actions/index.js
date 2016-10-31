@@ -155,8 +155,8 @@ export function addMediaStateToNonInteractivePlaylist(stateName, path) {
 
 
         // soon to be obsolete code
-        const msAction = dispatch(baAddMediaState(stateName, zoneContainer, contentItem));
-        const mediaStateId = msAction.id;
+        // const msAction = dispatch(baAddMediaState(stateName, zoneContainer, contentItem));
+        // const mediaStateId = msAction.id;
 
         // code using new badm functionality - doesn't work yet
         // export function baPlaylistAppendMediaState(
@@ -168,13 +168,15 @@ export function addMediaStateToNonInteractivePlaylist(stateName, path) {
         //     eventType?: EventType,
         //     eventData?: any
         // ) : BaDmThunkAction<PlaylistAddMediaStateAction>;
-        // let thunkAction = dispatch(baPlaylistAppendMediaState (stateName, zoneContainer, contentItem));
-        // thunkAction.then( (mediaStateAction) => {
-        //     console.log("addMediaStateToNonInteractivePlaylist, return from dispatch");
-        //
-        //     reduxState = getState();
-        //     badm = reduxState.badm;
-        // });
+        let thunkAction = dispatch(baPlaylistAppendMediaState (stateName, zoneContainer, contentItem));
+        debugger;
+        thunkAction.then( (mediaStateAction) => {
+            debugger;
+            console.log("addMediaStateToNonInteractivePlaylist, return from dispatch");
+
+            reduxState = getState();
+            badm = reduxState.badm;
+        });
 
         // reduxState = getState();
         // badm = reduxState.badm;

@@ -13,7 +13,7 @@
     "bangwapp": "webpack --config ./webpackwapp.config.js"
   },
   "dependencies": {
-    "@brightsign/badatamodel": "^0.1.2",
+    "@brightsign/badatamodel": "^0.1.4",
     "axios": "^0.12.0",
     "deep-equal": "^1.0.1",
     "exif": "^0.6.0",
