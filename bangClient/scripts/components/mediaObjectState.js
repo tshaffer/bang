@@ -55,7 +55,7 @@ export default class MediaObjectState extends Component {
                 data-type="image"
                 id={"mediaThumb" + this.props.dataIndex.toString()}>
                 <img
-                    id={this.props.dataIndex}
+                    id={this.props.mediaStateId}
                     src={thumb}
                     className={className}
                     draggable={false}

@@ -30,6 +30,22 @@ class NonInteractivePlaylist extends Component {
 // NEW CODE
     getDropIndex(event) {
 
+        const playlistItemsUl = document.getElementById("playlistItemsUl");
+
+        // console.log(event);
+        // console.log("event.target.id = ", event.target.id);
+        // console.log("event.pageX = ", event.pageX);
+        // console.log("event.clientX = ", event.clientX);
+        // console.log("event.screenX = ", event.screenX);
+
+        // console.log("playlistItemsUl.offsetLeft = ", playlistItemsUl.offsetLeft);
+        // console.log("getClientBoundingRect:");
+        // console.log(playlistItemsUl.getBoundingClientRect());
+        // console.log("getClientRects:");
+        // console.log(playlistItemsUl.getClientRects());
+        const left = event.pageX - playlistItemsUl.getBoundingClientRect().left;
+        console.log("left=",left);
+
         let index = -1;
         let indexOfDropTarget = -1;
 
@@ -39,14 +55,18 @@ class NonInteractivePlaylist extends Component {
         //     numberOfMediaStates = Object.keys(this.props.mediaStates.mediaStatesById).length;
         // }
         //
-        const offset = $("#" + event.target.id).offset();
-        const left = event.pageX - offset.left;
+
+        // following no longer works
+        // const offset = $("#" + event.target.id).offset();
+        // const left = event.pageX - offset.left;
+
         let targetWidth = event.target.width;
         if (targetWidth == undefined) {
             targetWidth = $("#" + event.target.id).outerWidth();
         }
 
         indexOfDropTarget = Number(event.target.dataset.index);
+        console.log("indexOfDropTarget = ", indexOfDropTarget);
 
         if (left < (targetWidth / 2)) {
             index = indexOfDropTarget;
@@ -54,6 +74,9 @@ class NonInteractivePlaylist extends Component {
         // else if (indexOfDropTarget <= (numberOfMediaStates - 1)) {
         //     index = indexOfDropTarget + 1;
         // }
+        else {
+            index = indexOfDropTarget + 1;
+        }
 
         return index;
     }

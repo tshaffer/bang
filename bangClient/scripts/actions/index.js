@@ -196,9 +196,7 @@ export function addMediaStateToNonInteractivePlaylist(stateName, path) {
         //     eventData?: any
         // ) : BaDmThunkAction<PlaylistAddMediaStateAction>;
         let thunkAction = dispatch(baPlaylistAppendMediaState (stateName, zoneContainer, contentItem));
-        debugger;
         thunkAction.then( (mediaStateAction) => {
-            debugger;
             console.log("addMediaStateToNonInteractivePlaylist, return from dispatch");
 
             reduxState = getState();
