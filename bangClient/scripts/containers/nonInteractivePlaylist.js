@@ -28,48 +28,30 @@ class NonInteractivePlaylist extends Component {
     }
 
 
-// NEW CODE
     getDropIndex(event) {
 
-        // the following works under some circumstances. does not necessarily work
-        //          all the time
-        //          when clicking on something other than a media state thumb
-        //          which also includes when clicking beyond the end of the thumbs
+        let left;
+
+        console.log("event.target.id is:", event.target.id);
 
         const playlistItemsUl = document.getElementById("playlistItemsUl");
         const targetElement = document.getElementById(event.target.id);
 
-        // console.log(event);
-        // console.log("event.target.id = ", event.target.id);
-        // console.log("event.pageX = ", event.pageX);
-        // console.log("event.clientX = ", event.clientX);
-        // console.log("event.screenX = ", event.screenX);
-
-        // console.log("playlistItemsUl.offsetLeft = ", playlistItemsUl.offsetLeft);
-        // console.log("getClientBoundingRect:");
-        // console.log(playlistItemsUl.getBoundingClientRect());
-        // console.log("getClientRects:");
-        // console.log(playlistItemsUl.getClientRects());
-        // const left = event.pageX - playlistItemsUl.getBoundingClientRect().left;
-        const left = event.pageX - targetElement.getBoundingClientRect().left;
+        if (event.target.id == "playlistItemsUl") {
+            left = event.pageX - playlistItemsUl.getBoundingClientRect().left;
+        }
+        else {
+            left = event.pageX - targetElement.getBoundingClientRect().left;
+        }
         console.log("left=",left);
 
         let index = -1;
         let indexOfDropTarget = -1;
 
-        // let numberOfMediaStates = 0;
-        // const selectedZonePlaylist = this.getSelectedZonePlaylist();
-        // if (selectedZonePlaylist) {
-        //     numberOfMediaStates = Object.keys(this.props.mediaStates.mediaStatesById).length;
-        // }
-        //
-
-        // following no longer works
-        // const offset = $("#" + event.target.id).offset();
-        // const left = event.pageX - offset.left;
-
+        const numberOfMediaStates = this.props.allMediaStates.length;
         let targetWidth = event.target.width;
         if (targetWidth == undefined) {
+            // FIX ME TO REMOVE DEPENDENCY ON JQUERY
             targetWidth = $("#" + event.target.id).outerWidth();
         }
 
@@ -79,16 +61,15 @@ class NonInteractivePlaylist extends Component {
         if (left < (targetWidth / 2)) {
             index = indexOfDropTarget;
         }
-        // else if (indexOfDropTarget <= (numberOfMediaStates - 1)) {
-        //     index = indexOfDropTarget + 1;
-        // }
+        else if (indexOfDropTarget <= (numberOfMediaStates - 1)) {
+            index = indexOfDropTarget + 1;
+        }
         else {
             index = indexOfDropTarget + 1;
         }
 
         return index;
     }
-// END OF NEW CODE
 
 
     handlePlaylistDragOver (event) {
@@ -101,7 +82,6 @@ class NonInteractivePlaylist extends Component {
 
         event.preventDefault();
 
-// NEW CODE
         // copy or move?
         let operation = "";
         let startIndex = -1;
@@ -112,12 +92,10 @@ class NonInteractivePlaylist extends Component {
         else {
             operation = "copy";
         }
-// END OF NEW CODE
 
         // get dropped playlist item
         let stateName = event.dataTransfer.getData("name");
         const path = event.dataTransfer.getData("path");
-// NEW CODE
         const type = event.dataTransfer.getData("type");
 
         // determine where the drop occurred relative to the target element
@@ -128,6 +106,7 @@ class NonInteractivePlaylist extends Component {
         // index == -1 => drop item at end of list
         if (event.target.id === "playlistItemsUl") {
             // drop item at end of list
+            // NO LONGER VALID - drop may occur between playlist items - get rid of the space between them????
         }
         else if (event.target.id === "lblDropItemHere" || event.target.id === "liDropItemHere") {
             // drop item onto 'Drop Item Here'
@@ -144,7 +123,6 @@ class NonInteractivePlaylist extends Component {
             console.log("don't know where to drop it");
             return;
         }
-// END OF NEW CODE
 
         this.props.addMediaStateToNonInteractivePlaylist(index, stateName, path);
     }
@@ -264,12 +242,14 @@ function mapStateToProps(reduxState) {
     let mediaStates = [];
     let lastSelectedMediaStateId = "";
 
+    // for now, rely on the fact there is a single zone rather than storing the selected zone in redux
     const zoneCount = baGetZoneCount(badm);
     if (zoneCount === 1) {
         const zoneIds = baGetZonesForSign(badm);
         // assert zoneIds.length === 1
         const zoneId = zoneIds[0];
 
+        // until issue is resolved
         // mediaStateIds = baGetMediaStateIdsForZone(badm, {id: zoneId});
         mediaStateIds = baGetZoneSimplePlaylist(badm, {id: zoneId});
 

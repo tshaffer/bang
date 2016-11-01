@@ -223,8 +223,5 @@ export function addMediaStateToNonInteractivePlaylist(index, stateName, path) {
             reduxState = getState();
             badm = reduxState.badm;
         });
-
-        // reduxState = getState();
-        // badm = reduxState.badm;
     };
 }
